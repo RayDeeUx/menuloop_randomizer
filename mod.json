@@ -5,13 +5,13 @@
 		"win": "2.206"
 	},
 	"version": "v1.0.0",
-	"id": "elnexreal.menu_loop_randomizer",
+	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developer": "elnexreal",
 	"description": "Randomize your menu loop when opening the game.",
 	"links": {
 		"community": "https://discord.gg/vfFazvmKKb",
-		"source": "https://github.com/elnexreal/menu_loop_randomizer",
+		"source": "https://github.com/elnexreal/menuloop_randomizer",
 		"homepage": "https://github.com/elnexreal"
 	}
 }
