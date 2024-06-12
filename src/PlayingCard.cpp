@@ -19,8 +19,6 @@ bool PlayingCard::init(gd::string songId) {
 
 	this->setID("now-playing-card"_spr);
 
-	this->setPosition({67, 199});
-
 	auto bg = CCScale9Sprite::create("GE_square03.png");
 	bg->setContentSize({90, 55});
 

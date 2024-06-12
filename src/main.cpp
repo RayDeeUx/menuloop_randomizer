@@ -55,8 +55,21 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		auto cardSettingValue = Mod::get()->getSettingValue<bool>("nowPlayingCard");
 
 		if (cardSettingValue) {
-			auto thing = PlayingCard::create(selectedSong.songId);
-			this->addChild(thing);
+			auto card = PlayingCard::create(selectedSong.songId);
+			auto defaultPos = card->position;
+			auto posx = defaultPos.x;
+			auto posy = defaultPos.y;
+
+			card->setPosition(defaultPos);
+			this->addChild(card);
+
+			auto sequence = CCSequence::create(
+				CCEaseInOut::create(CCMoveTo::create(2.f, {posx - 120, posy}), 2.0f),
+				CCDelayTime::create(0.5f),
+				CCEaseInOut::create(CCMoveTo::create(2.f, {posx, posy}), 2.0f),
+				nullptr
+			);
+			card->runAction(sequence);
 		}
 
 		// geode::Notification::create("Now playing: " + selectedSong.songId, geode::NotificationIcon::Loading, 1.f)->show();
