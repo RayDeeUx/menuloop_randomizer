@@ -1,3 +1,7 @@
+# v1.1.0-alpha.2
+
+- Fixed crash on startup caused by a missing dependency.
+
 # v1.1.0-alpha.1
 
 - Added a card showing which song is playing (you can disable it in settings)

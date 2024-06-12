@@ -4,7 +4,7 @@
 		"android": "2.206",
 		"win": "2.206"
 	},
-	"version": "v1.1.0-alpha.1",
+	"version": "v1.1.0-alpha.2",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developer": "elnexreal",
@@ -21,5 +21,12 @@
 			"description": "Shows the card telling you what song is currently playing.",
 			"name": "Now playing card"
 		}
-	}
+	},
+	"dependencies": [
+		{
+			"id": "geode.node-ids",
+			"importance": "required",
+			"version": ">=1.12.0-beta.4"
+		}
+	]
 }
