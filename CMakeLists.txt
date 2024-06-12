@@ -6,13 +6,13 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 project(MenuLoopRandomizer VERSION 1.0.0)
 
-add_library(${PROJECT_NAME} SHARED
-    src/main.cpp
-    src/PlayingCard.cpp
-    src/PlayingCard.hpp
+file(GLOB SOURCES
+    src/*.cpp
 )
 
 set(GEODE_BINDINGS_REPO_PATH "D:\\Projects\\geode\\bindings")
+
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 if (NOT DEFINED ENV{GEODE_SDK})
     message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
