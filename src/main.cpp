@@ -11,7 +11,7 @@ $execute {
 	std::vector<std::string> songs;
 
 	// get the path for the songs
-	std::filesystem::path ngSongsPath = CCFileUtils::get()->getWritablePath();
+	std::filesystem::path ngSongsPath = CCFileUtils::get()->getWritablePath().c_str();
 
 	// add all the mp3 files to the vector
 	for (auto &song : std::filesystem::directory_iterator(ngSongsPath)) {
