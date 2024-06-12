@@ -1,3 +1,8 @@
+# v1.1.0-alpha.3
+
+- Added a notification animation for the card.
+- The position is now added in `MainLayer` instead of the layer itself.
+
 # v1.1.0-alpha.2
 
 - Fixed crash on startup caused by a missing dependency.
