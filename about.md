@@ -12,3 +12,4 @@ This mod allows you to change the menu song every time you open the game, pickin
 # Thanks to!
 
 - [hiimjustin000](https://github.com/hiimjustin000) <cj>for helping me with the bindings problem (i was using an outdated version of geode LMAO)</cj>
+- <cj>Shaday for giving me the idea<cj>
