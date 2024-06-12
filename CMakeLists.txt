@@ -8,7 +8,8 @@ project(MenuLoopRandomizer VERSION 1.0.0)
 
 add_library(${PROJECT_NAME} SHARED
     src/main.cpp
-    # Add any extra C++ source files here
+    src/PlayingCard.cpp
+    src/PlayingCard.hpp
 )
 
 set(GEODE_BINDINGS_REPO_PATH "D:\\Projects\\geode\\bindings")

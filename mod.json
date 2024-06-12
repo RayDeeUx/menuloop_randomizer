@@ -13,5 +13,13 @@
 		"community": "https://discord.gg/vfFazvmKKb",
 		"source": "https://github.com/elnexreal/menuloop_randomizer",
 		"homepage": "https://github.com/elnexreal"
+	},
+	"settings": {
+		"nowPlayingCard": {
+			"type": "bool",
+			"default": true,
+			"description": "Shows the card telling you what song is currently playing.",
+			"name": "Now playing card"
+		}
 	}
 }
