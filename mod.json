@@ -18,8 +18,8 @@
 		"nowPlayingCard": {
 			"type": "bool",
 			"default": true,
-			"description": "Shows the card telling you what song is currently playing.",
-			"name": "Now playing card"
+			"description": "Shows a notification with the name of the currently playing song.",
+			"name": "Show notification"
 		}
 	},
 	"dependencies": [

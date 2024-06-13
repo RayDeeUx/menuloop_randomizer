@@ -3,9 +3,9 @@
 
 using namespace geode::prelude;
 
-PlayingCard *PlayingCard::create(gd::string songId) {
+PlayingCard *PlayingCard::create(gd::string songName, gd::string songId) {
 	PlayingCard *ret = new PlayingCard();
-	if (ret && ret->init(songId)) {
+	if (ret && ret->init(songName, songId)) {
 		ret->autorelease();
 		return ret;
 	}
@@ -13,27 +13,27 @@ PlayingCard *PlayingCard::create(gd::string songId) {
 	return nullptr;
 }
 
-bool PlayingCard::init(gd::string songId) {
+bool PlayingCard::init(gd::string songName, gd::string songId) {
 	if (!CCNode::init())
 		return false;
 
+	auto mainNode = CCNode::create();
+
 	this->setID("now-playing-card"_spr);
 
-	auto bg = CCScale9Sprite::create("GE_square03.png");
-	bg->setContentSize({90, 55});
+	auto bg = CCScale9Sprite::create("black-square.png");
+	bg->setContentSize(cardSize);
+	bg->setAnchorPoint({0.5f, 0.0f});
 
-	auto nowPlayingLabel = CCLabelBMFont::create("Now Playing", "bigFont.fnt");
-	nowPlayingLabel->setScale(0.3f);
+	auto nowPlayingLabel = CCLabelBMFont::create("", "mdFontBI.fnt");
+	nowPlayingLabel->setString(fmt::format("Now playing: {} ({})", songId, songName).c_str());
+	nowPlayingLabel->limitLabelWidth(cardSize.x - 4.0f, 0.7f, 0.1f);
 	nowPlayingLabel->setPositionY(12.0f);
 
-	auto idLabel = CCLabelBMFont::create(songId.c_str(), "bigFont.fnt");
-	idLabel->setScale(0.3f);
-	idLabel->limitLabelWidth(85.0f, 0.45f, 0.05f);
-	idLabel->setPositionY(-10.0f);
+	mainNode->addChild(bg);
+	mainNode->addChild(nowPlayingLabel);
 
-	this->addChild(bg);
-	this->addChild(nowPlayingLabel);
-	this->addChild(idLabel);
+	this->addChild(mainNode);
 
 	return true;
 }
