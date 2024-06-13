@@ -1,3 +1,8 @@
+# v1.1.0-alpha.4
+
+- Updated notification card & position.
+- Added the property `name` to the `Song` class.
+
 # v1.1.0-alpha.3
 
 - Added a notification animation for the card.
