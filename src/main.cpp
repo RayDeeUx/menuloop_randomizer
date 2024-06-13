@@ -52,10 +52,14 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		if (!MenuLayer::init())
 			return false;
 
+		auto screenSize = CCDirector::get()->getWinSize();
 		auto cardSettingValue = Mod::get()->getSettingValue<bool>("nowPlayingCard");
 
 		if (cardSettingValue) {
 			auto card = PlayingCard::create(selectedSong.songId);
+			card->position.x = screenSize.width / 2.0f;
+			card->position.y = screenSize.height;
+
 			auto defaultPos = card->position;
 			auto posx = defaultPos.x;
 			auto posy = defaultPos.y;
@@ -64,9 +68,9 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 			this->addChild(card);
 
 			auto sequence = CCSequence::create(
-				CCEaseInOut::create(CCMoveTo::create(2.f, {posx - 120, posy}), 2.0f),
+				CCEaseInOut::create(CCMoveTo::create(2.0f, {posx, posy - 60.0f}), 2.0f),
 				CCDelayTime::create(0.5f),
-				CCEaseInOut::create(CCMoveTo::create(2.f, {posx, posy}), 2.0f),
+				CCEaseInOut::create(CCMoveTo::create(2.0f, {posx, posy}), 2.0f),
 				nullptr
 			);
 			card->runAction(sequence);

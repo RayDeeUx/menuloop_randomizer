@@ -6,5 +6,5 @@ class PlayingCard : public cocos2d::CCNode {
 
   public:
 	static PlayingCard *create(gd::string);
-	cocos2d::CCPoint position = {613, 115};
+	cocos2d::CCPoint position;
 };
