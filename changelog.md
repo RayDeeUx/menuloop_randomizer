@@ -1,3 +1,7 @@
+# v1.1.0-alpha.5
+
+- Updated Geode target version to `v3.0.0-beta.1`
+
 # v1.1.0-alpha.4
 
 - Updated notification card & position.

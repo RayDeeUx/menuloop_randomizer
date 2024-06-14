@@ -1,14 +1,19 @@
 {
-	"geode": "3.0.0-alpha.2",
+	"geode": "3.0.0-beta.1",
 	"gd": {
 		"android": "2.206",
 		"win": "2.206"
 	},
-	"version": "v1.1.0-alpha.4",
+	"version": "v1.1.0-alpha.3",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developer": "elnexreal",
 	"description": "Randomize your menu loop when opening the game.",
+	"tags": [
+		"music",
+		"interface",
+		"enhancement"
+	],
 	"links": {
 		"community": "https://discord.gg/vfFazvmKKb",
 		"source": "https://github.com/elnexreal/menuloop_randomizer",
