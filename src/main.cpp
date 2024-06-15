@@ -19,7 +19,7 @@ std::vector<Song> songs;
 Song selectedSong;
 MusicDownloadManager *downloadManager;
 
-$execute {
+$on_mod(Loaded) {
 	// get the path for the songs
 	std::filesystem::path ngSongsPath = CCFileUtils::get()->getWritablePath().c_str();
 
