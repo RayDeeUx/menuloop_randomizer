@@ -39,6 +39,7 @@ jobs:
           bindings: elnexreal/geode-bindings
           bindings-ref: main
           combine: true
+          build-config: RelWithDebInfo
           target: ${{ matrix.config.target }}
 
   package:
