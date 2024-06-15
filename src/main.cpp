@@ -48,11 +48,13 @@ $on_mod(Loaded) {
 
 struct GameManagerHook : Modify<GameManagerHook, GameManager> {
 	gd::string getMenuMusicFile() {
-		if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
-			selectedSong.name = songObject->m_songName;
-		} else {
-			selectedSong.name = "NONG";
-		}
+		// if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
+		// 	selectedSong.name = songObject->m_songName;
+		// } else {
+		// 	selectedSong.name = "NONG";
+		// }
+
+		selectedSong.name = "TESTING...";
 
 		return selectedSong.path;
 	}
