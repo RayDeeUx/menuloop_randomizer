@@ -17,13 +17,13 @@ class Song {
 // global variables
 std::vector<Song> songs;
 Song selectedSong;
-MusicDownloadManager *downloadManager;
+// MusicDownloadManager *downloadManager;
 
 $on_mod(Loaded) {
 	// get the path for the songs
 	std::filesystem::path ngSongsPath = CCFileUtils::get()->getWritablePath().c_str();
 
-	downloadManager = MusicDownloadManager::sharedState();
+	// downloadManager = MusicDownloadManager::sharedState();
 
 	// add all the mp3 files to the vector
 	for (auto &song : std::filesystem::directory_iterator(ngSongsPath)) {
