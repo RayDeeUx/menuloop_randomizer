@@ -17,13 +17,13 @@ class Song {
 // global variables
 std::vector<Song> songs;
 Song selectedSong;
-// MusicDownloadManager *downloadManager;
+MusicDownloadManager *downloadManager;
 
 $on_mod(Loaded) {
 	// get the path for the songs
 	std::filesystem::path ngSongsPath = CCFileUtils::get()->getWritablePath().c_str();
 
-	// downloadManager = MusicDownloadManager::sharedState();
+	downloadManager = MusicDownloadManager::sharedState();
 
 	// add all the mp3 files to the vector
 	for (auto &song : std::filesystem::directory_iterator(ngSongsPath)) {
@@ -48,13 +48,11 @@ $on_mod(Loaded) {
 
 struct GameManagerHook : Modify<GameManagerHook, GameManager> {
 	gd::string getMenuMusicFile() {
-		// if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
-		// 	selectedSong.name = songObject->m_songName;
-		// } else {
-		// 	selectedSong.name = "NONG";
-		// }
-
-		selectedSong.name = "TESTING...";
+		if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
+			selectedSong.name = songObject->m_songName;
+		} else {
+			selectedSong.name = "Unknown";
+		}
 
 		return selectedSong.path;
 	}
