@@ -1,7 +1,8 @@
 {
 	"geode": "3.0.0",
 	"gd": {
-		"win": "2.206"
+		"win": "2.206",
+		"android": "2.206"
 	},
 	"version": "v1.1.0-alpha.5",
 	"id": "elnexreal.menuloop_randomizer",
