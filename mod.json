@@ -26,11 +26,15 @@
 			"name": "Show notification"
 		}
 	},
-	"dependencies": [
-		{
-			"id": "geode.node-ids",
-			"importance": "required",
-			"version": ">=1.12.0"
+	"resources": {
+		"sprites": [
+			"resources/black-square.png"
+		],
+		"fonts": {
+			"nunitoSans": {
+				"path": "resources/NunitoSans-Italic.ttf",
+				"size": 100
+			}
 		}
-	]
+	}
 }

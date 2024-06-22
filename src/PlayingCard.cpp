@@ -21,11 +21,11 @@ bool PlayingCard::init(gd::string songName, gd::string songId) {
 
 	this->setID("now-playing-card"_spr);
 
-	auto bg = CCScale9Sprite::create("black-square.png");
+	auto bg = CCScale9Sprite::create("black-square.png"_spr);
 	bg->setContentSize(cardSize);
 	bg->setAnchorPoint({0.5f, 0.0f});
 
-	auto nowPlayingLabel = CCLabelBMFont::create("", "mdFontBI.fnt");
+	auto nowPlayingLabel = CCLabelBMFont::create("", "nunitoSans.fnt"_spr);
 	nowPlayingLabel->setString(fmt::format("Now playing: {} ({})", songName, songId).c_str());
 	nowPlayingLabel->limitLabelWidth(cardSize.x - 4.0f, 0.7f, 0.1f);
 	nowPlayingLabel->setPositionY(12.0f);
