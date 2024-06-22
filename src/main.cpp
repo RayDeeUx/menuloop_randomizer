@@ -1,4 +1,5 @@
 #include "PlayingCard.hpp"
+#include "Song.hpp"
 #include <Geode/Geode.hpp>
 #include <Geode/modify/GameManager.hpp>
 #include <Geode/modify/MenuLayer.hpp>
@@ -6,13 +7,6 @@
 #include <vector>
 
 using namespace geode::prelude;
-
-class Song {
-  public:
-	std::string name;
-	std::string id;
-	std::string path;
-};
 
 // global variables
 std::vector<Song> songs;
