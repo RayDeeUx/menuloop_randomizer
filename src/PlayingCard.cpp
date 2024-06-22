@@ -26,7 +26,7 @@ bool PlayingCard::init(gd::string songName, gd::string songId) {
 	bg->setAnchorPoint({0.5f, 0.0f});
 
 	auto nowPlayingLabel = CCLabelBMFont::create("", "mdFontBI.fnt");
-	nowPlayingLabel->setString(fmt::format("Now playing: {} ({})", songId, songName).c_str());
+	nowPlayingLabel->setString(fmt::format("Now playing: {} ({})", songName, songId).c_str());
 	nowPlayingLabel->limitLabelWidth(cardSize.x - 4.0f, 0.7f, 0.1f);
 	nowPlayingLabel->setPositionY(12.0f);
 

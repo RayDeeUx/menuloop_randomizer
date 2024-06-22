@@ -67,7 +67,7 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		auto cardSettingValue = Mod::get()->getSettingValue<bool>("nowPlayingCard");
 
 		if (cardSettingValue) {
-			auto card = PlayingCard::create(selectedSong.id, selectedSong.name);
+			auto card = PlayingCard::create(selectedSong.name, selectedSong.id);
 			card->position.x = screenSize.width / 2.0f;
 			card->position.y = screenSize.height;
 
