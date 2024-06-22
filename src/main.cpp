@@ -10,7 +10,7 @@ using namespace geode::prelude;
 
 // global variables
 std::vector<Song> songs;
-Song selectedSong(nullptr);
+Song selectedSong;
 
 $on_mod(Loaded) {
 	// get the path for the songs
