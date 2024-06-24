@@ -10,8 +10,6 @@ file(GLOB SOURCES
     src/*.cpp
 )
 
-set(GEODE_BINDINGS_REPO_PATH "D:\\Projects\\geode\\bindings")
-
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 if (NOT DEFINED ENV{GEODE_SDK})
