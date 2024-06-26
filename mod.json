@@ -30,12 +30,6 @@
 	"resources": {
 		"sprites": [
 			"resources/black-square.png"
-		],
-		"fonts": {
-			"nunitoSans": {
-				"path": "resources/NunitoSans-Italic.ttf",
-				"size": 100
-			}
-		}
+		]
 	}
 }
