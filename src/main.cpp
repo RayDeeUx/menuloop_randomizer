@@ -34,7 +34,7 @@ $on_mod(Loaded) {
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> dist(0, songs.size() - 1);
 	int randomIndex = dist(gen);
-	selectedSong = &songs[randomIndex];
+	selectedSong = std::move(&songs[randomIndex]);
 }
 
 struct GameManagerHook : Modify<GameManagerHook, GameManager> {
