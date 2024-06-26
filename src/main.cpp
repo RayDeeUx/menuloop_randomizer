@@ -71,13 +71,13 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 			card->setPosition(defaultPos);
 			this->addChild(card);
 
-			auto sequence = CCSequence::create(
-				CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy - 25.0f}), 2.0f),
-				CCDelayTime::create(0.5f),
-				CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy}), 2.0f),
-				nullptr
-			);
-			card->runAction(sequence);
+			// auto sequence = CCSequence::create(
+			// 	CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy - 25.0f}), 2.0f),
+			// 	CCDelayTime::create(0.5f),
+			// 	CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy}), 2.0f),
+			// 	nullptr
+			// );
+			// card->runAction(sequence);
 		}
 
 		return true;
