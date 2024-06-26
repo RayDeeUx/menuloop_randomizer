@@ -3,7 +3,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/GameManager.hpp>
 #include <Geode/modify/MenuLayer.hpp>
-#include <random>
+// #include <random>
 #include <vector>
 
 using namespace geode::prelude;
@@ -30,11 +30,11 @@ $on_mod(Loaded) {
 	}
 
 	// select a random item from the vector and return the path
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dist(0, songs.size() - 1);
-	int randomIndex = dist(gen);
-	selectedSong = songs[randomIndex];
+	// std::random_device rd;
+	// std::mt19937 gen(rd());
+	// std::uniform_int_distribution<> dist(0, songs.size() - 1);
+	// int randomIndex = dist(gen);
+	selectedSong = songs[50];
 }
 
 struct GameManagerHook : Modify<GameManagerHook, GameManager> {
