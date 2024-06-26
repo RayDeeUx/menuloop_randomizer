@@ -1,6 +1,6 @@
 # v1.1.0
 
-- Updated Geode target version to `v3.0.0`
+- Updated Geode target version to `v3.1.1`
 - Fixed crash when installing the mod (missing textures crash)
 - Moved song class to its own file.
 - Added new font file (Nunito Sans)
