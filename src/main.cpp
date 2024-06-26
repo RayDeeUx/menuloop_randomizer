@@ -3,14 +3,14 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/GameManager.hpp>
 #include <Geode/modify/MenuLayer.hpp>
-// #include <random>
+#include <random>
 #include <vector>
 
 using namespace geode::prelude;
 
 // global variables
 std::vector<Song> songs;
-Song selectedSong;
+Song *selectedSong;
 
 $on_mod(Loaded) {
 	// get the path for the songs
@@ -30,16 +30,16 @@ $on_mod(Loaded) {
 	}
 
 	// select a random item from the vector and return the path
-	// std::random_device rd;
-	// std::mt19937 gen(rd());
-	// std::uniform_int_distribution<> dist(0, songs.size() - 1);
-	// int randomIndex = dist(gen);
-	selectedSong = songs[50];
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dist(0, songs.size() - 1);
+	int randomIndex = dist(gen);
+	selectedSong = &songs[randomIndex];
 }
 
 struct GameManagerHook : Modify<GameManagerHook, GameManager> {
 	gd::string getMenuMusicFile() {
-		return selectedSong.path;
+		return selectedSong->path;
 	}
 };
 
@@ -54,13 +54,13 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		auto cardSettingValue = Mod::get()->getSettingValue<bool>("nowPlayingCard");
 
 		if (cardSettingValue) {
-			if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
-				selectedSong.name = songObject->m_songName;
+			if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong->id))) {
+				selectedSong->name = songObject->m_songName;
 			} else {
-				selectedSong.name = "Unknown";
+				selectedSong->name = "Unknown";
 			}
 
-			auto card = PlayingCard::create(selectedSong.name, selectedSong.id);
+			auto card = PlayingCard::create(selectedSong->name, selectedSong->id);
 			card->position.x = screenSize.width / 2.0f;
 			card->position.y = screenSize.height;
 
