@@ -39,14 +39,6 @@ $on_mod(Loaded) {
 
 struct GameManagerHook : Modify<GameManagerHook, GameManager> {
 	gd::string getMenuMusicFile() {
-		auto downloadManager = MusicDownloadManager::sharedState();
-
-		if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
-			selectedSong.name = songObject->m_songName;
-		} else {
-			selectedSong.name = "Unknown";
-		}
-
 		return selectedSong.path;
 	}
 };
@@ -56,10 +48,18 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		if (!MenuLayer::init())
 			return false;
 
+		auto downloadManager = MusicDownloadManager::sharedState();
+
 		auto screenSize = CCDirector::get()->getWinSize();
 		auto cardSettingValue = Mod::get()->getSettingValue<bool>("nowPlayingCard");
 
 		if (cardSettingValue) {
+			if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
+				selectedSong.name = songObject->m_songName;
+			} else {
+				selectedSong.name = "Unknown";
+			}
+
 			auto card = PlayingCard::create(selectedSong.name, selectedSong.id);
 			card->position.x = screenSize.width / 2.0f;
 			card->position.y = screenSize.height;
