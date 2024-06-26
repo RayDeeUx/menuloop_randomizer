@@ -4,7 +4,6 @@
 - Fixed crash when installing the mod (missing textures crash)
 - Fixed random song picker being on a loop for every song downloaded.
 - Moved song class to its own file.
-- Added new font file (Nunito Sans)
 - The mod should now check for the songs path when loaded, not when executed.
 
 # v1.1.0-alpha.5
