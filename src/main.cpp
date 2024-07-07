@@ -58,6 +58,7 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 
 		auto screenSize = CCDirector::get()->getWinSize();
 		auto cardSettingValue = Mod::get()->getSettingValue<bool>("nowPlayingCard");
+		auto screenTime = Mod::get()->getSettingValue<double>("notificationTime");
 
 		if (cardSettingValue) {
 			if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
@@ -79,7 +80,7 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 
 			auto sequence = CCSequence::create(
 				CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy - 25.0f}), 2.0f),
-				CCDelayTime::create(0.5f),
+				CCDelayTime::create(screenTime),
 				CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy}), 2.0f),
 				nullptr
 			);

@@ -31,6 +31,14 @@
 			"default": true,
 			"description": "Randomize the song when you exit a level (for example when exiting the editor)",
 			"name": "Randomize on level exit"
+		},
+		"notificationTime": {
+			"type": "float",
+			"default": 0.5,
+			"min": 0.1,
+			"max": 2,
+			"description": "Modify the time that the notification is on screen",
+			"name": "Notification time"
 		}
 	},
 	"resources": {
