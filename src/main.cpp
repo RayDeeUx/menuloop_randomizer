@@ -2,6 +2,7 @@
 #include "Song.hpp"
 #include "Utils.hpp"
 #include <Geode/Geode.hpp>
+#include <Geode/modify/EditorPauseLayer.hpp>
 #include <Geode/modify/GameManager.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 #include <Geode/modify/PauseLayer.hpp>
@@ -41,11 +42,21 @@ struct GameManagerHook : Modify<GameManagerHook, GameManager> {
 
 struct PauseLayerHook : Modify<PauseLayerHook, PauseLayer> {
 	void onQuit(CCObject *sender) {
-		if (Mod::get()->getSettingValue<bool>("randomizeWhenExiting")) {
+		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingLevel")) {
 			selectedSong = std::move(songs[Utils::randomIndex(songs.size())]);
 		}
 
 		PauseLayer::onQuit(sender);
+	}
+};
+
+struct EditorPauseLayerHook : Modify<EditorPauseLayerHook, EditorPauseLayer> {
+	void onExitEditor(CCObject *sender) {
+		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor")) {
+			selectedSong = std::move(songs[Utils::randomIndex(songs.size())]);
+		}
+
+		EditorPauseLayer::onExitEditor(sender);
 	}
 };
 

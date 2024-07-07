@@ -26,11 +26,17 @@
 			"description": "Shows a notification with the name of the currently playing song.",
 			"name": "Show notification"
 		},
-		"randomizeWhenExiting": {
+		"randomizeWhenExitingLevel": {
 			"type": "bool",
 			"default": true,
-			"description": "Randomize the song when you exit a level (for example when exiting the editor)",
+			"description": "Randomize the song when you exit a level",
 			"name": "Randomize on level exit"
+		},
+		"randomizeWhenExitingEditor": {
+			"type": "bool",
+			"default": true,
+			"description": "Randomize the song when you exit the editor",
+			"name": "Randomize on editor exit"
 		},
 		"notificationTime": {
 			"type": "float",
