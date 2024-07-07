@@ -1,10 +1,12 @@
 # v1.1.0
 
-- Updated Geode target version to `v3.1.1`
 - Fixed crash when opening the game (missing textures crash)
 - Fixed random song picker being on a loop for every song downloaded.
 - Moved song class to its own file.
 - The mod should now check for the songs path when loaded, not when executed.
+- Added setting to randomize song on level exit.
+- Fixed Android crash caused by not able to access the memory (f*** pointers)
+- Added `Utils.hpp`
 
 # v1.1.0-alpha.5
 
