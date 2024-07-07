@@ -1,5 +1,5 @@
 {
-	"geode": "3.1.1",
+	"geode": "3.2.0",
 	"gd": {
 		"win": "2.206",
 		"android": "2.206"
@@ -8,7 +8,7 @@
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developer": "elnexreal",
-	"description": "Randomize your menu loop when opening the game.",
+	"description": "Menu Loop randomizer for GD.",
 	"tags": [
 		"music",
 		"interface",
@@ -25,6 +25,12 @@
 			"default": true,
 			"description": "Shows a notification with the name of the currently playing song.",
 			"name": "Show notification"
+		},
+		"randomizeWhenExiting": {
+			"type": "bool",
+			"default": true,
+			"description": "Randomize the song when you exit a level (for example when exiting the editor)",
+			"name": "Randomize on level exit"
 		}
 	},
 	"resources": {

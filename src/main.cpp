@@ -1,16 +1,17 @@
 #include "PlayingCard.hpp"
 #include "Song.hpp"
+#include "Utils.hpp"
 #include <Geode/Geode.hpp>
 #include <Geode/modify/GameManager.hpp>
 #include <Geode/modify/MenuLayer.hpp>
-#include <random>
+#include <Geode/modify/PauseLayer.hpp>
 #include <vector>
 
 using namespace geode::prelude;
 
 // global variables
 std::vector<Song> songs;
-Song *selectedSong;
+Song selectedSong;
 
 $on_mod(Loaded) {
 	// get the path for the songs
@@ -29,17 +30,22 @@ $on_mod(Loaded) {
 		}
 	}
 
-	// select a random item from the vector and return the path
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dist(0, songs.size() - 1);
-	int randomIndex = dist(gen);
-	selectedSong = std::move(&songs[randomIndex]);
+	selectedSong = std::move(songs[Utils::randomIndex(songs.size())]);
 }
 
 struct GameManagerHook : Modify<GameManagerHook, GameManager> {
 	gd::string getMenuMusicFile() {
-		return selectedSong->path;
+		return selectedSong.path;
+	}
+};
+
+struct PauseLayerHook : Modify<PauseLayerHook, PauseLayer> {
+	void onQuit(CCObject *sender) {
+		if (Mod::get()->getSettingValue<bool>("randomizeWhenExiting")) {
+			selectedSong = std::move(songs[Utils::randomIndex(songs.size())]);
+		}
+
+		PauseLayer::onQuit(sender);
 	}
 };
 
@@ -54,13 +60,13 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		auto cardSettingValue = Mod::get()->getSettingValue<bool>("nowPlayingCard");
 
 		if (cardSettingValue) {
-			if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong->id))) {
-				selectedSong->name = songObject->m_songName;
+			if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
+				selectedSong.name = songObject->m_songName;
 			} else {
-				selectedSong->name = "Unknown";
+				selectedSong.name = "Unknown";
 			}
 
-			auto card = PlayingCard::create(selectedSong->name, selectedSong->id);
+			auto card = PlayingCard::create(selectedSong.name, selectedSong.id);
 			card->position.x = screenSize.width / 2.0f;
 			card->position.y = screenSize.height;
 
@@ -71,13 +77,13 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 			card->setPosition(defaultPos);
 			this->addChild(card);
 
-			// auto sequence = CCSequence::create(
-			// 	CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy - 25.0f}), 2.0f),
-			// 	CCDelayTime::create(0.5f),
-			// 	CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy}), 2.0f),
-			// 	nullptr
-			// );
-			// card->runAction(sequence);
+			auto sequence = CCSequence::create(
+				CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy - 25.0f}), 2.0f),
+				CCDelayTime::create(0.5f),
+				CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy}), 2.0f),
+				nullptr
+			);
+			card->runAction(sequence);
 		}
 
 		return true;

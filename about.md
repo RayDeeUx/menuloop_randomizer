@@ -6,7 +6,6 @@ This mod allows you to change the menu song every time you open the game, pickin
 
 # Notes
 
-- The song changes every time you restart the game, so you will not get another song every time you go back to the menu.
 - In the future i'll add a setting to toggle between using NG songs or your own songs.
 
 # Thanks to!
