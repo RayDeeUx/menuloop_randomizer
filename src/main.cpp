@@ -99,7 +99,26 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 			card->runAction(sequence);
 		}
 
+		// add a shuffle button
+		auto menu = getChildByID("right-side-menu");
+
+		auto btn = CCMenuItemSpriteExtra::create(
+			CircleButtonSprite::create(
+				CCSprite::create("note-btn-sprite.png"_spr)
+			),
+			this,
+			menu_selector(MenuLayerHook::shuffleBtn)
+		);
+
+		menu->addChild(btn);
+
+		menu->updateLayout();
+
 		return true;
+	}
+
+	void shuffleBtn(CCObject *sender) {
+		// todo
 	}
 };
 

@@ -13,3 +13,4 @@ This mod allows you to change the menu song every time you open the game, pickin
 - [hiimjustin000](https://github.com/hiimjustin000) <cj>for helping me with the bindings problem (i was using an outdated version of geode LMAO)</cj>
 - [km7dev](https://github.com/Kingminer7) <cj>for helping me with the constant crashes and testing.</cj>
 - <cj>Shaday for giving me the idea<cj>
+- [Feather Icons](https://feathericons.com) <cj>for providing the shuffle icon.</cj>
