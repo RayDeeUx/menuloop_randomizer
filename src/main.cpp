@@ -14,12 +14,12 @@ using namespace geode::prelude;
 std::vector<Song> songs;
 Song selectedSong;
 
-$on_mod(Loaded) {
-	// get the path for the songs
-	std::filesystem::path ngSongsPath = CCFileUtils::get()->getWritablePath().c_str();
+// this function is used to populate the vector with every .mp3 file in a folder
+void populateVector(std::filesystem::path songsPath) {
+	if (songs.size() >= 1)
+		songs.clear();
 
-	// add all the mp3 files to the vector
-	for (auto &song : std::filesystem::directory_iterator(ngSongsPath)) {
+	for (auto &song : std::filesystem::directory_iterator(songsPath)) {
 		if (song.path().string().ends_with(".mp3")) {
 			auto id = song.path().filename().string().substr(0, song.path().filename().string().length() - 4);
 			auto path = song.path().string();
@@ -67,6 +67,7 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 
 		auto downloadManager = MusicDownloadManager::sharedState();
 
+		// create notif card stuff
 		auto screenSize = CCDirector::get()->getWinSize();
 		auto cardSettingValue = Mod::get()->getSettingValue<bool>("nowPlayingCard");
 		auto screenTime = Mod::get()->getSettingValue<double>("notificationTime");
@@ -101,3 +102,10 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		return true;
 	}
 };
+
+$on_mod(Loaded) {
+	std::filesystem::path ngSongsPath = CCFileUtils::get()->getWritablePath();
+	// std::filesystem::path customSongsPath = std::filesystem::path(CCFileUtils::get()->getWritablePath2()) / "resources";
+
+	populateVector(ngSongsPath);
+}
