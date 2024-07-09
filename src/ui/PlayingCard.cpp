@@ -3,9 +3,9 @@
 
 using namespace geode::prelude;
 
-PlayingCard *PlayingCard::create(gd::string songName, gd::string songId) {
+PlayingCard *PlayingCard::create(std::string output) {
 	PlayingCard *ret = new PlayingCard();
-	if (ret && ret->init(songName, songId)) {
+	if (ret && ret->init(output)) {
 		ret->autorelease();
 		return ret;
 	}
@@ -13,12 +13,12 @@ PlayingCard *PlayingCard::create(gd::string songName, gd::string songId) {
 	return nullptr;
 }
 
-bool PlayingCard::init(gd::string songName, gd::string songId) {
+bool PlayingCard::init(std::string output) {
 	if (!CCNode::init())
 		return false;
 
-	if (songName.empty())
-		songName = "Unknown";
+	if (output.empty())
+		output = "Unknown";
 
 	auto mainNode = CCNode::create();
 
@@ -29,7 +29,7 @@ bool PlayingCard::init(gd::string songName, gd::string songId) {
 	bg->setAnchorPoint({0.5f, 0.0f});
 
 	auto nowPlayingLabel = CCLabelBMFont::create("", "gjFont17.fnt");
-	nowPlayingLabel->setString(fmt::format("Now playing: {} ({})", songName, songId).c_str());
+	nowPlayingLabel->setString(output.c_str());
 	nowPlayingLabel->limitLabelWidth(cardSize.x - 4.0f, 0.5f, 0.1f);
 	nowPlayingLabel->setPositionY(12.0f);
 

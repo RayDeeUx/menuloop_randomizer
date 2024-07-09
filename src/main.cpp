@@ -48,38 +48,48 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 			return false;
 
 		auto downloadManager = MusicDownloadManager::sharedState();
-
-		// create notif card stuff
-		auto screenSize = CCDirector::get()->getWinSize();
 		auto notificationEnabled = Mod::get()->getSettingValue<bool>("enableNotification");
-		auto notificationTime = Mod::get()->getSettingValue<double>("notificationTime");
 
-		// if (cardSettingValue) {
-		// 	if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
-		// 		selectedSong.name = songObject->m_songName;
-		// 	} else {
-		// 		selectedSong.name = "Unknown";
-		// 	}
+		if (notificationEnabled) {
+			// create notif card stuff
+			auto screenSize = CCDirector::get()->getWinSize();
+			auto notificationTime = Mod::get()->getSettingValue<double>("notificationTime");
 
-		// 	auto card = PlayingCard::create(selectedSong.name, selectedSong.id);
-		// 	card->position.x = screenSize.width / 2.0f;
-		// 	card->position.y = screenSize.height;
+			auto songFileName = std::filesystem::path(songManager.getCurrentSong()).filename();
 
-		// 	auto defaultPos = card->position;
-		// 	auto posx = defaultPos.x;
-		// 	auto posy = defaultPos.y;
+			PlayingCard *card;
 
-		// 	card->setPosition(defaultPos);
-		// 	this->addChild(card);
+			if (Mod::get()->getSettingValue<bool>("useCustomSongs")) {
+				card = PlayingCard::create(fmt::format("Now playing: {}", songFileName));
+			} else {
+				size_t dotPos = songFileName.string().find_last_of(".");
 
-		// 	auto sequence = CCSequence::create(
-		// 		CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy - 24.0f}), 2.0f),
-		// 		CCDelayTime::create(screenTime),
-		// 		CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy}), 2.0f),
-		// 		nullptr
-		// 	);
-		// 	card->runAction(sequence);
-		// }
+				if (dotPos != std::string::npos)
+					songFileName = songFileName.string().substr(0, dotPos);
+
+				auto songInfo = downloadManager->getSongInfoObject(std::stoi(songFileName));
+
+				card = PlayingCard::create(fmt::format("Now playing: {} ({})", songInfo->m_songName, songInfo->m_songID));
+			}
+
+			card->position.x = screenSize.width / 2.0f;
+			card->position.y = screenSize.height;
+
+			auto defaultPos = card->position;
+			auto posx = defaultPos.x;
+			auto posy = defaultPos.y;
+
+			card->setPosition(defaultPos);
+			this->addChild(card);
+
+			auto sequence = CCSequence::create(
+				CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy - 24.0f}), 2.0f),
+				CCDelayTime::create(notificationTime),
+				CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy}), 2.0f),
+				nullptr
+			);
+			card->runAction(sequence);
+		}
 
 		// add a shuffle button
 		auto menu = getChildByID("right-side-menu");
