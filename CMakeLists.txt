@@ -11,7 +11,11 @@ file(GLOB SOURCES
     src/ui/*.cpp
 )
 
-set(GEODE_BINDINGS_REPO_PATH ${CMAKE_SOURCE_DIR}/bindings)
+if (DEFINED ENV{GITHUB_ACTIONS})
+    message("Github Actions Building, setting up env")
+    set(GEODE_BINDINGS_REPO_PATH ${CMAKE_SOURCE_DIR}/bindings)
+    add_definitions(-DGITHUB_ACTIONS)
+endif()
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
