@@ -113,6 +113,7 @@ struct OptionsLayerHook : Modify<OptionsLayerHook, OptionsLayer> {
 	void customSetup() {
 		OptionsLayer::customSetup();
 
+		// add the folder btn to the settings layer
 		auto menu = CCMenu::create();
 
 		auto btn = CCMenuItemSpriteExtra::create(
@@ -136,6 +137,10 @@ struct OptionsLayerHook : Modify<OptionsLayerHook, OptionsLayer> {
 };
 
 $on_mod(Loaded) {
+	/*
+		if custom songs are enabled search for files in the config dir
+		if not, just use the newgrounds songs
+	*/
 	if (Mod::get()->getSettingValue<bool>("useCustomSongs")) {
 		auto configPath = geode::Mod::get()->getConfigDir();
 
@@ -181,5 +186,13 @@ $execute {
 				}
 			}
 		}
+
+		// change the song when you click apply.
+		auto gameManager = GameManager::sharedState();
+		auto audioEngine = FMODAudioEngine::sharedEngine();
+
+		audioEngine->m_backgroundMusicChannel->stop();
+		songManager.pickRandomSong();
+		gameManager->playMenuMusic();
 	});
 }
