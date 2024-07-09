@@ -100,6 +100,15 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 	}
 
 	void shuffleBtn(CCObject *sender) {
+		auto gameManager = GameManager::sharedState();
+		auto audioEngine = FMODAudioEngine::sharedEngine();
+
+		audioEngine->m_backgroundMusicChannel->stop();
+		songManager.pickRandomSong();
+		gameManager->playMenuMusic();
+	}
+};
+
 struct OptionsLayerHook : Modify<OptionsLayerHook, OptionsLayer> {
 	void customSetup() {
 		OptionsLayer::customSetup();
