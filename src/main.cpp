@@ -15,9 +15,6 @@ SongManager &songManager = SongManager::get();
 
 struct GameManagerHook : Modify<GameManagerHook, GameManager> {
 	gd::string getMenuMusicFile() {
-		if (songManager.getCurrentSong().empty())
-			return GameManager::getMenuMusicFile();
-
 		return songManager.getCurrentSong();
 	}
 };

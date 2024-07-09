@@ -1,5 +1,6 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
+#include <Geode/binding/GameManager.hpp>
 
 SongManager::SongManager() {}
 
@@ -17,7 +18,7 @@ void SongManager::pickRandomSong() {
 	if (m_songs.size() >= 1) {
 		m_currentSong = m_songs[Utils::randomIndex(m_songs.size())];
 	} else {
-		m_currentSong = "";
+		m_currentSong = GameManager::get()->getMenuMusicFile();
 	}
 }
 
