@@ -20,7 +20,7 @@
 		"homepage": "https://github.com/elnexreal"
 	},
 	"settings": {
-		"nowPlayingCard": {
+		"enableNotification": {
 			"type": "bool",
 			"default": true,
 			"description": "Shows a notification with the name of the currently playing song.",
@@ -46,7 +46,7 @@
 			"description": "Randomize the song when you exit the editor",
 			"name": "Randomize on editor exit"
 		},
-		"useCustomSongsPath": {
+		"useCustomSongs": {
 			"type": "bool",
 			"default": false,
 			"description": "Use your own songs instead of Newgrounds's (instructions are on the about.md file)",
