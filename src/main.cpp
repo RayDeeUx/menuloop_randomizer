@@ -175,7 +175,7 @@ $execute {
 			for (auto song : songs) {
 				std::string songPath = downloadManager->pathForSong(song->m_songID);
 
-				if (songPath.ends_with("mp3")) {
+				if (songPath.ends_with(".mp3")) {
 					log::debug("Adding NG song: {}", downloadManager->pathForSong(song->m_songID));
 					songManager.addSong(downloadManager->pathForSong(song->m_songID));
 				}
