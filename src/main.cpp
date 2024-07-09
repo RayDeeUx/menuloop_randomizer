@@ -146,58 +146,54 @@ struct OptionsLayerHook : Modify<OptionsLayerHook, OptionsLayer> {
 	}
 };
 
-$on_mod(Loaded) {
+void populateVector(bool customSongs) {
 	/*
 		if custom songs are enabled search for files in the config dir
 		if not, just use the newgrounds songs
 	*/
-	if (Mod::get()->getSettingValue<bool>("useCustomSongs")) {
+	if (customSongs) {
 		auto configPath = geode::Mod::get()->getConfigDir();
 
 		for (auto file : std::filesystem::directory_iterator(configPath)) {
-			geode::log::debug("Adding song path: {}", file.path().string());
-			songManager.addSong(file.path().string());
+			if (file.path().string().ends_with(".mp3")) {
+				log::debug("Adding custom song: {}", file.path().filename().string());
+				songManager.addSong(file.path().string());
+			}
 		}
 	} else {
 		auto downloadManager = MusicDownloadManager::sharedState();
 
+		// for every downloaded song push it to the m_songs vector
 		CCArrayExt<SongInfoObject *> songs = downloadManager->getDownloadedSongs();
 		for (auto song : songs) {
-			songManager.addSong(downloadManager->pathForSong(song->m_songID));
+			std::string songPath = downloadManager->pathForSong(song->m_songID);
+
+			if (songPath.ends_with(".mp3")) {
+				log::debug("Adding NG song: {}", songPath);
+				songManager.addSong(songPath);
+			}
 		}
 	}
+}
+
+$on_mod(Loaded) {
+	populateVector(Mod::get()->getSettingValue<bool>("useCustomSongs"));
 
 	songManager.pickRandomSong();
 }
 
 $execute {
 	listenForSettingChanges<bool>("useCustomSongs", [](bool value) {
+		// make sure m_songs its empty, we don't want to make a mess here
 		songManager.clearSongs();
 
-		if (value) {
-			auto configPath = geode::Mod::get()->getConfigDir();
+		/*
+			for every custom song file, push its path to m_songs
+			if they're ng songs also push the path bc we're going to use getPathForSong
+		*/
+		populateVector(value);
 
-			for (auto file : std::filesystem::directory_iterator(configPath)) {
-				if (file.path().string().ends_with(".mp3")) {
-					log::debug("Adding custom song: {}", file.path().filename().string());
-					songManager.addSong(file.path().string());
-				}
-			}
-		} else {
-			auto downloadManager = MusicDownloadManager::sharedState();
-
-			CCArrayExt<SongInfoObject *> songs = downloadManager->getDownloadedSongs();
-			for (auto song : songs) {
-				std::string songPath = downloadManager->pathForSong(song->m_songID);
-
-				if (songPath.ends_with(".mp3")) {
-					log::debug("Adding NG song: {}", songPath);
-					songManager.addSong(songPath);
-				}
-			}
-		}
-
-		// change the song when you click apply.
+		// change the song when you click apply, stoi will not like custom names.
 		auto gameManager = GameManager::sharedState();
 		auto audioEngine = FMODAudioEngine::sharedEngine();
 
