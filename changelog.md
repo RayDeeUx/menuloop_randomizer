@@ -1,3 +1,19 @@
+# v1.2.0
+
+- Added `Randomize on editor exit` setting.
+- Added `Notification time` setting.
+- Added `Use custom songs path` setting.
+- Added `SongManager.hpp`
+- Added custom songs support.
+- Added `stoi` to `Utils` (prolly it crashed because of Autonong)
+- Added a button to add custom songs (present in the settings tab)
+- Added a button for randomizing the song manually.
+- Most of the functions related to the `m_songs` vector are now in `SongManager`
+- Fixed crash when there are no songs (original menuLoop plays instead)
+- Fixed crash caused by switching the songs location.
+- Modified `PlayingCard` to fit the new system.
+- Now the song randomizes every time you change `Use custom songs path`
+
 # v1.1.0
 
 - Fixed crash when opening the game (missing textures crash)
