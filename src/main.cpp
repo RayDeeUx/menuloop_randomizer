@@ -179,7 +179,7 @@ $execute {
 
 			for (auto file : std::filesystem::directory_iterator(configPath)) {
 				if (file.path().string().ends_with(".mp3")) {
-					log::debug("Adding custom song: {}", file.path().string());
+					log::debug("Adding custom song: {}", file.path().filename().string());
 					songManager.addSong(file.path().string());
 				}
 			}
@@ -191,8 +191,8 @@ $execute {
 				std::string songPath = downloadManager->pathForSong(song->m_songID);
 
 				if (songPath.ends_with(".mp3")) {
-					log::debug("Adding NG song: {}", downloadManager->pathForSong(song->m_songID));
-					songManager.addSong(downloadManager->pathForSong(song->m_songID));
+					log::debug("Adding NG song: {}", songPath);
+					songManager.addSong(songPath);
 				}
 			}
 		}
