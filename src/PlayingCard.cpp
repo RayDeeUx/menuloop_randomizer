@@ -17,6 +17,9 @@ bool PlayingCard::init(gd::string songName, gd::string songId) {
 	if (!CCNode::init())
 		return false;
 
+	if (songName.empty())
+		songName = "Unknown";
+
 	auto mainNode = CCNode::create();
 
 	this->setID("now-playing-card"_spr);
