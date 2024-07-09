@@ -104,7 +104,7 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 
 		auto btn = CCMenuItemSpriteExtra::create(
 			CircleButtonSprite::create(
-				CCSprite::create("note-btn-sprite.png"_spr)
+				CCSprite::create("shuffle-btn-sprite.png"_spr)
 			),
 			this,
 			menu_selector(MenuLayerHook::shuffleBtn)
