@@ -4,7 +4,7 @@
 		"win": "2.206",
 		"android": "2.206"
 	},
-	"version": "v1.1.0",
+	"version": "v1.1.1",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developer": "elnexreal",
@@ -26,6 +26,14 @@
 			"description": "Shows a notification with the name of the currently playing song.",
 			"name": "Show notification"
 		},
+		"notificationTime": {
+			"type": "float",
+			"default": 0.5,
+			"min": 0.1,
+			"max": 2,
+			"description": "Modify the time that the notification is on screen",
+			"name": "Notification time"
+		},
 		"randomizeWhenExitingLevel": {
 			"type": "bool",
 			"default": true,
@@ -37,14 +45,6 @@
 			"default": true,
 			"description": "Randomize the song when you exit the editor",
 			"name": "Randomize on editor exit"
-		},
-		"notificationTime": {
-			"type": "float",
-			"default": 0.5,
-			"min": 0.1,
-			"max": 2,
-			"description": "Modify the time that the notification is on screen",
-			"name": "Notification time"
 		},
 		"useCustomSongsPath": {
 			"type": "bool",
