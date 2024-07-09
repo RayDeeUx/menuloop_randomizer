@@ -1,49 +1,29 @@
 #include "PlayingCard.hpp"
-#include "Song.hpp"
-#include "Utils.hpp"
+#include "SongManager.hpp"
 #include <Geode/Geode.hpp>
 #include <Geode/modify/EditorPauseLayer.hpp>
 #include <Geode/modify/GameManager.hpp>
 #include <Geode/modify/MenuLayer.hpp>
+#include <Geode/modify/MusicDownloadManager.hpp>
 #include <Geode/modify/PauseLayer.hpp>
-#include <vector>
 
 using namespace geode::prelude;
 
-// global variables
-std::vector<Song> songs;
-Song selectedSong;
-
-// this function is used to populate the vector with every .mp3 file in a folder
-void populateVector(std::filesystem::path songsPath) {
-	if (songs.size() >= 1)
-		songs.clear();
-
-	for (auto &song : std::filesystem::directory_iterator(songsPath)) {
-		if (song.path().string().ends_with(".mp3")) {
-			auto id = song.path().filename().string().substr(0, song.path().filename().string().length() - 4);
-			auto path = song.path().string();
-
-			Song *currentSong = new Song();
-			currentSong->id = id;
-			currentSong->path = path;
-			songs.push_back(*currentSong);
-		}
-	}
-
-	selectedSong = std::move(songs[Utils::randomIndex(songs.size())]);
-}
+SongManager *songManager = SongManager::get();
 
 struct GameManagerHook : Modify<GameManagerHook, GameManager> {
 	gd::string getMenuMusicFile() {
-		return selectedSong.path;
+		if (!songManager->getCurrentSong().empty())
+			return songManager->getCurrentSong();
+
+		return GameManager::getMenuMusicFile();
 	}
 };
 
 struct PauseLayerHook : Modify<PauseLayerHook, PauseLayer> {
 	void onQuit(CCObject *sender) {
 		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingLevel")) {
-			selectedSong = std::move(songs[Utils::randomIndex(songs.size())]);
+			songManager->pickRandomSong();
 		}
 
 		PauseLayer::onQuit(sender);
@@ -53,7 +33,7 @@ struct PauseLayerHook : Modify<PauseLayerHook, PauseLayer> {
 struct EditorPauseLayerHook : Modify<EditorPauseLayerHook, EditorPauseLayer> {
 	void onExitEditor(CCObject *sender) {
 		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor")) {
-			selectedSong = std::move(songs[Utils::randomIndex(songs.size())]);
+			songManager->pickRandomSong();
 		}
 
 		EditorPauseLayer::onExitEditor(sender);
@@ -72,34 +52,34 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		auto cardSettingValue = Mod::get()->getSettingValue<bool>("nowPlayingCard");
 		auto screenTime = Mod::get()->getSettingValue<double>("notificationTime");
 
-		if (cardSettingValue) {
-			if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
-				selectedSong.name = songObject->m_songName;
-			} else {
-				selectedSong.name = "Unknown";
-			}
+		// if (cardSettingValue) {
+		// 	if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
+		// 		selectedSong.name = songObject->m_songName;
+		// 	} else {
+		// 		selectedSong.name = "Unknown";
+		// 	}
 
-			auto card = PlayingCard::create(selectedSong.name, selectedSong.id);
-			card->position.x = screenSize.width / 2.0f;
-			card->position.y = screenSize.height;
+		// 	auto card = PlayingCard::create(selectedSong.name, selectedSong.id);
+		// 	card->position.x = screenSize.width / 2.0f;
+		// 	card->position.y = screenSize.height;
 
-			auto defaultPos = card->position;
-			auto posx = defaultPos.x;
-			auto posy = defaultPos.y;
+		// 	auto defaultPos = card->position;
+		// 	auto posx = defaultPos.x;
+		// 	auto posy = defaultPos.y;
 
-			card->setPosition(defaultPos);
-			this->addChild(card);
+		// 	card->setPosition(defaultPos);
+		// 	this->addChild(card);
 
-			auto sequence = CCSequence::create(
-				CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy - 24.0f}), 2.0f),
-				CCDelayTime::create(screenTime),
-				CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy}), 2.0f),
-				nullptr
-			);
-			card->runAction(sequence);
-		}
+		// 	auto sequence = CCSequence::create(
+		// 		CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy - 24.0f}), 2.0f),
+		// 		CCDelayTime::create(screenTime),
+		// 		CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy}), 2.0f),
+		// 		nullptr
+		// 	);
+		// 	card->runAction(sequence);
+		// }
 
-		// add a shuffle button
+		// // add a shuffle button
 		auto menu = getChildByID("right-side-menu");
 
 		auto btn = CCMenuItemSpriteExtra::create(
