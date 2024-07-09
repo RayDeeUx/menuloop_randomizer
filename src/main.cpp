@@ -49,10 +49,10 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 
 		auto downloadManager = MusicDownloadManager::sharedState();
 
-		// // create notif card stuff
-		// auto screenSize = CCDirector::get()->getWinSize();
-		// auto cardSettingValue = Mod::get()->getSettingValue<bool>("nowPlayingCard");
-		// auto screenTime = Mod::get()->getSettingValue<double>("notificationTime");
+		// create notif card stuff
+		auto screenSize = CCDirector::get()->getWinSize();
+		auto notificationEnabled = Mod::get()->getSettingValue<bool>("enableNotification");
+		auto notificationTime = Mod::get()->getSettingValue<double>("notificationTime");
 
 		// if (cardSettingValue) {
 		// 	if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
@@ -136,7 +136,7 @@ struct OptionsLayerHook : Modify<OptionsLayerHook, OptionsLayer> {
 };
 
 $on_mod(Loaded) {
-	if (Mod::get()->getSettingValue<bool>("useCustomSongsPath")) {
+	if (Mod::get()->getSettingValue<bool>("useCustomSongs")) {
 		auto configPath = geode::Mod::get()->getConfigDir();
 
 		for (auto file : std::filesystem::directory_iterator(configPath)) {
@@ -156,7 +156,7 @@ $on_mod(Loaded) {
 }
 
 $execute {
-	listenForSettingChanges<bool>("useCustomSongsPath", [](bool value) {
+	listenForSettingChanges<bool>("useCustomSongs", [](bool value) {
 		songManager.clearSongs();
 
 		if (value) {
