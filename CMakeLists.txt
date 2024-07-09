@@ -8,6 +8,7 @@ project(MenuLoopRandomizer VERSION 1.0.0)
 
 file(GLOB SOURCES
     src/*.cpp
+    src/ui/*.cpp
 )
 
 set(GEODE_BINDINGS_REPO_PATH ${CMAKE_SOURCE_DIR}/bindings)
