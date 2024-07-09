@@ -1,4 +1,5 @@
 #include "SongManager.hpp"
+#include "Utils.hpp"
 #include "ui/PlayingCard.hpp"
 #include <Geode/Geode.hpp>
 #include <Geode/loader/SettingEvent.hpp>
@@ -64,7 +65,7 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 				if (dotPos != std::string::npos)
 					songFileName = songFileName.string().substr(0, dotPos);
 
-				auto songInfo = downloadManager->getSongInfoObject(std::stoi(songFileName));
+				auto songInfo = downloadManager->getSongInfoObject(Utils::stoi(songFileName.string()));
 
 				card = PlayingCard::create(fmt::format("Now playing: {} ({})", songInfo->m_songName, songInfo->m_songID));
 			}
