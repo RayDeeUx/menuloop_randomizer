@@ -6,6 +6,7 @@
 #include <Geode/modify/GameManager.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 #include <Geode/modify/MusicDownloadManager.hpp>
+#include <Geode/modify/OptionsLayer.hpp>
 #include <Geode/modify/PauseLayer.hpp>
 
 using namespace geode::prelude;
@@ -99,7 +100,29 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 	}
 
 	void shuffleBtn(CCObject *sender) {
-		// todo
+struct OptionsLayerHook : Modify<OptionsLayerHook, OptionsLayer> {
+	void customSetup() {
+		OptionsLayer::customSetup();
+
+		auto menu = CCMenu::create();
+
+		auto btn = CCMenuItemSpriteExtra::create(
+			geode::CircleButtonSprite::create(
+				CCSprite::createWithSpriteFrameName("gj_folderBtn_001.png"),
+				geode::CircleBaseColor::Pink
+			),
+			this,
+			menu_selector(OptionsLayerHook::onSongsBtn)
+		);
+
+		btn->setPosition({-144.0f, -60.0f});
+		btn->m_scaleMultiplier = 1.1f;
+		menu->addChild(btn);
+		m_mainLayer->addChild(menu);
+	}
+
+	void onSongsBtn(CCObject *sender) {
+		utils::file::openFolder(Mod::get()->getConfigDir());
 	}
 };
 
