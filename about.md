@@ -10,6 +10,10 @@ If you want to add your own songs to the mod you should go to the settings tab, 
 
 ![Screenshot on how to use it](elnexreal.menuloop_randomizer/screenshot.png)
 
+## Android
+
+<co>*If you click the folder and you get sent to the geode folder itself, you should go to game/geode/config/elnexreal.menuloop_randomizer and put the songs there*</co>
+
 # Thanks to!
 
 - [hiimjustin000](https://github.com/hiimjustin000) <cj>for helping me with the bindings problem (i was using an outdated version of geode LMAO)</cj>
