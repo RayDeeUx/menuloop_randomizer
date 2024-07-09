@@ -1,6 +1,7 @@
 #include "SongManager.hpp"
 #include "ui/PlayingCard.hpp"
 #include <Geode/Geode.hpp>
+#include <Geode/loader/SettingEvent.hpp>
 #include <Geode/modify/EditorPauseLayer.hpp>
 #include <Geode/modify/GameManager.hpp>
 #include <Geode/modify/MenuLayer.hpp>
@@ -47,10 +48,10 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 
 		auto downloadManager = MusicDownloadManager::sharedState();
 
-		// create notif card stuff
-		auto screenSize = CCDirector::get()->getWinSize();
-		auto cardSettingValue = Mod::get()->getSettingValue<bool>("nowPlayingCard");
-		auto screenTime = Mod::get()->getSettingValue<double>("notificationTime");
+		// // create notif card stuff
+		// auto screenSize = CCDirector::get()->getWinSize();
+		// auto cardSettingValue = Mod::get()->getSettingValue<bool>("nowPlayingCard");
+		// auto screenTime = Mod::get()->getSettingValue<double>("notificationTime");
 
 		// if (cardSettingValue) {
 		// 	if (auto songObject = downloadManager->getSongInfoObject(stoi(selectedSong.id))) {
@@ -79,7 +80,7 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		// 	card->runAction(sequence);
 		// }
 
-		// // add a shuffle button
+		// add a shuffle button
 		auto menu = getChildByID("right-side-menu");
 
 		auto btn = CCMenuItemSpriteExtra::create(
@@ -120,4 +121,33 @@ $on_mod(Loaded) {
 	}
 
 	songManager.pickRandomSong();
+}
+
+$execute {
+	listenForSettingChanges<bool>("useCustomSongsPath", [](bool value) {
+		songManager.clearSongs();
+
+		if (value) {
+			auto configPath = geode::Mod::get()->getConfigDir();
+
+			for (auto file : std::filesystem::directory_iterator(configPath)) {
+				if (file.path().string().ends_with(".mp3")) {
+					log::debug("Adding custom song: {}", file.path().string());
+					songManager.addSong(file.path().string());
+				}
+			}
+		} else {
+			auto downloadManager = MusicDownloadManager::sharedState();
+
+			CCArrayExt<SongInfoObject *> songs = downloadManager->getDownloadedSongs();
+			for (auto song : songs) {
+				auto songPath = downloadManager->pathForSong(song->m_songID);
+
+				if (songPath.ends_with("mp3")) {
+					log::debug("Adding NG song: {}", downloadManager->pathForSong(song->m_songID));
+					songManager.addSong(downloadManager->pathForSong(song->m_songID));
+				}
+			}
+		}
+	});
 }
