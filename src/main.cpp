@@ -103,8 +103,20 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 };
 
 $on_mod(Loaded) {
-	std::filesystem::path ngSongsPath = CCFileUtils::get()->getWritablePath();
-	// std::filesystem::path customSongsPath = std::filesystem::path(CCFileUtils::get()->getWritablePath2()) / "resources";
+	if (Mod::get()->getSettingValue<bool>("useCustomSongsPath")) {
+		auto configPath = geode::Mod::get()->getConfigDir();
 
-	populateVector(ngSongsPath);
+		for (auto file : std::filesystem::directory_iterator(configPath)) {
+			songManager->addSong(file.path().string());
+		}
+	} else {
+		auto downloadManager = MusicDownloadManager::sharedState();
+
+		CCArrayExt<SongInfoObject *> songs = downloadManager->getDownloadedSongs();
+		for (auto song : songs) {
+			songManager->addSong(downloadManager->pathForSong(song->m_songID));
+		}
+	}
+
+	songManager->pickRandomSong();
 }

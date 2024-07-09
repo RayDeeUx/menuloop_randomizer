@@ -45,6 +45,12 @@
 			"max": 2,
 			"description": "Modify the time that the notification is on screen",
 			"name": "Notification time"
+		},
+		"useCustomSongsPath": {
+			"type": "bool",
+			"default": false,
+			"description": "Use your own songs instead of Newgrounds's (instructions are on the about.md file)",
+			"name": "Use custom songs path"
 		}
 	},
 	"resources": {
