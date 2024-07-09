@@ -173,7 +173,7 @@ $execute {
 
 			CCArrayExt<SongInfoObject *> songs = downloadManager->getDownloadedSongs();
 			for (auto song : songs) {
-				auto songPath = downloadManager->pathForSong(song->m_songID);
+				std::string songPath = downloadManager->pathForSong(song->m_songID);
 
 				if (songPath.ends_with("mp3")) {
 					log::debug("Adding NG song: {}", downloadManager->pathForSong(song->m_songID));
