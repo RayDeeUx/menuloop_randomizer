@@ -1,6 +1,8 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
 
+SongManager::SongManager() {}
+
 void SongManager::addSong(std::string path) {
 	m_songs.push_back(path);
 }

@@ -9,12 +9,12 @@
 
 using namespace geode::prelude;
 
-SongManager *songManager = SongManager::get();
+SongManager &songManager = SongManager::get();
 
 struct GameManagerHook : Modify<GameManagerHook, GameManager> {
 	gd::string getMenuMusicFile() {
-		if (!songManager->getCurrentSong().empty())
-			return songManager->getCurrentSong();
+		if (!songManager.getCurrentSong().empty())
+			return songManager.getCurrentSong();
 
 		return GameManager::getMenuMusicFile();
 	}
@@ -23,7 +23,7 @@ struct GameManagerHook : Modify<GameManagerHook, GameManager> {
 struct PauseLayerHook : Modify<PauseLayerHook, PauseLayer> {
 	void onQuit(CCObject *sender) {
 		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingLevel")) {
-			songManager->pickRandomSong();
+			songManager.pickRandomSong();
 		}
 
 		PauseLayer::onQuit(sender);
@@ -33,7 +33,7 @@ struct PauseLayerHook : Modify<PauseLayerHook, PauseLayer> {
 struct EditorPauseLayerHook : Modify<EditorPauseLayerHook, EditorPauseLayer> {
 	void onExitEditor(CCObject *sender) {
 		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor")) {
-			songManager->pickRandomSong();
+			songManager.pickRandomSong();
 		}
 
 		EditorPauseLayer::onExitEditor(sender);
@@ -107,16 +107,17 @@ $on_mod(Loaded) {
 		auto configPath = geode::Mod::get()->getConfigDir();
 
 		for (auto file : std::filesystem::directory_iterator(configPath)) {
-			songManager->addSong(file.path().string());
+			geode::log::debug("Adding song path: {}", file.path().string());
+			songManager.addSong(file.path().string());
 		}
 	} else {
 		auto downloadManager = MusicDownloadManager::sharedState();
 
 		CCArrayExt<SongInfoObject *> songs = downloadManager->getDownloadedSongs();
 		for (auto song : songs) {
-			songManager->addSong(downloadManager->pathForSong(song->m_songID));
+			songManager.addSong(downloadManager->pathForSong(song->m_songID));
 		}
 	}
 
-	songManager->pickRandomSong();
+	songManager.pickRandomSong();
 }
