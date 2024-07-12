@@ -55,20 +55,28 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 
 			auto songFileName = std::filesystem::path(songManager.getCurrentSong()).filename();
 
-			PlayingCard *card;
+			std::string notifString;
 
 			if (Mod::get()->getSettingValue<bool>("useCustomSongs")) {
-				card = PlayingCard::create(fmt::format("Now playing: {}", songFileName));
+				notifString = fmt::format("Now playing: {}", songFileName);
 			} else {
-				size_t dotPos = songFileName.string().find_last_of(".");
+				// in case that the current file selected is the original menuloop, don't gather any info
+				if (songManager.isOriginalMenuLoop()) {
+					notifString = fmt::format("Now playing: Original Menu Loop");
+				} else {
+					// if its not menuLoop.mp3 then get info
+					size_t dotPos = songFileName.string().find_last_of(".");
 
-				if (dotPos != std::string::npos)
-					songFileName = songFileName.string().substr(0, dotPos);
+					if (dotPos != std::string::npos)
+						songFileName = songFileName.string().substr(0, dotPos);
 
-				auto songInfo = downloadManager->getSongInfoObject(Utils::stoi(songFileName.string()));
+					auto songInfo = downloadManager->getSongInfoObject(Utils::stoi(songFileName.string()));
 
-				card = PlayingCard::create(fmt::format("Now playing: {} ({})", songInfo->m_songName, songInfo->m_songID));
+					notifString = fmt::format("Now playing: {} ({})", songInfo->m_songName, songInfo->m_songID);
+				}
 			}
+
+			auto card = PlayingCard::create(notifString);
 
 			card->position.x = screenSize.width / 2.0f;
 			card->position.y = screenSize.height;

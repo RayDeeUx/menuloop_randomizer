@@ -11,6 +11,7 @@ class SongManager {
 	void addSong(std::string);
 	void clearSongs();
 	void pickRandomSong();
+	bool isOriginalMenuLoop();
 	std::string getCurrentSong();
 
   private:
@@ -18,4 +19,5 @@ class SongManager {
 	SongManager(const SongManager &) = delete;
 	std::vector<std::string> m_songs;
 	std::string m_currentSong;
+	bool m_isMenuLoop;
 };

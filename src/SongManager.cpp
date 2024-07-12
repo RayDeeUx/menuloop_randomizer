@@ -15,12 +15,18 @@ void SongManager::clearSongs() {
 
 void SongManager::pickRandomSong() {
 	if (m_songs.size() >= 1) {
+		m_isMenuLoop = false;
 		m_currentSong = m_songs[Utils::randomIndex(m_songs.size())];
 	} else {
+		m_isMenuLoop = true;
 		m_currentSong = "menuLoop.mp3";
 	}
 }
 
 std::string SongManager::getCurrentSong() {
 	return m_currentSong;
+}
+
+bool SongManager::isOriginalMenuLoop() {
+	return m_isMenuLoop;
 }
