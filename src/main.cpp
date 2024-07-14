@@ -98,6 +98,9 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		}
 
 		// add a shuffle button
+		if (Mod::get()->getSettingValue<bool>("hideShuffleButton"))
+			return true;
+			
 		auto menu = getChildByID("right-side-menu");
 
 		auto btn = CCMenuItemSpriteExtra::create(
