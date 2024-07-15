@@ -1,3 +1,11 @@
+# v1.2.2
+
+- Added an option to enable the shuffle button (thx [reinmar](https://github.com/Reinmmar))
+
+# v1.2.1
+
+- Fixed crash caused by Newgrounds manager trying to gather info of default menuLoop.mp3
+
 # v1.2.0
 
 - Added `Randomize on editor exit` setting.
