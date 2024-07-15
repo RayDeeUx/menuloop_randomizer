@@ -20,11 +20,11 @@
 		"homepage": "https://github.com/elnexreal"
 	},
 	"settings": {
-		"hideShuffleButton": {
+		"enableShuffleButton": {
 			"type": "bool",
-			"default": false,
-			"description": "Hides the <cj>shuffle button</c> in the main menu",
-			"name": "Hide shuffle button"
+			"default": true,
+			"description": "Enables the <cj>shuffle button</c> in the main menu",
+			"name": "Enable shuffle button"
 		},
 		"enableNotification": {
 			"type": "bool",
