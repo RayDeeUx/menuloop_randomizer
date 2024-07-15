@@ -98,19 +98,21 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		}
 
 		// add a shuffle button
-		auto menu = getChildByID("right-side-menu");
+		if (Mod::get()->getSettingValue<bool>("enableShuffleButton")) {
+			auto menu = getChildByID("right-side-menu");
 
-		auto btn = CCMenuItemSpriteExtra::create(
-			CircleButtonSprite::create(
-				CCSprite::create("shuffle-btn-sprite.png"_spr)
-			),
-			this,
-			menu_selector(MenuLayerHook::shuffleBtn)
-		);
+			auto btn = CCMenuItemSpriteExtra::create(
+				CircleButtonSprite::create(
+					CCSprite::create("shuffle-btn-sprite.png"_spr)
+				),
+				this,
+				menu_selector(MenuLayerHook::shuffleBtn)
+			);
 
-		menu->addChild(btn);
+			menu->addChild(btn);
 
-		menu->updateLayout();
+			menu->updateLayout();
+		}
 
 		return true;
 	}
