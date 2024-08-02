@@ -137,6 +137,7 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 			auto posy = defaultPos.y;
 
 			card->setPosition(defaultPos);
+			card->setZOrder(200);
 			this->addChild(card);
 
 			auto sequence = CCSequence::create(
@@ -205,6 +206,10 @@ struct OptionsLayerHook : Modify<OptionsLayerHook, OptionsLayer> {
 	}
 };
 
+bool isSupportedExtension(std::string path) {
+	return path.ends_with(".mp3") || path.ends_with(".wav") || path.ends_with(".ogg") || path.ends_with(".oga");
+}
+
 void populateVector(bool customSongs) {
 	/*
 		if custom songs are enabled search for files in the config dir
@@ -220,7 +225,7 @@ void populateVector(bool customSongs) {
 
 		for (auto file : std::filesystem::directory_iterator(configPath)) {
 			auto filePathString = file.path().string();
-			if (filePathString.ends_with(".mp3") || filePathString.ends_with(".wav")) {
+			if (isSupportedExtension(filePathString)) {
 				log::debug("Adding custom song: {}", file.path().filename().string());
 				songManager.addSong(filePathString);
 			}
@@ -235,7 +240,7 @@ void populateVector(bool customSongs) {
 		for (auto song : songs) {
 			std::string songPath = downloadManager->pathForSong(song->m_songID);
 
-			if (songPath.ends_with(".mp3")) {
+			if (isSupportedExtension(songPath)) {
 				log::debug("Adding NG song: {}", songPath);
 				songManager.addSong(songPath);
 			}

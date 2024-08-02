@@ -1,7 +1,7 @@
 # v1.3.0
 
 - Added partial macOS support [custom songs only] (thx [raydeeux](https://github.com/RayDeeUx))
-- Added support for `.wav` files
+- Added support for `.wav`, `.ogg`, and `.oga` files
 
 # v1.2.2
 
