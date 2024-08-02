@@ -1,3 +1,7 @@
+# v1.3.0
+
+- Added partial macOS support [custom songs only] (thx [raydeeux](https://github.com/RayDeeUx))
+
 # v1.2.2
 
 - Added an option to enable the shuffle button (thx [reinmar](https://github.com/Reinmmar))

@@ -1,10 +1,11 @@
 {
-	"geode": "3.2.0",
+	"geode": "3.4.0",
 	"gd": {
 		"win": "2.206",
+		"mac": "2.206",
 		"android": "2.206"
 	},
-	"version": "v1.2.2",
+	"version": "v1.3.0",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developer": "elnexreal",
@@ -24,39 +25,40 @@
 			"type": "bool",
 			"default": true,
 			"description": "Enables the <cj>shuffle button</c> in the main menu",
-			"name": "Enable shuffle button"
+			"name": "Shuffle Button"
 		},
 		"enableNotification": {
 			"type": "bool",
 			"default": true,
 			"description": "Shows a notification with the name of the currently playing song.",
-			"name": "Show notification"
+			"name": "Show Notification"
 		},
 		"notificationTime": {
 			"type": "float",
 			"default": 0.5,
 			"min": 0.1,
 			"max": 2,
-			"description": "Modify the time that the notification is on screen",
-			"name": "Notification time"
+			"description": "Adjust the time that the notification is on screen.",
+			"name": "Notification Time"
 		},
 		"randomizeWhenExitingLevel": {
 			"type": "bool",
 			"default": true,
-			"description": "Randomize the song when you exit a level",
-			"name": "Randomize on level exit"
+			"description": "Randomize the song when you exit a level.",
+			"name": "Randomize on Level Exit"
 		},
 		"randomizeWhenExitingEditor": {
 			"type": "bool",
 			"default": true,
-			"description": "Randomize the song when you exit the editor",
-			"name": "Randomize on editor exit"
+			"description": "Randomize the song when you exit the editor.",
+			"name": "Randomize on Editor Exit"
 		},
 		"useCustomSongs": {
 			"type": "bool",
 			"default": false,
 			"description": "Use your own songs instead of Newgrounds's (instructions are on the about.md file)",
-			"name": "Use custom songs path"
+			"name": "Use custom songs path",
+			"platforms": ["win", "android"]
 		}
 	},
 	"resources": {

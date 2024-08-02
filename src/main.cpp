@@ -31,6 +31,7 @@ struct PauseLayerHook : Modify<PauseLayerHook, PauseLayer> {
 };
 
 struct EditorPauseLayerHook : Modify<EditorPauseLayerHook, EditorPauseLayer> {
+	#ifndef __APPLE__
 	void onExitEditor(CCObject *sender) {
 		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor")) {
 			songManager.pickRandomSong();
@@ -38,6 +39,51 @@ struct EditorPauseLayerHook : Modify<EditorPauseLayerHook, EditorPauseLayer> {
 
 		EditorPauseLayer::onExitEditor(sender);
 	}
+	#else
+	// this is for macOS
+	// don't hook onSaveAndPlay; that goes to playlayer
+	// don't hook onSave or the FLAlertLayer from it; that does not exit the editor
+	// can't hook onExitEditor for macOS due to aggressive inlining from robtop
+	void onSaveAndExit(CCObject *sender) {
+		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor")) {
+			songManager.pickRandomSong();
+		}
+
+		EditorPauseLayer::onSaveAndExit(sender);
+	}
+	void FLAlert_Clicked(FLAlertLayer* p0, bool btnTwo) {
+		bool isQualifedAlert = false;
+		// determine if the FLAlertLayer being clicked on is the one from onExitNoSave
+		/*
+		hooking FLAlertLayer::init() is also an option
+		but i'm not sure what this mod's stance is with global variables
+		*/
+		auto tArea = p0->m_mainLayer->getChildByIDRecursive("content-text-area");
+		if (auto textArea = typeinfo_cast<TextArea*>(tArea)) {
+			for (auto node : CCArrayExt<CCNode*>(textArea->getChildren())) {
+				if (typeinfo_cast<MultilineBitmapFont*>(node)) {
+					for (auto nodeTwo : CCArrayExt<CCNode*>(node->getChildren())) {
+						if (auto label = typeinfo_cast<CCLabelBMFont*>(nodeTwo)) {
+							auto labelString = std::string(label->getString());
+							isQualifedAlert = labelString == R"(Exit without saving? All unsaved changes will be lost!)";
+							log::debug("labelString: {}", labelString); // log::debug calls since that's kinda this mod's thing
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		log::debug("isQualifedAlert: {}", isQualifedAlert); // log::debug calls since that's kinda this mod's thing
+		log::debug("btnTwo: {}", btnTwo); // log::debug calls since that's kinda this mod's thing
+
+		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor") && isQualifedAlert && btnTwo) {
+			songManager.pickRandomSong();
+		}
+
+		EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
+	}
+	#endif
 };
 
 struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
@@ -49,6 +95,11 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		auto notificationEnabled = Mod::get()->getSettingValue<bool>("enableNotification");
 
 		if (notificationEnabled) {
+			#ifdef GEODE_IS_MACOS
+			bool isMacOS = true;
+			#else
+			bool isMacOS = false;
+			#endif
 			// create notif card stuff
 			auto screenSize = CCDirector::get()->getWinSize();
 			auto notificationTime = Mod::get()->getSettingValue<double>("notificationTime");
@@ -57,7 +108,7 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 
 			std::string notifString;
 
-			if (Mod::get()->getSettingValue<bool>("useCustomSongs")) {
+			if (Mod::get()->getSettingValue<bool>("useCustomSongs") || isMacOS) {
 				notifString = fmt::format("Now playing: {}", songFileName);
 			} else {
 				// in case that the current file selected is the original menuloop, don't gather any info
@@ -159,7 +210,12 @@ void populateVector(bool customSongs) {
 		if custom songs are enabled search for files in the config dir
 		if not, just use the newgrounds songs
 	*/
-	if (customSongs) {
+	#ifdef GEODE_IS_MACOS
+	bool isMacOS = true;
+	#else
+	bool isMacOS = false;
+	#endif
+	if (customSongs || isMacOS) {
 		auto configPath = geode::Mod::get()->getConfigDir();
 
 		for (auto file : std::filesystem::directory_iterator(configPath)) {
@@ -168,7 +224,9 @@ void populateVector(bool customSongs) {
 				songManager.addSong(file.path().string());
 			}
 		}
-	} else {
+	}
+	#ifndef GEODE_IS_MACOS
+	else {
 		auto downloadManager = MusicDownloadManager::sharedState();
 
 		// for every downloaded song push it to the m_songs vector
@@ -182,6 +240,7 @@ void populateVector(bool customSongs) {
 			}
 		}
 	}
+	#endif
 }
 
 $on_mod(Loaded) {
