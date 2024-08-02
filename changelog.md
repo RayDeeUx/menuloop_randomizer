@@ -1,7 +1,8 @@
 # v1.3.0
 
-- Added partial macOS support [custom songs only] (thx [raydeeux](https://github.com/RayDeeUx))
-- Added support for `.wav`, `.ogg`, and `.oga` files
+- Added partial macOS support [custom songs only]
+- Added support for `.wav`, `.ogg`, and `.oga` files (thx [raydeeux](https://github.com/RayDeeUx))
+- Set Z order of the "Now Playing" notification to 200 for easier readability against MenuLayer mods such as Overcharged Main Menu 
 
 # v1.2.2
 
