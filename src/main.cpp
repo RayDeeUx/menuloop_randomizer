@@ -219,9 +219,10 @@ void populateVector(bool customSongs) {
 		auto configPath = geode::Mod::get()->getConfigDir();
 
 		for (auto file : std::filesystem::directory_iterator(configPath)) {
-			if (file.path().string().ends_with(".mp3")) {
+			auto filePathString = file.path().string();
+			if (filePathString.ends_with(".mp3") || filePathString.ends_with(".wav")) {
 				log::debug("Adding custom song: {}", file.path().filename().string());
-				songManager.addSong(file.path().string());
+				songManager.addSong(filePathString);
 			}
 		}
 	}
