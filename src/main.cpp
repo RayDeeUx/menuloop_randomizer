@@ -134,7 +134,7 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		std::string notifString = "Now playing: ";
 
 		if (Mod::get()->getSettingValue<bool>("useCustomSongs")) {
-			notifString = notifString.append(songFileName);
+			notifString = notifString.append(songFileName.string());
 		} else {
 			// in case that the current file selected is the original menuloop, don't gather any info
 			if (songManager.isOriginalMenuLoop()) {
