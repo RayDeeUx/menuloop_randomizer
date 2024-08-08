@@ -1,14 +1,14 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
 #include "ui/PlayingCard.hpp"
-#include <Geode/Geode.hpp>
 #include <Geode/loader/SettingEvent.hpp>
 #include <Geode/modify/EditorPauseLayer.hpp>
 #include <Geode/modify/GameManager.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 #include <Geode/modify/MusicDownloadManager.hpp>
 #include <Geode/modify/OptionsLayer.hpp>
-#include <Geode/modify/PauseLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
+#include <Geode/loader/Dirs.hpp>
 
 using namespace geode::prelude;
 
@@ -20,22 +20,20 @@ struct GameManagerHook : Modify<GameManagerHook, GameManager> {
 	}
 };
 
-struct PauseLayerHook : Modify<PauseLayerHook, PauseLayer> {
-	void onQuit(CCObject *sender) {
-		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingLevel")) {
+struct PlayLayerHook : Modify<PlayLayerHook, PlayLayer> {
+	void onQuit() {
+		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingLevel"))
 			songManager.pickRandomSong();
-		}
 
-		PauseLayer::onQuit(sender);
+		PlayLayer::onQuit();
 	}
 };
 
 struct EditorPauseLayerHook : Modify<EditorPauseLayerHook, EditorPauseLayer> {
 	#ifndef __APPLE__
 	void onExitEditor(CCObject *sender) {
-		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor")) {
+		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor"))
 			songManager.pickRandomSong();
-		}
 
 		EditorPauseLayer::onExitEditor(sender);
 	}
@@ -54,9 +52,8 @@ struct EditorPauseLayerHook : Modify<EditorPauseLayerHook, EditorPauseLayer> {
 	-- raydeeux
 	*/
 	void onSaveAndExit(CCObject *sender) {
-		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor")) {
+		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor"))
 			songManager.pickRandomSong();
-		}
 
 		EditorPauseLayer::onSaveAndExit(sender);
 	}
@@ -69,10 +66,13 @@ struct EditorPauseLayerHook : Modify<EditorPauseLayerHook, EditorPauseLayer> {
 		consider this overkill, but it gets the job done.
 
 		i wanted to use getChildOfType to reduce the line count but ran into one of those
-		C-Tidy/Clang red squiggly lines about typeinfo_cast or whatever and got worried
-		so all you get is this. yep, nested forloops and typeinfo_cast calls for days.
+		C-Tidy/Clang red squiggly lines about typeinfo_cast or whatever and got worried,
+		so all you get is this.
+
+		yep, nested forloops and typeinfo_cast calls for days.
 
 		if anyone has a shorter solution that still hooks this function, go ahead.
+
 		for reference, unformatted FLAlertLayer main text is:
 		R"(Exit without saving? All unsaved changes will be lost!)"
 		-- raydeeux
@@ -96,9 +96,8 @@ struct EditorPauseLayerHook : Modify<EditorPauseLayerHook, EditorPauseLayer> {
 		log::debug("isQualifedAlert: {}", isQualifedAlert); // log::debug calls since that's kinda this mod's thing
 		log::debug("btnTwo: {}", btnTwo); // log::debug calls since that's kinda this mod's thing
 
-		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor") && isQualifedAlert && btnTwo) {
+		if (Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor") && isQualifedAlert && btnTwo)
 			songManager.pickRandomSong();
-		}
 
 		EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 	}
@@ -110,91 +109,92 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		if (!MenuLayer::init())
 			return false;
 
-		auto downloadManager = MusicDownloadManager::sharedState();
-		auto notificationEnabled = Mod::get()->getSettingValue<bool>("enableNotification");
+		// return early if notif card setting is disabled, reducing indentation
+		if (!Mod::get()->getSettingValue<bool>("enableNotification"))
+			return true;
 
-		if (notificationEnabled) {
-			#ifdef GEODE_IS_MACOS
-			bool isMacOS = true;
-			#else
-			bool isMacOS = false;
-			#endif
-			// create notif card stuff
-			auto screenSize = CCDirector::get()->getWinSize();
-			auto notificationTime = Mod::get()->getSettingValue<double>("notificationTime");
-
-			auto songFileName = std::filesystem::path(songManager.getCurrentSong()).filename();
-
-			std::string notifString;
-
-			if (Mod::get()->getSettingValue<bool>("useCustomSongs") || isMacOS) {
-				notifString = fmt::format("Now playing: {}", songFileName);
-			} else {
-				// in case that the current file selected is the original menuloop, don't gather any info
-				if (songManager.isOriginalMenuLoop()) {
-					notifString = fmt::format("Now playing: Original Menu Loop");
-				} else {
-					// if its not menuLoop.mp3 then get info
-					size_t dotPos = songFileName.string().find_last_of(".");
-
-					if (dotPos != std::string::npos)
-						songFileName = songFileName.string().substr(0, dotPos);
-
-					auto songInfo = downloadManager->getSongInfoObject(Utils::stoi(songFileName.string()));
-
-					notifString = fmt::format("Now playing: {} ({})", songInfo->m_songName, songInfo->m_songID);
-				}
-			}
-
-			auto card = PlayingCard::create(notifString);
-
-			card->position.x = screenSize.width / 2.0f;
-			card->position.y = screenSize.height;
-
-			auto defaultPos = card->position;
-			auto posx = defaultPos.x;
-			auto posy = defaultPos.y;
-
-			card->setPosition(defaultPos);
-			card->setZOrder(200);
-			this->addChild(card);
-
-			auto sequence = CCSequence::create(
-				CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy - 24.0f}), 2.0f),
-				CCDelayTime::create(notificationTime),
-				CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy}), 2.0f),
-				nullptr
-			);
-			card->runAction(sequence);
-		}
+		MenuLayerHook::generateNotifcation();
 
 		// add a shuffle button
-		if (Mod::get()->getSettingValue<bool>("enableShuffleButton")) {
-			auto menu = getChildByID("right-side-menu");
+		if (!Mod::get()->getSettingValue<bool>("enableShuffleButton"))
+			return true;
 
-			auto btn = CCMenuItemSpriteExtra::create(
-				CircleButtonSprite::create(
-					CCSprite::create("shuffle-btn-sprite.png"_spr)
-				),
-				this,
-				menu_selector(MenuLayerHook::shuffleBtn)
-			);
-
-			menu->addChild(btn);
-
-			menu->updateLayout();
-		}
+		MenuLayerHook::addShuffleButton();
 
 		return true;
 	}
 
-	void shuffleBtn(CCObject *sender) {
-		auto gameManager = GameManager::sharedState();
-		auto audioEngine = FMODAudioEngine::sharedEngine();
+	void generateNotifcation() {
+		auto downloadManager = MusicDownloadManager::sharedState();
+		// create notif card stuff
+		auto screenSize = CCDirector::get()->getWinSize();
 
-		audioEngine->m_backgroundMusicChannel->stop();
+		auto songFileName = std::filesystem::path(songManager.getCurrentSong()).filename();
+
+		std::string notifString = "Now playing: ";
+
+		if (Mod::get()->getSettingValue<bool>("useCustomSongs")) {
+			notifString = notifString.append(songFileName);
+		} else {
+			// in case that the current file selected is the original menuloop, don't gather any info
+			if (songManager.isOriginalMenuLoop()) {
+				notifString = notifString.append("Original Menu Loop by RobTop");
+			} else {
+				// if its not menuLoop.mp3, then get info
+				size_t dotPos = songFileName.string().find_last_of(".");
+
+				if (dotPos != std::string::npos)
+					songFileName = songFileName.string().substr(0, dotPos);
+
+				auto songInfo = downloadManager->getSongInfoObject(Utils::stoi(songFileName.string()));
+
+				notifString = notifString.append(fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID));
+			}
+		}
+
+		auto card = PlayingCard::create(notifString);
+
+		card->position.x = screenSize.width / 2.0f;
+		card->position.y = screenSize.height;
+
+		auto defaultPos = card->position;
+		auto posx = defaultPos.x;
+		auto posy = defaultPos.y;
+
+		card->setPosition(defaultPos);
+		card->setZOrder(200);
+		this->addChild(card);
+
+		auto sequence = CCSequence::create(
+			CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy - 24.0f}), 2.0f),
+			CCDelayTime::create(Mod::get()->getSettingValue<double>("notificationTime")),
+			CCEaseInOut::create(CCMoveTo::create(1.5f, {posx, posy}), 2.0f),
+			nullptr
+		);
+		card->runAction(sequence);
+	}
+
+	void addShuffleButton() {
+		auto menu = getChildByID("right-side-menu");
+
+		auto btn = CCMenuItemSpriteExtra::create(
+			CircleButtonSprite::create(
+				CCSprite::create("shuffle-btn-sprite.png"_spr)
+			),
+			this,
+			menu_selector(MenuLayerHook::onShuffleBtn)
+		);
+		btn->setID("shuffle-button"_spr);
+
+		menu->addChild(btn);
+		menu->updateLayout();
+	}
+
+	void onShuffleBtn(CCObject *sender) {
+		FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
 		songManager.pickRandomSong();
-		gameManager->playMenuMusic();
+		GameManager::sharedState()->playMenuMusic();
+		MenuLayerHook::generateNotifcation();
 	}
 };
 
@@ -216,7 +216,11 @@ struct OptionsLayerHook : Modify<OptionsLayerHook, OptionsLayer> {
 
 		btn->setPosition({-144.0f, -60.0f});
 		btn->m_scaleMultiplier = 1.1f;
+		btn->setID("songs-button"_spr);
+
 		menu->addChild(btn);
+		menu->setID("songs-button-menu"_spr);
+
 		m_mainLayer->addChild(menu);
 	}
 
@@ -226,7 +230,7 @@ struct OptionsLayerHook : Modify<OptionsLayerHook, OptionsLayer> {
 };
 
 bool isSupportedExtension(std::string path) {
-	return path.ends_with(".mp3") || path.ends_with(".wav") || path.ends_with(".ogg") || path.ends_with(".oga");
+	return path.ends_with(".mp3") || path.ends_with(".wav") || path.ends_with(".ogg") || path.ends_with(".oga") || path.ends_with(".flac");
 }
 
 void populateVector(bool customSongs) {
@@ -234,12 +238,7 @@ void populateVector(bool customSongs) {
 		if custom songs are enabled search for files in the config dir
 		if not, just use the newgrounds songs
 	*/
-	#ifdef GEODE_IS_MACOS
-	bool isMacOS = true;
-	#else
-	bool isMacOS = false;
-	#endif
-	if (customSongs || isMacOS) {
+	if (customSongs) {
 		auto configPath = geode::Mod::get()->getConfigDir();
 
 		for (auto file : std::filesystem::directory_iterator(configPath)) {
@@ -249,9 +248,8 @@ void populateVector(bool customSongs) {
 				songManager.addSong(filePathString);
 			}
 		}
-	}
-	#ifndef GEODE_IS_MACOS
-	else {
+	} else {
+		#ifndef GEODE_IS_MACOS
 		auto downloadManager = MusicDownloadManager::sharedState();
 
 		// for every downloaded song push it to the m_songs vector
@@ -264,8 +262,10 @@ void populateVector(bool customSongs) {
 				songManager.addSong(songPath);
 			}
 		}
+		#else
+
+		#endif
 	}
-	#endif
 }
 
 $on_mod(Loaded) {
@@ -276,7 +276,7 @@ $on_mod(Loaded) {
 
 $execute {
 	listenForSettingChanges<bool>("useCustomSongs", [](bool value) {
-		// make sure m_songs its empty, we don't want to make a mess here
+		// make sure m_songs is empty, we don't want to make a mess here
 		songManager.clearSongs();
 
 		/*
@@ -286,11 +286,9 @@ $execute {
 		populateVector(value);
 
 		// change the song when you click apply, stoi will not like custom names.
-		auto gameManager = GameManager::sharedState();
-		auto audioEngine = FMODAudioEngine::sharedEngine();
 
-		audioEngine->m_backgroundMusicChannel->stop();
+		FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
 		songManager.pickRandomSong();
-		gameManager->playMenuMusic();
+		GameManager::sharedState()->playMenuMusic();
 	});
 }
