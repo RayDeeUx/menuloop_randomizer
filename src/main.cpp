@@ -249,22 +249,34 @@ void populateVector(bool customSongs) {
 			}
 		}
 	} else {
-		#ifndef GEODE_IS_MACOS
 		auto downloadManager = MusicDownloadManager::sharedState();
 
 		// for every downloaded song push it to the m_songs vector
+		/*
+		getDownloadedSongs() function call binding for macOS found
+		from ninXout (ARM) and hiimjustin000 (Intel + verification)
+		*/
 		CCArrayExt<SongInfoObject *> songs = downloadManager->getDownloadedSongs();
 		for (auto song : songs) {
 			std::string songPath = downloadManager->pathForSong(song->m_songID);
 
-			if (isSupportedExtension(songPath)) {
-				log::debug("Adding NG song: {}", songPath);
-				songManager.addSong(songPath);
-			}
-		}
-		#else
+			if (!isSupportedExtension(songPath))
+				continue;
 
-		#endif
+			log::debug("Adding Newgrounds song: {}", songPath);
+			songManager.addSong(songPath);
+		}
+		// same thing as NG but for music library as well --ninXout
+		std::filesystem::path mlsongs = geode::dirs::getGeodeDir().parent_path() / "Resources" / "songs";
+		for (const std::filesystem::path& dirEntry : std::filesystem::recursive_directory_iterator(mlsongs)) {
+			std::string songPath = dirEntry.string();
+
+			if (!isSupportedExtension(songPath))
+				continue;
+
+			log::debug("Adding Music Library song: {}", songPath);
+			songManager.addSong(songPath);
+		}
 	}
 }
 
