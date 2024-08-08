@@ -39,7 +39,16 @@
 			"min": 0.1,
 			"max": 5,
 			"description": "Adjust the time that the notification is on screen.",
-			"name": "Notification Time"
+			"name": "Notification Time",
+			"control": {
+				"input": true,
+				"slider": true,
+				"arrows": true,
+				"big-arrows": true,
+				"arrow-step": 0.5,
+				"big-arrow-step": 1,
+				"slider-step": 0.1
+			}
 		},
 		"randomizeWhenExitingLevel": {
 			"type": "bool",

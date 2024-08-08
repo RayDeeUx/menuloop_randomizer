@@ -5,6 +5,8 @@
 - Set Z order of the "Now Playing" notification to 200 for easier readability against most MenuLayer mods (such as Overcharged Main Menu)
 - Shuffling the song now generates a new "Now Playing" notification
 - Increase "Now Playing" notification maximum duration to 5 seconds
+- Add better slider control for adjusting notification duration
+- Added Node IDs to nodes added by this mod
 - Squash a few bugs, optimize a few things, minimize likelihood of potential crashes
 
 # v1.2.2
