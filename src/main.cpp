@@ -256,10 +256,12 @@ void populateVector(bool customSongs) {
 
 		for (auto file : std::filesystem::directory_iterator(configPath)) {
 			auto filePathString = file.path().string();
-			if (isSupportedExtension(filePathString)) {
-				log::debug("Adding custom song: {}", file.path().filename().string());
-				songManager.addSong(filePathString);
-			}
+
+			if (!isSupportedExtension(filePathString))
+				continue;
+
+			log::debug("Adding custom song: {}", file.path().filename().string());
+			songManager.addSong(filePathString);
 		}
 	} else {
 		auto downloadManager = MusicDownloadManager::sharedState();
