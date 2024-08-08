@@ -6,7 +6,7 @@ This mod allows you to randomize the menu song every time you open the game, pic
 
 # How to add custom songs
 
-If you want to add your own songs to the mod you should go to the settings tab, then click the <c>pink</c> folder button. Just like with grabbing songs you've downloaded from Newgrounds or RobTop's music library, `.mp3` and `.ogg` files are supported.
+If you want to add your own songs to the mod you should go to the settings tab, then click the <cd>pink</c> folder button. Just like with grabbing songs you've downloaded from Newgrounds or RobTop's music library, `.mp3` and `.ogg` files are supported.
 
 ![Screenshot on how to use it. Install the mod to view this screenshot!](elnexreal.menuloop_randomizer/screenshot.png)
 
