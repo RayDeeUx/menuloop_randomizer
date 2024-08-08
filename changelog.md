@@ -1,8 +1,11 @@
 # v1.3.0
 
-- Added partial macOS support [custom songs only]
-- Added support for `.wav`, `.ogg`, and `.oga` files (thx [raydeeux](https://github.com/RayDeeUx))
-- Set Z order of the "Now Playing" notification to 200 for easier readability against MenuLayer mods such as Overcharged Main Menu 
+- Added macOS support (thx [ninxout](https://github.com/ninXout), [raydeeux](https://github.com/RayDeeUx), and [hiimjustin000](https://github.com/hiimjustin000))
+- Added support for `.wav`, `.ogg`/`.oga`, and `.flac` files for custom songs
+- Set Z order of the "Now Playing" notification to 200 for easier readability against most MenuLayer mods (such as Overcharged Main Menu)
+- Shuffling the song now generates a new "Now Playing" notification
+- Increase "Now Playing" notification maximum duration to 5 seconds
+- Squash a few bugs, optimize a few things, minimize likelihood of potential crashes
 
 # v1.2.2
 

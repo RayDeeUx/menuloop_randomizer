@@ -56,7 +56,7 @@
 		"useCustomSongs": {
 			"type": "bool",
 			"default": false,
-			"description": "Use your own songs instead of those you have downloaded from Newgrounds or RobTop's music library.\n\n<cy>Find instructions in the mod info popup.</c>",
+			"description": "Use your own songs instead of those you have downloaded from Newgrounds or RobTop's Music Library.\n\n<cy>Find instructions in the mod info popup.</c>",
 			"name": "Use Custom Songs Instead"
 		}
 	},

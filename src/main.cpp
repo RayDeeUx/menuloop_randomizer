@@ -140,15 +140,24 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 			if (songManager.isOriginalMenuLoop()) {
 				notifString = notifString.append("Original Menu Loop by RobTop");
 			} else {
+				log::info("attempting to play {}", songFileName.string());
 				// if its not menuLoop.mp3, then get info
-				size_t dotPos = songFileName.string().find_last_of(".");
+				size_t dotPos = songFileName.string().find_last_of('.');
 
-				if (dotPos != std::string::npos)
+				if (dotPos == std::string::npos) {
+					notifString = notifString.append("Unknown");
+				} else {
 					songFileName = songFileName.string().substr(0, dotPos);
 
-				auto songInfo = downloadManager->getSongInfoObject(Utils::stoi(songFileName.string()));
+					auto songInfo = downloadManager->getSongInfoObject(Utils::stoi(songFileName.string()));
 
-				notifString = notifString.append(fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID));
+					// sometimes songInfo is nullptr, so improvise
+					if (songInfo) {
+						notifString = notifString.append(fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID));
+					} else {
+						notifString = notifString.append(songFileName.string());
+					}
+				}
 			}
 		}
 
@@ -163,6 +172,7 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 
 		card->setPosition(defaultPos);
 		card->setZOrder(200);
+		card->setID("now-playing"_spr);
 		this->addChild(card);
 
 		auto sequence = CCSequence::create(
@@ -191,6 +201,9 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 	}
 
 	void onShuffleBtn(CCObject *sender) {
+		if (auto card = getChildByIDRecursive("now-playing"_spr)) {
+			card->removeMeAndCleanup();
+		}
 		FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
 		songManager.pickRandomSong();
 		GameManager::sharedState()->playMenuMusic();
