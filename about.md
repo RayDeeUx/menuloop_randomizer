@@ -2,7 +2,7 @@
 
 Are you bored of hearing the same menu song <cr>over & over</cr>? Well... **No more of that!**
 
-This mod allows you to randomize the menu song every time you open the game, picking from a random downloaded song from Newgrounds, RobTop's Music Library, or your own songs. `.mp3`, `.ogg`, `.oga`, and `.wav` files are supported.
+This mod allows you to randomize the menu song every time you open the game, picking from a random downloaded song from Newgrounds, RobTop's Music Library, or your own songs. `.mp3`, `.ogg`/`.oga`, `.wav`, and `.flac` files are supported.
 
 # How to add custom songs
 
