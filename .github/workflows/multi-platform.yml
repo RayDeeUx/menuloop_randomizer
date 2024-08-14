@@ -36,8 +36,11 @@ jobs:
         uses: geode-sdk/build-geode-mod@main
         with:
           # cli: "v3.0.0" # not sure why this is here --raydeeux
-          bindings: RayDeeUx/bindings # comment this out to use geode-sdk/bindings
-          bindings-ref: i-know-this-is-behind-but-i-need-it-for-menulooprandomizer # comment this out to use default branch
+          # export-pdb: true # [vscode] comment this out (and the line above!) to Release mode
+          # sdk: nightly # [vscode] comment this out to use stable Geode SDK version
+          # bindings: RayDeeUx/bindings # comment this out to use geode-sdk/bindings
+          # bindings-ref: menulooprandomizer # comment this out to use default branch
+          # build-config: RelWithDebInfo # [vscode] comment this out (and the line below!) to Release mode
           combine: true
           target: ${{ matrix.config.target }}
 
