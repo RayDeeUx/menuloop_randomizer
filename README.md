@@ -1,4 +1,4 @@
-# This mod is not being maintained by [RayDeeUx](https://github.com/RayDeeUx).
+# This mod is being maintained by [RayDeeUx](https://github.com/RayDeeUx).
 
 # MenuLoopRandomizer
 This is where she makes a mod.

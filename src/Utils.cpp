@@ -21,7 +21,7 @@ int Utils::stoi(std::string text) {
 }
 
 bool Utils::isSupportedExtension(std::string path) {
-	return path.ends_with(".mp3") || path.ends_with(".wav") || path.ends_with(".ogg") || path.ends_with(".oga") || path.ends_with(".flac");
+	return !path.empty() && (path.ends_with(".mp3") || path.ends_with(".wav") || path.ends_with(".ogg") || path.ends_with(".oga") || path.ends_with(".flac"));
 }
 
 bool Utils::getBool(std::string setting) {

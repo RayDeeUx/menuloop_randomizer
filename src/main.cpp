@@ -15,12 +15,14 @@ void populateVector(bool customSongs) {
 	*/
 	if (customSongs) {
 		for (auto file : std::filesystem::directory_iterator(configDir)) {
-			auto filePathString = file.path().string();
+			if (!std::filesystem::exists(file)) continue;
 
-			if (!Utils::isSupportedExtension(filePathString))
-				continue;
+			auto filePath = file.path();
+			auto filePathString = filePath.string();
 
-			log::debug("Adding custom song: {}", file.path().filename().string());
+			if (!Utils::isSupportedExtension(filePathString)) continue;
+
+			log::debug("Adding custom song: {}", filePath.filename().string());
 			songManager.addSong(filePathString);
 		}
 	} else {
@@ -33,21 +35,24 @@ void populateVector(bool customSongs) {
 		*/
 		CCArrayExt<SongInfoObject *> songs = downloadManager->getDownloadedSongs();
 		for (auto song : songs) {
+			if (!song) continue;
+			
 			std::string songPath = downloadManager->pathForSong(song->m_songID);
 
-			if (!Utils::isSupportedExtension(songPath))
-				continue;
+			if (!Utils::isSupportedExtension(songPath)) continue;
 
 			log::debug("Adding Newgrounds song: {}", songPath);
 			songManager.addSong(songPath);
 		}
 		// same thing as NG but for music library as well --ninXout
-		std::filesystem::path mlsongs = dirs::getGeodeDir().parent_path() / "Resources" / "songs";
-		for (const std::filesystem::path& dirEntry : std::filesystem::recursive_directory_iterator(mlsongs)) {
+		std::filesystem::path musicLibrarySongs = dirs::getGeodeDir().parent_path() / "Resources" / "songs";
+		if (!std::filesystem::exists(musicLibrarySongs)) return;
+		for (const std::filesystem::path& dirEntry : std::filesystem::recursive_directory_iterator(musicLibrarySongs)) {
+			if (!std::filesystem::exists(dirEntry)) continue;
+
 			std::string songPath = dirEntry.string();
 
-			if (!Utils::isSupportedExtension(songPath))
-				continue;
+			if (!Utils::isSupportedExtension(songPath)) continue;
 
 			log::debug("Adding Music Library song: {}", songPath);
 			songManager.addSong(songPath);
