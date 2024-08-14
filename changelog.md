@@ -2,6 +2,7 @@
 - Added setting to choose font for "Now Playing" notifications
 - Added an extra child folder in the mod's config directory for enabling/disabling menuloops easily
 - Hopefully fix the mistake where macOS ARM support wasn't added the first time in v1.3.0
+- Fix arrow steps in settings being wonky
 # v1.3.0
 - Added macOS support (thx [ninxout](https://github.com/ninXout), [raydeeux](https://github.com/RayDeeUx), and [hiimjustin000](https://github.com/hiimjustin000))
 - Added support for `.wav`, `.ogg`/`.oga`, and `.flac` files for custom songs

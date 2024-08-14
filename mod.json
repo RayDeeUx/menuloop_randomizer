@@ -47,8 +47,8 @@
 				"slider": true,
 				"arrows": true,
 				"big-arrows": true,
-				"arrow-step": 0.5,
-				"big-arrow-step": 1,
+				"arrow-step": 1,
+				"big-arrow-step": 2,
 				"slider-step": 0.1
 			}
 		},
