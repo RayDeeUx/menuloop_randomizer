@@ -1,4 +1,4 @@
-<h2 align="center">This mod is not being maintained by me, instead you should check the forks -> https://github.com/elnexreal/menuloop_randomizer/forks <-</h2>
+<h2 align="center">This mod is not being maintained by [RayDeeUx](https://github.com/RayDeeUx).</h2>
 
 # MenuLoopRandomizer
 This is where she makes a mod.
