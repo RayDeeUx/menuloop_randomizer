@@ -19,3 +19,19 @@ int Utils::stoi(std::string text) {
 	// convert the digits string to an integer (or 0 if empty)
 	return digits.empty() ? 0 : std::stoi(digits);
 }
+
+bool Utils::isSupportedExtension(std::string path) {
+	return path.ends_with(".mp3") || path.ends_with(".wav") || path.ends_with(".ogg") || path.ends_with(".oga") || path.ends_with(".flac");
+}
+
+bool Utils::getBool(std::string setting) {
+	return geode::Mod::get()->getSettingValue<bool>(setting);
+}
+
+#include "SongManager.hpp"
+
+void Utils::setNewSong() {
+	FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
+	SongManager::get().pickRandomSong();
+	GameManager::sharedState()->playMenuMusic();
+}

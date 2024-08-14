@@ -5,16 +5,12 @@
 		"mac": "2.206",
 		"android": "2.206"
 	},
-	"version": "v1.3.0",
+	"version": "v1.4.0",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
-	"developer": "elnexreal",
+	"developers": ["elnexreal", "RayDeeUx"],
 	"description": "Menu Loop randomizer for GD.",
-	"tags": [
-		"music",
-		"interface",
-		"enhancement"
-	],
+	"tags": ["music", "interface", "enhancement"],
 	"links": {
 		"community": "https://discord.gg/vfFazvmKKb",
 		"source": "https://github.com/elnexreal/menuloop_randomizer",
@@ -22,24 +18,30 @@
 	},
 	"settings": {
 		"enableShuffleButton": {
+			"name": "Shuffle Button",
+			"description": "Enables the <cj>shuffle button</c> in the main menu.",
 			"type": "bool",
-			"default": true,
-			"description": "Enables the <cj>shuffle button</c> in the main menu",
-			"name": "Shuffle Button"
+			"default": true
 		},
 		"enableNotification": {
-			"type": "bool",
-			"default": true,
+			"name": "Show Notification",
 			"description": "Shows a notification with the name of the currently playing song.",
-			"name": "Show Notification"
+			"type": "bool",
+			"default": true
+		},
+		"removeSuffix": {
+			"name": "Hide File Extension",
+			"description": "Hides the file extension of the song being played.\n<cy>Only applies when using custom songs as the menu loop.</c>",
+			"type": "bool",
+			"default": true
 		},
 		"notificationTime": {
+			"name": "Notification Time",
 			"type": "float",
 			"default": 0.5,
 			"min": 0.1,
 			"max": 5,
 			"description": "Adjust the time that the notification is on screen.",
-			"name": "Notification Time",
 			"control": {
 				"input": true,
 				"slider": true,
@@ -50,23 +52,40 @@
 				"slider-step": 0.1
 			}
 		},
+		"notificationFont": {
+			"name": "Notification Font",
+			"description": "Choose the font the notification will use. Default is 17 for legacy purposes.\n\n<cj>0 for Pusab, -1 for Golden Pusab, and -2 for the font you see when viewing level comments.</c>\n<cy>To use font numbers greater than 0: refer to the level editor for the font each number corresponds to, subtract that number by 1, and then put it here.</c>",
+			"type": "int",
+			"default": 17,
+			"min": -2,
+			"max": 59,
+			"control": {
+				"input": true,
+				"slider": true,
+				"arrows": true,
+				"big-arrows": true,
+				"arrow-step": 1,
+				"big-arrow-step": 5,
+				"slider-step": 1
+			}
+		},
 		"randomizeWhenExitingLevel": {
-			"type": "bool",
-			"default": true,
+			"name": "Randomize on Level Exit",
 			"description": "Randomize the song when you exit a level.",
-			"name": "Randomize on Level Exit"
+			"type": "bool",
+			"default": true
 		},
 		"randomizeWhenExitingEditor": {
-			"type": "bool",
-			"default": true,
+			"name": "Randomize on Editor Exit",
 			"description": "Randomize the song when you exit the editor.",
-			"name": "Randomize on Editor Exit"
+			"type": "bool",
+			"default": true
 		},
 		"useCustomSongs": {
-			"type": "bool",
-			"default": false,
+			"name": "Use Custom Songs Instead",
 			"description": "Use your own songs instead of those you have downloaded from Newgrounds or RobTop's Music Library.\n\n<cy>Find instructions in the mod info popup.</c>",
-			"name": "Use Custom Songs Instead"
+			"type": "bool",
+			"default": false
 		}
 	},
 	"resources": {
