@@ -109,17 +109,11 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 		if (!MenuLayer::init())
 			return false;
 
-		// return early if notif card setting is disabled, reducing indentation
-		if (!Mod::get()->getSettingValue<bool>("enableNotification"))
-			return true;
+		if (Mod::get()->getSettingValue<bool>("enableNotification"))
+			MenuLayerHook::generateNotifcation();
 
-		MenuLayerHook::generateNotifcation();
-
-		// add a shuffle button
-		if (!Mod::get()->getSettingValue<bool>("enableShuffleButton"))
-			return true;
-
-		MenuLayerHook::addShuffleButton();
+		if (Mod::get()->getSettingValue<bool>("enableShuffleButton"))
+			MenuLayerHook::addShuffleButton();
 
 		return true;
 	}
@@ -152,11 +146,10 @@ struct MenuLayerHook : Modify<MenuLayerHook, MenuLayer> {
 					auto songInfo = downloadManager->getSongInfoObject(Utils::stoi(songFileName.string()));
 
 					// sometimes songInfo is nullptr, so improvise
-					if (songInfo) {
+					if (songInfo)
 						notifString = notifString.append(fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID));
-					} else {
+					else
 						notifString = notifString.append(songFileName.string());
-					}
 				}
 			}
 		}
@@ -256,10 +249,12 @@ void populateVector(bool customSongs) {
 
 		for (auto file : std::filesystem::directory_iterator(configPath)) {
 			auto filePathString = file.path().string();
-			if (isSupportedExtension(filePathString)) {
-				log::debug("Adding custom song: {}", file.path().filename().string());
-				songManager.addSong(filePathString);
-			}
+
+			if (!isSupportedExtension(filePathString))
+				continue;
+
+			log::debug("Adding custom song: {}", file.path().filename().string());
+			songManager.addSong(filePathString);
 		}
 	} else {
 		auto downloadManager = MusicDownloadManager::sharedState();
