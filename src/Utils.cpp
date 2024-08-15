@@ -28,8 +28,23 @@ bool Utils::getBool(std::string setting) {
 	return geode::Mod::get()->getSettingValue<bool>(setting);
 }
 
+cocos2d::CCNode* Utils::findCard() {
+	return cocos2d::CCDirector::get()->getRunningScene()->getChildByIDRecursive("now-playing"_spr);
+}
+
+cocos2d::CCNode* Utils::findCardRemotely() {
+	if (const auto gm = GameManager::get()) {
+		if (const auto menuLayer = gm->m_menuLayer) {
+			if (const auto card = menuLayer->getChildByIDRecursive("now-playing"_spr)) {
+				return card;
+			}
+		}
+	}
+	return nullptr;
+}
+
 void Utils::removeCard() {
-	if (auto card = cocos2d::CCDirector::get()->getRunningScene()->getChildByIDRecursive("now-playing"_spr))
+	if (auto card = Utils::findCard())
 		card->removeMeAndCleanup();
 }
 
