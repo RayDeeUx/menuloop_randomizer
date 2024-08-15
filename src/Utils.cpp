@@ -28,16 +28,6 @@ bool Utils::getBool(std::string setting) {
 	return geode::Mod::get()->getSettingValue<bool>(setting);
 }
 
-void Utils::keepCardAcrossScenes() {
-	if (const auto gm = GameManager::get()) {
-		if (const auto menuLayer = gm->m_menuLayer) {
-			if (const auto card = menuLayer->getChildByIDRecursive("now-playing"_spr)) {
-				geode::SceneManager::get()->keepAcrossScenes(card);
-			}
-		}
-	}
-}
-
 void Utils::removeCard() {
 	if (auto card = cocos2d::CCDirector::get()->getRunningScene()->getChildByIDRecursive("now-playing"_spr))
 		card->removeMeAndCleanup();

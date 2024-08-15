@@ -30,7 +30,7 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 
 		std::string notifString;
 		auto prefix = Mod::get()->getSettingValue<std::string>("customPrefix");
-		if (!prefix.empty() || prefix != "[Empty]")
+		if (prefix != "[Empty]")
 			notifString = fmt::format("{}: ", prefix);
 
 		if (Utils::getBool("useCustomSongs")) {
