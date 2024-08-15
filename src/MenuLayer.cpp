@@ -9,6 +9,7 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 	struct Fields {
 		SongManager &songManager = SongManager::get();
 	};
+
 	bool init() {
 		if (!MenuLayer::init())
 			return false;
@@ -28,7 +29,10 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 	void generateNotifcation() {
 		auto songFileName = std::filesystem::path(m_fields->songManager.getCurrentSong()).filename();
 
-		std::string notifString = "Now playing: ";
+		std::string notifString;
+		auto prefix = Mod::get()->getSettingValue<std::string>("customPrefix");
+		if (!prefix.empty())
+			notifString = fmt::format("{}: ", prefix);
 
 		if (Utils::getBool("useCustomSongs")) {
 			notifString = notifString.append(songFileName.string());
@@ -86,9 +90,7 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 		auto menu = getChildByID("right-side-menu");
 
 		auto btn = CCMenuItemSpriteExtra::create(
-			CircleButtonSprite::create(
-				CCSprite::create("shuffle-btn-sprite.png"_spr)
-			),
+			CircleButtonSprite::create(CCSprite::create("shuffle-btn-sprite.png"_spr)),
 			this,
 			menu_selector(MenuLoopMLHook::onShuffleBtn)
 		);
@@ -99,10 +101,11 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 	}
 
 	void onShuffleBtn(CCObject *sender) {
-		if (auto card = getChildByIDRecursive("now-playing"_spr)) {
-			card->removeMeAndCleanup();
-		}
+		Utils::removeCurrentNotif();
+
 		Utils::setNewSong();
-		MenuLoopMLHook::generateNotifcation();
+
+		if (Utils::getBool("enableNotification"))
+			MenuLoopMLHook::generateNotifcation();
 	}
 };

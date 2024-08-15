@@ -35,6 +35,21 @@
 			"type": "bool",
 			"default": true
 		},
+		"customPrefix": {
+			"name": "Notification Prefix",
+			"description": "Set your prefix for the \"Now Playing\" notification here.\n\n<cyTo disable the prefix, set it to </c><cc>\"[Empty]\"</c><cy>.</c>",
+			"type": "string",
+			"default": "Now Playing",
+			"one-of": [
+				"Now Playing",
+				"Current Song",
+				"Looping",
+				"Song",
+				"Music",
+				"Playing",
+				"[Empty]"
+			]
+		},
 		"notificationTime": {
 			"name": "Notification Time",
 			"type": "float",

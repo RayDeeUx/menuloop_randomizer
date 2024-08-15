@@ -28,6 +28,25 @@ bool Utils::getBool(std::string setting) {
 	return geode::Mod::get()->getSettingValue<bool>(setting);
 }
 
+// TODO FIX
+
+void Utils::removeCurrentNotif() {
+	if (auto card = cocos2d::CCDirector::get()->getRunningScene()->getChildByIDRecursive("now-playing"_spr)) {
+		cocos2d::CCAction* fadeOutSequence = cocos2d::CCSequence::create(
+			cocos2d::CCFadeOut::create(geode::Mod::get()->getSettingValue<double>("notificationTime") / 4),
+			cocos2d::CCDelayTime::create(.125f),
+			cocos2d::CCCallFunc::create(callfunc_selector(Utils::removeCard)),
+			nullptr
+		);
+		card->runAction(fadeOutSequence);
+	}
+}
+
+void Utils::removeCard(cocos2d::CCObject* sender) {
+	if (auto card = cocos2d::CCDirector::get()->getRunningScene()->getChildByIDRecursive("now-playing"_spr))
+		card->removeMeAndCleanup();
+}
+
 #include "SongManager.hpp"
 
 void Utils::setNewSong() {
