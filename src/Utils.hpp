@@ -7,6 +7,6 @@ class Utils {
 	static bool isSupportedExtension(std::string);
 	static bool getBool(std::string);
 	static void removeCurrentNotif();
-	static void removeCard(cocos2d::CCObject*);
+	static cocos2d::SEL_CallFunc removeCard();
 	static void setNewSong();
 };
