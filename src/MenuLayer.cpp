@@ -52,10 +52,25 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 					auto songInfo = MusicDownloadManager::sharedState()->getSongInfoObject(Utils::stoi(songFileName.string()));
 
 					// sometimes songInfo is nullptr, so improvise
-					if (songInfo)
-						notifString = notifString.append(fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID));
-					else
+					if (songInfo) {
+						// default: "Song Name, Artist, Song ID"
+						// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
+						std::string resultString = "";
+						auto formatSetting = Mod::get()->getSettingValue<std::string>("songFormatNGML");
+						if (formatSetting == "Song Name, Artist, Song ID") {
+							resultString = fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
+						} else if (formatSetting == "Song Name + Artist") {
+							resultString = fmt::format("{} by {}", songInfo->m_songName, songInfo->m_artistName);
+						} else if (formatSetting == "Song Name + Song ID") {
+							resultString = fmt::format("{} ({})", songInfo->m_songName, songInfo->m_songID);
+						} else {
+							resultString = fmt::format("{}", songInfo->m_songName);
+						}
+						notifString = notifString.append(resultString);
+					}
+					else {
 						notifString = notifString.append(songFileName.string());
+					}
 				}
 			}
 		}

@@ -7,8 +7,8 @@ class $modify(MenuLoopCCDHook, CCDirector) {
     void fadeOutCardRemotely() {
         if (const auto card = Utils::findCardRemotely()) {
         	card->stopAllActions();
-            CCAction* remoteCardRemoval = cocos2d::CCSequence::create(
-            	CCEaseOut::create(CCMoveBy::create(.25f, {0, 12}), 1.f),
+            CCAction* remoteCardRemoval = CCSequence::create(
+            	CCEaseOut::create(CCMoveBy::create(.25f, {0, 24}), 1.f),
 				CCCallFunc::create(this, callfunc_selector(MenuLoopCCDHook::removeCardRemotely)),
 				nullptr
 			);

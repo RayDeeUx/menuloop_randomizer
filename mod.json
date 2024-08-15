@@ -35,9 +35,21 @@
 			"type": "bool",
 			"default": true
 		},
+		"songFormatNGML": {
+			"name": "Song Notification Format",
+			"description": "Choose the format you prefer for the \"Now Playing\" notification here.\n<cy>Only applies when using Newgrounds/Music Library songs as the menu loop.</c>",
+			"type": "string",
+			"default": "Song Name, Artist, Song ID",
+			"one-of": [
+				"Song Name",
+				"Song Name + Artist",
+				"Song Name + Song ID",
+				"Song Name, Artist, Song ID"
+			]
+		},
 		"customPrefix": {
 			"name": "Notification Prefix",
-			"description": "Set your prefix for the \"Now Playing\" notification here.\n\n<cyTo disable the prefix, set it to </c><cc>\"[Empty]\"</c><cy>.</c>",
+			"description": "Set your prefix for the \"Now Playing\" notification here.\n\n<cy>To disable the prefix, set it to </c><cl>\"[Empty]\"</c><cy>.</c>",
 			"type": "string",
 			"default": "Now Playing",
 			"one-of": [
