@@ -14,8 +14,7 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 		if (!MenuLayer::init())
 			return false;
 
-		if (auto card = getChildByIDRecursive("now-playing"_spr))
-			card->removeMeAndCleanup();
+		Utils::removeCard();
 
 		if (Utils::getBool("enableNotification"))
 			MenuLoopMLHook::generateNotifcation();
@@ -31,7 +30,7 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 
 		std::string notifString;
 		auto prefix = Mod::get()->getSettingValue<std::string>("customPrefix");
-		if (!prefix.empty())
+		if (!prefix.empty() || prefix != "[Empty]")
 			notifString = fmt::format("{}: ", prefix);
 
 		if (Utils::getBool("useCustomSongs")) {
@@ -101,7 +100,7 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 	}
 
 	void onShuffleBtn(CCObject *sender) {
-		Utils::removeCurrentNotif();
+		Utils::removeCard();
 
 		Utils::setNewSong();
 
