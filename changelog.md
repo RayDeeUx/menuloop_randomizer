@@ -2,6 +2,7 @@
 - Added setting to choose font for "Now Playing" notifications.
 - Added an extra child folder in the mod's config directory for enabling/disabling menuloops easily. The mod itself doesn't do anything to it beyond creating the child folder.
 - Hopefully fix the mistake where macOS ARM support wasn't added the first time in v1.3.0.
+- Fix rolling the same song twice in a row. (Unless if you have only one song loaded for the mod.)
 - Fix that one godforsaken Android crash. (It was caused by ninxout being a bit silly and failing to check if certain directories existed on Android.)
   - Incidentally, this also fixes potential issues where songs from RobTop's Music Library *could* be added twice on certain platforms, skewing the probability distribution.
 - Fix arrow steps in settings being wonky. (Geode has yet to support floating point increments in arrow steps.)

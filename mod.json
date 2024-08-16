@@ -8,11 +8,11 @@
 	"version": "v1.4.0",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
-	"developers": ["elnexreal", "RayDeeUx"],
+	"developers": ["RayDeeUx", "elnexreal"],
 	"description": "Menu Loop randomizer for GD.",
 	"tags": ["music", "interface", "enhancement"],
 	"links": {
-		"community": "https://discord.gg/vfFazvmKKb",
+		"community": "https://discord.gg/WqZBYdBWZW",
 		"source": "https://github.com/elnexreal/menuloop_randomizer",
 		"homepage": "https://github.com/elnexreal"
 	},

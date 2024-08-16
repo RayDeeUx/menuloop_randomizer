@@ -67,8 +67,7 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 							resultString = fmt::format("{}", songInfo->m_songName);
 						}
 						notifString = notifString.append(resultString);
-					}
-					else {
+					} else {
 						notifString = notifString.append(songFileName.string());
 					}
 				}
