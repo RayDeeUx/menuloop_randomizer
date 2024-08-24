@@ -37,7 +37,7 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 			notifString = fmt::format("{}: ", prefix);
 
 		if (Utils::getBool("useCustomSongs"))
-			makeNewCard(notifString.append(songFileName.string()));
+			return MenuLoopMLHook::makeNewCard(notifString.append(songFileName.string()));
 
 		// in case that the current file selected is the original menuloop, don't gather any info
 		if (m_fields->songManager.isOriginalMenuLoop())
