@@ -1,5 +1,7 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
+#include <Geode/loader/SettingEvent.hpp>
+#include <Geode/loader/Dirs.hpp>
 
 using namespace geode::prelude;
 
