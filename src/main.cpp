@@ -1,11 +1,5 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
-#include <Geode/loader/SettingEvent.hpp>
-#include <Geode/binding/SongInfoObject.hpp>
-#include <Geode/binding/MusicDownloadManager.hpp>
-#ifndef GEODE_IS_ANDROID
-#include <Geode/utils/Cocos.hpp>
-#endif
 
 using namespace geode::prelude;
 

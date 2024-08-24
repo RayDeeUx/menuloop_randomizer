@@ -1,6 +1,5 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
-#include <Geode/loader/Log.hpp>
 
 SongManager::SongManager() {}
 

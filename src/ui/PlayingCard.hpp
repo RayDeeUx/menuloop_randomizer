@@ -1,5 +1,4 @@
 #pragma once
-#include <Geode/cocos/base_nodes/CCNode.h>
 
 class PlayingCard : public cocos2d::CCNode {
   protected:

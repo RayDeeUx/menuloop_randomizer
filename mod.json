@@ -29,6 +29,12 @@
 			"type": "bool",
 			"default": true
 		},
+		"enableNewNotification": {
+			"name": "Regenerate Notification Button",
+			"description": "Enables the <cj>notification regeneration button</c> in the main menu.",
+			"type": "bool",
+			"default": true
+		},
 		"removeSuffix": {
 			"name": "Hide File Extension",
 			"description": "Hides the file extension of the song being played.\n<cy>Only applies when using custom songs as the menu loop.</c>",

@@ -1,5 +1,7 @@
 # v1.4.1
-- Attempted to fix a weird `stoi` crash. Not sure why it happens, but it did for the one person who reported it, and they didn't really provide further context beyond a crashlog file reading `C++ Exception: class std::out_of_range("stoi argument out of range")`.
+- Add a new button to show the "Now Playing" notification again, per GitHub feedback. (The texture is incredibly scuffed. I will revise it later. The important thing is that it works as intended.)
+- Attempted to fix a weird `stoi` crash. Not sure why it happens, but it did for the one person who reported it, and they didn't really provide further context beyond a crashlog file reading `C++ Exception: class std::out_of_range("stoi argument out of range")`. ¯\\\_(ツ)\_/¯
+  - The mod now uses Geode's `geode::utils::numFromString<int>()` function.
 - License the mod under LGPLv2.
 # v1.4.0
 - Added setting to choose font for "Now Playing" notifications.

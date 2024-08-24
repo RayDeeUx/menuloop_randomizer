@@ -1,11 +1,6 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
 #include <Geode/modify/EditorPauseLayer.hpp>
-#include <Geode/binding/FLAlertLayer.hpp>
-#include <Geode/binding/TextArea.hpp>
-#ifndef GEODE_IS_ANDROID
-#include <Geode/utils/Cocos.hpp>
-#endif
 
 using namespace geode::prelude;
 
