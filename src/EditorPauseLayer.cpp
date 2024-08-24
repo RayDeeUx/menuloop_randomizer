@@ -1,6 +1,9 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
 #include <Geode/modify/EditorPauseLayer.hpp>
+#include <Geode/binding/FLAlertLayer.hpp>
+#include <Geode/binding/TextArea.hpp>
+#include <Geode/utils/Cocos.hpp>
 
 using namespace geode::prelude;
 

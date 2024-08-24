@@ -1,6 +1,9 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
 #include <Geode/loader/SettingEvent.hpp>
+#include <Geode/binding/SongInfoObject.hpp>
+#include <Geode/binding/MusicDownloadManager.hpp>
+#include <Geode/utils/Cocos.hpp>
 
 using namespace geode::prelude;
 
@@ -39,7 +42,7 @@ void populateVector(bool customSongs) {
 		- only reason it didn't work was because file support was limited to `.mp3`.
 		--raydeeux
 		*/
-		CCArrayExt<SongInfoObject *> songs = downloadManager->getDownloadedSongs();
+		CCArrayExt<SongInfoObject*> songs = downloadManager->getDownloadedSongs();
 		for (auto song : songs) {
 			if (!song) continue;
 			

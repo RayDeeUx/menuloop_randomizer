@@ -25,3 +25,5 @@ If you want to add your own songs to the mod you should go to the settings tab, 
 # Discord servers
 - [Join elnexreal's Discord server](https://discord.gg/vfFazvmKKb).
 - [Join RayDeeUx's Discord server](https://discord.gg/WqZBYdBWZW) to report issues with using the mod, or [open a GitHub issue](https://github.com/elnexreal/menuloop_randomizer/issues/new).
+
+This [Geode mod](https://geode-sdk.org) is licensed under LGPLv2.

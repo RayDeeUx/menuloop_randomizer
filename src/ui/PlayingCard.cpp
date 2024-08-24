@@ -1,6 +1,8 @@
 #include "PlayingCard.hpp"
 #include "../Utils.hpp"
 #include <regex>
+#include <GUI/CCControlExtension/CCScale9Sprite.h>
+#include <Geode/loader/Mod.hpp>
 
 using namespace geode::prelude;
 

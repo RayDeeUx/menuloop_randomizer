@@ -1,5 +1,10 @@
+#include "SongManager.hpp"
 #include "Utils.hpp"
 #include <random>
+#include <Geode/binding/FMODAudioEngine.hpp>
+#include <Geode/binding/GameManager.hpp>
+#include <Geode/binding/MenuLayer.hpp>
+#include <Geode/loader/Mod.hpp>
 
 int Utils::randomIndex(int size) {
 	// select a random item from the vector and return the path
@@ -11,13 +16,16 @@ int Utils::randomIndex(int size) {
 	return randomIndex;
 }
 
-int Utils::stoi(std::string text) {
+uint64_t Utils::stoi(std::string text) {
 	// create a new string containing only digits
 	std::string digits;
 	std::copy_if(text.begin(), text.end(), std::back_inserter(digits), ::isdigit);
 
+	uint64_t result = std::stoi(digits);
+	if (!result) return 0;
+
 	// convert the digits string to an integer (or 0 if empty)
-	return digits.empty() ? 0 : std::stoi(digits);
+	return digits.empty() ? 0 : result;
 }
 
 bool Utils::isSupportedExtension(std::string path) {
@@ -47,8 +55,6 @@ void Utils::removeCard() {
 	if (auto card = Utils::findCard())
 		card->removeMeAndCleanup();
 }
-
-#include "SongManager.hpp"
 
 void Utils::setNewSong() {
 	FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();

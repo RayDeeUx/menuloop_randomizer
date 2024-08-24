@@ -1,3 +1,6 @@
+# v1.4.1
+- Attempted to fix a weird `stoi` crash. Not sure why it happens, but it did for the one person who reported it, and they didn't really provide further context beyond a crashlog file reading `C++ Exception: class std::out_of_range("stoi argument out of range")`.
+- License the mod under LGPLv2.
 # v1.4.0
 - Added setting to choose font for "Now Playing" notifications.
 - Added an extra child folder in the mod's config directory for enabling/disabling menuloops easily. The mod itself doesn't do anything to it beyond creating the child folder.

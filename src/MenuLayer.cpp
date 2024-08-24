@@ -2,6 +2,11 @@
 #include "Utils.hpp"
 #include "ui/PlayingCard.hpp"
 #include <Geode/modify/MenuLayer.hpp>
+#include <Geode/binding/MusicDownloadManager.hpp>
+#include <Geode/binding/CCMenuItemSpriteExtra.hpp>
+#include <Geode/binding/SongInfoObject.hpp>
+#include <Geode/ui/BasedButtonSprite.hpp>
+#include <filesystem>
 
 using namespace geode::prelude;
 
@@ -45,31 +50,40 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 				size_t dotPos = songFileName.string().find_last_of('.');
 
 				if (dotPos == std::string::npos) {
+					log::error("{} was not a valid file name..? [NG/Music Library]", songFileName.string());
 					notifString = notifString.append("Unknown");
-				} else {
-					songFileName = songFileName.string().substr(0, dotPos);
+					return;
+				}
+				std::string songFileNameAsAtring = songFileName.string().substr(0, dotPos);
 
-					auto songInfo = MusicDownloadManager::sharedState()->getSongInfoObject(Utils::stoi(songFileName.string()));
+				Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameAsAtring);
 
-					// sometimes songInfo is nullptr, so improvise
-					if (songInfo) {
-						// default: "Song Name, Artist, Song ID"
-						// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
-						std::string resultString = "";
-						auto formatSetting = Mod::get()->getSettingValue<std::string>("songFormatNGML");
-						if (formatSetting == "Song Name, Artist, Song ID") {
-							resultString = fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
-						} else if (formatSetting == "Song Name + Artist") {
-							resultString = fmt::format("{} by {}", songInfo->m_songName, songInfo->m_artistName);
-						} else if (formatSetting == "Song Name + Song ID") {
-							resultString = fmt::format("{} ({})", songInfo->m_songName, songInfo->m_songID);
-						} else {
-							resultString = fmt::format("{}", songInfo->m_songName);
-						}
-						notifString = notifString.append(resultString);
+				if (songFileNameAsID.isErr()) {
+					log::error("{} had an invalid Song ID! [NG/Music Library]", songFileNameAsAtring);
+					notifString = notifString.append("Unknown (Invalid Song ID)");
+					return;
+				}
+
+				auto songInfo = MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrap());
+
+				// sometimes songInfo is nullptr, so improvise
+				if (songInfo) {
+					// default: "Song Name, Artist, Song ID"
+					// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
+					std::string resultString = "";
+					auto formatSetting = Mod::get()->getSettingValue<std::string>("songFormatNGML");
+					if (formatSetting == "Song Name, Artist, Song ID") {
+						resultString = fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
+					} else if (formatSetting == "Song Name + Artist") {
+						resultString = fmt::format("{} by {}", songInfo->m_songName, songInfo->m_artistName);
+					} else if (formatSetting == "Song Name + Song ID") {
+						resultString = fmt::format("{} ({})", songInfo->m_songName, songInfo->m_songID);
 					} else {
-						notifString = notifString.append(songFileName.string());
+						resultString = fmt::format("{}", songInfo->m_songName);
 					}
+					notifString = notifString.append(resultString);
+				} else {
+					notifString = notifString.append(songFileName.string());
 				}
 			}
 		}
