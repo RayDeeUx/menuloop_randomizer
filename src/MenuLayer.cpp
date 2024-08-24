@@ -136,7 +136,7 @@ class $modify(MenuLoopMLHook, MenuLayer) {
 		auto menu = getChildByID("right-side-menu");
 
 		auto btn = CCMenuItemSpriteExtra::create(
-			CircleButtonSprite::create(CCSprite::create("regen-button-sprite.png"_spr)),
+			CircleButtonSprite::create(CCSprite::create("regen-btn-sprite.png"_spr)),
 			this,
 			menu_selector(MenuLoopMLHook::onRegenButton)
 		);
