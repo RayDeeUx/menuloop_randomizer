@@ -1,3 +1,6 @@
+# v1.4.3
+- Made sure the new "Regenerate Notification" sprite is actually part of the mod's resources.
+- Also shrunk the mod file size down as there haven't been any new crashes from the changes introduced in v1.4.1.
 # v1.4.2
 - Redrew the "Regenerate Notification" sprite (courtesy of elnexreal).
 # v1.4.1
