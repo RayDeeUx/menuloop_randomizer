@@ -1,3 +1,5 @@
+# v1.4.2
+- Redrew the "Regenerate Notification" sprite (courtesy of elnexreal).
 # v1.4.1
 - Add a new button to show the "Now Playing" notification again, per GitHub feedback. (The texture is incredibly scuffed. I will revise it later. The important thing is that it works as intended.)
 - Attempted to fix a weird `stoi` crash. Not sure why it happens, but it did for the one person who reported it, and they didn't really provide further context beyond a crashlog file reading `C++ Exception: class std::out_of_range("stoi argument out of range")`. ¯\\\_(ツ)\_/¯

@@ -22,8 +22,8 @@ If you want to add your own songs to the mod you should go to the settings tab, 
 - [raydeeux](https://github.com/RayDeeUx) <cj>for porting part of the mod to macOS, and adding `.ogg`/`.oga`/`.wav`/`.flac` file support for custom songs.</cj>
 - [Feather Icons](https://feathericons.com) <cj>for providing the shuffle icon.</cj>
 
-# Discord servers
-- [Join elnexreal's Discord server](https://discord.gg/vfFazvmKKb).
+# Discord server
 - [Join RayDeeUx's Discord server](https://discord.gg/WqZBYdBWZW) to report issues with using the mod, or [open a GitHub issue](https://github.com/elnexreal/menuloop_randomizer/issues/new).
+- [Elnex has deleted their Discord server].
 
 This [Geode mod](https://geode-sdk.org) is licensed under LGPLv2.
