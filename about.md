@@ -16,7 +16,7 @@ If you want to add your own songs to the mod you should go to the settings tab, 
 # Elnexreal would like to thank:
 - [hiimjustin000](https://github.com/hiimjustin000) <cj>for helping me with the bindings problem (i was using an outdated version of geode LMAO).</cj>
 - [km7dev](https://github.com/Kingminer7) <cj>for helping me with the constant crashes and testing.</cj>
-- <cj>Shaday for giving me the idea.<cj>
+- [shaday](https://twitter.com/shadaygabo) <cj>for giving me the idea.<cj>
 - [dank_meme](https://github.com/dankmeme01) <cj>for helping me with singletons.</cj>
 - [ninxout](https://github.com/ninXout) <cj>for porting part of the mod to macOS, and adding Music Library support.</c>
 - [raydeeux](https://github.com/RayDeeUx) <cj>for porting part of the mod to macOS, and adding `.ogg`/`.oga`/`.wav`/`.flac` file support for custom songs.</cj>
