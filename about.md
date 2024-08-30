@@ -8,7 +8,7 @@ If you want to add your own songs to the mod you should go to the settings tab, 
 
 ![Screenshot on how to use it. Install the mod to view this screenshot!](elnexreal.menuloop_randomizer/screenshot.png)
 
-`.oga`, `.flac` and `.wav` files are also supported for the few audiophiles who want the highest of audio quality out there.
+`.oga`, `.flac` and `.wav` files are also supported, for the few audiophiles who want the highest of audio quality out there.
 
 ## Android
 <co>*If you click the folder and you get sent to the geode folder itself, you should go to `game/geode/config/elnexreal.menuloop_randomizer` and put the songs there*</co>
@@ -22,8 +22,6 @@ If you want to add your own songs to the mod you should go to the settings tab, 
 - [raydeeux](https://github.com/RayDeeUx) <cj>for porting part of the mod to macOS, and adding `.ogg`/`.oga`/`.wav`/`.flac` file support for custom songs.</cj>
 - [Feather Icons](https://feathericons.com) <cj>for providing the shuffle icon.</cj>
 
-# Discord server
-- [Join RayDeeUx's Discord server](https://discord.gg/WqZBYdBWZW) to report issues with using the mod, or [open a GitHub issue](https://github.com/elnexreal/menuloop_randomizer/issues/new).
-- [Elnex has deleted their Discord server].
+[Join RayDeeUx's Discord server](https://discord.gg/WqZBYdBWZW) to report issues with using the mod, or [open a GitHub issue](https://github.com/elnexreal/menuloop_randomizer/issues/new).
 
 This [Geode mod](https://geode-sdk.org) is licensed under LGPLv2.
