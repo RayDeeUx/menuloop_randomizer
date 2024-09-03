@@ -9,7 +9,7 @@ class Utils {
 	static cocos2d::CCNode* findCard();
 	static cocos2d::CCNode* findCardRemotely();
 	static void setNewSong();
-	static void playlistModeNewSong();
+	static void playlistModeNewSong(bool fromButton = false);
 	static void makeNewCard(std::string);
 	static void generateNotification();
 	static void playlistModePLAndEPL();

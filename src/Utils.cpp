@@ -50,13 +50,19 @@ void Utils::setNewSong() {
 	GameManager::sharedState()->playMenuMusic();
 }
 
-void Utils::playlistModeNewSong() {
+void Utils::playlistModeNewSong(bool fromButton) {
 	if (!Utils::getBool("playlistMode")) {
 		return Utils::setNewSong();
 	}
-	FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
+	auto fmod = FMODAudioEngine::get();
+	#ifdef GEODE_IS_WINDOWS
+	if (fmod->isMusicPlaying(0) && !fromButton) return;
+	#else
+	if (fmod->isMusicPlaying(1) && !fromButton) return;
+	#endif
+	fmod->m_backgroundMusicChannel->stop();
 	SongManager::get().pickRandomSong();
-	FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
+	fmod->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 }
 
 // create notif card stuff

@@ -15,9 +15,9 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		if (GJBaseGameLayer::get() && !isMenuLoop) {
 			return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 		}
-		if (Utils::getBool("playlistMode") && shouldLoop && fadeInTime == 1.0f) {
+		log::info("\npath: {}\nshouldLoop: {}\nfadeInTime: {}\nchannel: {}", path, shouldLoop, fadeInTime, channel);
+		if (Utils::getBool("playlistMode") && shouldLoop && fadeInTime == 1.0f && channel == 1) {
 			log::info("playlist mode enabled.");
-			log::info("\npath: {}\nshouldLoop: {}\nfadeInTime: {}\nchannel: {}", path, shouldLoop, fadeInTime, channel);
 			if (!isMenuLoop) {
 				return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 			}

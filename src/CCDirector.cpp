@@ -31,9 +31,11 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 			MenuLoopCCDHook::fadeOutCardRemotely();
 		else if (!scene->getChildByIDRecursive("MenuLayer"))
 			MenuLoopCCDHook::removeCardRemotely();
+		#ifdef GEODE_IS_WINDOWS
 		if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0))
 			if (Utils::getBool("playlistMode"))
 				Utils::playlistModeNewSong();
+		#endif
 	}
 
 	bool pushScene(cocos2d::CCScene* scene) {
@@ -46,9 +48,11 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 			MenuLoopCCDHook::fadeOutCardRemotely();
 		else if (!scene->getChildByIDRecursive("MenuLayer"))
 			MenuLoopCCDHook::removeCardRemotely();
+		#ifdef GEODE_IS_WINDOWS
 		if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0))
 			if (Utils::getBool("playlistMode"))
 				Utils::playlistModeNewSong();
+		#endif
 
 		return result;
 	}
@@ -63,9 +67,11 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 			MenuLoopCCDHook::fadeOutCardRemotely();
 		else if (!scene->getChildByIDRecursive("MenuLayer"))
 			MenuLoopCCDHook::removeCardRemotely();
+		#ifdef GEODE_IS_WINDOWS
 		if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0))
 			if (Utils::getBool("playlistMode"))
 				Utils::playlistModeNewSong();
+		#endif
 
 		return result;
 	}
@@ -80,8 +86,10 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 			MenuLoopCCDHook::fadeOutCardRemotely();
 		else
 			MenuLoopCCDHook::removeCardRemotely();
+		#ifdef GEODE_IS_WINDOWS
 		if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0))
 			if (Utils::getBool("playlistMode"))
 				Utils::playlistModeNewSong();
+		#endif
 	}
 };
