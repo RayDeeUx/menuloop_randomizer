@@ -29,11 +29,15 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 
 		if (previousScene->getChildByIDRecursive("MenuLayer"))
 			MenuLoopCCDHook::fadeOutCardRemotely();
-		else if (!scene->getChildByIDRecursive("MenuLayer"))
+		else if (!scene->getChildByIDRecursive("MenuLayer")) {
 			MenuLoopCCDHook::removeCardRemotely();
-		if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0))
-			if (Utils::getBool("playlistMode"))
-				Utils::playlistModeNewSong();
+			if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0)) {
+				if (Utils::getBool("playlistMode")) {
+					Utils::playlistModeNewSong();
+					log::info("\nprevious scene had GJBGL.\nchanging song through CCDirector: willSwitchToScene");
+				}
+			}
+		}
 	}
 
 	bool pushScene(cocos2d::CCScene* scene) {
@@ -44,11 +48,15 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 
 		if (previousScene->getChildByIDRecursive("MenuLayer"))
 			MenuLoopCCDHook::fadeOutCardRemotely();
-		else if (!scene->getChildByIDRecursive("MenuLayer"))
+		else if (!scene->getChildByIDRecursive("MenuLayer")) {
 			MenuLoopCCDHook::removeCardRemotely();
-		if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0))
-			if (Utils::getBool("playlistMode"))
-				Utils::playlistModeNewSong();
+			if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0)) {
+				if (Utils::getBool("playlistMode")) {
+					Utils::playlistModeNewSong();
+					log::info("\nprevious scene had GJBGL.\nchanging song through CCDirector: pushScene");
+				}
+			}
+		}
 
 		return result;
 	}
@@ -61,11 +69,15 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 
 		if (previousScene->getChildByIDRecursive("MenuLayer"))
 			MenuLoopCCDHook::fadeOutCardRemotely();
-		else if (!scene->getChildByIDRecursive("MenuLayer"))
+		else if (!scene->getChildByIDRecursive("MenuLayer")) {
 			MenuLoopCCDHook::removeCardRemotely();
-		if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0))
-			if (Utils::getBool("playlistMode"))
-				Utils::playlistModeNewSong();
+			if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0)) {
+				if (Utils::getBool("playlistMode")) {
+					Utils::playlistModeNewSong();
+					log::info("\nprevious scene had GJBGL.\nchanging song through CCDirector: replaceScene");
+				}
+			}
+		}
 
 		return result;
 	}
@@ -78,10 +90,14 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 
 		if (previousScene->getChildByIDRecursive("MenuLayer"))
 			MenuLoopCCDHook::fadeOutCardRemotely();
-		else
+		else {
 			MenuLoopCCDHook::removeCardRemotely();
-		if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0))
-			if (Utils::getBool("playlistMode"))
-				Utils::playlistModeNewSong();
+			if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0)) {
+				if (Utils::getBool("playlistMode")) {
+					Utils::playlistModeNewSong();
+					log::info("\nprevious scene had GJBGL.\nchanging song through CCDirector: popSceneWithTransition");
+				}
+			}
+		}
 	}
 };
