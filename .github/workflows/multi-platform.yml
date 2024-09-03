@@ -37,8 +37,8 @@ jobs:
         with:
           # cli: "v3.0.0" # not sure why this is here --raydeeux
           # sdk: nightly # [vscode] comment this out to use stable Geode SDK version
-          # build-config: RelWithDebInfo # [vscode] comment this out (and the line below!) to Release mode
-          # export-pdb: true # [vscode] comment this out (and the line above!) to Release mode
+          build-config: RelWithDebInfo # [vscode] comment this out (and the line below!) to Release mode
+          export-pdb: true # [vscode] comment this out (and the line above!) to Release mode
           # bindings: RayDeeUx/bindings # comment this out to use geode-sdk/bindings
           # bindings-ref: menulooprandomizer # comment this out to use default branch
           combine: true
