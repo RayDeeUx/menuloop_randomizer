@@ -29,7 +29,8 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 			*/
 			log::info("menu loop detected.");
 			desiredShouldLoop = false;
+			return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, 0.0f, channel);
 		}
-		if (isMenuLoop) FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
+		FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 	}
 };
