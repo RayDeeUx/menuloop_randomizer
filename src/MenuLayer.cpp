@@ -45,8 +45,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onShuffleBtn(CCObject*) {
 		Utils::removeCard();
 
-		if (Utils::getBool("playlistMode")) Utils::playlistModeNewSong(true);
-		else Utils::setNewSong();
+		Utils::setNewSong();
 
 		if (Utils::getBool("enableNotification"))
 			Utils::generateNotification();
