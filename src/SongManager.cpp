@@ -43,7 +43,11 @@ void SongManager::update(float dt) {
 	auto fmod = FMODAudioEngine::get();
 	if (!Utils::getBool("playlistMode") || GJBaseGameLayer::get() || m_isMenuLoop || m_songs.size() < 2 || !fmod) return;
 	// geode::log::info("channelIsPlaying: {}", fmod->isMusicPlaying(0));
+	#ifdef GEODE_IS_WINDOWS
 	if (fmod->isMusicPlaying(0)) return;
+	#else
+	if (fmod->isMusicPlaying(1)) return;
+	#endif
 	geode::log::info("song is probably finished. Switching songs.");
 	Utils::removeCard();
 	Utils::playlistModeNewSong();
