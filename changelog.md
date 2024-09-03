@@ -1,3 +1,6 @@
+# v1.5.0
+- Added "Playlist Mode", auggested by [TheKevineer](https://discord.com/users/633040761256017963).
+- Renamed and reordered a few settings to reduce confusion.
 # v1.4.3
 - Made sure the new "Regenerate Notification" sprite is actually part of the mod's resources.
 - Also shrunk the mod file size down as there haven't been any new crashes from the changes introduced in v1.4.1.
