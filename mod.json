@@ -17,38 +17,50 @@
 		"homepage": "https://github.com/elnexreal"
 	},
 	"settings": {
-		"enableShuffleButton": {
-			"name": "Shuffle Button",
-			"description": "Enables the <cj>shuffle button</c> in the main menu.",
-			"type": "bool",
-			"default": true
-		},
-		"playlistMode": {
-			"name": "Playlist Mode",
-			"description": "<cl>Original idea by TheKevinner.</c>\n\nChange menu loops after a song is finished.\n\n<cy>Enabling this kind of defeats the purpose of calling it a menu loop at this point, but it seems reasonable enough of a feature to be included in this mod. Have fun, folks.</c> <cr>This feature *may* go terribly, terribly wrong.</c>",
+		"useCustomSongs": {
+			"name": "Use Custom Songs Instead",
+			"description": "Use your own songs instead of those you have downloaded from Newgrounds or RobTop's Music Library.\n\n<cy>Find instructions in the mod info popup.</c>",
 			"type": "bool",
 			"default": false
 		},
+		"playlistMode": {
+			"name": "Playlist Mode",
+			"description": "<cl>Original idea by TheKevinner.</c>\n\nChange menu loops after a song is finished.\n\n<cy>Enabling this kind of defeats the purpose of calling it a menu loop at this point, but it seems reasonable enough of a feature to be included in this mod. Have fun, folks.</c>\n<cr>This feature *may* go terribly, terribly wrong. It's best if you rebooted your game after this setting in case anything goes wrong, or leave this disabled.</c>",
+			"type": "bool",
+			"default": false
+		},
+		"saveSongOnExit": {
+			"name": "Remember Last Menu Loop",
+			"description": "<cl>Original idea by HexCodesGMD.</c>\n\nIf enabled, this mod's most recently chosen menu loop will be the first loop you hear the next time you open Geometry Dash.",
+			"type": "bool",
+			"default": false
+		},
+		"enableShuffleButton": {
+			"name": "Shuffle Button",
+			"description": "Enables the <cj>shuffle button</c> in the main menu.\n\n<cy>To clarify: This button is not the same feature as \"Shuffle Mode\", although it *can* work with \"Shuffle Mode\" enabled. The button only changes the current menu loop to a different song *when pressed*.</c>",
+			"type": "bool",
+			"default": true
+		},
 		"enableNotification": {
-			"name": "Show Notification",
+			"name": "\"Now Playing\" Notifs",
 			"description": "Shows a notification with the name of the currently playing song.",
 			"type": "bool",
 			"default": true
 		},
 		"enableNewNotification": {
-			"name": "Regenerate Notification Button",
+			"name": "Notifs: New Notif Button",
 			"description": "Enables the <cj>notification regeneration button</c> in the main menu.",
 			"type": "bool",
 			"default": true
 		},
 		"removeSuffix": {
-			"name": "Hide File Extension",
+			"name": "Notifs: Hide File Extension",
 			"description": "Hides the file extension of the song being played.\n<cy>Only applies when using custom songs as the menu loop.</c>",
 			"type": "bool",
 			"default": true
 		},
 		"songFormatNGML": {
-			"name": "Song Notification Format",
+			"name": "Notifs: Song Name Format",
 			"description": "Choose the format you prefer for the \"Now Playing\" notification here.\n<cy>Only applies when using Newgrounds/Music Library songs as the menu loop.</c>",
 			"type": "string",
 			"default": "Song Name, Artist, Song ID",
@@ -60,7 +72,7 @@
 			]
 		},
 		"customPrefix": {
-			"name": "Notification Prefix",
+			"name": "Notifs: Prefix",
 			"description": "Set your prefix for the \"Now Playing\" notification here.\n\n<cy>To disable the prefix, set it to </c><cl>\"[Empty]\"</c><cy>.</c>",
 			"type": "string",
 			"default": "Now Playing",
@@ -75,7 +87,7 @@
 			]
 		},
 		"notificationTime": {
-			"name": "Notification Time",
+			"name": "Notifs: Duration",
 			"type": "float",
 			"default": 0.5,
 			"min": 0.1,
@@ -92,7 +104,7 @@
 			}
 		},
 		"notificationFont": {
-			"name": "Notification Font",
+			"name": "Notifs: Font",
 			"description": "Choose the font the notification will use. Default is 17 for legacy purposes.\n\n<cj>0 for Pusab, -1 for Golden Pusab, and -2 for the font you see when viewing level comments.</c>\n<cy>To use font numbers greater than 0: refer to the level editor for the font each number corresponds to, subtract that number by 1, and then put it here.</c>",
 			"type": "int",
 			"default": 17,
@@ -119,12 +131,6 @@
 			"description": "Randomize the song when you exit the editor.",
 			"type": "bool",
 			"default": true
-		},
-		"useCustomSongs": {
-			"name": "Use Custom Songs Instead",
-			"description": "Use your own songs instead of those you have downloaded from Newgrounds or RobTop's Music Library.\n\n<cy>Find instructions in the mod info popup.</c>",
-			"type": "bool",
-			"default": false
 		}
 	},
 	"resources": {
