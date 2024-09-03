@@ -25,7 +25,7 @@
 		},
 		"playlistMode": {
 			"name": "Playlist Mode",
-			"description": "<cl>Original idea by TheKevinner.</c>\n\nChange menu loops after a song is finished.\n\n<cy>Enabling this kind of defeats the purpose of calling it a menu loop at this point, but it seems reasonable enough of a feature to be included in this mod. Have fun, folks.</c>\n<cr>This feature *may* go terribly, terribly wrong. It's best if you rebooted your game after this setting in case anything goes wrong, or leave this disabled.</c>",
+			"description": "<cl>Original idea by TheKevinner.</c>\n\nChange menu loops after a song is finished.\n\n<cy>This feature kind of defeats the need to call it a menu loop, but it seems reasonable enough as a feature to be included in this mod.</c>\n<cr>Things *may* go terribly, terribly wrong if you enable this. It's best if you reboot your game after enabling this setting in case anything goes wrong. Or you can play it safe and leave this disabled.</c>",
 			"type": "bool",
 			"default": false
 		},
