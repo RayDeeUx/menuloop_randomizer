@@ -40,15 +40,10 @@ bool SongManager::isOriginalMenuLoop() {
 }
 
 void SongManager::update(float dt) {
-	if (GJBaseGameLayer::get()) { return; }
-	if (m_isMenuLoop) { return; }
-	if (m_songs.empty()) { return; }
-	if (m_songs.size() == 1) { return; }
 	auto fmod = FMODAudioEngine::get();
-	if (!fmod) { return; }
-	if (!Utils::getBool("playlistMode")) { return; }
+	if (!Utils::getBool("playlistMode") || GJBaseGameLayer::get() || m_isMenuLoop || m_songs.size() < 2 || !fmod) return;
 	// geode::log::info("channelIsPlaying: {}", fmod->isMusicPlaying(0));
-	if (fmod->isMusicPlaying(0)) { return; }
+	if (fmod->isMusicPlaying(0)) return;
 	geode::log::info("song is probably finished. Switching songs.");
 	Utils::removeCard();
 	Utils::playlistModeNewSong();
