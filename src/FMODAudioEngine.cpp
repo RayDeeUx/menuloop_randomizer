@@ -29,6 +29,11 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 			*/
 			log::info("menu loop detected.");
 			desiredShouldLoop = false;
+			// TODO: maybe ifdef these few lines. it works on macos intel
+			if (channel == 0) {
+				log::info("attempted to loop menu music on channel zero! see if on windows or not. aborting early.");
+				return;
+			}
 			return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, 0.0f, channel);
 		}
 		FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
