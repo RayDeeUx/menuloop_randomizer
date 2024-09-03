@@ -54,8 +54,10 @@ void Utils::playlistModeNewSong() {
 	if (!Utils::getBool("playlistMode")) {
 		return Utils::setNewSong();
 	}
+	geode::log::info("attempting to hijack menuloop channel to use playlist mode");
 	FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
 	SongManager::get().pickRandomSong();
+	geode::log::info("is it over?");
 	FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 }
 
@@ -143,10 +145,7 @@ void Utils::generateNotification() {
 
 void Utils::playlistModePLAndEPL() {
 	if (!Utils::getBool("playlistMode")) { return; }
-	auto fmod = FMODAudioEngine::get();
-	if (!fmod) { return; }
-	geode::log::info("attempting to hijack menuloop channel to use playlist mode");
-	fmod->m_backgroundMusicChannel->stop();
-	geode::log::info("is it over?");
-	fmod->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
+	auto gjbgl = GJBaseGameLayer::get();
+	if (gjbgl) { return; }
+	Utils::playlistModeNewSong();
 }
