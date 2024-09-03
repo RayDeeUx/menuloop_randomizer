@@ -13,5 +13,8 @@ class $modify(MenuLoopPLHook, PlayLayer) {
 			m_fields->songManager.pickRandomSong();
 
 		PlayLayer::onQuit();
+
+		if (Utils::getBool("playlistMode"))
+			Utils::playlistModePLAndEPL();
 	}
 };

@@ -5,7 +5,7 @@
 		"mac": "2.206",
 		"android": "2.206"
 	},
-	"version": "v1.4.3",
+	"version": "v1.5.0",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developers": ["RayDeeUx", "elnexreal"],
@@ -22,6 +22,12 @@
 			"description": "Enables the <cj>shuffle button</c> in the main menu.",
 			"type": "bool",
 			"default": true
+		},
+		"playlistMode": {
+			"name": "Playlist Mode",
+			"description": "<cl>Original idea by TheKevinner.</c>\n\nChange menu loops after a song is finished.\n\n<cy>Enabling this kind of defeats the purpose of calling it a menu loop at this point, but it seems reasonable enough of a feature to be included in this mod. Have fun, folks.</c> <cr>This feature *may* go terribly, terribly wrong.</c>",
+			"type": "bool",
+			"default": false
 		},
 		"enableNotification": {
 			"name": "Show Notification",

@@ -23,6 +23,7 @@ void SongManager::pickRandomSong() {
 				randomIndex = Utils::randomIndex(m_songs.size());
 			}
 			m_currentSong = m_songs[randomIndex];
+			geode::log::debug("new song: {}", m_currentSong);
 		} else m_currentSong = m_songs[0];
 	} else {
 		m_isMenuLoop = true;
@@ -36,4 +37,21 @@ std::string SongManager::getCurrentSong() {
 
 bool SongManager::isOriginalMenuLoop() {
 	return m_isMenuLoop;
+}
+
+void SongManager::update(float dt) {
+	if (GJBaseGameLayer::get()) { return; }
+	if (m_isMenuLoop) { return; }
+	if (m_songs.empty()) { return; }
+	if (m_songs.size() == 1) { return; }
+	auto fmod = FMODAudioEngine::get();
+	if (!fmod) { return; }
+	if (!Utils::getBool("playlistMode")) { return; }
+	// geode::log::info("channelIsPlaying: {}", fmod->isMusicPlaying(0));
+	if (fmod->isMusicPlaying(0)) { return; }
+	geode::log::info("song is probably finished. Switching songs.");
+	Utils::removeCard();
+	Utils::playlistModeNewSong();
+	if (Utils::getBool("enableNotification"))
+		Utils::generateNotification();
 }

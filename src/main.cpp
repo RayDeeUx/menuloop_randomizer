@@ -96,4 +96,11 @@ $execute {
 
 		Utils::setNewSong();
 	});
+	listenForSettingChanges<bool>("playlistMode", [](bool isPlaylistMode) {
+		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
+		if (isPlaylistMode) {
+			return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
+		}
+		GameManager::sharedState()->playMenuMusic();
+	});
 }

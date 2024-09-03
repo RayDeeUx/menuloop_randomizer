@@ -13,6 +13,7 @@ class SongManager {
 	void pickRandomSong();
 	bool isOriginalMenuLoop();
 	std::string getCurrentSong();
+	void update(float);
 
   private:
 	SongManager();

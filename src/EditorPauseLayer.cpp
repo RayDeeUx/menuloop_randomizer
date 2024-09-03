@@ -14,6 +14,9 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 			m_fields->songManager.pickRandomSong();
 
 		EditorPauseLayer::onExitEditor(sender);
+
+		if (Utils::getBool("playlistMode"))
+			Utils::playlistModePLAndEPL();
 	}
 	#else
 	/*
@@ -34,6 +37,9 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 			m_fields->songManager.pickRandomSong();
 
 		EditorPauseLayer::onSaveAndExit(sender);
+
+		if (Utils::getBool("playlistMode"))
+			Utils::playlistModePLAndEPL();
 	}
 	void FLAlert_Clicked(FLAlertLayer* p0, bool btnTwo) {
 		bool isQualifedAlert = false;
@@ -78,6 +84,9 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 			m_fields->songManager.pickRandomSong();
 
 		EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
+
+		if (Utils::getBool("playlistMode"))
+			Utils::playlistModePLAndEPL();
 	}
 	#endif
 };
