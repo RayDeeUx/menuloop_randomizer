@@ -31,7 +31,7 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 			MenuLoopCCDHook::fadeOutCardRemotely();
 		else if (!scene->getChildByIDRecursive("MenuLayer"))
 			MenuLoopCCDHook::removeCardRemotely();
-		if (auto gjbgl = getChildOfType<GJBaseGameLayer*>(previousScene, 0))
+		if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0))
 			if (Utils::getBool("playlistMode"))
 				Utils::playlistModeNewSong();
 	}
@@ -46,7 +46,7 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 			MenuLoopCCDHook::fadeOutCardRemotely();
 		else if (!scene->getChildByIDRecursive("MenuLayer"))
 			MenuLoopCCDHook::removeCardRemotely();
-		if (auto gjbgl = getChildOfType<GJBaseGameLayer*>(previousScene, 0))
+		if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0))
 			if (Utils::getBool("playlistMode"))
 				Utils::playlistModeNewSong();
 
@@ -63,7 +63,7 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 			MenuLoopCCDHook::fadeOutCardRemotely();
 		else if (!scene->getChildByIDRecursive("MenuLayer"))
 			MenuLoopCCDHook::removeCardRemotely();
-		if (auto gjbgl = getChildOfType<GJBaseGameLayer*>(previousScene, 0))
+		if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0))
 			if (Utils::getBool("playlistMode"))
 				Utils::playlistModeNewSong();
 
@@ -80,7 +80,7 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 			MenuLoopCCDHook::fadeOutCardRemotely();
 		else
 			MenuLoopCCDHook::removeCardRemotely();
-		if (auto gjbgl = getChildOfType<GJBaseGameLayer*>(previousScene, 0))
+		if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0))
 			if (Utils::getBool("playlistMode"))
 				Utils::playlistModeNewSong();
 	}
