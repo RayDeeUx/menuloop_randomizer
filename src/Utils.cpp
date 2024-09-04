@@ -55,10 +55,15 @@ void Utils::playlistModeNewSong() {
 		return Utils::setNewSong();
 	}
 	geode::log::info("attempting to hijack menuloop channel to use playlist mode");
-	FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
+	auto fmod = FMODAudioEngine::sharedEngine();
+	fmod->m_backgroundMusicChannel->stop();
 	SongManager::get().pickRandomSong();
 	geode::log::info("is it over?");
-	FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
+	if (SongManager::get().getCalledOnce()) fmod->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
+	else {
+		fmod->playMusic(geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop"), true, 1.0f, 1);
+		SongManager::get().setCalledOnce(true);
+	}
 }
 
 // create notif card stuff

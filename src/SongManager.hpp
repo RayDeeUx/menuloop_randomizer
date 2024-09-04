@@ -13,7 +13,10 @@ class SongManager {
 	void pickRandomSong();
 	bool isOriginalMenuLoop();
 	std::string getCurrentSong();
+	void setCurrentSongToSavedSong();
 	void update(float);
+	bool getCalledOnce();
+	void setCalledOnce(bool);
 
   private:
 	SongManager();
@@ -21,4 +24,5 @@ class SongManager {
 	std::vector<std::string> m_songs;
 	std::string m_currentSong;
 	bool m_isMenuLoop;
+	bool m_calledOnce = false;
 };

@@ -29,7 +29,7 @@
 			"type": "bool",
 			"default": false
 		},
-		"saveSongOnExit": {
+		"saveSongOnGameClose": {
 			"name": "Remember Last Menu Loop",
 			"description": "<cl>Original idea by HexCodesGMD.</c>\n\nIf enabled, this mod's most recently chosen menu loop will be the first loop you hear the next time you open Geometry Dash.",
 			"type": "bool",

@@ -35,6 +35,10 @@ std::string SongManager::getCurrentSong() {
 	return m_currentSong;
 }
 
+void SongManager::setCurrentSongToSavedSong() {
+	m_currentSong = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
+}
+
 bool SongManager::isOriginalMenuLoop() {
 	return m_isMenuLoop;
 }
@@ -53,4 +57,12 @@ void SongManager::update(float dt) {
 	Utils::playlistModeNewSong();
 	if (Utils::getBool("enableNotification"))
 		Utils::generateNotification();
+}
+
+void SongManager::setCalledOnce(bool value) {
+	m_calledOnce = value;
+}
+
+bool SongManager::getCalledOnce() {
+	return m_calledOnce;
 }
