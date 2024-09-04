@@ -78,8 +78,10 @@ $on_mod(Loaded) {
 	bool loopExists = std::filesystem::exists(lastMenuLoop);
 	log::info("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}", lastMenuLoop, saveSongOnGameClose, loopExists);
 	if (!lastMenuLoop.empty() && Utils::isSupportedExtension(lastMenuLoop) && loopExists && saveSongOnGameClose) {
+		log::info("setting songManager's current song to saved song from on_mod(Loaded)");
 		songManager.setCurrentSongToSavedSong();
 	} else {
+		log::info("randomizing songManager's current song through on_mod(Loaded)");
 		songManager.pickRandomSong();
 	}
 
