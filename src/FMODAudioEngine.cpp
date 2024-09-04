@@ -5,6 +5,7 @@
 using namespace geode::prelude;
 
 const static std::regex geometryDashRegex = std::regex(R"(^.*(?:Geometry ?Dash.*|config.(?:[\w])*\.(?:[\w])*).(?:.*)\.(?:mp3|ogg|oga|flac|wav)$)");
+const static std::regex terribleLoopRegex = std::regex(R"(^[\w]\.mp3$)");
 
 class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void playMusic(gd::string path, bool shouldLoop, float fadeInTime, int channel) {
@@ -14,13 +15,15 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		std::string gdStringSucks = path;
 		std::smatch smatch;
 		bool isMenuLoop = std::regex_match(gdStringSucks, smatch, geometryDashRegex);
+		bool isTerribleLoop = std::regex_match(gdStringSucks, smatch, terribleLoopRegex);
 		if (GJBaseGameLayer::get() && !isMenuLoop)
 			return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 		log::info("playlist mode enabled.\n=== PLAYLIST MODE DEBUG INFO ===\npath: {}\nshouldLoop: {}\nfadeInTime: {}\nchannel: {}", path, shouldLoop, fadeInTime, channel);
+		if (fadeInTime == 0 && gdStringSucks == "shop.mp3") return;
 		if (shouldLoop && fadeInTime == 1.0f) {
 			if (!isMenuLoop) {
-				log::info("non-menu loop found and playlist mode is detected: {}", gdStringSucks);
-				if (gdStringSucks.ends_with(".mp3")) return;
+				log::info("non-menu loop found while playlist mode is enabled: {}", gdStringSucks);
+				if (isTerribleLoop) return;
 				return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 			}
 			/*
