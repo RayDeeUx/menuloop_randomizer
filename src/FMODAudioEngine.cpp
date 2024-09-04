@@ -5,25 +5,32 @@
 using namespace geode::prelude;
 
 const static std::regex geometryDashRegex = std::regex(R"(^.*(?:Geometry ?Dash.*|config.(?:[\w])*\.(?:[\w])*).(?:.*)\.(?:mp3|ogg|oga|flac|wav)$)");
-const static std::regex terribleLoopRegex = std::regex(R"(^[\w]\.mp3$)");
+const static std::regex terribleLoopRegex = std::regex(R"(^[\w]+\.mp3$)");
 
 class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void playMusic(gd::string path, bool shouldLoop, float fadeInTime, int channel) {
 		if (!Utils::getBool("playlistMode"))
 			return FMODAudioEngine::get()->playMusic(path, shouldLoop, fadeInTime, channel);
+		log::info("playlist mode enabled.\n=== PLAYLIST MODE DEBUG INFO ===\npath: {}\nshouldLoop: {}\nfadeInTime: {}\nchannel: {}", path, shouldLoop, fadeInTime, channel);
+		if (auto currentScene = CCDirector::get()->getRunningScene()) {
+			for (auto object : CCArrayExt<CCObject*>(currentScene->getChildren())) {
+				if (auto node = typeinfo_cast<CCNode*>(object)) {
+					log::debug("there is a CCNode with ID: \"{}\"", node->getID());
+				}
+			}
+		}
 		bool desiredShouldLoop = shouldLoop;
 		std::string gdStringSucks = path;
 		std::smatch smatch;
+		if (std::regex_match(gdStringSucks, smatch, terribleLoopRegex))
+			return log::info("terrible loop detected while playlist mode is active: {}", gdStringSucks);
 		bool isMenuLoop = std::regex_match(gdStringSucks, smatch, geometryDashRegex);
-		bool isTerribleLoop = std::regex_match(gdStringSucks, smatch, terribleLoopRegex);
 		if (GJBaseGameLayer::get() && !isMenuLoop)
 			return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
-		log::info("playlist mode enabled.\n=== PLAYLIST MODE DEBUG INFO ===\npath: {}\nshouldLoop: {}\nfadeInTime: {}\nchannel: {}", path, shouldLoop, fadeInTime, channel);
 		if (fadeInTime == 0 && gdStringSucks == "shop.mp3") return;
 		if (shouldLoop && fadeInTime == 1.0f) {
 			if (!isMenuLoop) {
 				log::info("non-menu loop found while playlist mode is enabled: {}", gdStringSucks);
-				if (isTerribleLoop) return;
 				return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 			}
 			/*
