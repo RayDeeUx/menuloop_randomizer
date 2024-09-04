@@ -13,6 +13,7 @@ class SongManager {
 	void pickRandomSong();
 	bool isOriginalMenuLoop();
 	std::string getCurrentSong();
+	void setCurrentSong(std::string);
 	void setCurrentSongToSavedSong();
 	void update(float);
 	bool getCalledOnce();

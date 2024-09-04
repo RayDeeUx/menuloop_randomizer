@@ -61,8 +61,10 @@ void Utils::playlistModeNewSong() {
 	geode::log::info("is it over?");
 	if (SongManager::get().getCalledOnce()) fmod->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 	else {
-		fmod->playMusic(geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop"), true, 1.0f, 1);
+		std::string lastSong = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
+		fmod->playMusic(lastSong, true, 1.0f, 1);
 		SongManager::get().setCalledOnce(true);
+		SongManager::get().setCurrentSong(lastSong);
 	}
 }
 
