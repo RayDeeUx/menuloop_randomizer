@@ -12,7 +12,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		std::string gdStringSucks = path;
 		std::smatch smatch;
 		bool isMenuLoop = std::regex_match(gdStringSucks, smatch, geometryDashRegex);
-		if (GJBaseGameLayer::get() || !isMenuLoop) {
+		if (GJBaseGameLayer::get() && !isMenuLoop) {
 			return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 		}
 		if (Utils::getBool("playlistMode") && shouldLoop && fadeInTime == 1.0f) {
