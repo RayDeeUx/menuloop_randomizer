@@ -63,6 +63,9 @@ void Utils::playlistModeNewSong() {
 
 // create notif card stuff
 void Utils::makeNewCard(std::string notifString) {
+	if (auto oldCard = Utils::findCardRemotely()) {
+		oldCard->removeMeAndCleanup();
+	}
 	auto card = PlayingCard::create(notifString);
 	auto screenSize = cocos2d::CCDirector::get()->getWinSize();
 
