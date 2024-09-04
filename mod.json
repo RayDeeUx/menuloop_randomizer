@@ -25,7 +25,7 @@
 		},
 		"playlistMode": {
 			"name": "Playlist Mode",
-			"description": "<cl>Original idea by TheKevinner.</c>\n\nChange menu loops after a song is finished. Requires more than 2 songs available to work.\n\n<cr>This feature is ***very*** unstable. It's best if you reboot your game after enabling this setting, or you can play it safe and leave this disabled.</c>\n\n<cy>Known issues (most often for non-Windows users):</c>\n<cy>- Songs may stop changing while/after viewing Geode UI, the Tower, or the shops.</c>\n<cy>- Playlist Mode disables loops from the Tower, all shops, and all vaults. (This isn't much of a loss; those loops get tiring after a while.)</c>",
+			"description": "<cl>Original idea by TheKevinner.</c>\n\nChange menu loops after a song is finished. Requires more than 1 song available to work.\n\n<cr>This feature is ***very*** unstable. It's best if you restart your game after toggling this setting.</c>\n\n<cy>Known issues (usually for non-Windows users):</c>\n<cy>- Songs may stop changing while/after viewing Geode UI, the Tower, the icon kit, or the shops.</c>\n<cy>- Playlist Mode disables loops from the Tower, all shops, and all vaults. (Not much of a loss; those loops get tiring after a while.)</c>",
 			"type": "bool",
 			"default": false
 		},
