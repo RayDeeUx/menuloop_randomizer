@@ -97,6 +97,7 @@ $execute {
 		Utils::setNewSong();
 	});
 	listenForSettingChanges<bool>("playlistMode", [](bool isPlaylistMode) {
+		if (SongManager::get().isOriginalMenuLoop()) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		if (isPlaylistMode) {
 			return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
