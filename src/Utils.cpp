@@ -47,6 +47,7 @@ void Utils::setNewSong() {
 	}
 	FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
 	SongManager::get().pickRandomSong();
+	geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", SongManager::get().getCurrentSong());
 	GameManager::sharedState()->playMenuMusic();
 }
 
@@ -62,6 +63,7 @@ void Utils::playlistModeNewSong() {
 	if (SongManager::get().getCalledOnce()) {
 		geode::log::info("playing song as normal");
 		fmod->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
+		geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", SongManager::get().getCurrentSong());
 	} else {
 		std::string lastSong = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 		geode::log::info("playing song from saved value: {}", lastSong);

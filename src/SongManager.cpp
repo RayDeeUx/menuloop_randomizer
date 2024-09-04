@@ -32,7 +32,6 @@ void SongManager::pickRandomSong() {
 }
 
 std::string SongManager::getCurrentSong() {
-	geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", m_currentSong);
 	return m_currentSong;
 }
 
