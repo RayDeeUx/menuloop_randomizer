@@ -4,7 +4,7 @@
 
 using namespace geode::prelude;
 
-const static std::regex geometryDashRegex = std::regex(R"(^.*(?:Geometry ?Dash.*|config.(?:[\w])*\.(?:[\w])*).(?:.*)\.(?:mp3|ogg|oga|flac|wav)$)");
+const static std::regex geometryDashRegex = std::regex(R"(^.*(?:(?:Geometry ?Dash.*|com\.geode\.launcher)|config.(?:[\w])*\.(?:[\w])*).(?:.*)\.(?:mp3|ogg|oga|flac|wav)$)");
 const static std::regex terribleLoopRegex = std::regex(R"(^[\w]+\.mp3$)");
 
 class $modify(MenuLoopFMODHook, FMODAudioEngine) {
