@@ -76,10 +76,12 @@ $on_mod(Loaded) {
 	std::string lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 	bool saveSongOnGameClose = Utils::getBool("saveSongOnGameClose");
 	bool loopExists = std::filesystem::exists(lastMenuLoop);
-	log::debug("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}", lastMenuLoop, saveSongOnGameClose, loopExists);
+	log::info("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}", lastMenuLoop, saveSongOnGameClose, loopExists);
 	if (!lastMenuLoop.empty() && Utils::isSupportedExtension(lastMenuLoop) && loopExists && saveSongOnGameClose) {
 		songManager.setCurrentSongToSavedSong();
-	} else songManager.pickRandomSong();
+	} else {
+		songManager.pickRandomSong();
+	}
 
 	if (!std::filesystem::exists(configDir / R"(store_your_disabled_menuloops_here)")) {
 		std::filesystem::create_directory(configDir / R"(store_your_disabled_menuloops_here)");
