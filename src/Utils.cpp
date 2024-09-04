@@ -60,17 +60,17 @@ void Utils::playlistModeNewSong() {
 	fmod->m_backgroundMusicChannel->stop();
 	SongManager::get().pickRandomSong();
 	geode::log::info("is it over?");
-	if (SongManager::get().getCalledOnce()) {
+	if (SongManager::get().getCalledOnce() || !Utils::getBool("saveSongOnGameClose")) {
 		geode::log::info("playing song as normal");
 		fmod->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 		geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", SongManager::get().getCurrentSong());
 	} else {
 		std::string lastSong = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 		geode::log::info("playing song from saved value: {}", lastSong);
-		SongManager::get().setCalledOnce(true);
 		SongManager::get().setCurrentSong(lastSong);
 		fmod->playMusic(lastSong, true, 1.0f, 1);
 	}
+	SongManager::get().setCalledOnce(true);
 }
 
 // create notif card stuff
