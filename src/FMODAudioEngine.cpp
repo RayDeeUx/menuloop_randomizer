@@ -46,6 +46,9 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 				log::info("attempted to loop menu music on channel zero! see if on windows or not. aborting early.");
 				return;
 			}
+			#ifdef GEODE_IS_WINDOWS
+			if (!SongManager::get().getCalledOnce()) SongManager::get().setCalledOnce(true);
+			#endif
 			return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, 0.0f, channel);
 		}
 		FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
