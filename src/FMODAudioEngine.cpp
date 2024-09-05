@@ -1,3 +1,6 @@
+#ifdef GEODE_IS_WINDOWS
+#include "SongManager.hpp"
+#endif
 #include "Utils.hpp"
 #include <Geode/modify/FMODAudioEngine.hpp>
 #include <regex>
