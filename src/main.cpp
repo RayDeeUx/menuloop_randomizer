@@ -1,5 +1,6 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
+#include "Settings.hpp"
 #include <Geode/loader/SettingEvent.hpp>
 #include <Geode/loader/Dirs.hpp>
 
@@ -71,6 +72,8 @@ void populateVector(bool customSongs) {
 }
 
 $on_mod(Loaded) {
+	Mod::get()->addCustomSetting<MySettingValue>("configdir", "none");
+
 	populateVector(Utils::getBool("useCustomSongs"));
 
 	std::string lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");

@@ -17,6 +17,11 @@
 		"homepage": "https://github.com/elnexreal"
 	},
 	"settings": {
+		"configdir": {
+			"name": "Click me to open the Config Directory!",
+			"desc": "<cy>(Hopefully.)</c>\nThis setting does literally nothing new except being a button that acts as a shortcut to open the config directory for this mod (which is kind of important for using this mod properly, because this is where you will store your \"New Best\" sound effects), because the legendary developers in the Geode Team themselves forgot to add a shortcut button that would have done this exact same thing, and I have gotten far too many folks (rightfully) asking me to find the config directory when using some of my other mods, and I hate repeating the same things over and over again, and I don't know if the next major update for Geode will also repeat this mistake where HJfod forgets to include a config directory shortcut button, so this setting and this button are here for extra insurance, so please enjoy this extra button, I guess. Anyway, by the time you're finished reading this, your device should be finished with opening the config directory; press \"Aight\" to close this window.",
+			"type": "custom"
+		},
 		"useCustomSongs": {
 			"name": "Use Custom Songs Instead",
 			"description": "Use your own songs instead of those you have downloaded from Newgrounds or RobTop's Music Library.\n\n<cy>Find instructions in the mod info popup.</c>",
@@ -122,13 +127,13 @@
 		},
 		"randomizeWhenExitingLevel": {
 			"name": "Randomize on Level Exit",
-			"description": "Randomize the song when you exit a level.",
+			"description": "Randomize the song when you exit a level.\n\n<cy>This setting is ignored when \"Playlist Mode\" is enabled.</c>",
 			"type": "bool",
 			"default": true
 		},
 		"randomizeWhenExitingEditor": {
 			"name": "Randomize on Editor Exit",
-			"description": "Randomize the song when you exit the editor.",
+			"description": "Randomize the song when you exit the editor.\n\n<cy>This setting is ignored when \"Playlist Mode\" is enabled.</c>",
 			"type": "bool",
 			"default": true
 		}

@@ -10,6 +10,8 @@ If you want to add your own songs to the mod you should go to the settings tab, 
 
 `.oga`, `.flac` and `.wav` files are also supported, for the few audiophiles who want the highest of audio quality out there.
 
+*<cy>Note:</c>* ***<cy>There is an alternative config directory shortcut button within the mod's settings, in case you have QOLMod installed.</c>***
+
 ## Android
 <co>*If you click the folder and you get sent to the geode folder itself, you should go to `game/geode/config/elnexreal.menuloop_randomizer` and put the songs there*</co>
 

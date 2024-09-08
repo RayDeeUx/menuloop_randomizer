@@ -2,6 +2,8 @@
 - Added "Playlist Mode" (suggested by [TheKevineer](https://discord.com/users/633040761256017963)). <cy>This feature is incredibly unstable, especially outside of Windows. I have done everything I could to keep its behavior consistent between Windows, macOS, and Android, but any crashes/issues from this feature are either beyond my control or have been acknowledged during beta testing without an obvious/more immediate fix.</c>
 - Added "Remember Last Menu Loop" (suggested by [HexCodesGMD](https://discord.com/users/1222327935315218506)).
 - Renamed and reordered a few settings to reduce confusion.
+- Added config directory shortcut button.
+  - Incidentally, the pink config directory shortcut button from previous versions won't be added if QOLMod is loaded.
 # v1.4.3
 - Made sure the new "Regenerate Notification" sprite is actually part of the mod's resources.
 - Also shrunk the mod file size down as there haven't been any new crashes from the changes introduced in v1.4.1.

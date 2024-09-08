@@ -6,6 +6,8 @@ class $modify(MenuLoopOLHook, OptionsLayer) {
 	void customSetup() {
 		OptionsLayer::customSetup();
 
+		if (Loader::get()->getLoadedMod("thesillydoggo.qolmod")) return;
+
 		// add the folder btn to the settings layer
 		auto menu = CCMenu::create();
 
