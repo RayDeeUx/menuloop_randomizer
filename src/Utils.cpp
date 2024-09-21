@@ -58,7 +58,7 @@ void Utils::setNewSong() {
 }
 
 void Utils::playlistModeNewSong() {
-	if (!GameManager::sharedState()->getGameVariable("0122")) return;
+	if (GameManager::sharedState()->getGameVariable("0122")) return;
 	if (!Utils::getBool("playlistMode")) {
 		return Utils::setNewSong();
 	}
