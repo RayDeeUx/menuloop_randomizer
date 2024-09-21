@@ -40,9 +40,21 @@
 			"type": "bool",
 			"default": false
 		},
+		"enableCopySongID": {
+			"name": "\"Copy Song ID\" Button",
+			"description": "<cl>Original idea by Akashnil.</c>\n\nEnables the <cj>copy Song ID</c> in the main menu.\n\n<cy>If</c> <cl>\"Use Custom Songs Instead\"</c> <cy>is enabled, this button will copy the song name instead.</c>",
+			"type": "bool",
+			"default": true
+		},
 		"enableShuffleButton": {
 			"name": "Shuffle Button",
-			"description": "Enables the <cj>shuffle button</c> in the main menu.\n\n<cy>To clarify: This button is not the same feature as \"Shuffle Mode\", although it *can* work with \"Shuffle Mode\" enabled. The button only changes the current menu loop to a different song *when pressed*.</c>",
+			"description": "Enables the <cj>shuffle button</c> in the main menu.\n\n<cy>Using this button is not the same feature as enabling</c> <cl>\"Playlist Mode\"</c><cy>, although it *can* work with</c> <cl>\"Playlist Mode\"</c> <cy>enabled. This button only changes the menu loop to a different song *when pressed*, instead of when a song finishes.</c>",
+			"type": "bool",
+			"default": true
+		},
+		"enableBlacklistButton": {
+			"name": "Blacklist Button",
+			"description": "<cl>Original idea by AlphaQuata.</c>\n\nEnables the <cj>blacklist button</c> in the main menu.\n\n<cy>Using this button prevents a song from being chosen as a menu loop, and chooses a new menu loop song.</c>",
 			"type": "bool",
 			"default": true
 		},

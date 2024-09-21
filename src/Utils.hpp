@@ -1,4 +1,5 @@
 #pragma once
+#include <regex>
 
 class Utils {
   public:
@@ -10,7 +11,8 @@ class Utils {
 	static cocos2d::CCNode* findCardRemotely();
 	static void setNewSong();
 	static void playlistModeNewSong();
-	static void makeNewCard(std::string);
+	static void makeNewCard(const std::string &);
 	static void generateNotification();
 	static void playlistModePLAndEPL();
+	static void copyCurrentSongName();
 };

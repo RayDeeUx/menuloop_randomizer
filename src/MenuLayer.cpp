@@ -25,6 +25,9 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (Utils::getBool("enableNotification") && Utils::getBool("enableNewNotification"))
 			MenuLayerMLHook::addRegenButton();
 
+		if (Utils::getBool("enableCopySongID"))
+			MenuLayerMLHook::addCopyButton();
+
 		return true;
 	}
 
@@ -70,5 +73,24 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 
 		if (Utils::getBool("enableNotification"))
 			Utils::generateNotification();
+	}
+
+	void addCopyButton() {
+		auto menu = getChildByID("right-side-menu");
+
+		auto btn = CCMenuItemSpriteExtra::create(
+			CircleButtonSprite::create(CCSprite::create("copy-btn-sprite.png"_spr)),
+			this,
+			menu_selector(MenuLayerMLHook::onCopyButton)
+		);
+		btn->setID("copy-button"_spr);
+
+		menu->addChild(btn);
+		menu->updateLayout();
+	}
+
+	void onCopyButton(CCObject*) {
+		Utils::copyCurrentSongName();
+		Notification::create("[MLR] Current song name copied!", NotificationIcon::None, Mod::get()->getSettingValue<double>("notificationTime"));
 	}
 };

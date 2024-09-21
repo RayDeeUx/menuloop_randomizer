@@ -2,6 +2,12 @@
 #include "ui/PlayingCard.hpp"
 #include "Utils.hpp"
 #include <random>
+#include <regex>
+
+static std::regex m_songEffectRegex(R"(.*(?:\\|\/)(\S+)\.(mp3|ogg|wav|flac|oga))", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/CqvIvI/1.
+static const std::regex m_geodeAudioRegex(R"(((?!\S+geode)(?:\\|\/)(?:([a-z0-9\-_]+\.[a-z0-9\-_]+)(?:\\|\/))([\S ]+)\.(mp3|ogg|wav|flac|oga))$)", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/0b9rY1/1.
+static const std::regex m_possiblyJukeboxRegex(R"(.*.[\\\/]([\S]+))", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/Brmwbs/1.
+static const int m_desiredIndexForFileName = 1; // easier place to change index
 
 int Utils::randomIndex(int size) {
 	// select a random item from the vector and return the path
@@ -52,6 +58,7 @@ void Utils::setNewSong() {
 }
 
 void Utils::playlistModeNewSong() {
+	if (!GameManager::sharedState()->getGameVariable("0122")) return;
 	if (!Utils::getBool("playlistMode")) {
 		return Utils::setNewSong();
 	}
@@ -74,7 +81,7 @@ void Utils::playlistModeNewSong() {
 }
 
 // create notif card stuff
-void Utils::makeNewCard(std::string notifString) {
+void Utils::makeNewCard(const std::string& notifString) {
 	if (auto oldCard = Utils::findCardRemotely()) {
 		oldCard->removeMeAndCleanup();
 	}
@@ -163,4 +170,37 @@ void Utils::playlistModePLAndEPL() {
 	auto gjbgl = GJBaseGameLayer::get();
 	if (gjbgl) { return; }
 	Utils::playlistModeNewSong();
+}
+
+void Utils::copyCurrentSongName() {
+	std::string currentSongName = SongManager::get().getCurrentSong();
+	std::smatch match;
+	std::smatch geodeMatch;
+	std::smatch jukeboxMatch;
+	std::string result = "";
+	currentSongName = std::regex_replace(currentSongName, std::regex(R"(com\.geode\.launcher\/)"), ""); // android is cring, original is [ "com\.geode\.launcher\/" ]
+	currentSongName = fmt::format("/{}", currentSongName); // adding an extra slash to get it working on all possible paths. this is because combo burst does some stuff under the hood i am too scared to look at and i don't want to define more regex than necessary.
+	geode::log::info("path after: {}", currentSongName);
+	if (currentSongName.find("geode") != std::string::npos && (currentSongName.find("mods") != std::string::npos || currentSongName.find("config") != std::string::npos)) {
+		if (std::regex_search(currentSongName, geodeMatch, m_geodeAudioRegex)) {
+			result = geodeMatch[geodeMatch.size() - 2].str();
+			if (std::regex_search(result, jukeboxMatch, m_possiblyJukeboxRegex)) {
+				result = jukeboxMatch[jukeboxMatch.size() - 1].str();
+			}
+		} else {
+			result = "Something went wrong...";
+		}
+	} else if (std::regex_match(currentSongName, match, m_songEffectRegex)) {
+		if (std::regex_search(currentSongName, geodeMatch, m_geodeAudioRegex)) {
+			result = geodeMatch[geodeMatch.size() - 2].str();
+			if (std::regex_search(result, jukeboxMatch, m_possiblyJukeboxRegex)) {
+				result = jukeboxMatch[jukeboxMatch.size() - 1].str();
+			}
+		} else {
+			result = match[m_desiredIndexForFileName].str();
+		}
+	} else {
+		result = currentSongName;
+	}
+	geode::utils::clipboard::write(result);
 }

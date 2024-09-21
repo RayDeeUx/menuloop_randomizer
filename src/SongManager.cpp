@@ -48,6 +48,7 @@ bool SongManager::isOriginalMenuLoop() {
 }
 
 void SongManager::update(float dt) {
+	if (!GameManager::sharedState()->getGameVariable("0122")) return;
 	auto fmod = FMODAudioEngine::get();
 	if (!Utils::getBool("playlistMode") || GJBaseGameLayer::get() || m_isMenuLoop || m_songs.size() < 2 || !fmod) return;
 	// geode::log::info("channelIsPlaying: {}", fmod->isMusicPlaying(0));
