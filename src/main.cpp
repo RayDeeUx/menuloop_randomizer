@@ -21,8 +21,7 @@ $on_mod(Loaded) {
 # Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
 # Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
 # Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
-# --RayDeeUx
-)";
+# --RayDeeUx)";
 		auto result = utils::file::writeString(blacklistTxt, content);
 		if (result.isErr()) {
 			log::error("Error writing to blacklist.txt");
