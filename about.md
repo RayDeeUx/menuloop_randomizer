@@ -15,6 +15,9 @@ If you want to add your own songs to the mod you should go to the settings tab, 
 ## Android
 <co>*If you click the folder and you get sent to the geode folder itself, you should go to `game/geode/config/elnexreal.menuloop_randomizer` and put the songs there*</co>
 
+# Blacklisting songs
+Ever felt like a song was an absolute dud? Click the (crudely drawn) <cl>blacklist button</c> and you won't ever hear that song as a menu loop again.
+
 # Elnexreal would like to thank:
 - [hiimjustin000](https://github.com/hiimjustin000) <cj>for helping me with the bindings problem (i was using an outdated version of geode LMAO).</cj>
 - [km7dev](https://github.com/Kingminer7) <cj>for helping me with the constant crashes and testing.</cj>
