@@ -308,7 +308,7 @@ SongInfoObject* Utils::getSongInfoObject() {
 	if (Utils::getBool("useCustomSongs")) return nullptr;
 	if (SongManager::get().isOriginalMenuLoop()) return nullptr;
 
-	auto songFileName = std::filesystem::path(SongManager::get().getCurrentSong()).filename();
+	auto songFileName = std::filesystem::path(SongManager::get().getCurrentSong()).filename().string();
 
 	// if it's not menuLoop.mp3, then get info
 	size_t dotPos = songFileName.find_last_of('.');
