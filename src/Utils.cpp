@@ -154,6 +154,7 @@ void Utils::generateNotification() {
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
 		std::string resultString = "";
 		auto formatSetting = geode::Mod::get()->getSettingValue<std::string>("songFormatNGML");
+		bool isMenuLoopFromNG = songInfo->m_songID == 584131;
 		if (formatSetting == "Song Name, Artist, Song ID") {
 			resultString = fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
 		} else if (formatSetting == "Song Name + Artist") {
@@ -163,6 +164,7 @@ void Utils::generateNotification() {
 		} else {
 			resultString = fmt::format("{}", songInfo->m_songName);
 		}
+		if (isMenuLoopFromNG) resultString = resultString.append(" [OOF!]");
 		return Utils::makeNewCard(notifString.append(resultString));
 	}
 	return Utils::makeNewCard(notifString.append(songFileName.string()));
@@ -243,7 +245,7 @@ void Utils::populateVector(bool customSongs) {
 
 			bool isInTextBlacklist = false;
 
-			for (std::string string : blacklist) {
+			for (const std::string& string : blacklist) {
 				if (string.starts_with(filePathString)) {
 					isInTextBlacklist = true;
 					break;
@@ -270,6 +272,7 @@ void Utils::populateVector(bool customSongs) {
 		--raydeeux
 		*/
 		geode::cocos::CCArrayExt<SongInfoObject*> songs = downloadManager->getDownloadedSongs();
+		bool qualifiedForOGMenuBlacklist = geode::Mod::get()->getSavedValue<bool>("isEry");
 		for (auto song : songs) {
 			if (!song) continue;
 
@@ -277,14 +280,14 @@ void Utils::populateVector(bool customSongs) {
 
 			bool isInTextBlacklist = false;
 
-			for (std::string string : blacklist) {
+			for (const std::string& string : blacklist) {
 				if (string.starts_with(songPath)) {
 					isInTextBlacklist = true;
 					break;
 				}
 			}
 
-			if (!Utils::isSupportedExtension(songPath) || std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end() || isInTextBlacklist) continue;
+			if (!Utils::isSupportedExtension(songPath) || std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end() || isInTextBlacklist || (qualifiedForOGMenuBlacklist && song->m_songID == 584131)) continue; // apply hardcode blacklist 584131 onto self in light of BS edge case caught by hiimjustin001: https://discord.com/channels/911701438269386882/911702535373475870/1289021323279990795
 
 			geode::log::debug("Adding Newgrounds/Music Library song: {}", songPath);
 			SongManager::get().addSong(songPath);

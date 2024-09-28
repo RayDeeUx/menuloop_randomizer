@@ -40,6 +40,7 @@ void SongManager::setCurrentSong(std::string song) {
 }
 
 void SongManager::setCurrentSongToSavedSong() {
+	if (m_isMenuLoop) return;
 	m_currentSong = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 }
 

@@ -1,6 +1,6 @@
 # v1.5.1
-- Added "Copy Song ID" button (suggested by [Akashnil](https://discord.com/users/1068096599701590056)). <cy>This button only appears when using songs you've downloaded from Newgrounds or the Music Library. NONGs will not return a song ID.</c>
-- Added "Blacklist Song" button (suggested by [AlphaQuata](https://discord.com/users/766876726566846505)). <cy>This button works regardless of your custom songs or Playlist Mode choices.</c>
+- Added "Copy Song ID" button (suggested by [Akashnil](https://discord.com/users/1068096599701590056)). <cy>Custom songs and NONGs will not return a song ID. They will fall back to its song name instead.</c> <cy>Button sprite adapted from [hiimjustin000](https://github.com/hiimjustin000) with permission.</c>
+- Added "Blacklist Song" button (suggested by [AlphaQuata](https://discord.com/users/766876726566846505)). <cy>This button works regardless of your custom songs or Playlist Mode choices.</c> <cy>To manually un-blacklist a song, open `blacklist.txt` in the mod's config directory and edit it accordingly.</c>
 - Fix a bug where Playlist Mode would ignore the in-game "Menu Music" toggle if that was disabled.
 # v1.5.0
 - Added "Playlist Mode" (suggested by [TheKevineer](https://discord.com/users/633040761256017963)). <cy>This feature is incredibly unstable, especially outside of Windows. I have done everything I could to keep its behavior consistent between Windows, macOS, and Android, but any crashes/issues from this feature are either beyond my control or have been acknowledged during beta testing without an obvious/more immediate fix.</c>
