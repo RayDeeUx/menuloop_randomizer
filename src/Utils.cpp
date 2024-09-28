@@ -216,7 +216,7 @@ void Utils::populateVector(bool customSongs) {
 		--elnex
 	*/
 
-	std::vector<std::string> blacklist {};
+	std::vector<std::string> blacklist;
 	std::vector<std::string> otherBlacklist = SongManager::get().getBlacklist();
 
 	if (auto blacklistPath = std::filesystem::exists(configDir / R"(blacklist.txt)")) {
@@ -237,7 +237,17 @@ void Utils::populateVector(bool customSongs) {
 			const auto& filePath = file.path();
 			auto filePathString = filePath.string();
 
-			if (!Utils::isSupportedExtension(filePathString) || std::ranges::find(blacklist, filePathString) != blacklist.end() || std::ranges::find(otherBlacklist, filePathString) != otherBlacklist.end()) continue;
+			bool isInTextBlacklist = false;
+
+			for (std::string string : blacklist) {
+				if (string.starts_with(filePathString)) {
+					geode::log::info("\n{}\n{}", string, filePathString);
+					isInTextBlacklist = true;
+					break;
+				}
+			}
+
+			if (!Utils::isSupportedExtension(filePathString) || std::ranges::find(otherBlacklist, filePathString) != otherBlacklist.end() || isInTextBlacklist) continue;
 
 			geode::log::debug("Adding custom song: {}", filePath.filename().string());
 			SongManager::get().addSong(filePathString);
@@ -262,7 +272,18 @@ void Utils::populateVector(bool customSongs) {
 
 			std::string songPath = downloadManager->pathForSong(song->m_songID);
 
-			if (!Utils::isSupportedExtension(songPath) || std::ranges::find(blacklist, songPath) != blacklist.end() || std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end()) continue;
+			bool isInTextBlacklist = false;
+
+			for (std::string string : blacklist) {
+				if (string.starts_with(songPath)) {
+					geode::log::info("string.starts_with(songPath): {}", string.starts_with(songPath));
+					geode::log::info("\n{}\n{}", string, songPath);
+					isInTextBlacklist = true;
+					break;
+				}
+			}
+
+			if (!Utils::isSupportedExtension(songPath) || std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end() || isInTextBlacklist) continue;
 
 			geode::log::debug("Adding Newgrounds/Music Library song: {}", songPath);
 			SongManager::get().addSong(songPath);

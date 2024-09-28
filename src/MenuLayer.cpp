@@ -125,7 +125,11 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (!useCustomSongs) toWriteToFile = toWriteToFile.append(fmt::format(" # Song: {} by {}", songName, songArtist));
 		auto test = utils::file::readString(m_fields->blacklistFile);
 		if (test.isErr()) return log::info("error reading blacklist file!");
-		auto result = geode::utils::file::writeString(m_fields->blacklistFile, test.unwrap().append(fmt::format("{}\n", toWriteToFile)));
+		auto newLine = geode::utils::file::writeString(m_fields->blacklistFile, test.unwrap().append("\n"));
+		if (newLine.isErr()) return log::info("error writing blacklist file!");
+		auto readAfterNewLine = geode::utils::file::readString(m_fields->blacklistFile);
+		if (readAfterNewLine.isErr()) return log::info("error reading blacklist file!");
+		auto result = geode::utils::file::writeString(m_fields->blacklistFile, readAfterNewLine.unwrap().append(toWriteToFile));
 		if (result.isErr()) return log::info("error blacklisting song {}", currentSong);
 		m_fields->songManager.addToBlacklist();
 		m_fields->songManager.clearSongs();
