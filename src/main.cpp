@@ -2,79 +2,34 @@
 #include "Utils.hpp"
 #include "Settings.hpp"
 #include <Geode/loader/SettingEvent.hpp>
-#include <Geode/loader/Dirs.hpp>
 
 using namespace geode::prelude;
 
 SongManager &songManager = SongManager::get();
 std::filesystem::path configDir = Mod::get()->getConfigDir();
 
-void populateVector(bool customSongs) {
-	/*
-		if custom songs are enabled search for files in the config dir
-		if not, just use the newgrounds songs
-		--elnex
-	*/
-	if (customSongs) {
-		for (auto file : std::filesystem::directory_iterator(configDir)) {
-			if (!std::filesystem::exists(file)) continue;
-
-			auto filePath = file.path();
-			auto filePathString = filePath.string();
-
-			if (!Utils::isSupportedExtension(filePathString)) continue;
-
-			log::debug("Adding custom song: {}", filePath.filename().string());
-			songManager.addSong(filePathString);
-		}
-	} else {
-		auto downloadManager = MusicDownloadManager::sharedState();
-
-		// for every downloaded song push it to the m_songs vector --elnex
-		/*
-		getDownloadedSongs() function call binding for macOS found
-		from ninXout (ARM) and hiimjustin000 (Intel + verification)
-
-		remarks:
-		- getDownloadedSongs() grabs both music library and newgrounds
-		songs lol.
-		- only reason it didn't work was because file support was limited to `.mp3`.
-		--raydeeux
-		*/
-		CCArrayExt<SongInfoObject*> songs = downloadManager->getDownloadedSongs();
-		for (auto song : songs) {
-			if (!song) continue;
-			
-			std::string songPath = downloadManager->pathForSong(song->m_songID);
-
-			if (!Utils::isSupportedExtension(songPath)) continue;
-
-			log::debug("Adding Newgrounds/Music Library song: {}", songPath);
-			songManager.addSong(songPath);
-		}
-		// same thing as NG but for music library as well --ninXout
-		// SPOILER: IT DOESN'T WORK CROSSPLATFORM (android specifically)! --raydeeux
-		/*
-		std::filesystem::path musicLibrarySongs = dirs::getGeodeDir().parent_path() / "Resources" / "songs";
-		if (!std::filesystem::exists(musicLibrarySongs)) return;
-		for (const std::filesystem::path& dirEntry : std::filesystem::recursive_directory_iterator(musicLibrarySongs)) {
-			if (!std::filesystem::exists(dirEntry)) continue;
-
-			std::string songPath = dirEntry.string();
-
-			if (!Utils::isSupportedExtension(songPath)) continue;
-
-			log::debug("Adding Music Library song: {}", songPath);
-			songManager.addSong(songPath);
-		}
-		*/
-	}
-}
-
 $on_mod(Loaded) {
 	Mod::get()->addCustomSetting<MySettingValue>("configdir", "none");
 
-	populateVector(Utils::getBool("useCustomSongs"));
+	auto blacklistTxt = configDir / R"(blacklist.txt)";
+	if (!std::filesystem::exists(blacklistTxt)) {
+		std::string content = R"(# Welcome to the Menu Loop Randomizer song blacklist!
+# Each line that doesn't start with a "#" will be treated as a blacklisted song file.
+# All lines that start with a "#" are ignored. This means you can un-blacklist a song by adding "#" next to it.
+# Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
+# Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
+# Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
+# Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
+# Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
+# --RayDeeUx
+)";
+		auto result = utils::file::writeString(blacklistTxt, content);
+		if (result.isErr()) {
+			log::error("Error writing to blacklist.txt");
+		}
+	}
+
+	Utils::populateVector(Utils::getBool("useCustomSongs"));
 
 	std::string lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 	bool saveSongOnGameClose = Utils::getBool("saveSongOnGameClose");
@@ -103,7 +58,7 @@ $execute {
 			if they're ng songs also push the path bc we're going to use getPathForSong
 			--elnexreal
 		*/
-		populateVector(value);
+		Utils::populateVector(value);
 
 		// change the song when you click apply, stoi will not like custom names. --elnexreal
 

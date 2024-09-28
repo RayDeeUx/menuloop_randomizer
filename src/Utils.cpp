@@ -3,6 +3,9 @@
 #include "Utils.hpp"
 #include <random>
 #include <regex>
+#include <filesystem>
+#include <iostream>
+#include <fstream>
 
 static std::regex m_songEffectRegex(R"(.*(?:\\|\/)(\S+)\.(mp3|ogg|wav|flac|oga))", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/CqvIvI/1.
 static const std::regex m_geodeAudioRegex(R"(((?!\S+geode)(?:\\|\/)(?:([a-z0-9\-_]+\.[a-z0-9\-_]+)(?:\\|\/))([\S ]+)\.(mp3|ogg|wav|flac|oga))$)", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/0b9rY1/1.
@@ -203,4 +206,119 @@ void Utils::copyCurrentSongName() {
 		result = currentSongName;
 	}
 	geode::utils::clipboard::write(result);
+}
+
+void Utils::populateVector(bool customSongs) {
+	auto configDir = geode::Mod::get()->getConfigDir();
+	/*
+		if custom songs are enabled search for files in the config dir
+		if not, just use the newgrounds songs
+		--elnex
+	*/
+
+	std::vector<std::string> blacklist {};
+
+	if (auto blacklistPath = std::filesystem::exists(configDir / R"(blacklist.txt)")) {
+		std::ifstream blacklistFile((configDir / R"(blacklist.txt)"));
+		std::string blacklistString;
+		while (std::getline(blacklistFile, blacklistString)) {
+			if (blacklistString.starts_with('#')) continue;
+			blacklist.push_back(blacklistString);
+			geode::log::info("{}", blacklistString);
+		}
+		geode::log::info("Finished storing oldDNBMessages.");
+	}
+
+	if (customSongs) {
+		for (auto file : std::filesystem::directory_iterator(configDir)) {
+			if (!std::filesystem::exists(file)) continue;
+
+			auto filePath = file.path();
+			auto filePathString = filePath.string();
+
+			if (!Utils::isSupportedExtension(filePathString) || std::ranges::find(blacklist, filePathString) != blacklist.end()) continue;
+
+			geode::log::debug("Adding custom song: {}", filePath.filename().string());
+			SongManager::get().addSong(filePathString);
+		}
+	} else {
+		auto downloadManager = MusicDownloadManager::sharedState();
+
+		// for every downloaded song push it to the m_songs vector --elnex
+		/*
+		getDownloadedSongs() function call binding for macOS found
+		from ninXout (ARM) and hiimjustin000 (Intel + verification)
+
+		remarks:
+		- getDownloadedSongs() grabs both music library and newgrounds
+		songs lol.
+		- only reason it didn't work was because file support was limited to `.mp3`.
+		--raydeeux
+		*/
+		geode::cocos::CCArrayExt<SongInfoObject*> songs = downloadManager->getDownloadedSongs();
+		for (auto song : songs) {
+			if (!song) continue;
+
+			std::string songPath = downloadManager->pathForSong(song->m_songID);
+
+			if (!Utils::isSupportedExtension(songPath) || std::ranges::find(blacklist, songPath) != blacklist.end()) continue;
+
+			geode::log::debug("Adding Newgrounds/Music Library song: {}", songPath);
+			SongManager::get().addSong(songPath);
+		}
+		// same thing as NG but for music library as well --ninXout
+		// SPOILER: IT DOESN'T WORK CROSSPLATFORM (android specifically)! --raydeeux
+		/*
+		std::filesystem::path musicLibrarySongs = dirs::getGeodeDir().parent_path() / "Resources" / "songs";
+		if (!std::filesystem::exists(musicLibrarySongs)) return;
+		for (const std::filesystem::path& dirEntry : std::filesystem::recursive_directory_iterator(musicLibrarySongs)) {
+			if (!std::filesystem::exists(dirEntry)) continue;
+
+			std::string songPath = dirEntry.string();
+
+			if (!Utils::isSupportedExtension(songPath)) continue;
+
+			log::debug("Adding Music Library song: {}", songPath);
+			songManager.addSong(songPath);
+		}
+		*/
+	}
+}
+
+SongInfoObject* Utils::getSongInfoObject() {
+	if (Utils::getBool("useCustomSongs")) return nullptr;
+	if (SongManager::get().isOriginalMenuLoop()) return nullptr;
+
+	auto songFileName = SongManager::get().getCurrentSong();
+
+	// if it's not menuLoop.mp3, then get info
+	size_t dotPos = songFileName.find_last_of('.');
+
+	if (dotPos == std::string::npos) return nullptr;
+
+	std::string songFileNameAsAtring = songFileName.substr(0, dotPos);
+
+	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameAsAtring);
+
+	if (songFileNameAsID.isErr()) return nullptr;
+
+	return MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrap());
+}
+
+std::string Utils::getSongName() {
+	const auto songInfo = Utils::getSongInfoObject();
+	if (!songInfo) return "";
+	return songInfo->m_songName;
+}
+
+std::string Utils::getSongArtist() {
+	const auto songInfo = Utils::getSongInfoObject();
+	if (!songInfo) return "";
+	return songInfo->m_artistName;
+}
+
+int Utils::getSongID() {
+	const auto songInfo = Utils::getSongInfoObject();
+	if (!songInfo) return -1;
+	return songInfo->m_songID;
 }

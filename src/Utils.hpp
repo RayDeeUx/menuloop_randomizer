@@ -15,4 +15,9 @@ class Utils {
 	static void generateNotification();
 	static void playlistModePLAndEPL();
 	static void copyCurrentSongName();
+	static void populateVector(bool);
+	static SongInfoObject* getSongInfoObject();
+	static std::string getSongName();
+	static std::string getSongArtist();
+	static int getSongID();
 };
