@@ -1,6 +1,5 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
-#include "ui/PlayingCard.hpp"
 #include <Geode/modify/MenuLayer.hpp>
 
 using namespace geode::prelude;
@@ -134,7 +133,11 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::playlistModeNewSong();
 		if (!Utils::getBool("enableNotification")) return;
-		if (!useCustomSongs) Utils::makeNewCard(fmt::format("Blacklisted {} by {} ({}), now playing {}.", songName, songArtist, songID, Utils::getSongName()));
-		else if (!customSong.empty()) Utils::makeNewCard(fmt::format("Blacklisted {}, now playing {}.", customSong, Utils::currentCustomSong()));
+		if (m_fields->songManager.isOriginalMenuLoop()) {
+			if (useCustomSongs && !customSong.empty()) return Utils::makeNewCard(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", customSong));
+			if (!useCustomSongs && !songName.empty()) return Utils::makeNewCard(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", songName));
+		}
+		if (!useCustomSongs) return Utils::makeNewCard(fmt::format("Blacklisted {} by {} ({}), now playing {}.", songName, songArtist, songID, Utils::getSongName()));
+		if (!customSong.empty()) return Utils::makeNewCard(fmt::format("Blacklisted {}, now playing {}.", customSong, Utils::currentCustomSong()));
 	}
 };

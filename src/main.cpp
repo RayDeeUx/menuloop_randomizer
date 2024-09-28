@@ -16,11 +16,11 @@ $on_mod(Loaded) {
 		std::string content = R"(# Welcome to the Menu Loop Randomizer song blacklist!
 # Each line that doesn't start with a "#" will be treated as a blacklisted song file.
 # All lines that start with a "#" are ignored. This means you can un-blacklist a song by adding "#" next to it.
-# Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
-# Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
-# Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
-# Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
-# Reports of any crashes from lines that don't begin with "#" will be ignored. Lines that do not start with "#" will be treated as song files.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # --RayDeeUx)";
 		auto result = utils::file::writeString(blacklistTxt, content);
 		if (result.isErr()) {

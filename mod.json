@@ -42,7 +42,7 @@
 		},
 		"enableCopySongID": {
 			"name": "\"Copy Song ID\" Button",
-			"description": "<cl>Original idea by Akashnil.</c>\n\nEnables the <cj>copy Song ID</c> in the main menu.\n\n<cy>If</c> <cl>\"Use Custom Songs Instead\"</c> <cy>is enabled, this button will copy the song name instead.</c>",
+			"description": "<cl>Original idea by Akashnil. Original sprite by hiimjustin000.</c>\n\nEnables the <cj>copy Song ID</c> in the main menu.\n\n<cy>If</c> <cl>\"Use Custom Songs Instead\"</c> <cy>is enabled, this button will copy the song name instead.</c>",
 			"type": "bool",
 			"default": true
 		},
