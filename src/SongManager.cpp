@@ -71,3 +71,11 @@ void SongManager::setCalledOnce(bool value) {
 bool SongManager::getCalledOnce() {
 	return m_calledOnce;
 }
+
+void SongManager::addToBlacklist(std::string song = SongManager::get().getCurrentSong()) {
+	m_blacklist.push_back(song);
+}
+
+std::vector<std::string> SongManager::getBlacklist() {
+	return m_blacklist;
+}

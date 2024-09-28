@@ -217,12 +217,13 @@ void Utils::populateVector(bool customSongs) {
 	*/
 
 	std::vector<std::string> blacklist {};
+	std::vector<std::string> otherBlacklist = SongManager::get().getBlacklist();
 
 	if (auto blacklistPath = std::filesystem::exists(configDir / R"(blacklist.txt)")) {
 		std::ifstream blacklistFile((configDir / R"(blacklist.txt)"));
 		std::string blacklistString;
 		while (std::getline(blacklistFile, blacklistString)) {
-			if (blacklistString.starts_with('#')) continue;
+			if (blacklistString.starts_with('#') || blacklistString.empty()) continue;
 			blacklist.push_back(blacklistString);
 			geode::log::info("{}", blacklistString);
 		}
@@ -236,7 +237,7 @@ void Utils::populateVector(bool customSongs) {
 			const auto& filePath = file.path();
 			auto filePathString = filePath.string();
 
-			if (!Utils::isSupportedExtension(filePathString) || std::ranges::find(blacklist, filePathString) != blacklist.end() || std::ranges::find(blacklist, filePath.filename().string()) != blacklist.end()) continue;
+			if (!Utils::isSupportedExtension(filePathString) || std::ranges::find(blacklist, filePathString) != blacklist.end() || std::ranges::find(otherBlacklist, filePathString) != otherBlacklist.end()) continue;
 
 			geode::log::debug("Adding custom song: {}", filePath.filename().string());
 			SongManager::get().addSong(filePathString);
@@ -261,7 +262,7 @@ void Utils::populateVector(bool customSongs) {
 
 			std::string songPath = downloadManager->pathForSong(song->m_songID);
 
-			if (!Utils::isSupportedExtension(songPath) || std::ranges::find(blacklist, songPath) != blacklist.end()) continue;
+			if (!Utils::isSupportedExtension(songPath) || std::ranges::find(blacklist, songPath) != blacklist.end() || std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end()) continue;
 
 			geode::log::debug("Adding Newgrounds/Music Library song: {}", songPath);
 			SongManager::get().addSong(songPath);
