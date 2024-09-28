@@ -19,6 +19,7 @@ class SongManager {
 	bool getCalledOnce();
 	void setCalledOnce(bool);
 	void addToBlacklist(std::string);
+	void addToBlacklist();
 	std::vector<std::string> getBlacklist();
 
   private:
