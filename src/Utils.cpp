@@ -241,7 +241,6 @@ void Utils::populateVector(bool customSongs) {
 
 			for (std::string string : blacklist) {
 				if (string.starts_with(filePathString)) {
-					geode::log::info("\n{}\n{}", string, filePathString);
 					isInTextBlacklist = true;
 					break;
 				}
@@ -276,8 +275,6 @@ void Utils::populateVector(bool customSongs) {
 
 			for (std::string string : blacklist) {
 				if (string.starts_with(songPath)) {
-					geode::log::info("string.starts_with(songPath): {}", string.starts_with(songPath));
-					geode::log::info("\n{}\n{}", string, songPath);
 					isInTextBlacklist = true;
 					break;
 				}
