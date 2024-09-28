@@ -51,6 +51,8 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onShuffleBtn(CCObject*) {
 		Utils::removeCard();
 
+		if (m_fields->songManager.isOriginalMenuLoop()) Utils::populateVector(Utils::getBool("useCustomSongs"));
+
 		Utils::setNewSong();
 
 		if (Utils::getBool("enableNotification"))
