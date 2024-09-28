@@ -123,7 +123,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		int songID = Utils::getSongID();
 		std::string customSong = Utils::currentCustomSong();
 		if (!std::filesystem::exists(m_fields->blacklistFile)) return log::info("error finding blacklist file!");
-		if (!useCustomSongs) toWriteToFile = toWriteToFile.append(fmt::format(" # Song: {} by {}", songName, songArtist));
+		if (!useCustomSongs) toWriteToFile = toWriteToFile.append(fmt::format(" # [MLR] Song: {} by {} [MLR] #", songName, songArtist));
 		std::ofstream blacklistFileOutput;
 		blacklistFileOutput.open(m_fields->blacklistFile, std::ios_base::app);
 		blacklistFileOutput << std::endl << toWriteToFile;

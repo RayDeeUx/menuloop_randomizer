@@ -224,8 +224,13 @@ void Utils::populateVector(bool customSongs) {
 		std::string blacklistString;
 		while (std::getline(blacklistFile, blacklistString)) {
 			if (blacklistString.starts_with('#') || blacklistString.empty()) continue;
-			blacklist.push_back(blacklistString);
-			geode::log::info("adding to blacklist: {}", blacklistString);
+			std::string blacklistStringModified = blacklistString;
+			if (blacklistStringModified.ends_with(" [MLR] #")) {
+				blacklistStringModified = blacklistStringModified.substr(0, blacklistStringModified.find(" # [MLR] Song: "));
+				geode::log::info("blacklistStringModified: {}", blacklistStringModified);
+			}
+			blacklist.push_back(blacklistStringModified);
+			geode::log::info("adding to blacklist: {}", blacklistStringModified);
 		}
 		geode::log::info("Finished storing blacklist. size: {}", blacklist.size());
 	}
