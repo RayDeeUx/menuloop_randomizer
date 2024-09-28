@@ -20,4 +20,5 @@ class Utils {
 	static std::string getSongName();
 	static std::string getSongArtist();
 	static int getSongID();
+	static std::string currentCustomSong();
 };

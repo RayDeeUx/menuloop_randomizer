@@ -226,17 +226,17 @@ void Utils::populateVector(bool customSongs) {
 			blacklist.push_back(blacklistString);
 			geode::log::info("{}", blacklistString);
 		}
-		geode::log::info("Finished storing oldDNBMessages.");
+		geode::log::info("Finished storing blacklist. size: {}", blacklist.size());
 	}
 
 	if (customSongs) {
 		for (auto file : std::filesystem::directory_iterator(configDir)) {
 			if (!std::filesystem::exists(file)) continue;
 
-			auto filePath = file.path();
+			const auto& filePath = file.path();
 			auto filePathString = filePath.string();
 
-			if (!Utils::isSupportedExtension(filePathString) || std::ranges::find(blacklist, filePathString) != blacklist.end()) continue;
+			if (!Utils::isSupportedExtension(filePathString) || std::ranges::find(blacklist, filePathString) != blacklist.end() || std::ranges::find(blacklist, filePath.filename().string()) != blacklist.end()) continue;
 
 			geode::log::debug("Adding custom song: {}", filePath.filename().string());
 			SongManager::get().addSong(filePathString);
@@ -321,4 +321,10 @@ int Utils::getSongID() {
 	const auto songInfo = Utils::getSongInfoObject();
 	if (!songInfo) return -1;
 	return songInfo->m_songID;
+}
+
+std::string Utils::currentCustomSong() {
+	if (!Utils::getBool("useCustomSongs")) return Utils::getSongName();
+	if (SongManager::get().isOriginalMenuLoop()) return "";
+	return std::filesystem::path(SongManager::get().getCurrentSong()).filename().string();
 }
