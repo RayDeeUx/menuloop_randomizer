@@ -7,7 +7,8 @@ using namespace geode::prelude;
 class $modify(MenuLayerMLHook, MenuLayer) {
 	struct Fields {
 		SongManager &songManager = SongManager::get();
-		std::filesystem::path blacklistFile = Mod::get()->getConfigDir() / R"(blacklist.txt)";
+		std::filesystem::path configDir = Mod::get()->getConfigDir();
+		std::filesystem::path blacklistFile = configDir / R"(blacklist.txt)";
 	};
 
 	bool init() {
@@ -114,7 +115,19 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	}
 
 	void onBlacklistButton(CCObject*) {
-		if (m_fields->songManager.isOriginalMenuLoop()) return;
+		if (m_fields->songManager.isOriginalMenuLoop()) {
+			geode::createQuickPopup(
+				"Menu Loop Randomizer",
+				"There's nothing to blacklist! Open Menu Loop Randomizer's config directory and edit its <cj>blacklist.txt</c> file to bring back some songs.",
+				"Never Mind", "Open Mod Config",
+				[this](FLAlertLayer* alert, bool openConfig) {
+					if (openConfig) {
+						file::openFolder(m_fields->configDir);
+					}
+				}
+			);
+			return;
+		}
 		auto currentSong = m_fields->songManager.getCurrentSong();
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 		log::info("blacklisting: {}", currentSong);
