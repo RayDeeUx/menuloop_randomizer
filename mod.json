@@ -11,11 +11,7 @@
 	"developers": ["RayDeeUx", "elnexreal"],
 	"description": "Menu Loop randomizer for GD.",
 	"tags": ["music", "interface", "enhancement"],
-	"links": {
-		"community": "https://discord.gg/WqZBYdBWZW",
-		"source": "https://github.com/elnexreal/menuloop_randomizer",
-		"homepage": "https://github.com/elnexreal"
-	},
+	"repository": "https://github.com/RayDeeUx/menuloop_randomizer",
 	"settings": {
 		"configdir": {
 			"name": "Click me to open the Config Directory!",
@@ -161,5 +157,13 @@
 			"importance": "required",
 			"version": ">=1.13.1"
 		}
-	]
+	],
+	"issues": {
+		"url": "https://discord.com/channels/911701438269386882/1205523212444639292",
+		"info": "To disable hyphen prefixes and suffixes in custom messages, edit saved.json. For other issues, ping me <cl>(@erymanthus)</c> in the Geode SDK Discord server's <cl>#help</c> channel if you need help. <cr>DMs are NOT accepted.</c>"
+	},
+	"links": {
+		"community": "https://discord.gg/WqZBYdBWZW",
+		"homepage": "https://discord.com/channels/822510988409831486/1206371881222144020"
+	}
 }
