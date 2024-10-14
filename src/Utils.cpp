@@ -128,12 +128,12 @@ void Utils::generateNotification() {
 	if (SongManager::get().isOriginalMenuLoop())
 		return Utils::makeNewCard(notifString.append("Original Menu Loop by RobTop"));
 
-	geode::log::info("attempting to play {}", songFileName.wstring());
+	geode::log::info("attempting to play {}", geode::utils::string::wideToUtf8(songFileName.wstring()));
 	// if it's not menuLoop.mp3, then get info
 	size_t dotPos = songFileName.wstring().find_last_of('.');
 
 	if (dotPos == std::string::npos) {
-		geode::log::error("{} was not a valid file name...? [NG/Music Library]", songFileName.wstring());
+		geode::log::error("{} was not a valid file name...? [NG/Music Library]", geode::utils::string::wideToUtf8(songFileName.wstring()));
 		return Utils::makeNewCard(notifString.append("Unknown"));
 	}
 
@@ -254,7 +254,7 @@ void Utils::populateVector(bool customSongs) {
 
 			if (!Utils::isSupportedExtension(filePathString) || std::ranges::find(otherBlacklist, filePathString) != otherBlacklist.end() || isInTextBlacklist) continue;
 
-			geode::log::debug("Adding custom song: {}", filePath.filename().wstring());
+			geode::log::debug("Adding custom song: {}", geode::utils::string::wideToUtf8(filePath.filename().wstring()));
 			SongManager::get().addSong(filePathString);
 		}
 	} else {
