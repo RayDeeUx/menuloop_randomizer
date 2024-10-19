@@ -21,4 +21,5 @@ class Utils {
 	static std::string getSongArtist();
 	static int getSongID();
 	static std::string currentCustomSong();
+	static std::string toNormalizedString(const std::filesystem::path& path);
 };
