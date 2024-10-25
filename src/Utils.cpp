@@ -67,6 +67,9 @@ void Utils::playlistModeNewSong() {
 	}
 	geode::log::info("attempting to hijack menuloop channel to use playlist mode");
 	auto fmod = FMODAudioEngine::sharedEngine();
+	float fmodIsCBrained;
+	FMOD_RESULT fmodResult = fmod->m_backgroundMusicChannel->getVolume(&fmodIsCBrained);
+	if (fmod->m_musicVolume <= 0.0f || fmod->getBackgroundMusicVolume() <= 0.0f || fmodIsCBrained <= 0.0f) return geode::log::info(" --- !!! MISSION ABORT !!! ---\n\none of the following was at or below 0.0f:\nfmod->m_musicVolume: {}\nfmod->getBackgroundMusicVolume(): {}\nfmodIsCBrained: {} (with fmodResult {})", fmod->m_musicVolume, fmod->getBackgroundMusicVolume(), fmodIsCBrained, fmodResult);
 	fmod->m_backgroundMusicChannel->stop();
 	SongManager::get().pickRandomSong();
 	geode::log::info("is it over?");
