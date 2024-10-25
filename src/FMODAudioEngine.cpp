@@ -32,7 +32,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 			return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 		if (fadeInTime == 0 && gdStringSucks == "shop.mp3") return;
 		if (shouldLoop && fadeInTime == 1.0f) {
-			if (!isMenuLoop) {
+			if (!isMenuLoop && !utils::string::contains(gdStringSucks, "/Library/Caches/")) {
 				log::info("non-menu loop found while playlist mode is enabled: {}", gdStringSucks);
 				return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 			}
@@ -44,7 +44,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 			*/
 			log::info("menu loop detected.");
 			desiredShouldLoop = false;
-			// TODO: maybe ifdef these few lines. it works on macos intel
+			// T0D0: maybe ifdef these few lines. it works on macos intel
 			if (channel == 0) {
 				log::info("attempted to loop menu music on channel zero! see if on windows or not. aborting early.");
 				return;

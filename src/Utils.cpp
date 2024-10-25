@@ -334,7 +334,17 @@ SongInfoObject* Utils::getSongInfoObject() {
 std::string Utils::getSongName() {
 	const auto songInfo = Utils::getSongInfoObject();
 	if (!songInfo) return "";
-	return songInfo->m_songName;
+	std::string ret = songInfo->m_songName;
+	#ifndef __APPLE__
+	if (geode::utils::string::contains(ret, "nong")) {
+		std::string instructions = "open File Explorer and visit AppData/Local/GeometryDash/geode/mods/fleym.nongd/nongs";
+		#ifdef GEODE_IS_ANDROID
+		instructions = "open your file manager [preferably ZArchiver, otherwise you would need to close Geode/Geometry Dash] and visit Android/media/com.geode.launcher/save/geode/mods/fleym.nongd/nongs";
+		#endif
+		return fmt::format("{} (To find this song, {})", ret, instructions);
+	}
+	#endif
+	return ret;
 }
 
 std::string Utils::getSongArtist() {
