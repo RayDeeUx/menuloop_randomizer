@@ -2,6 +2,7 @@
 - Redo the button for blacklisting songs. Base icon shape provided by [FREAKINGDAN](https://github.com/freakingdan).
 - Reduce confusion when copying song names/IDs while playing songs replaced by Jukebox/Auto Nong. {Reported by CyBlanc}
 - Fix a bug where some songs downloaded from vanilla GD wouldn't be treated properly in Playlist Mode (potentially related to "No Songs Limit" being enabled). {Reported by ita_player}
+- Make the setting description for Playlist Mode a scrollable setting description. {Reported by hiimjustin000}
 - _Attempt_ to fix a bug where setting the music volume to 0 while on Playlist Mode would re-start a song while failing to end the original playback. {Reported by EmirNoob}
 # v1.6.0
 - Added "Copy Song ID" button (suggested by [Akashnil](https://discord.com/users/1068096599701590056)). <cy>Custom songs and NONGs will not return a song ID. They will fall back to its song name instead.</c> <cy>Button sprite adapted from [hiimjustin000](https://github.com/hiimjustin000) with permission.</c>
