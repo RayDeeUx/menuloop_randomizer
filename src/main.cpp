@@ -9,7 +9,7 @@ SongManager &songManager = SongManager::get();
 std::filesystem::path configDir = Mod::get()->getConfigDir();
 
 $on_mod(Loaded) {
-	Mod::get()->addCustomSetting<MySettingValue>("configdir", "none");
+	Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 
 	auto blacklistTxt = configDir / R"(blacklist.txt)";
 	if (!std::filesystem::exists(blacklistTxt)) {
