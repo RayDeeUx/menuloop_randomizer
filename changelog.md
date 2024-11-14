@@ -1,3 +1,6 @@
+# v1.6.2
+- Port to 2.2074.
+- Remove the pink button config directory shortcut.
 # v1.6.1
 - Redo the button for blacklisting songs. Base icon shape provided by [FREAKINGDAN](https://github.com/freakingdan).
 - Reduce confusion when copying song names/IDs while playing songs replaced by Jukebox/Auto Nong. {Reported by CyBlanc}

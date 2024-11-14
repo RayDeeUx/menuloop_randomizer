@@ -1,28 +1,45 @@
 #pragma once
 
-#include <Geode/loader/SettingNode.hpp>
+#include <Geode/loader/SettingV3.hpp>
 
 using namespace geode::prelude;
 
-class MySettingValue : public
-
-SettingValue
-
-{
-protected:
-	std::string m_placeholder;
+class MyButtonSettingV3 : public SettingV3 {
 public:
-	MySettingValue(std::string const& key, std::string const& modID, std::string const& placeholder)
-	  : SettingValue(key, modID), m_placeholder(placeholder) {}
-	bool load(matjson::Value const& json) override { return true; }
-	bool save(matjson::Value& json) const override { return true; }
-	SettingNode* createNode(float width) override;
+	static Result<std::shared_ptr<SettingV3>> parse(std::string const& key, std::string const& modID, matjson::Value const& json) {
+		auto res = std::make_shared<MyButtonSettingV3>();
+		auto root = checkJson(json, "MyButtonSettingV3");
+		res->init(key, modID, root);
+		res->parseNameAndDescription(root);
+		res->parseEnableIf(root);
+		return root.ok(std::static_pointer_cast<SettingV3>(res));
+	}
+	bool load(matjson::Value const& json) override {
+		return true;
+	}
+	bool save(matjson::Value& json) const override {
+		return true;
+	}
+	bool isDefaultValue() const override {
+		return true;
+	}
+	void reset() override {}
+	// SettingNodeV3* createNode(float width) override; // this line is [absolutely] certified cringe
+	SettingNodeV3 *createNode(float width) override; // this line is NOT certified cringe
 };
 
-class MySettingNode : public SettingNode {
+class MyButtonSettingNodeV3 : public SettingNodeV3 {
 private:
 	std::string m_desc = "";
-protected:
+public:
+	void onCommit() {}
+	void onResetToDefault() {}
+	bool hasUncommittedChanges() const {
+		return false;
+	}
+	bool hasNonDefaultValue() const {
+		return false;
+	}
 	void onConfigDirButton(CCObject*) {
 		file::openFolder(Mod::get()->getConfigDir());
 		#ifndef GEODE_IS_MOBILE
@@ -34,47 +51,38 @@ protected:
 		)->show();
 		#endif
 	}
-	bool init(MySettingValue* value, float width) {
-		if (!SettingNode::init(value))
-			return false;
+	bool init(std::shared_ptr<MyButtonSettingV3> setting, float width) {
+		if (!SettingNodeV3::init(setting, width)) return false;
 		this->setContentSize({ width, 40.f });
-		std::string name = Mod::get()->getSettingDefinition(value->getKey())->get<CustomSetting>()->json->get<std::string>("name");
-		m_desc = Mod::get()->getSettingDefinition(value->getKey())->get<CustomSetting>()->json->get<std::string>("desc");
-
+		std::string name = setting->getName().value();
+		m_desc = setting->getDescription().value();
 		auto theMenu = CCMenu::create();
 		auto theLabel = CCLabelBMFont::create(name.c_str(), "bigFont.fnt");
 
-		// copied a bit from viper
+		// copied a bit from louis ck jr
 		theLabel->setScale(.35f);
 		theLabel->limitLabelWidth(300.f, .35f, .25f); // added by Ery. max width is 346.f
 
-		auto theLabelAsAButton = CCMenuItemSpriteExtra::create(theLabel, this, menu_selector(MySettingNode::onConfigDirButton));
+		auto theLabelAsAButton = CCMenuItemSpriteExtra::create(theLabel, this, menu_selector(MyButtonSettingNodeV3::onConfigDirButton));
 
 		theLabelAsAButton->setPositionX(0);
+		theLabelAsAButton->setID("config-dir-shortcut-button"_spr);
 
 		theMenu->addChild(theLabelAsAButton);
 		theMenu->setPosition(width / 2, 20.f);
+		theMenu->setID("config-dir-shortcut-menu"_spr);
 
 		this->addChild(theMenu);
 
+		for (const auto &node : CCArrayExt<CCNode*>(this->getChildren())) {
+			node->setVisible(!node->getID().empty());
+		}
+
 		return true;
 	}
-
-public:
-	void commit() override {
-		this->dispatchCommitted();
-	}
-	bool hasUncommittedChanges() override {
-		return false;
-	}
-	bool hasNonDefaultValue() override {
-		return true;
-	}
-	void resetToDefault() override {}
-
-	static MySettingNode* create(MySettingValue* value, float width) {
-		auto ret = new MySettingNode();
-		if (ret && ret->init(value, width)) {
+	static MyButtonSettingNodeV3* create(std::shared_ptr<MyButtonSettingV3> setting, float width) {
+		auto ret = new MyButtonSettingNodeV3();
+		if (ret && ret->init(setting, width)) {
 			ret->autorelease();
 			return ret;
 		}

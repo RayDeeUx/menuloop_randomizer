@@ -1,11 +1,11 @@
 {
-	"geode": "3.4.0",
+	"geode": "4.0.0-alpha.1",
 	"gd": {
-		"win": "2.206",
-		"android": "2.206",
-		"mac": "2.206"
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074"
 	},
-	"version": "v1.6.1",
+	"version": "v1.6.2",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developers": ["RayDeeUx", "elnexreal"],
@@ -16,7 +16,8 @@
 		"configdir": {
 			"name": "Click me to open the Config Directory!",
 			"desc": "<cy>(Hopefully.)</c>\nThis setting does literally nothing new except being a button that acts as a shortcut to open the config directory for this mod (which is kind of important for using this mod properly, because this is where you will store menu loops), because the legendary developers in the Geode Team themselves forgot to add a shortcut button that would have done this exact same thing, and I have gotten far too many folks (rightfully) asking me to find the config directory when using some of my other mods, and I hate repeating the same things over and over again, and I don't know if the next major update for Geode will also repeat this mistake where HJfod forgets to include a config directory shortcut button, so this setting and this button are here for extra insurance, so please enjoy this extra button, I guess. Anyway, by the time you're finished reading this, your device should be finished with opening the config directory; press \"Aight\" to close this window.",
-			"type": "custom"
+			"description": "<cy>(Hopefully.)</c>\nThis setting does literally nothing new except being a button that acts as a shortcut to open the config directory for this mod (which is kind of important for using this mod properly, because this is where you will store menu loops), because the legendary developers in the Geode Team themselves forgot to add a shortcut button that would have done this exact same thing, and I have gotten far too many folks (rightfully) asking me to find the config directory when using some of my other mods, and I hate repeating the same things over and over again, and I don't know if the next major update for Geode will also repeat this mistake where HJfod forgets to include a config directory shortcut button, so this setting and this button are here for extra insurance, so please enjoy this extra button, I guess. Anyway, by the time you're finished reading this, your device should be finished with opening the config directory; press \"Aight\" to close this window.",
+			"type": "custom:configdir"
 		},
 		"useCustomSongs": {
 			"name": "Use Custom Songs Instead",
@@ -155,13 +156,9 @@
 		{
 			"id": "geode.node-ids",
 			"importance": "required",
-			"version": ">=1.13.1"
+			"version": ">=1.16.0"
 		}
 	],
-	"issues": {
-		"url": "https://discord.com/channels/911701438269386882/1205523212444639292",
-		"info": "To disable hyphen prefixes and suffixes in custom messages, edit saved.json. For other issues, ping me <cl>(@erymanthus)</c> in the Geode SDK Discord server's <cl>#help</c> channel if you need help. <cr>DMs are NOT accepted.</c>"
-	},
 	"links": {
 		"community": "https://discord.gg/WqZBYdBWZW",
 		"homepage": "https://discord.com/channels/822510988409831486/1206371881222144020"

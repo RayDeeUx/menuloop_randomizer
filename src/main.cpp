@@ -1,7 +1,7 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
 #include "Settings.hpp"
-#include <Geode/loader/SettingEvent.hpp>
+#include <Geode/loader/SettingV3.hpp>
 
 using namespace geode::prelude;
 
