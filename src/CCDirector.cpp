@@ -31,7 +31,7 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 			MenuLoopCCDHook::fadeOutCardRemotely();
 		else if (!scene->getChildByIDRecursive("MenuLayer")) {
 			MenuLoopCCDHook::removeCardRemotely();
-			if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0)) {
+			if (auto gjbgl = previousScene->getChildByType<GJBaseGameLayer>(0)) {
 				if (Utils::getBool("playlistMode")) {
 					Utils::playlistModeNewSong();
 					log::info("\nprevious scene had GJBGL.\nchanging song through CCDirector: willSwitchToScene");
@@ -50,7 +50,7 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 			MenuLoopCCDHook::fadeOutCardRemotely();
 		else if (!scene->getChildByIDRecursive("MenuLayer")) {
 			MenuLoopCCDHook::removeCardRemotely();
-			if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0)) {
+			if (auto gjbgl = previousScene->getChildByType<GJBaseGameLayer>(0)) {
 				if (Utils::getBool("playlistMode")) {
 					Utils::playlistModeNewSong();
 					log::info("\nprevious scene had GJBGL.\nchanging song through CCDirector: pushScene");
@@ -71,7 +71,7 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 			MenuLoopCCDHook::fadeOutCardRemotely();
 		else if (!scene->getChildByIDRecursive("MenuLayer")) {
 			MenuLoopCCDHook::removeCardRemotely();
-			if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0)) {
+			if (auto gjbgl = previousScene->getChildByType<GJBaseGameLayer>(0)) {
 				if (Utils::getBool("playlistMode")) {
 					Utils::playlistModeNewSong();
 					log::info("\nprevious scene had GJBGL.\nchanging song through CCDirector: replaceScene");
@@ -92,7 +92,7 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 			MenuLoopCCDHook::fadeOutCardRemotely();
 		else {
 			MenuLoopCCDHook::removeCardRemotely();
-			if (auto gjbgl = getChildOfType<GJBaseGameLayer>(previousScene, 0)) {
+			if (auto gjbgl = previousScene->getChildByType<GJBaseGameLayer>(0)) {
 				if (Utils::getBool("playlistMode")) {
 					Utils::playlistModeNewSong();
 					log::info("\nprevious scene had GJBGL.\nchanging song through CCDirector: popSceneWithTransition");

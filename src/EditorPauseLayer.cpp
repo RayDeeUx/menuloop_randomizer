@@ -61,17 +61,15 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 		R"(Exit without saving? All unsaved changes will be lost!)"
 		-- raydeeux
 		*/
-		auto tArea = p0->m_mainLayer->getChildByIDRecursive("content-text-area");
-		if (auto textArea = typeinfo_cast<TextArea*>(tArea)) {
-			for (auto node : CCArrayExt<CCNode*>(textArea->getChildren())) {
-				if (typeinfo_cast<MultilineBitmapFont*>(node)) {
-					for (auto nodeTwo : CCArrayExt<CCNode*>(node->getChildren())) {
-						if (auto label = typeinfo_cast<CCLabelBMFont*>(nodeTwo)) {
-							auto labelString = std::string(label->getString());
-							isQualifedAlert = labelString == R"(Exit without saving? All unsaved changes will be lost!)";
-							log::debug("labelString: {}", labelString); // log::debug calls since that's kinda this mod's thing
-							break;
-						}
+		auto textArea = static_cast<TextArea*>(p0->m_mainLayer->getChildByIDRecursive("content-text-area"));
+		for (auto node : CCArrayExt<CCNode*>(textArea->getChildren())) {
+			if (typeinfo_cast<MultilineBitmapFont*>(node)) {
+				for (auto nodeTwo : CCArrayExt<CCNode*>(node->getChildren())) {
+					if (auto label = typeinfo_cast<CCLabelBMFont*>(nodeTwo)) {
+						auto labelString = std::string(label->getString());
+						isQualifedAlert = labelString == R"(Exit without saving? All unsaved changes will be lost!)";
+						log::debug("labelString: {}", labelString); // log::debug calls since that's kinda this mod's thing
+						break;
 					}
 				}
 			}
