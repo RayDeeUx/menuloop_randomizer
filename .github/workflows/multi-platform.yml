@@ -35,12 +35,11 @@ jobs:
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
         with:
-          # cli: "v3.0.0" # not sure why this is here --raydeeux
-          # sdk: nightly # [vscode] comment this out to use stable Geode SDK version
+          sdk: nightly # [vscode] comment this out to use stable Geode SDK version
           build-config: RelWithDebInfo # [vscode] comment this out (and the line below!) to Release mode
           export-pdb: true # [vscode] comment this out (and the line above!) to Release mode
-          bindings: RayDeeUx/bindings # comment this out to use geode-sdk/bindings
-          bindings-ref: i-hate-cc-lightning # comment this out to use default branch
+          # bindings: RayDeeUx/bindings # comment this out to use geode-sdk/bindings
+          # bindings-ref: i-hate-cc-lightning # comment this out to use default branch
           combine: true
           target: ${{ matrix.config.target }}
 
