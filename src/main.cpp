@@ -1,3 +1,4 @@
+#include "PlaylistModeWarning.hpp"
 #include "SongManager.hpp"
 #include "Utils.hpp"
 #include "Settings.hpp"
@@ -9,7 +10,7 @@ SongManager &songManager = SongManager::get();
 std::filesystem::path configDir = Mod::get()->getConfigDir();
 
 $on_mod(Loaded) {
-	Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
+	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 
 	auto blacklistTxt = configDir / R"(blacklist.txt)";
 	if (!std::filesystem::exists(blacklistTxt)) {
@@ -68,7 +69,8 @@ $execute {
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		if (GameManager::sharedState()->getGameVariable("0122")) return;
 		if (isPlaylistMode) {
-			return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
+			FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
+			return PlaylistModeWarning::create(SongManager::get().getGeodify())->show();
 		}
 		GameManager::sharedState()->playMenuMusic();
 	});

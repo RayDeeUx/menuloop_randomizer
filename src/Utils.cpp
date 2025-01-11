@@ -51,9 +51,7 @@ void Utils::removeCard() {
 }
 
 void Utils::setNewSong() {
-	if (Utils::getBool("playlistMode")) {
-		return Utils::playlistModeNewSong();
-	}
+	if (Utils::getBool("playlistMode")) return Utils::playlistModeNewSong();
 	FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
 	SongManager::get().pickRandomSong();
 	geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", SongManager::get().getCurrentSong());
@@ -62,9 +60,7 @@ void Utils::setNewSong() {
 
 void Utils::playlistModeNewSong() {
 	if (GameManager::sharedState()->getGameVariable("0122")) return;
-	if (!Utils::getBool("playlistMode")) {
-		return Utils::setNewSong();
-	}
+	if (!Utils::getBool("playlistMode")) return Utils::setNewSong();
 	geode::log::info("attempting to hijack menuloop channel to use playlist mode");
 	auto fmod = FMODAudioEngine::sharedEngine();
 	float fmodIsCBrained;

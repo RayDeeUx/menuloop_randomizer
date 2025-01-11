@@ -73,6 +73,14 @@ bool SongManager::getCalledOnce() {
 	return m_calledOnce;
 }
 
+void SongManager::setGeodify(bool value) {
+	m_geodify = value;
+}
+
+bool SongManager::getGeodify() {
+	return m_geodify;
+}
+
 void SongManager::addToBlacklist(std::string song) {
 	m_blacklist.push_back(song);
 }

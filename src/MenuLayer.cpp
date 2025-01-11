@@ -17,6 +17,9 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 
 		Utils::removeCard();
 
+		if (Loader::get()->isModLoaded("omgrod.geodify"))
+			SongManager::get().setGeodify(Loader::get()->getLoadedMod("omgrod.geodify")->getSettingValue<bool>("menu-loop"));
+
 		if (Utils::getBool("enableNotification"))
 			Utils::generateNotification();
 

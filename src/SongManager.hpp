@@ -18,6 +18,8 @@ class SongManager {
 	void update(float);
 	bool getCalledOnce();
 	void setCalledOnce(bool);
+	bool getGeodify();
+	void setGeodify(bool);
 	void addToBlacklist(std::string);
 	void addToBlacklist();
 	std::vector<std::string> getBlacklist();
@@ -29,5 +31,6 @@ class SongManager {
 	std::string m_currentSong;
 	bool m_isMenuLoop;
 	bool m_calledOnce = false;
+	bool m_geodify = false;
 	std::vector<std::string> m_blacklist;
 };
