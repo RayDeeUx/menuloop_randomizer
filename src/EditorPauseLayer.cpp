@@ -21,8 +21,8 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 	#else
 	/*
 	this section is for macOS (both intel and ARM). remarks:
-	- don't hook onSaveAndPlay; that goes to playlayer
-	- don't hook onSave or the FLAlertLayer from it; that does not exit the editor
+	- don't hook onSaveAndPlay; while it IS macos hookable, it goes to playlayer
+	- don't hook onSave or the FLAlertLayer from it; while it IS macos hookable, it does not exit the editor
 	- can't hook onExitEditor for macOS, due to aggressive inlining from robtop/appleclang
 		(yes, nin. i know the address exists; justin found those addresses for me.
 		but i keep getting the same song five times in a row if i hook onExitEditor
@@ -42,7 +42,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 			Utils::playlistModePLAndEPL();
 	}
 	void FLAlert_Clicked(FLAlertLayer* p0, bool btnTwo) {
-		bool isQualifedAlert = false;
+		bool isQualifedAlert = p0->getTag() == 1;
 		// determine if the FLAlertLayer being clicked on is the one from onExitNoSave
 		/*
 		hooking FLAlertLayer::init() and then storing its desc param is also an option,
@@ -57,10 +57,8 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		if anyone has a shorter solution that still hooks this function, go ahead.
 
-		for reference, unformatted FLAlertLayer main text is:
-		R"(Exit without saving? All unsaved changes will be lost!)"
-		-- raydeeux
-		*/
+		EDIT: PREVTER CAME IN CLUTCH. ORIGINAL CODE KEPT HERE FOR POSTERITY
+
 		auto textArea = static_cast<TextArea*>(p0->m_mainLayer->getChildByIDRecursive("content-text-area"));
 		for (auto node : CCArrayExt<CCNode*>(textArea->getChildren())) {
 			if (typeinfo_cast<MultilineBitmapFont*>(node)) {
@@ -74,6 +72,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 				}
 			}
 		}
+		*/
 
 		log::info("isQualifedAlert: {}", isQualifedAlert); // log::info calls since that's kinda this mod's thing
 		log::info("btnTwo: {}", btnTwo); // log::info calls since that's kinda this mod's thing
