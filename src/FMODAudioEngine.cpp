@@ -18,7 +18,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		if (auto currentScene = CCDirector::get()->getRunningScene()) {
 			for (auto object : CCArrayExt<CCObject*>(currentScene->getChildren())) {
 				if (auto node = typeinfo_cast<CCNode*>(object)) {
-					log::debug("there is a CCNode with ID: \"{}\"", node->getID());
+					log::info("there is a CCNode with ID: \"{}\"", node->getID());
 				}
 			}
 		}

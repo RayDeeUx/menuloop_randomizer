@@ -253,7 +253,7 @@ void Utils::populateVector(bool customSongs) {
 
 			if (!Utils::isSupportedExtension(filePathString) || std::ranges::find(otherBlacklist, filePathString) != otherBlacklist.end() || isInTextBlacklist) continue;
 
-			geode::log::debug("Adding custom song: {}", Utils::toNormalizedString(filePath.filename()));
+			geode::log::info("Adding custom song: {}", Utils::toNormalizedString(filePath.filename()));
 			SongManager::get().addSong(filePathString);
 		}
 	} else {
@@ -288,7 +288,7 @@ void Utils::populateVector(bool customSongs) {
 
 			if (!Utils::isSupportedExtension(songPath) || std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end() || isInTextBlacklist || (qualifiedForOGMenuBlacklist && song->m_songID == 584131)) continue; // apply hardcode blacklist 584131 onto self in light of BS edge case caught by hiimjustin001: https://discord.com/channels/911701438269386882/911702535373475870/1289021323279990795
 
-			geode::log::debug("Adding Newgrounds/Music Library song: {}", songPath);
+			geode::log::info("Adding Newgrounds/Music Library song: {}", songPath);
 			SongManager::get().addSong(songPath);
 		}
 		// same thing as NG but for music library as well --ninXout
@@ -303,7 +303,7 @@ void Utils::populateVector(bool customSongs) {
 
 			if (!Utils::isSupportedExtension(songPath)) continue;
 
-			log::debug("Adding Music Library song: {}", songPath);
+			log::info("Adding Music Library song: {}", songPath);
 			songManager.addSong(songPath);
 		}
 		*/

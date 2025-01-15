@@ -68,15 +68,15 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 					if (auto label = typeinfo_cast<CCLabelBMFont*>(nodeTwo)) {
 						auto labelString = std::string(label->getString());
 						isQualifedAlert = labelString == R"(Exit without saving? All unsaved changes will be lost!)";
-						log::debug("labelString: {}", labelString); // log::debug calls since that's kinda this mod's thing
+						log::info("labelString: {}", labelString); // log::info calls since that's kinda this mod's thing
 						break;
 					}
 				}
 			}
 		}
 
-		log::debug("isQualifedAlert: {}", isQualifedAlert); // log::debug calls since that's kinda this mod's thing
-		log::debug("btnTwo: {}", btnTwo); // log::debug calls since that's kinda this mod's thing
+		log::info("isQualifedAlert: {}", isQualifedAlert); // log::info calls since that's kinda this mod's thing
+		log::info("btnTwo: {}", btnTwo); // log::info calls since that's kinda this mod's thing
 
 		if (Utils::getBool("randomizeWhenExitingEditor") && isQualifedAlert && btnTwo)
 			m_fields->songManager.pickRandomSong();

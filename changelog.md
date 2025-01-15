@@ -1,4 +1,10 @@
 # Menu Loop Randomizer Changelog
+## v1.6.4
+- Added option to replace unsupported characters with `?`s, enabled by default.
+- Only display extended warnings for `Playlist Mode` when enabling it from mod settings.
+- Preparing in advance for some naughty behavior from other mods.
+- Changed logging level in anticipation of future changes to Geode.
+- Removed Goro Akechi.
 ## v1.6.3
 - Some cleanup from behind the scenes. Nothing noticeable for end users, though.
 ## v1.6.2
