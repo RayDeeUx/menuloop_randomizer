@@ -42,7 +42,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 			Utils::playlistModePLAndEPL();
 	}
 	void FLAlert_Clicked(FLAlertLayer* p0, bool btnTwo) {
-		bool isQualifedAlert = p0->getTag() == 1;
+		bool shouldClose = p0->getTag() == 1 && btnTwo;
 		// determine if the FLAlertLayer being clicked on is the one from onExitNoSave
 		/*
 		hooking FLAlertLayer::init() and then storing its desc param is also an option,
@@ -74,10 +74,9 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 		}
 		*/
 
-		log::info("isQualifedAlert: {}", isQualifedAlert); // log::info calls since that's kinda this mod's thing
-		log::info("btnTwo: {}", btnTwo); // log::info calls since that's kinda this mod's thing
+		log::info("shouldClose: {} (p0->getTag() == 1: {}, btnTwo: {})", shouldClose, p0->getTag() == 1, btnTwo); // log::info calls since that's kinda this mod's thing
 
-		if (Utils::getBool("randomizeWhenExitingEditor") && isQualifedAlert && btnTwo)
+		if (Utils::getBool("randomizeWhenExitingEditor") && shouldClose)
 			m_fields->songManager.pickRandomSong();
 
 		EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
