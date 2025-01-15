@@ -4,8 +4,8 @@
 
 using namespace geode::prelude;
 
-const static std::regex fileExtensionRegex = std::regex(R"(\.(?:mp3|ogg|oga|flac|wav)$)");
-const static std::regex quotationMarkRegex = std::regex(R"(")");
+static const std::regex fileExtensionRegex = std::regex(R"(\.(?:mp3|ogg|oga|flac|wav)$)");
+static const std::regex unsupportedCharRegex = std::regex(R"([^[\]+,. !@#$%^&*()'|`~•/:;<>=?\-\w\\])");
 
 PlayingCard *PlayingCard::create(std::string output) {
 	PlayingCard *ret = new PlayingCard();
@@ -26,7 +26,7 @@ bool PlayingCard::init(std::string output) {
 	else if (Utils::getBool("removeSuffix"))
 		output = std::regex_replace(output, fileExtensionRegex, "");
 
-	output = std::regex_replace(output, quotationMarkRegex, "''");
+	if (Utils::getBool("replaceUnsupportedChars")) output = std::regex_replace(output, unsupportedCharRegex, "?");
 
 	auto mainNode = CCNode::create();
 

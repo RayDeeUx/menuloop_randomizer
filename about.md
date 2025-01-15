@@ -6,15 +6,13 @@ This mod allows you to randomize the menu song every time you open the game, pic
 # Adding custom songs
 If you want to add your own songs to the mod you should go to the mod's settings menu, then "Click me to open the Config Directory!". Just like the songs you've downloaded from Newgrounds or RobTop's Music Library, `.mp3` and `.ogg` files are supported.
 
-![Screenshot on how to use it. Install the mod to view this screenshot!](elnexreal.menuloop_randomizer/screenshot.png)
-
 `.oga`, `.flac` and `.wav` files are also supported, for the few audiophiles who want the highest of audio quality out there.
 
 ## Android
 <co>*If you click the config directory shortcut and you get sent to the geode folder itself, you should go to `game/geode/config/elnexreal.menuloop_randomizer` and put the songs there*</co>
 
 # Blacklisting songs
-Ever felt like a song was an absolute dud? Click the (crudely drawn) <cl>blacklist button</c> and you won't ever hear that song as a menu loop again.
+Ever felt like a song was an absolute dud? Click the <cl>blacklist button</c> (you'll know it when you see it) and you won't ever hear that song as a menu loop again.
 
 # Elnexreal would like to thank:
 - [hiimjustin000](https://github.com/hiimjustin000) <cj>for helping me with the bindings problem (i was using an outdated version of geode LMAO).</cj>

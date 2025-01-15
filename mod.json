@@ -5,7 +5,7 @@
 		"android": "2.2074",
 		"mac": "2.2074"
 	},
-	"version": "v1.6.3",
+	"version": "v1.6.4",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developers": ["RayDeeUx", "elnexreal"],
@@ -59,6 +59,11 @@
 		"enableNotification": {
 			"name": "\"Now Playing\" Notifs",
 			"description": "Shows a notification with the name of the currently playing song.",
+			"type": "bool",
+			"default": true
+		},
+		"replaceUnsupportedChars": {
+			"name": "Notifs: Use '?' For Unsupported Characters",
 			"type": "bool",
 			"default": true
 		},
