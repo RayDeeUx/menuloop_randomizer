@@ -1,4 +1,6 @@
 # Menu Loop Randomizer Changelog
+## v1.6.5
+- New logo by [dasshu_](https://linktr.ee/jaydasshu)!
 ## v1.6.4
 - Added option to replace unsupported characters with `?`s, enabled by default.
 - Only display extended warnings for `Playlist Mode` when enabling it from mod settings.
