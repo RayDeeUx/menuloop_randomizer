@@ -15,19 +15,17 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		if (!Utils::getBool("playlistMode"))
 			return FMODAudioEngine::get()->playMusic(path, shouldLoop, fadeInTime, channel);
 		log::info("playlist mode enabled.\n=== PLAYLIST MODE DEBUG INFO ===\npath: {}\nshouldLoop: {}\nfadeInTime: {}\nchannel: {}", path, shouldLoop, fadeInTime, channel);
-		if (auto currentScene = CCDirector::get()->getRunningScene()) {
-			for (auto object : CCArrayExt<CCObject*>(currentScene->getChildren())) {
-				if (auto node = typeinfo_cast<CCNode*>(object)) {
-					log::info("there is a CCNode with ID: \"{}\"", node->getID());
-				}
-			}
+		for (CCScene* scene = CCScene::get(); CCObject* object : CCArrayExt<CCObject*>(scene->getChildren())) {
+			const auto node = typeinfo_cast<CCNode*>(object);
+			if (!node) continue;
+			log::info("there is a CCNode with ID: \"{}\"", node->getID());
 		}
 		bool desiredShouldLoop = shouldLoop;
 		std::string gdStringSucks = path;
 		std::smatch smatch;
 		if (std::regex_match(gdStringSucks, smatch, terribleLoopRegex))
 			return log::info("terrible loop detected while playlist mode is active: {}", gdStringSucks);
-		bool isMenuLoop = std::regex_match(gdStringSucks, smatch, geometryDashRegex);
+		const bool isMenuLoop = std::regex_match(gdStringSucks, smatch, geometryDashRegex);
 		if (GJBaseGameLayer::get() && !isMenuLoop)
 			return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 		if (fadeInTime == 0 && gdStringSucks == "shop.mp3") return;
@@ -45,10 +43,8 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 			log::info("menu loop detected.");
 			desiredShouldLoop = false;
 			// T0D0: maybe ifdef these few lines. it works on macos intel
-			if (channel == 0) {
-				log::info("attempted to loop menu music on channel zero! see if on windows or not. aborting early.");
-				return;
-			}
+			if (channel == 0)
+				return log::info("attempted to loop menu music on channel zero! see if on windows or not. aborting early.");
 			#ifdef GEODE_IS_WINDOWS
 			if (!SongManager::get().getCalledOnce()) SongManager::get().setCalledOnce(true);
 			#endif

@@ -13,8 +13,11 @@ class $modify(MenuLoopPLHook, PlayLayer) {
 			m_fields->songManager.pickRandomSong();
 
 		PlayLayer::onQuit();
+		Utils::removeCardRemotely();
 
-		if (Utils::getBool("playlistMode"))
+		if (Utils::getBool("playlistMode")) {
 			Utils::playlistModePLAndEPL();
+			Utils::playlistModeNewSong();
+		}
 	}
 };

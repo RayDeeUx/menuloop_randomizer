@@ -15,8 +15,12 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		EditorPauseLayer::onExitEditor(sender);
 
-		if (Utils::getBool("playlistMode"))
+		Utils::removeCardRemotely();
+
+		if (Utils::getBool("playlistMode")) {
 			Utils::playlistModePLAndEPL();
+			Utils::playlistModeNewSong();
+		}
 	}
 	#else
 	/*
@@ -38,8 +42,12 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		EditorPauseLayer::onSaveAndExit(sender);
 
-		if (Utils::getBool("playlistMode"))
+		Utils::removeCardRemotely();
+
+		if (Utils::getBool("playlistMode")) {
 			Utils::playlistModePLAndEPL();
+			Utils::playlistModeNewSong();
+		}
 	}
 	void FLAlert_Clicked(FLAlertLayer* p0, bool btnTwo) {
 		bool shouldClose = p0->getTag() == 1 && btnTwo;
@@ -76,13 +84,19 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		log::info("shouldClose: {} (p0->getTag() == 1: {}, btnTwo: {})", shouldClose, p0->getTag() == 1, btnTwo); // log::info calls since that's kinda this mod's thing
 
-		if (Utils::getBool("randomizeWhenExitingEditor") && shouldClose)
+		if (!shouldClose) return EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
+
+		if (Utils::getBool("randomizeWhenExitingEditor"))
 			m_fields->songManager.pickRandomSong();
 
 		EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 
-		if (Utils::getBool("playlistMode"))
+		Utils::removeCardRemotely();
+
+		if (Utils::getBool("playlistMode")) {
 			Utils::playlistModePLAndEPL();
+			Utils::playlistModeNewSong();
+		}
 	}
 	#endif
 };

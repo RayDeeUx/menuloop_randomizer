@@ -170,10 +170,7 @@ void Utils::generateNotification() {
 }
 
 void Utils::playlistModePLAndEPL() {
-	if (!Utils::getBool("playlistMode")) { return; }
-	auto gjbgl = GJBaseGameLayer::get();
-	if (gjbgl) { return; }
-	Utils::playlistModeNewSong();
+	if (Utils::getBool("playlistMode") && GJBaseGameLayer::get()) return Utils::playlistModeNewSong();
 }
 
 void Utils::copyCurrentSongName() {
@@ -370,4 +367,18 @@ std::string Utils::toNormalizedString(const std::filesystem::path& path) {
 	#else
 	return path.string();
 	#endif
+}
+
+void Utils::fadeOutCardRemotely(cocos2d::CCNode* card) {
+	if (!card) return;
+	card->stopAllActions();
+	card->runAction(cocos2d::CCSequence::create(
+		cocos2d::CCEaseOut::create(cocos2d::CCMoveBy::create(.25f, {0, 24}), 1.f),
+		nullptr
+	));
+}
+
+void Utils::removeCardRemotely(cocos2d::CCNode* card) {
+	if (!card) return;
+	card->removeMeAndCleanup();
 }

@@ -22,4 +22,6 @@ class Utils {
 	static int getSongID();
 	static std::string currentCustomSong();
 	static std::string toNormalizedString(const std::filesystem::path& path);
+	static void fadeOutCardRemotely(cocos2d::CCNode* card = Utils::findCardRemotely());
+	static void removeCardRemotely(cocos2d::CCNode* card = Utils::findCardRemotely());
 };
