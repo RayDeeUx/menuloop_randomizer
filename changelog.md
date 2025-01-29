@@ -1,6 +1,8 @@
 # Menu Loop Randomizer Changelog
-## v1.6.5
+## v1.7.0
 - New logo by [dasshu_](https://linktr.ee/jaydasshu)!
+- Refactor how the song notificaton card is removed when switching scenes.
+  - Playlist Mode may have been broken in the process if there is only one song available for the mod to choose from. But at that point, you might as well use a texture pack instead.
 ## v1.6.4
 - Added option to replace unsupported characters with `?`s, enabled by default.
 - Only display extended warnings for `Playlist Mode` when enabling it from mod settings.
