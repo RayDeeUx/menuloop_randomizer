@@ -3,7 +3,7 @@
 
 SongManager::SongManager() {}
 
-void SongManager::addSong(std::string path) {
+void SongManager::addSong(const std::string& path) {
 	m_songs.push_back(path);
 }
 
@@ -35,7 +35,7 @@ std::string SongManager::getCurrentSong() {
 	return m_currentSong;
 }
 
-void SongManager::setCurrentSong(std::string song) {
+void SongManager::setCurrentSong(const std::string& song) {
 	m_currentSong = song;
 }
 
@@ -44,7 +44,7 @@ void SongManager::setCurrentSongToSavedSong() {
 	m_currentSong = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 }
 
-bool SongManager::isOriginalMenuLoop() {
+bool SongManager::isOriginalMenuLoop() const {
 	return m_isMenuLoop;
 }
 
@@ -65,23 +65,31 @@ void SongManager::update(float dt) {
 		Utils::generateNotification();
 }
 
-void SongManager::setCalledOnce(bool value) {
+void SongManager::setCalledOnce(const bool value) {
 	m_calledOnce = value;
 }
 
-bool SongManager::getCalledOnce() {
+bool SongManager::getCalledOnce() const {
 	return m_calledOnce;
 }
 
-void SongManager::setGeodify(bool value) {
+void SongManager::setGeodify(const bool value) {
 	m_geodify = value;
 }
 
-bool SongManager::getGeodify() {
+bool SongManager::getGeodify() const {
 	return m_geodify;
 }
 
-void SongManager::addToBlacklist(std::string song) {
+void SongManager::setHeldSong(const std::string_view value) {
+	m_heldSong = value;
+}
+
+std::string SongManager::getHeldSong() {
+	return m_heldSong;
+}
+
+void SongManager::addToBlacklist(const std::string& song) {
 	m_blacklist.push_back(song);
 }
 
