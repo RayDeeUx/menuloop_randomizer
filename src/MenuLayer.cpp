@@ -185,18 +185,19 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onHoldSongButton(CCObject*) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		SongManager& songManager = m_fields->songManager;
-		if (songManager.isOverride()) return;
-		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
+		if (songManager.isOverride()) return log::info("songmanager is override");
 		const std::string& formerHeldSong = songManager.getHeldSong();
 		songManager.setHeldSong(songManager.getCurrentSong());
 		if (!formerHeldSong.empty()) {
+			FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 			songManager.setCurrentSong(formerHeldSong);
-			if (Utils::getBool("playlistMode")) return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
-			return GameManager::sharedState()->playMenuMusic();
+			if (Utils::getBool("playlistMode")) FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
+			else GameManager::sharedState()->playMenuMusic();
+			if (!Utils::getBool("enableNotification")) return;
+			return Utils::generateNotification();
 		}
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::playlistModeNewSong();
-		if (!Utils::getBool("enableNotification")) return;
-		Utils::generateNotification();
+		if (Utils::getBool("enableNotification")) Utils::generateNotification();
 	}
 };
