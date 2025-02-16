@@ -14,7 +14,8 @@ void SongManager::clearSongs() {
 }
 
 void SongManager::pickRandomSong() {
-	if (!m_songs.empty()) {
+	if (!getSpecificSongOverride().empty()) m_currentSong = getSpecificSongOverride();
+	else if (!m_songs.empty()) {
 		m_isMenuLoop = false;
 		if (m_songs.size() != 1) {
 			auto randomIndex = Utils::randomIndex(m_songs.size());
@@ -32,15 +33,17 @@ void SongManager::pickRandomSong() {
 }
 
 std::string SongManager::getCurrentSong() {
+	if (!getSpecificSongOverride().empty()) return getSpecificSongOverride();
 	return m_currentSong;
 }
 
 void SongManager::setCurrentSong(const std::string& song) {
-	m_currentSong = song;
+	if (!getSpecificSongOverride().empty()) m_currentSong = getSpecificSongOverride();
+	else m_currentSong = song;
 }
 
 void SongManager::setCurrentSongToSavedSong() {
-	if (m_isMenuLoop) return;
+	if (m_isMenuLoop || !getSpecificSongOverride().empty()) return;
 	m_currentSong = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 }
 
@@ -50,6 +53,7 @@ bool SongManager::isOriginalMenuLoop() const {
 
 void SongManager::update(float dt) {
 	if (GameManager::sharedState()->getGameVariable("0122")) return;
+	if (!getSpecificSongOverride().empty()) return;
 	auto fmod = FMODAudioEngine::get();
 	if (!Utils::getBool("playlistMode") || GJBaseGameLayer::get() || m_isMenuLoop || m_songs.size() < 2 || !fmod) return;
 	// geode::log::info("channelIsPlaying: {}", fmod->isMusicPlaying(0));
@@ -82,6 +86,7 @@ bool SongManager::getGeodify() const {
 }
 
 void SongManager::setHeldSong(const std::string_view value) {
+	if (!getSpecificSongOverride().empty()) return;
 	m_heldSong = value;
 }
 
@@ -90,13 +95,31 @@ std::string SongManager::getHeldSong() {
 }
 
 void SongManager::addToBlacklist(const std::string& song) {
+	if (!getSpecificSongOverride().empty()) return;
 	m_blacklist.push_back(song);
 }
 
 void SongManager::addToBlacklist() {
+	if (!getSpecificSongOverride().empty()) return;
 	m_blacklist.push_back(m_currentSong);
 }
 
 std::vector<std::string> SongManager::getBlacklist() {
 	return m_blacklist;
+}
+
+std::string SongManager::getSpecificSongOverride() {
+	const auto specificSongOverride = geode::Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride").string();
+	if (!Utils::isSupportedFile(specificSongOverride)) return "";
+	return specificSongOverride;
+}
+
+bool SongManager::isOverride() {
+	return m_currentSong == getSpecificSongOverride();
+}
+
+void SongManager::setCurrentSongToOverride() {
+	const std::string& override = getSpecificSongOverride();
+	if (override.empty() || !Utils::isSupportedFile(override)) return;
+	m_currentSong = override;
 }

@@ -22,8 +22,8 @@ int Utils::randomIndex(int size) {
 	return randomIndex;
 }
 
-bool Utils::isSupportedExtension(std::string path) {
-	return !path.empty() && (path.ends_with(".mp3") || path.ends_with(".wav") || path.ends_with(".ogg") || path.ends_with(".oga") || path.ends_with(".flac"));
+bool Utils::isSupportedFile(const std::string_view path) {
+	return std::filesystem::exists(path) && !path.empty() && (path.ends_with(".mp3") || path.ends_with(".wav") || path.ends_with(".ogg") || path.ends_with(".oga") || path.ends_with(".flac"));
 }
 
 bool Utils::getBool(std::string setting) {
@@ -52,9 +52,10 @@ void Utils::removeCard() {
 
 void Utils::setNewSong() {
 	if (Utils::getBool("playlistMode")) return Utils::playlistModeNewSong();
+	SongManager& songManager = SongManager::get();
 	FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
-	SongManager::get().pickRandomSong();
-	geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", SongManager::get().getCurrentSong());
+	songManager.pickRandomSong();
+	if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
 	GameManager::sharedState()->playMenuMusic();
 }
 
@@ -62,38 +63,38 @@ void Utils::playlistModeNewSong() {
 	if (GameManager::sharedState()->getGameVariable("0122")) return;
 	if (!Utils::getBool("playlistMode")) return Utils::setNewSong();
 	geode::log::info("attempting to hijack menuloop channel to use playlist mode");
-	auto fmod = FMODAudioEngine::sharedEngine();
+	const auto fmod = FMODAudioEngine::sharedEngine();
 	float fmodIsCBrained;
-	FMOD_RESULT fmodResult = fmod->m_backgroundMusicChannel->getVolume(&fmodIsCBrained);
+	const FMOD_RESULT fmodResult = fmod->m_backgroundMusicChannel->getVolume(&fmodIsCBrained);
 	if (fmod->m_musicVolume <= 0.0f || fmod->getBackgroundMusicVolume() <= 0.0f || fmodIsCBrained <= 0.0f) return geode::log::info(" --- !!! MISSION ABORT !!! ---\n\none of the following was at or below 0.0f:\nfmod->m_musicVolume: {}\nfmod->getBackgroundMusicVolume(): {}\nfmodIsCBrained: {} (with fmodResult {} as int)", fmod->m_musicVolume, fmod->getBackgroundMusicVolume(), fmodIsCBrained, static_cast<int>(fmodResult));
 	fmod->m_backgroundMusicChannel->stop();
-	SongManager::get().pickRandomSong();
+	SongManager& songManager = SongManager::get();
+	songManager.pickRandomSong();
 	geode::log::info("is it over?");
-	if (SongManager::get().getCalledOnce() || !Utils::getBool("saveSongOnGameClose")) {
+	if (songManager.getCalledOnce() || !Utils::getBool("saveSongOnGameClose")) {
 		geode::log::info("playing song as normal");
-		fmod->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
-		geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", SongManager::get().getCurrentSong());
+		fmod->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
+		if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
 	} else {
 		std::string lastSong = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 		geode::log::info("playing song from saved value: {}", lastSong);
-		SongManager::get().setCurrentSong(lastSong);
+		songManager.setCurrentSong(lastSong);
 		fmod->playMusic(lastSong, true, 1.0f, 1);
 	}
-	SongManager::get().setCalledOnce(true);
+	songManager.setCalledOnce(true);
 }
 
 // create notif card stuff
 void Utils::makeNewCard(const std::string& notifString) {
-	if (auto oldCard = Utils::findCardRemotely()) {
-		oldCard->removeMeAndCleanup();
-	}
+	if (cocos2d::CCNode* oldCard = Utils::findCardRemotely()) oldCard->removeMeAndCleanup();
+
 	auto card = PlayingCard::create(notifString);
 	auto screenSize = cocos2d::CCDirector::get()->getWinSize();
 
 	card->position.x = screenSize.width / 2.0f;
 	card->position.y = screenSize.height;
 
-	auto defaultPos = card->position;
+	const cocos2d::CCPoint defaultPos = card->position;
 	auto posx = defaultPos.x;
 	auto posy = defaultPos.y;
 
@@ -113,12 +114,16 @@ void Utils::makeNewCard(const std::string& notifString) {
 }
 
 void Utils::generateNotification() {
-	std::string songFileName = Utils::toNormalizedString(std::filesystem::path(SongManager::get().getCurrentSong()).filename());
+	SongManager& songManager = SongManager::get();
+	std::string songFileName = Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
 
 	std::string notifString;
 	auto prefix = geode::Mod::get()->getSettingValue<std::string>("customPrefix");
 	if (prefix != "[Empty]")
 		notifString = fmt::format("{}: ", prefix);
+
+	if (songManager.isOverride())
+		return Utils::makeNewCard(notifString.append(fmt::format("{} (MLR OVERRIDE)", songFileName)));
 
 	if (Utils::getBool("useCustomSongs"))
 		return Utils::makeNewCard(notifString.append(songFileName));
@@ -248,7 +253,7 @@ void Utils::populateVector(bool customSongs) {
 				}
 			}
 
-			if (!Utils::isSupportedExtension(filePathString) || std::ranges::find(otherBlacklist, filePathString) != otherBlacklist.end() || isInTextBlacklist) continue;
+			if (!Utils::isSupportedFile(filePathString) || std::ranges::find(otherBlacklist, filePathString) != otherBlacklist.end() || isInTextBlacklist) continue;
 
 			geode::log::info("Adding custom song: {}", Utils::toNormalizedString(filePath.filename()));
 			SongManager::get().addSong(filePathString);
@@ -283,7 +288,7 @@ void Utils::populateVector(bool customSongs) {
 				}
 			}
 
-			if (!Utils::isSupportedExtension(songPath) || std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end() || isInTextBlacklist || (qualifiedForOGMenuBlacklist && song->m_songID == 584131)) continue; // apply hardcode blacklist 584131 onto self in light of BS edge case caught by hiimjustin001: https://discord.com/channels/911701438269386882/911702535373475870/1289021323279990795
+			if (!Utils::isSupportedFile(songPath) || std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end() || isInTextBlacklist || (qualifiedForOGMenuBlacklist && song->m_songID == 584131)) continue; // apply hardcode blacklist 584131 onto self in light of BS edge case caught by hiimjustin001: https://discord.com/channels/911701438269386882/911702535373475870/1289021323279990795
 
 			geode::log::info("Adding Newgrounds/Music Library song: {}", songPath);
 			SongManager::get().addSong(songPath);

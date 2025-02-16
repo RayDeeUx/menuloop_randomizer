@@ -31,11 +31,16 @@ $on_mod(Loaded) {
 
 	Utils::populateVector(Utils::getBool("useCustomSongs"));
 
+	std::string override = songManager.getSpecificSongOverride();
+
 	std::string lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 	bool saveSongOnGameClose = Utils::getBool("saveSongOnGameClose");
 	bool loopExists = std::filesystem::exists(lastMenuLoop);
-	log::info("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}", lastMenuLoop, saveSongOnGameClose, loopExists);
-	if (!lastMenuLoop.empty() && Utils::isSupportedExtension(lastMenuLoop) && loopExists && saveSongOnGameClose) {
+	log::info("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}\noverride: {}", lastMenuLoop, saveSongOnGameClose, loopExists, override);
+	if (!override.empty() && Utils::isSupportedFile(override)) {
+		log::info("setting songManager's current song to overridden song from settings");
+		songManager.setCurrentSongToOverride();
+	} else if (!lastMenuLoop.empty() && Utils::isSupportedFile(lastMenuLoop) && loopExists && saveSongOnGameClose) {
 		log::info("setting songManager's current song to saved song from on_mod(Loaded)");
 		songManager.setCurrentSongToSavedSong();
 	} else {
@@ -49,7 +54,7 @@ $on_mod(Loaded) {
 }
 
 $execute {
-	listenForSettingChanges<bool>("useCustomSongs", [](bool value) {
+	listenForSettingChanges<bool>("useCustomSongs", [](bool useCustomSongs) {
 		// make sure m_songs is empty, we don't want to make a mess here --elnexreal
 		songManager.clearSongs();
 
@@ -58,20 +63,31 @@ $execute {
 			if they're ng songs also push the path bc we're going to use getPathForSong
 			--elnexreal
 		*/
-		Utils::populateVector(value);
+		Utils::populateVector(useCustomSongs);
 
 		// change the song when you click apply, stoi will not like custom names. --elnexreal
 
 		Utils::setNewSong();
 	});
-	listenForSettingChanges<bool>("playlistMode", [](bool isPlaylistMode) {
+	listenForSettingChanges<bool>("playlistMode", [](bool playlistMode) {
 		if (SongManager::get().isOriginalMenuLoop()) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		if (GameManager::sharedState()->getGameVariable("0122")) return;
-		if (isPlaylistMode) {
+		if (playlistMode) {
 			FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 			return PlaylistModeWarning::create(SongManager::get().getGeodify())->show();
 		}
+		GameManager::sharedState()->playMenuMusic();
+	});
+	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](std::filesystem::path specificSongOverride) {
+		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
+		if (GameManager::sharedState()->getGameVariable("0122")) return;
+		if (!Utils::isSupportedFile(specificSongOverride.string())) {
+			songManager.clearSongs();
+			Utils::populateVector(Utils::getBool("useCustomSongs"));
+			return Utils::setNewSong();
+		}
+		if (Utils::getBool("playlistMode")) return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 		GameManager::sharedState()->playMenuMusic();
 	});
 }

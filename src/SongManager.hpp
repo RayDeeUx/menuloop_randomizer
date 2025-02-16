@@ -25,6 +25,9 @@ class SongManager {
 	void addToBlacklist(const std::string&);
 	void addToBlacklist();
 	std::vector<std::string> getBlacklist();
+	std::string getSpecificSongOverride();
+	bool isOverride();
+	void setCurrentSongToOverride();
 
   private:
 	SongManager();

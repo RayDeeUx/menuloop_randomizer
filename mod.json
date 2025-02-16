@@ -150,6 +150,22 @@
 			"description": "Randomize the song when you exit the editor.\n\n<cy>This setting is ignored when \"Playlist Mode\" is enabled.</c>",
 			"type": "bool",
 			"default": true
+		},
+		"specificSongOverride": {
+			"name": "Specific Menu Loop File Override",
+			"description": "Here in case you *hate* the randomizer elements from this mod.\n<cy>Leave blank to disable.</c>",
+			"type": "file",
+			"default": {
+				"win": "",
+				"mac": "",
+				"android": ""
+			},
+			"filters": [
+				{
+					"files": [ "*.mp3", "*.ogg", "*.oga", "*.wav", "*.flac" ],
+					"description": "Audio files"
+				}
+			]
 		}
 	},
 	"resources": {

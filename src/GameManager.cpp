@@ -12,9 +12,10 @@ class $modify(MenuLoopGMHook, GameManager) {
 		return m_fields->songManager.getCurrentSong();
 	}
 	void encodeDataTo(DS_Dictionary* p0) {
-		std::string currentSong = m_fields->songManager.getCurrentSong();
+		SongManager& songManager = m_fields->songManager;
+		std::string currentSong = songManager.getCurrentSong();
 		log::info("Game close detected. Most recent songManager song: {}", currentSong);
-		Mod::get()->setSavedValue<std::string>("lastMenuLoop", currentSong);
+		if (!songManager.isOverride()) Mod::get()->setSavedValue<std::string>("lastMenuLoop", currentSong);
 
 		GameManager::encodeDataTo(p0);
 	}

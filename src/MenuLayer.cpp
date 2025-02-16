@@ -1,5 +1,6 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
+#include <Geode/ui/GeodeUI.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 
 using namespace geode::prelude;
@@ -117,21 +118,22 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		menu->updateLayout();
 	}
 
+	void woahThereBuddy(const std::string& reason) const {
+		geode::createQuickPopup(
+			"Menu Loop Randomizer", reason,
+			"Never Mind", "Open Mod Settings",
+			[this](FLAlertLayer*, bool openConfig) {
+				if (!openConfig) return;
+				openSettingsPopup(Mod::get());
+			}
+		);
+	}
+
 	void onBlacklistButton(CCObject*) {
-		if (m_fields->songManager.isOriginalMenuLoop()) {
-			geode::createQuickPopup(
-				"Menu Loop Randomizer",
-				"There's nothing to blacklist! Open Menu Loop Randomizer's config directory and edit its <cj>blacklist.txt</c> file to bring back some songs.",
-				"Never Mind", "Open Mod Config",
-				[this](FLAlertLayer* alert, bool openConfig) {
-					if (openConfig) {
-						file::openFolder(m_fields->configDir);
-					}
-				}
-			);
-			return;
-		}
-		auto currentSong = m_fields->songManager.getCurrentSong();
+		SongManager& songManager = m_fields->songManager;
+		if (songManager.isOriginalMenuLoop()) return woahThereBuddy("There's nothing to blacklist! Open Menu Loop Randomizer's config directory and edit its <cj>blacklist.txt</c> file to bring back some songs.");
+		if (songManager.isOverride()) return woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
+		auto currentSong = songManager.getCurrentSong();
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 		log::info("blacklisting: {}", currentSong);
 		std::string toWriteToFile = currentSong;
@@ -145,13 +147,13 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		blacklistFileOutput.open(m_fields->blacklistFile, std::ios_base::app);
 		blacklistFileOutput << std::endl << toWriteToFile;
 		blacklistFileOutput.close();
-		m_fields->songManager.addToBlacklist();
-		m_fields->songManager.clearSongs();
+		songManager.addToBlacklist();
+		songManager.clearSongs();
 		Utils::populateVector(useCustomSongs);
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::playlistModeNewSong();
 		if (!Utils::getBool("enableNotification")) return;
-		if (m_fields->songManager.isOriginalMenuLoop()) {
+		if (songManager.isOriginalMenuLoop()) {
 			if (useCustomSongs && !customSong.empty()) return Utils::makeNewCard(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", customSong));
 			if (!useCustomSongs && !songName.empty()) return Utils::makeNewCard(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", songName));
 		}
