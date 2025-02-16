@@ -47,7 +47,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (Utils::getBool("enableBlacklistButton"))
 			MenuLayerMLHook::addBlacklistButton();
 
-		if (Utils::getBool("enableBlacklistButton"))
+		if (Utils::getBool("enableHoldSongButton"))
 			MenuLayerMLHook::addHoldSongButton();
 
 		return true;

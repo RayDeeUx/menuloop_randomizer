@@ -55,6 +55,12 @@
 			"type": "bool",
 			"default": true
 		},
+		"enableHoldSongButton": {
+			"name": "Hold Song Button",
+			"description": "<cl>Original idea by [name intentionally omitted].</c>\n\nEnables the <cj>\"Hold Song\" button</c> in the main menu.\n\n<cy>Using this button holds onto the name of the current song, and swaps menu loop songs if there was a held song previously.</c>",
+			"type": "bool",
+			"default": true
+		},
 		"enableNotification": {
 			"name": "\"Now Playing\" Notifs",
 			"description": "Shows a notification with the name of the currently playing song.",
