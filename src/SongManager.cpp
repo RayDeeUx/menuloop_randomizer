@@ -14,7 +14,7 @@ void SongManager::clearSongs() {
 }
 
 void SongManager::pickRandomSong() {
-	if (!getSpecificSongOverride().empty()) m_currentSong = getSpecificSongOverride();
+	if (!getOverrideSong().empty()) m_currentSong = getOverrideSong();
 	else if (!m_songs.empty()) {
 		m_isMenuLoop = false;
 		if (m_songs.size() != 1) {
@@ -33,17 +33,17 @@ void SongManager::pickRandomSong() {
 }
 
 std::string SongManager::getCurrentSong() {
-	if (!getSpecificSongOverride().empty()) return getSpecificSongOverride();
+	if (!getOverrideSong().empty()) return getOverrideSong();
 	return m_currentSong;
 }
 
 void SongManager::setCurrentSong(const std::string& song) {
-	if (!getSpecificSongOverride().empty()) m_currentSong = getSpecificSongOverride();
+	if (!getOverrideSong().empty()) m_currentSong = getOverrideSong();
 	else m_currentSong = song;
 }
 
 void SongManager::setCurrentSongToSavedSong() {
-	if (m_isMenuLoop || !getSpecificSongOverride().empty()) return;
+	if (m_isMenuLoop || !getOverrideSong().empty()) return;
 	m_currentSong = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 }
 
@@ -91,7 +91,7 @@ bool SongManager::getGeodify() const {
 }
 
 void SongManager::setHeldSong(const std::string_view value) {
-	if (!getSpecificSongOverride().empty()) return;
+	if (!getOverrideSong().empty()) return;
 	m_heldSong = value;
 }
 
@@ -100,12 +100,12 @@ std::string SongManager::getHeldSong() {
 }
 
 void SongManager::addToBlacklist(const std::string& song) {
-	if (!getSpecificSongOverride().empty()) return;
+	if (!getOverrideSong().empty()) return;
 	m_blacklist.push_back(song);
 }
 
 void SongManager::addToBlacklist() {
-	if (!getSpecificSongOverride().empty()) return;
+	if (!getOverrideSong().empty()) return;
 	m_blacklist.push_back(m_currentSong);
 }
 
@@ -125,7 +125,7 @@ void SongManager::setOverride(const std::string_view path) {
 	geode::log::info("set override to false and override path to blank");
 }
 
-std::string SongManager::getSpecificSongOverride() {
+std::string SongManager::getOverrideSong() {
 	geode::log::info("fetching override song and seeing if it's valid");
 	if (!Utils::isSupportedFile(m_overrideSong)) return "";
 	return m_overrideSong;
@@ -137,7 +137,7 @@ bool SongManager::isOverride() const {
 
 void SongManager::setCurrentSongToOverride() {
 	geode::log::info("setting current song to override song if it exists");
-	const std::string& override = getSpecificSongOverride();
-	if (override.empty() || !Utils::isSupportedFile(override)) return;
+	const std::string& override = getOverrideSong();
+	if (override.empty() || !Utils::isSupportedFile(override)) return geode::log::info("override is not valid");
 	m_currentSong = override;
 }

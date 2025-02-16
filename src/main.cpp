@@ -32,6 +32,7 @@ $on_mod(Loaded) {
 	Utils::populateVector(Utils::getBool("useCustomSongs"));
 
 	std::string override = Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride").string();
+	songManager.setOverride(override);
 
 	const std::string& lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 	bool saveSongOnGameClose = Utils::getBool("saveSongOnGameClose");
@@ -51,9 +52,6 @@ $on_mod(Loaded) {
 	if (!std::filesystem::exists(configDir / R"(store_your_disabled_menuloops_here)")) {
 		std::filesystem::create_directory(configDir / R"(store_your_disabled_menuloops_here)");
 	}
-}
-
-$execute {
 	listenForSettingChanges<bool>("useCustomSongs", [](bool useCustomSongs) {
 		// make sure m_songs is empty, we don't want to make a mess here --elnexreal
 		songManager.clearSongs();
