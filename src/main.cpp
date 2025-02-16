@@ -11,6 +11,7 @@ std::filesystem::path configDir = Mod::get()->getConfigDir();
 
 $on_mod(Loaded) {
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
+	songManager.setPlaylistMode();
 
 	auto blacklistTxt = configDir / R"(blacklist.txt)";
 	if (!std::filesystem::exists(blacklistTxt)) {

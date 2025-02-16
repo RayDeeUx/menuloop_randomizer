@@ -80,10 +80,11 @@ void Utils::playlistModeNewSong() {
 		fmod->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
 		if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
 	} else {
-		std::string lastSong = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
-		geode::log::info("playing song from saved value: {}", lastSong);
-		songManager.setCurrentSong(lastSong);
-		fmod->playMusic(lastSong, true, 1.0f, 1);
+		const bool override = songManager.isOverride();
+		const std::string& song = override ? songManager.getOverrideSong() : geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
+		geode::log::info("playing song from {}: {}", override ? "override" : "saved value", song);
+		songManager.setCurrentSong(song);
+		fmod->playMusic(song, true, 1.0f, 1);
 	}
 	songManager.setCalledOnce(true);
 }
