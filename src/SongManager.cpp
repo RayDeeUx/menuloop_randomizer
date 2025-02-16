@@ -128,9 +128,7 @@ void SongManager::setOverride(const std::string_view path) {
 }
 
 std::string SongManager::getOverrideSong() {
-	geode::log::info("fetching override song and seeing if it's valid");
 	if (!Utils::isSupportedFile(m_overrideSong)) return "";
-	geode::log::info("it is valid");
 	return m_overrideSong;
 }
 
