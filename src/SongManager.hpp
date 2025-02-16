@@ -15,7 +15,7 @@ class SongManager {
 	std::string getCurrentSong();
 	void setCurrentSong(const std::string &);
 	void setCurrentSongToSavedSong();
-	void update(float);
+	void update(float) const;
 	bool getCalledOnce() const;
 	void setCalledOnce(const bool);
 	bool getGeodify() const;
@@ -25,8 +25,9 @@ class SongManager {
 	void addToBlacklist(const std::string&);
 	void addToBlacklist();
 	std::vector<std::string> getBlacklist();
+	void setOverride(const std::string_view);
 	std::string getSpecificSongOverride();
-	bool isOverride();
+	bool isOverride() const;
 	void setCurrentSongToOverride();
 
   private:
@@ -35,8 +36,10 @@ class SongManager {
 	std::vector<std::string> m_songs;
 	std::string m_currentSong;
 	std::string m_heldSong = "";
+	std::string m_overrideSong = "";
 	bool m_isMenuLoop;
 	bool m_calledOnce = false;
 	bool m_geodify = false;
+	bool m_isOverride = false;
 	std::vector<std::string> m_blacklist;
 };

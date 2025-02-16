@@ -23,7 +23,11 @@ int Utils::randomIndex(int size) {
 }
 
 bool Utils::isSupportedFile(const std::string_view path) {
-	return std::filesystem::exists(path) && !path.empty() && (path.ends_with(".mp3") || path.ends_with(".wav") || path.ends_with(".ogg") || path.ends_with(".oga") || path.ends_with(".flac"));
+	return std::filesystem::exists(path) && !path.empty() && Utils::goodExtension(path);
+}
+
+bool Utils::goodExtension(const std::string_view path) {
+	return path.ends_with(".mp3") || path.ends_with(".wav") || path.ends_with(".ogg") || path.ends_with(".oga") || path.ends_with(".flac");
 }
 
 bool Utils::getBool(std::string setting) {

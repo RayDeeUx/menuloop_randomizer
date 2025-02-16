@@ -51,9 +51,8 @@ bool SongManager::isOriginalMenuLoop() const {
 	return m_isMenuLoop;
 }
 
-void SongManager::update(float dt) {
-	if (GameManager::sharedState()->getGameVariable("0122")) return;
-	if (!getSpecificSongOverride().empty()) return;
+void SongManager::update(float dt) const {
+	if (GameManager::sharedState()->getGameVariable("0122") || m_isOverride) return;
 	auto fmod = FMODAudioEngine::get();
 	if (!Utils::getBool("playlistMode") || GJBaseGameLayer::get() || m_isMenuLoop || m_songs.size() < 2 || !fmod) return;
 	// geode::log::info("channelIsPlaying: {}", fmod->isMusicPlaying(0));
@@ -108,17 +107,30 @@ std::vector<std::string> SongManager::getBlacklist() {
 	return m_blacklist;
 }
 
-std::string SongManager::getSpecificSongOverride() {
-	const auto specificSongOverride = geode::Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride").string();
-	if (!Utils::isSupportedFile(specificSongOverride)) return "";
-	return specificSongOverride;
+void SongManager::setOverride(const std::string_view path) {
+	if (!Utils::goodExtension(path) && !path.empty()) return geode::log::info("invalid file offered for override song: {}", path);
+	if (Utils::isSupportedFile(path)) {
+		m_overrideSong = path;
+		m_isOverride = true;
+		return geode::log::info("set override to true and override path to: {}", path);
+	}
+	m_overrideSong = "";
+	m_isOverride = false;
+	geode::log::info("set override to false and override path to blank");
 }
 
-bool SongManager::isOverride() {
-	return m_currentSong == getSpecificSongOverride();
+std::string SongManager::getSpecificSongOverride() {
+	geode::log::info("fetching override song and seeing if it's valid");
+	if (!Utils::isSupportedFile(m_overrideSong)) return "";
+	return m_overrideSong;
+}
+
+bool SongManager::isOverride() const {
+	return m_isOverride;
 }
 
 void SongManager::setCurrentSongToOverride() {
+	geode::log::info("setting current song to override song if it exists");
 	const std::string& override = getSpecificSongOverride();
 	if (override.empty() || !Utils::isSupportedFile(override)) return;
 	m_currentSong = override;

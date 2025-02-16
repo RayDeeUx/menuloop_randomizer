@@ -31,7 +31,7 @@ $on_mod(Loaded) {
 
 	Utils::populateVector(Utils::getBool("useCustomSongs"));
 
-	std::string override = songManager.getSpecificSongOverride();
+	std::string override = Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride").string();
 
 	const std::string& lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 	bool saveSongOnGameClose = Utils::getBool("saveSongOnGameClose");
@@ -80,16 +80,17 @@ $execute {
 		GameManager::sharedState()->playMenuMusic();
 	});
 	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](std::filesystem::path specificSongOverride) {
-		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		if (GameManager::sharedState()->getGameVariable("0122")) return;
-		if (!Utils::isSupportedFile(specificSongOverride.string())) {
+		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
+		const std::string& overrideString = specificSongOverride.string();
+		songManager.setOverride(overrideString);
+		if (!Utils::isSupportedFile(overrideString)) {
 			songManager.clearSongs();
 			Utils::populateVector(Utils::getBool("useCustomSongs"));
 			if (Utils::isSupportedFile(Mod::get()->getSavedValue<std::string>("lastMenuLoop")) && Utils::getBool("saveSongOnGameClose")) {
-				log::info("setting songManager's current song to saved song from on_mod(Loaded)");
-				return songManager.setCurrentSongToSavedSong();
-			}
-			return Utils::setNewSong();
+				log::info("setting songManager's current song to saved song from settings change");
+				songManager.setCurrentSongToSavedSong();
+			} else Utils::setNewSong();
 		}
 		if (Utils::getBool("playlistMode")) return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 		GameManager::sharedState()->playMenuMusic();
