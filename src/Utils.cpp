@@ -55,8 +55,8 @@ void Utils::removeCard() {
 }
 
 void Utils::setNewSong() {
-	if (Utils::getBool("playlistMode")) return Utils::playlistModeNewSong();
 	SongManager& songManager = SongManager::get();
+	if (Utils::getBool("playlistMode") && !songManager.isOverride()) return Utils::playlistModeNewSong();
 	FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
 	songManager.pickRandomSong();
 	if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
