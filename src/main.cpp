@@ -33,7 +33,7 @@ $on_mod(Loaded) {
 
 	std::string override = songManager.getSpecificSongOverride();
 
-	std::string lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
+	const std::string& lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 	bool saveSongOnGameClose = Utils::getBool("saveSongOnGameClose");
 	bool loopExists = std::filesystem::exists(lastMenuLoop);
 	log::info("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}\noverride: {}", lastMenuLoop, saveSongOnGameClose, loopExists, override);
@@ -85,6 +85,10 @@ $execute {
 		if (!Utils::isSupportedFile(specificSongOverride.string())) {
 			songManager.clearSongs();
 			Utils::populateVector(Utils::getBool("useCustomSongs"));
+			if (Utils::isSupportedFile(Mod::get()->getSavedValue<std::string>("lastMenuLoop")) && Utils::getBool("saveSongOnGameClose")) {
+				log::info("setting songManager's current song to saved song from on_mod(Loaded)");
+				return songManager.setCurrentSongToSavedSong();
+			}
 			return Utils::setNewSong();
 		}
 		if (Utils::getBool("playlistMode")) return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);

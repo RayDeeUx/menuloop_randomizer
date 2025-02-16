@@ -15,7 +15,9 @@ class $modify(MenuLoopGMHook, GameManager) {
 		SongManager& songManager = m_fields->songManager;
 		std::string currentSong = songManager.getCurrentSong();
 		log::info("Game close detected. Most recent songManager song: {}", currentSong);
-		if (!songManager.isOverride()) Mod::get()->setSavedValue<std::string>("lastMenuLoop", currentSong);
+
+		if (songManager.isOverride()) log::info("however this is an override, so do not save it");
+		else Mod::get()->setSavedValue<std::string>("lastMenuLoop", currentSong);
 
 		GameManager::encodeDataTo(p0);
 	}
