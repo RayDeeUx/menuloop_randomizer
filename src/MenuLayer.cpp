@@ -12,6 +12,17 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		std::filesystem::path blacklistFile = configDir / R"(blacklist.txt)";
 	};
 
+	void woahThereBuddy(const std::string& reason) const {
+		geode::createQuickPopup(
+			"Menu Loop Randomizer", reason,
+			"Never Mind", "Open Mod Settings",
+			[this](FLAlertLayer*, bool openConfig) {
+				if (!openConfig) return;
+				openSettingsPopup(Mod::get());
+			}
+		);
+	}
+
 	bool init() {
 		if (!MenuLayer::init())
 			return false;
@@ -36,13 +47,16 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (Utils::getBool("enableBlacklistButton"))
 			MenuLayerMLHook::addBlacklistButton();
 
+		if (Utils::getBool("enableBlacklistButton"))
+			MenuLayerMLHook::addHoldSongButton();
+
 		return true;
 	}
 
 	void addShuffleButton() {
-		auto menu = getChildByID("right-side-menu");
+		CCNode* menu = getChildByID("right-side-menu");
 
-		auto btn = CCMenuItemSpriteExtra::create(
+		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
 			CircleButtonSprite::create(CCSprite::create("shuffle-btn-sprite.png"_spr)),
 			this,
 			menu_selector(MenuLayerMLHook::onShuffleBtn)
@@ -55,6 +69,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 
 	void onShuffleBtn(CCObject*) {
 		Utils::removeCard();
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		if (m_fields->songManager.isOriginalMenuLoop()) Utils::populateVector(Utils::getBool("useCustomSongs"));
 
@@ -65,9 +80,9 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	}
 
 	void addRegenButton() {
-		auto menu = getChildByID("right-side-menu");
+		CCNode* menu = getChildByID("right-side-menu");
 
-		auto btn = CCMenuItemSpriteExtra::create(
+		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
 			CircleButtonSprite::create(CCSprite::create("regen-btn-sprite.png"_spr)),
 			this,
 			menu_selector(MenuLayerMLHook::onRegenButton)
@@ -80,15 +95,16 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 
 	void onRegenButton(CCObject*) {
 		Utils::removeCard();
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		if (Utils::getBool("enableNotification"))
 			Utils::generateNotification();
 	}
 
 	void addCopyButton() {
-		auto menu = getChildByID("right-side-menu");
+		CCNode* menu = getChildByID("right-side-menu");
 
-		auto btn = CCMenuItemSpriteExtra::create(
+		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
 			CircleButtonSprite::create(CCSprite::create("copy-btn-sprite.png"_spr)),
 			this,
 			menu_selector(MenuLayerMLHook::onCopyButton)
@@ -100,14 +116,15 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	}
 
 	void onCopyButton(CCObject*) {
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		Utils::copyCurrentSongName();
 		Notification::create("[MLR] Current song name copied!", NotificationIcon::None, Mod::get()->getSettingValue<double>("notificationTime"));
 	}
 
 	void addBlacklistButton() {
-		auto menu = getChildByID("right-side-menu");
+		CCNode* menu = getChildByID("right-side-menu");
 
-		auto btn = CCMenuItemSpriteExtra::create(
+		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
 			CircleButtonSprite::create(CCSprite::create("blacklist-btn-sprite.png"_spr)),
 			this,
 			menu_selector(MenuLayerMLHook::onBlacklistButton)
@@ -118,18 +135,8 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		menu->updateLayout();
 	}
 
-	void woahThereBuddy(const std::string& reason) const {
-		geode::createQuickPopup(
-			"Menu Loop Randomizer", reason,
-			"Never Mind", "Open Mod Settings",
-			[this](FLAlertLayer*, bool openConfig) {
-				if (!openConfig) return;
-				openSettingsPopup(Mod::get());
-			}
-		);
-	}
-
 	void onBlacklistButton(CCObject*) {
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		SongManager& songManager = m_fields->songManager;
 		if (songManager.isOriginalMenuLoop()) return woahThereBuddy("There's nothing to blacklist! Open Menu Loop Randomizer's config directory and edit its <cj>blacklist.txt</c> file to bring back some songs.");
 		if (songManager.isOverride()) return woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
@@ -159,5 +166,35 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		}
 		if (!useCustomSongs) return Utils::makeNewCard(fmt::format("Blacklisted {} by {} ({}), now playing {}.", songName, songArtist, songID, Utils::getSongName()));
 		if (!customSong.empty()) return Utils::makeNewCard(fmt::format("Blacklisted {}, now playing {}.", customSong, Utils::currentCustomSong()));
+	}
+
+	void addHoldSongButton() {
+		CCNode* menu = getChildByID("right-side-menu");
+
+		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
+			CircleButtonSprite::create(CCSprite::create("hold-btn-sprite.png"_spr)),
+			this,
+			menu_selector(MenuLayerMLHook::onHoldSongButton)
+		);
+		btn->setID("hold-song-button"_spr);
+
+		menu->addChild(btn);
+		menu->updateLayout();
+	}
+
+	void onHoldSongButton(CCObject*) {
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
+		SongManager& songManager = m_fields->songManager;
+		if (songManager.isOverride()) return;
+		const std::string& formerHeldSong = songManager.getHeldSong();
+		songManager.setHeldSong(songManager.getCurrentSong());
+		if (!formerHeldSong.empty()) {
+			songManager.setCurrentSong(formerHeldSong);
+			if (Utils::getBool("playlistMode")) return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
+			return GameManager::sharedState()->playMenuMusic();
+		}
+		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
+		else Utils::playlistModeNewSong();
 	}
 };

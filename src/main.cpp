@@ -73,7 +73,7 @@ $on_mod(Loaded) {
 		songManager.setPlaylistMode();
 		if (songManager.isOriginalMenuLoop()) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
-		if (GameManager::sharedState()->getGameVariable("0122")) return;
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		if (playlistMode) {
 			FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
 			return PlaylistModeWarning::create(songManager.getGeodify())->show();
@@ -81,7 +81,7 @@ $on_mod(Loaded) {
 		GameManager::sharedState()->playMenuMusic();
 	});
 	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](std::filesystem::path specificSongOverride) {
-		if (GameManager::sharedState()->getGameVariable("0122")) return;
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		const std::string& overrideString = specificSongOverride.string();
 		songManager.setOverride(overrideString);

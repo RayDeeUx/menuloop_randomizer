@@ -64,7 +64,7 @@ void Utils::setNewSong() {
 }
 
 void Utils::playlistModeNewSong() {
-	if (GameManager::sharedState()->getGameVariable("0122")) return;
+	if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 	if (!Utils::getBool("playlistMode")) return Utils::setNewSong();
 	geode::log::info("attempting to hijack menuloop channel to use playlist mode");
 	const auto fmod = FMODAudioEngine::sharedEngine();

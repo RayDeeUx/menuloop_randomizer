@@ -59,7 +59,7 @@ void SongManager::setPlaylistMode() {
 
 void SongManager::update(float dt) const {
 	// split for readability
-	if (GameManager::sharedState()->getGameVariable("0122") || !m_playlistMode) return;
+	if (VANILLA_GD_MENU_LOOP_DISABLED || !m_playlistMode) return;
 	if (GJBaseGameLayer::get() || m_isMenuLoop || m_songs.size() < 2) return;
 	auto fmod = FMODAudioEngine::get();
 	if (!fmod) return;

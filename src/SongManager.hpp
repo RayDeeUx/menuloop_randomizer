@@ -1,10 +1,12 @@
 #pragma once
 
+// shorthand because haha yes
+#define VANILLA_GD_MENU_LOOP_DISABLED GameManager::sharedState()->getGameVariable("0122")
+
 class SongManager {
   public:
 	static SongManager &get() {
 		static SongManager instance;
-
 		return instance;
 	}
 
