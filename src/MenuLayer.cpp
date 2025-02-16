@@ -184,9 +184,9 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 
 	void onHoldSongButton(CCObject*) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		SongManager& songManager = m_fields->songManager;
 		if (songManager.isOverride()) return;
+		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		const std::string& formerHeldSong = songManager.getHeldSong();
 		songManager.setHeldSong(songManager.getCurrentSong());
 		if (!formerHeldSong.empty()) {
@@ -196,5 +196,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		}
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::playlistModeNewSong();
+		if (!Utils::getBool("enableNotification")) return;
+		Utils::generateNotification();
 	}
 };
