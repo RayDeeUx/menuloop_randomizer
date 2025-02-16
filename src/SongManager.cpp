@@ -51,10 +51,16 @@ bool SongManager::isOriginalMenuLoop() const {
 	return m_isMenuLoop;
 }
 
+void SongManager::setPlaylistMode() {
+	m_playlistMode = Utils::getBool("playlistMode");
+}
+
 void SongManager::update(float dt) const {
-	if (GameManager::sharedState()->getGameVariable("0122") || m_isOverride) return;
+	// split for readability
+	if (GameManager::sharedState()->getGameVariable("0122") || !m_playlistMode) return;
+	if (GJBaseGameLayer::get() || m_isMenuLoop || m_songs.size() < 2) return;
 	auto fmod = FMODAudioEngine::get();
-	if (!Utils::getBool("playlistMode") || GJBaseGameLayer::get() || m_isMenuLoop || m_songs.size() < 2 || !fmod) return;
+	if (!fmod) return;
 	// geode::log::info("channelIsPlaying: {}", fmod->isMusicPlaying(0));
 	#ifdef GEODE_IS_WINDOWS
 	if (fmod->isMusicPlaying(0)) return;

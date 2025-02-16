@@ -65,14 +65,14 @@ void Utils::setNewSong() {
 
 void Utils::playlistModeNewSong() {
 	if (GameManager::sharedState()->getGameVariable("0122")) return;
-	if (!Utils::getBool("playlistMode")) return Utils::setNewSong();
+	SongManager& songManager = SongManager::get();
+	if (!Utils::getBool("playlistMode") || songManager.isOverride()) return Utils::setNewSong();
 	geode::log::info("attempting to hijack menuloop channel to use playlist mode");
 	const auto fmod = FMODAudioEngine::sharedEngine();
 	float fmodIsCBrained;
 	const FMOD_RESULT fmodResult = fmod->m_backgroundMusicChannel->getVolume(&fmodIsCBrained);
 	if (fmod->m_musicVolume <= 0.0f || fmod->getBackgroundMusicVolume() <= 0.0f || fmodIsCBrained <= 0.0f) return geode::log::info(" --- !!! MISSION ABORT !!! ---\n\none of the following was at or below 0.0f:\nfmod->m_musicVolume: {}\nfmod->getBackgroundMusicVolume(): {}\nfmodIsCBrained: {} (with fmodResult {} as int)", fmod->m_musicVolume, fmod->getBackgroundMusicVolume(), fmodIsCBrained, static_cast<int>(fmodResult));
 	fmod->m_backgroundMusicChannel->stop();
-	SongManager& songManager = SongManager::get();
 	songManager.pickRandomSong();
 	geode::log::info("is it over?");
 	if (songManager.getCalledOnce() || !Utils::getBool("saveSongOnGameClose")) {

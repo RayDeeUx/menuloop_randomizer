@@ -70,12 +70,14 @@ $execute {
 		Utils::setNewSong();
 	});
 	listenForSettingChanges<bool>("playlistMode", [](bool playlistMode) {
-		if (SongManager::get().isOriginalMenuLoop()) return;
+		SongManager& songManager = SongManager::get();
+		songManager.setPlaylistMode();
+		if (songManager.isOriginalMenuLoop()) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		if (GameManager::sharedState()->getGameVariable("0122")) return;
 		if (playlistMode) {
-			FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
-			return PlaylistModeWarning::create(SongManager::get().getGeodify())->show();
+			FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
+			return PlaylistModeWarning::create(songManager.getGeodify())->show();
 		}
 		GameManager::sharedState()->playMenuMusic();
 	});
