@@ -191,6 +191,10 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're currently playing a menu loop <cy>override</c>. Double-check your settings again.");
 		if (songManager.songSizeIsBad()) return MenuLayerMLHook::woahThereBuddy("You don't have enough songs available to do this. Visit the config directory through the mod settings and try again.");
 		const std::string& formerHeldSong = songManager.getHeldSong();
+		if (songManager.getCurrentSong() == formerHeldSong) {
+			if (Utils::getBool("enableNotification")) return Utils::makeNewCard("You're already holding that song! :D");
+			return FLAlertLayer::create("Menu Loop Randomizer", "You're already holding that song! <cl>:D</c>", "Close")->show();
+		}
 		songManager.setHeldSong(songManager.getCurrentSong());
 		if (!formerHeldSong.empty()) {
 			FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
