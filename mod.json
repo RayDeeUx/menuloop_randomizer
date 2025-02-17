@@ -56,13 +56,13 @@
 			"default": true
 		},
 		"enableHoldSongButton": {
-			"name": "Hold Song Button",
+			"name": "Hold Song Button (READ!)",
 			"description": "Enables the <cj>\"Hold Song\" button</c> in the main menu.\n\n<cy>Like Tetris, using this button holds onto the name of the current song, and swaps menu loop songs with a previously held song (if there is one).</c>",
 			"type": "bool",
 			"default": true
 		},
 		"enablePreviousButton": {
-			"name": "Previous Song Button",
+			"name": "Previous Song Button (READ!)",
 			"description": "<cl>Original idea by DurexSensitive.</c>\n\nGo back <c_>one</c> song. This does <c_>NOT</c> store your entire menu loop history, only one song at a time.\n\nDon't expect this intentional limitation to go away anytime soon.",
 			"type": "bool",
 			"default": true
