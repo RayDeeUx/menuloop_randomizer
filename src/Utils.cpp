@@ -59,7 +59,8 @@ void Utils::setNewSong() {
 	FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
 	SongManager& songManager = SongManager::get();
 	const std::string& songToBeStored = songManager.getCurrentSong();
-	if (!songToBeStored.empty()) songManager.setPreviousSong(songToBeStored);
+	if (songManager.isPreviousSong()) geode::log::info("uhoh! stuff might hit the fan");
+	else if (!songToBeStored.empty()) songManager.setPreviousSong(songToBeStored);
 	else geode::log::info("no current song found, probably");
 	songManager.pickRandomSong();
 	if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
@@ -78,7 +79,8 @@ void Utils::playlistModeNewSong(const bool fromGJBGL) {
 	SongManager& songManager = SongManager::get();
 	if (!fromGJBGL) {
 		const std::string& songToBeStored = songManager.getCurrentSong();
-		if (!songToBeStored.empty()) songManager.setPreviousSong(songToBeStored);
+		if (songManager.isPreviousSong()) geode::log::info("uhoh! stuff might hit the fan");
+		else if (!songToBeStored.empty()) songManager.setPreviousSong(songToBeStored);
 		else geode::log::info("no current song found, probably");
 	}
 	songManager.pickRandomSong();
