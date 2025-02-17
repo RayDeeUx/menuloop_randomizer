@@ -97,6 +97,10 @@ void SongManager::setHeldSong(const std::string_view value) {
 	m_heldSong = value;
 }
 
+void SongManager::resetHeldSong() {
+	m_heldSong = "";
+}
+
 std::string SongManager::getHeldSong() {
 	return m_heldSong;
 }
@@ -141,4 +145,25 @@ void SongManager::setCurrentSongToOverride() {
 	const std::string& override = getOverrideSong();
 	if (override.empty() || !Utils::isSupportedFile(override)) return geode::log::info("override is not valid");
 	m_currentSong = override;
+}
+
+void SongManager::setPreviousSong(const std::string_view value) {
+	if (!Utils::isSupportedFile(value)) return geode::log::info("previous song is not valid");
+	m_previousSong = value;
+}
+
+void SongManager::resetPreviousSong() {
+	m_previousSong = "";
+}
+
+std::string SongManager::getPreviousSong() {
+	return m_previousSong;
+}
+
+bool SongManager::isPreviousSong() const {
+	return m_currentSong == m_previousSong;
+}
+
+bool SongManager::songSizeIsBad() const {
+	return m_songs.empty() || m_songs.size() < 2;
 }

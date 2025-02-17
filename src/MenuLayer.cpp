@@ -50,6 +50,9 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (Utils::getBool("enableHoldSongButton"))
 			MenuLayerMLHook::addHoldSongButton();
 
+		if (Utils::getBool("enablePreviousButton"))
+			MenuLayerMLHook::addPreviousButton();
+
 		return true;
 	}
 
@@ -138,8 +141,8 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onBlacklistButton(CCObject*) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		SongManager& songManager = m_fields->songManager;
-		if (songManager.isOriginalMenuLoop()) return woahThereBuddy("There's nothing to blacklist! Open Menu Loop Randomizer's config directory and edit its <cj>blacklist.txt</c> file to bring back some songs.");
-		if (songManager.isOverride()) return woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
+		if (songManager.isOriginalMenuLoop()) return MenuLayerMLHook::woahThereBuddy("There's nothing to blacklist! Open Menu Loop Randomizer's config directory and edit its <cj>blacklist.txt</c> file to bring back some songs.");
+		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
 		auto currentSong = songManager.getCurrentSong();
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 		log::info("blacklisting: {}", currentSong);
@@ -185,7 +188,8 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onHoldSongButton(CCObject*) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		SongManager& songManager = m_fields->songManager;
-		if (songManager.isOverride()) return log::info("songmanager is override");
+		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're currently playing a menu loop <cy>override</c>. Double-check your settings again.");
+		if (songManager.songSizeIsBad()) return MenuLayerMLHook::woahThereBuddy("You don't have enough songs available to do this. Visit the config directory through the mod settings and try again.");
 		const std::string& formerHeldSong = songManager.getHeldSong();
 		songManager.setHeldSong(songManager.getCurrentSong());
 		if (!formerHeldSong.empty()) {
@@ -199,5 +203,40 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::playlistModeNewSong();
 		if (Utils::getBool("enableNotification")) Utils::generateNotification();
+	}
+
+	void addPreviousButton() {
+		CCNode* menu = getChildByID("right-side-menu");
+
+		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
+			CircleButtonSprite::create(CCSprite::create("prev-btn-sprite.png"_spr)),
+			this,
+			menu_selector(MenuLayerMLHook::onPreviousButton)
+		);
+		btn->setID("hold-song-button"_spr);
+
+		menu->addChild(btn);
+		menu->updateLayout();
+	}
+
+	void onPreviousButton(CCObject*) {
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		SongManager& songManager = m_fields->songManager;
+		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're currently playing a menu loop <cy>override</c>. Double-check your settings again.");
+		if (songManager.songSizeIsBad()) return MenuLayerMLHook::woahThereBuddy("You don't have enough songs available to do this. Visit the config directory through the mod settings and try again.");
+		if (songManager.isPreviousSong()) {
+			if (Utils::getBool("enableNotification")) return Utils::makeNewCard("You're already playing the previous song! :)");
+			return FLAlertLayer::create("Menu Loop Randomizer", "You're already playing the previous song! <cl>:)</c>", "Close")->show();
+		}
+		const std::string& previousSong = songManager.getPreviousSong();
+		if (previousSong.empty()) {
+			if (Utils::getBool("enableNotification")) return Utils::makeNewCard("There's no previous song to go back to! :(");
+			return FLAlertLayer::create("Menu Loop Randomizer", "There's no previous song to go back to! <cl>:(</c>", "Close")->show();
+		}
+		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
+		songManager.setCurrentSong(previousSong);
+		if (Utils::getBool("playlistMode")) FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
+		else GameManager::sharedState()->playMenuMusic();
+		if (Utils::getBool("enableNotification")) return Utils::generateNotification();
 	}
 };

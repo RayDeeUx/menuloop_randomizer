@@ -8,6 +8,7 @@ using namespace geode::prelude;
 
 SongManager &songManager = SongManager::get();
 std::filesystem::path configDir = Mod::get()->getConfigDir();
+bool originalOverrideWasEmpty = false;
 
 $on_mod(Loaded) {
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
@@ -33,6 +34,7 @@ $on_mod(Loaded) {
 	Utils::populateVector(Utils::getBool("useCustomSongs"));
 
 	std::string override = Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride").string();
+	originalOverrideWasEmpty = override.empty();
 	songManager.setOverride(override);
 
 	const std::string& lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
@@ -56,6 +58,8 @@ $on_mod(Loaded) {
 	listenForSettingChanges<bool>("useCustomSongs", [](bool useCustomSongs) {
 		// make sure m_songs is empty, we don't want to make a mess here --elnexreal
 		songManager.clearSongs();
+		songManager.resetHeldSong();
+		songManager.resetPreviousSong();
 
 		/*
 			for every custom song file, push its path to m_songs
@@ -88,7 +92,7 @@ $on_mod(Loaded) {
 		if (!Utils::isSupportedFile(overrideString)) {
 			songManager.clearSongs();
 			Utils::populateVector(Utils::getBool("useCustomSongs"));
-			if (Utils::isSupportedFile(Mod::get()->getSavedValue<std::string>("lastMenuLoop")) && Utils::getBool("saveSongOnGameClose")) {
+			if (Utils::isSupportedFile(Mod::get()->getSavedValue<std::string>("lastMenuLoop")) && Utils::getBool("saveSongOnGameClose") && !originalOverrideWasEmpty) {
 				log::info("setting songManager's current song to saved song from settings change");
 				songManager.setCurrentSongToSavedSong();
 			} else Utils::setNewSong();

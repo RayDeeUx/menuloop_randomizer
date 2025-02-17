@@ -58,12 +58,15 @@ void Utils::setNewSong() {
 	if (Utils::getBool("playlistMode")) return Utils::playlistModeNewSong();
 	FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
 	SongManager& songManager = SongManager::get();
+	const std::string& songToBeStored = songManager.getCurrentSong();
+	if (!songToBeStored.empty()) songManager.setPreviousSong(songToBeStored);
+	else geode::log::info("no current song found, probably");
 	songManager.pickRandomSong();
 	if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
 	GameManager::sharedState()->playMenuMusic();
 }
 
-void Utils::playlistModeNewSong() {
+void Utils::playlistModeNewSong(const bool fromGJBGL) {
 	if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 	if (!Utils::getBool("playlistMode")) return Utils::setNewSong();
 	geode::log::info("attempting to hijack menuloop channel to use playlist mode");
@@ -73,6 +76,11 @@ void Utils::playlistModeNewSong() {
 	if (fmod->m_musicVolume <= 0.0f || fmod->getBackgroundMusicVolume() <= 0.0f || fmodIsCBrained <= 0.0f) return geode::log::info(" --- !!! MISSION ABORT !!! ---\n\none of the following was at or below 0.0f:\nfmod->m_musicVolume: {}\nfmod->getBackgroundMusicVolume(): {}\nfmodIsCBrained: {} (with fmodResult {} as int)", fmod->m_musicVolume, fmod->getBackgroundMusicVolume(), fmodIsCBrained, static_cast<int>(fmodResult));
 	fmod->m_backgroundMusicChannel->stop();
 	SongManager& songManager = SongManager::get();
+	if (!fromGJBGL) {
+		const std::string& songToBeStored = songManager.getCurrentSong();
+		if (!songToBeStored.empty()) songManager.setPreviousSong(songToBeStored);
+		else geode::log::info("no current song found, probably");
+	}
 	songManager.pickRandomSong();
 	geode::log::info("is it over?");
 	if (songManager.getCalledOnce() || !Utils::getBool("saveSongOnGameClose")) {
@@ -130,6 +138,9 @@ void Utils::generateNotification() {
 	if (songManager.isOverride())
 		return Utils::makeNewCard(notifString.append(fmt::format("{} (MLR OVERRIDE)", songFileName)));
 
+	if (songManager.isPreviousSong())
+		return Utils::makeNewCard(notifString.append(fmt::format("{} (PREVIOUS SONG)", songFileName)));
+
 	if (Utils::getBool("useCustomSongs"))
 		return Utils::makeNewCard(notifString.append(songFileName));
 
@@ -180,7 +191,7 @@ void Utils::generateNotification() {
 }
 
 void Utils::playlistModePLAndEPL() {
-	if (Utils::getBool("playlistMode") && GJBaseGameLayer::get()) return Utils::playlistModeNewSong();
+	if (Utils::getBool("playlistMode") && GJBaseGameLayer::get()) return Utils::playlistModeNewSong(true);
 }
 
 void Utils::copyCurrentSongName() {
