@@ -12,8 +12,8 @@ class Utils {
 	static cocos2d::CCNode* findCardRemotely();
 	static void setNewSong();
 	static void playlistModeNewSong(const bool fromGJBGL = false);
-	static void makeNewCard(const std::string &);
-	static void generateNotification();
+	static void newNotification(const std::string &);
+	static void newCardFromCurrentSong();
 	static void playlistModePLAndEPL();
 	static void copyCurrentSongName();
 	static void populateVector(bool);

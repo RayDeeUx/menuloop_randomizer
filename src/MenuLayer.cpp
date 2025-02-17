@@ -33,7 +33,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 			SongManager::get().setGeodify(Loader::get()->getLoadedMod("omgrod.geodify")->getSettingValue<bool>("menu-loop"));
 
 		if (Utils::getBool("enableNotification"))
-			Utils::generateNotification();
+			Utils::newCardFromCurrentSong();
 
 		if (Utils::getBool("enableShuffleButton"))
 			MenuLayerMLHook::addShuffleButton();
@@ -79,7 +79,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		Utils::setNewSong();
 
 		if (Utils::getBool("enableNotification"))
-			Utils::generateNotification();
+			Utils::newCardFromCurrentSong();
 	}
 
 	void addRegenButton() {
@@ -101,7 +101,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		if (Utils::getBool("enableNotification"))
-			Utils::generateNotification();
+			Utils::newCardFromCurrentSong();
 	}
 
 	void addCopyButton() {
@@ -164,11 +164,11 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		else Utils::playlistModeNewSong();
 		if (!Utils::getBool("enableNotification")) return;
 		if (songManager.isOriginalMenuLoop()) {
-			if (useCustomSongs && !customSong.empty()) return Utils::makeNewCard(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", customSong));
-			if (!useCustomSongs && !songName.empty()) return Utils::makeNewCard(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", songName));
+			if (useCustomSongs && !customSong.empty()) return Utils::newNotification(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", customSong));
+			if (!useCustomSongs && !songName.empty()) return Utils::newNotification(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", songName));
 		}
-		if (!useCustomSongs) return Utils::makeNewCard(fmt::format("Blacklisted {} by {} ({}), now playing {}.", songName, songArtist, songID, Utils::getSongName()));
-		if (!customSong.empty()) return Utils::makeNewCard(fmt::format("Blacklisted {}, now playing {}.", customSong, Utils::currentCustomSong()));
+		if (!useCustomSongs) return Utils::newNotification(fmt::format("Blacklisted {} by {} ({}), now playing {}.", songName, songArtist, songID, Utils::getSongName()));
+		if (!customSong.empty()) return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", customSong, Utils::currentCustomSong()));
 	}
 
 	void addHoldSongButton() {
@@ -192,7 +192,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (songManager.songSizeIsBad()) return MenuLayerMLHook::woahThereBuddy("You don't have enough songs available to do this. Visit the config directory through the mod settings and try again.");
 		const std::string& formerHeldSong = songManager.getHeldSong();
 		if (songManager.getCurrentSong() == formerHeldSong) {
-			if (Utils::getBool("enableNotification")) return Utils::makeNewCard("You're already holding that song! :D");
+			if (Utils::getBool("enableNotification")) return Utils::newNotification("You're already holding that song! :D");
 			return FLAlertLayer::create("Menu Loop Randomizer", "You're already holding that song! <cl>:D</c>", "Close")->show();
 		}
 		songManager.setHeldSong(songManager.getCurrentSong());
@@ -202,11 +202,11 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 			if (Utils::getBool("playlistMode")) FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
 			else GameManager::sharedState()->playMenuMusic();
 			if (!Utils::getBool("enableNotification")) return;
-			return Utils::generateNotification();
+			return Utils::newCardFromCurrentSong();
 		}
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::playlistModeNewSong();
-		if (Utils::getBool("enableNotification")) Utils::generateNotification();
+		if (Utils::getBool("enableNotification")) Utils::newCardFromCurrentSong();
 	}
 
 	void addPreviousButton() {
@@ -229,18 +229,18 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're currently playing a menu loop <cy>override</c>. Double-check your settings again.");
 		if (songManager.songSizeIsBad()) return MenuLayerMLHook::woahThereBuddy("You don't have enough songs available to do this. Visit the config directory through the mod settings and try again.");
 		if (songManager.isPreviousSong()) {
-			if (Utils::getBool("enableNotification")) return Utils::makeNewCard("You're already playing the previous song! :)");
+			if (Utils::getBool("enableNotification")) return Utils::newNotification("You're already playing the previous song! :)");
 			return FLAlertLayer::create("Menu Loop Randomizer", "You're already playing the previous song! <cl>:)</c>", "Close")->show();
 		}
 		const std::string& previousSong = songManager.getPreviousSong();
 		if (previousSong.empty()) {
-			if (Utils::getBool("enableNotification")) return Utils::makeNewCard("There's no previous song to go back to! :(");
+			if (Utils::getBool("enableNotification")) return Utils::newNotification("There's no previous song to go back to! :(");
 			return FLAlertLayer::create("Menu Loop Randomizer", "There's no previous song to go back to! <cl>:(</c>", "Close")->show();
 		}
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		songManager.setCurrentSong(previousSong);
 		if (Utils::getBool("playlistMode")) FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
 		else GameManager::sharedState()->playMenuMusic();
-		if (Utils::getBool("enableNotification")) return Utils::generateNotification();
+		if (Utils::getBool("enableNotification")) return Utils::newCardFromCurrentSong();
 	}
 };

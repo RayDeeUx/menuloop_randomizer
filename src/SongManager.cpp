@@ -73,7 +73,7 @@ void SongManager::update(float dt) const {
 	Utils::removeCard();
 	Utils::playlistModeNewSong();
 	if (Utils::getBool("enableNotification"))
-		Utils::generateNotification();
+		Utils::newCardFromCurrentSong();
 }
 
 void SongManager::setCalledOnce(const bool value) {
