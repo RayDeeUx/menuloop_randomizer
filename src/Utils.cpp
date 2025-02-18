@@ -267,6 +267,7 @@ void Utils::populateVector(bool customSongs) {
 				favoriteStringModified = favoriteStringModified.substr(0, favoriteStringModified.find(" # [MLR] Song: "));
 			}
 			textFileFavorites.push_back(favoriteStringModified);
+			songManagerFavorites.push_back(favoriteStringModified);
 		}
 		geode::log::info("Finished storing favorites. size: {}", textFileFavorites.size());
 	}
@@ -352,7 +353,7 @@ void Utils::populateVector(bool customSongs) {
 
 			if (std::ranges::find(songManagerFavorites, songPath) != songManagerFavorites.end() || isInTextFavorites) {
 				songManager.addSong(songPath);
-				geode::log::info("Adding FAVORITE custom song: {}", Utils::toNormalizedString(songPath));
+				geode::log::info("Adding FAVORITE Newgrounds/Music Library song: {}", Utils::toNormalizedString(songPath));
 			}
 		}
 	}

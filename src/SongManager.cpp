@@ -107,13 +107,13 @@ std::string SongManager::getHeldSong() {
 
 void SongManager::addToBlacklist(const std::string& song) {
 	if (!getOverrideSong().empty()) return;
-	if (std::ranges::find(m_favorites, song) != m_favorites.end()) return;
+	if (std::ranges::find(m_favorites, song) != m_favorites.end()) return geode::log::info("tried to blacklist a favorited song: {}", song);
 	m_blacklist.push_back(song);
 }
 
 void SongManager::addToBlacklist() {
 	if (!getOverrideSong().empty()) return;
-	if (std::ranges::find(m_favorites, m_currentSong) != m_favorites.end()) return;
+	if (std::ranges::find(m_favorites, m_currentSong) != m_favorites.end()) return geode::log::info("tried to blacklist a favorited song: {}", m_currentSong);
 	m_blacklist.push_back(m_currentSong);
 }
 
@@ -123,13 +123,13 @@ std::vector<std::string> SongManager::getBlacklist() {
 
 void SongManager::addToFavorites(const std::string& song) {
 	if (!getOverrideSong().empty()) return;
-	if (std::ranges::find(m_blacklist, song) != m_blacklist.end()) return;
+	if (std::ranges::find(m_blacklist, song) != m_blacklist.end()) return geode::log::info("tried to favorite a blacklisted song: {}", song);
 	m_favorites.push_back(song);
 }
 
 void SongManager::addToFavorites() {
 	if (!getOverrideSong().empty()) return;
-	if (std::ranges::find(m_blacklist, m_currentSong) != m_blacklist.end()) return;
+	if (std::ranges::find(m_blacklist, m_currentSong) != m_blacklist.end()) return geode::log::info("tried to favorite a blacklisted song: {}", m_currentSong);
 	m_favorites.push_back(m_currentSong);
 }
 
