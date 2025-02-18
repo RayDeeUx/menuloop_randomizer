@@ -237,8 +237,8 @@ void Utils::populateVector(bool customSongs) {
 
 	SongManager& songManager = SongManager::get();
 
-	std::vector<std::string> blacklist = {};
-	std::vector<std::string> otherBlacklist = songManager.getBlacklist();
+	std::vector<std::string> textFileBlacklist = {};
+	std::vector<std::string> songManagerBlacklist = songManager.getBlacklist();
 
 	if (auto blacklistPath = std::filesystem::exists(configDir / R"(blacklist.txt)")) {
 		std::ifstream blacklistFile((configDir / R"(blacklist.txt)"));
@@ -249,13 +249,13 @@ void Utils::populateVector(bool customSongs) {
 			if (blacklistStringModified.ends_with(" [MLR] #")) {
 				blacklistStringModified = blacklistStringModified.substr(0, blacklistStringModified.find(" # [MLR] Song: "));
 			}
-			blacklist.push_back(blacklistStringModified);
+			textFileBlacklist.push_back(blacklistStringModified);
 		}
-		geode::log::info("Finished storing blacklist. size: {}", blacklist.size());
+		geode::log::info("Finished storing blacklist. size: {}", textFileBlacklist.size());
 	}
 
-	std::vector<std::string> favorites = {};
-	std::vector<std::string> otherFavorites = songManager.getFavorites();
+	std::vector<std::string> textFileFavorites = {};
+	std::vector<std::string> songManagerFavorites = songManager.getFavorites();
 
 	if (auto favoritePath = std::filesystem::exists(configDir / R"(favorites.txt)")) {
 		std::ifstream favoriteFile((configDir / R"(favorites.txt)"));
@@ -266,9 +266,9 @@ void Utils::populateVector(bool customSongs) {
 			if (favoriteStringModified.ends_with(" [MLR] #")) {
 				favoriteStringModified = favoriteStringModified.substr(0, favoriteStringModified.find(" # [MLR] Song: "));
 			}
-			favorites.push_back(favoriteStringModified);
+			textFileFavorites.push_back(favoriteStringModified);
 		}
-		geode::log::info("Finished storing favorites. size: {}", favorites.size());
+		geode::log::info("Finished storing favorites. size: {}", textFileFavorites.size());
 	}
 
 	if (customSongs) {
@@ -281,27 +281,27 @@ void Utils::populateVector(bool customSongs) {
 
 			bool isInTextBlacklist = false;
 
-			for (const std::string& string : blacklist) {
+			for (const std::string& string : textFileBlacklist) {
 				if (string.starts_with(songPath)) {
 					isInTextBlacklist = true;
 					break;
 				}
 			}
 
-			if (std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end() || isInTextBlacklist) continue;
+			if (std::ranges::find(songManagerBlacklist, songPath) != songManagerBlacklist.end() || isInTextBlacklist) continue;
 
 			geode::log::info("Adding custom song: {}", Utils::toNormalizedString(filePath.filename()));
 			songManager.addSong(songPath);
 
 			bool isInTextFavorites = false;
-			for (const std::string& string : favorites) {
+			for (const std::string& string : textFileFavorites) {
 				if (string.starts_with(songPath)) {
 					isInTextFavorites = true;
 					break;
 				}
 			}
 
-			if (std::ranges::find(otherFavorites, songPath) != otherFavorites.end() || isInTextFavorites) {
+			if (std::ranges::find(songManagerFavorites, songPath) != songManagerFavorites.end() || isInTextFavorites) {
 				songManager.addSong(songPath);
 				geode::log::info("Adding FAVORITE custom song: {}", Utils::toNormalizedString(filePath.filename()));
 			}
@@ -330,27 +330,27 @@ void Utils::populateVector(bool customSongs) {
 
 			bool isInTextBlacklist = false;
 
-			for (const std::string& string : blacklist) {
+			for (const std::string& string : textFileBlacklist) {
 				if (string.starts_with(songPath)) {
 					isInTextBlacklist = true;
 					break;
 				}
 			}
 
-			if (std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end() || isInTextBlacklist || (qualifiedForOGMenuBlacklist && song->m_songID == 584131)) continue; // apply hardcode blacklist 584131 onto self in light of BS edge case caught by hiimjustin001: https://discord.com/channels/911701438269386882/911702535373475870/1289021323279990795
+			if (std::ranges::find(songManagerBlacklist, songPath) != songManagerBlacklist.end() || isInTextBlacklist || (qualifiedForOGMenuBlacklist && song->m_songID == 584131)) continue; // apply hardcode blacklist 584131 onto self in light of BS edge case caught by hiimjustin001: https://discord.com/channels/911701438269386882/911702535373475870/1289021323279990795
 
 			geode::log::info("Adding Newgrounds/Music Library song: {}", songPath);
 			songManager.addSong(songPath);
 
 			bool isInTextFavorites = false;
-			for (const std::string& string : favorites) {
+			for (const std::string& string : textFileFavorites) {
 				if (string.starts_with(songPath)) {
 					isInTextFavorites = true;
 					break;
 				}
 			}
 
-			if (std::ranges::find(otherFavorites, songPath) != otherFavorites.end() || isInTextFavorites) {
+			if (std::ranges::find(songManagerFavorites, songPath) != songManagerFavorites.end() || isInTextFavorites) {
 				songManager.addSong(songPath);
 				geode::log::info("Adding FAVORITE custom song: {}", Utils::toNormalizedString(songPath));
 			}
