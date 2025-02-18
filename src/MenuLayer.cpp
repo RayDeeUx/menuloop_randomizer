@@ -10,6 +10,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		SongManager &songManager = SongManager::get();
 		std::filesystem::path configDir = Mod::get()->getConfigDir();
 		std::filesystem::path blacklistFile = configDir / R"(blacklist.txt)";
+		std::filesystem::path favoritesFile = configDir / R"(favorites.txt)";
 	};
 
 	void woahThereBuddy(const std::string& reason) const {
@@ -46,6 +47,9 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 
 		if (Utils::getBool("enableBlacklistButton"))
 			MenuLayerMLHook::addBlacklistButton();
+
+		if (Utils::getBool("enableFavoriteButton"))
+			MenuLayerMLHook::addFavoriteButton();
 
 		if (Utils::getBool("enableHoldSongButton"))
 			MenuLayerMLHook::addHoldSongButton();
@@ -141,34 +145,91 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onBlacklistButton(CCObject*) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		SongManager& songManager = m_fields->songManager;
+
 		if (songManager.isOriginalMenuLoop()) return MenuLayerMLHook::woahThereBuddy("There's nothing to blacklist! Open Menu Loop Randomizer's config directory and edit its <cj>blacklist.txt</c> file to bring back some songs.");
 		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
+
 		auto currentSong = songManager.getCurrentSong();
-		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 		log::info("blacklisting: {}", currentSong);
+
 		std::string toWriteToFile = currentSong;
 		std::string songName = Utils::getSongName();
 		std::string songArtist = Utils::getSongArtist();
 		int songID = Utils::getSongID();
 		std::string customSong = Utils::currentCustomSong();
+
 		if (!std::filesystem::exists(m_fields->blacklistFile)) return log::info("error finding blacklist file!");
+
+		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 		if (!useCustomSongs) toWriteToFile = toWriteToFile.append(fmt::format(" # [MLR] Song: {} by {} [MLR] #", songName, songArtist));
+
 		std::ofstream blacklistFileOutput;
 		blacklistFileOutput.open(m_fields->blacklistFile, std::ios_base::app);
 		blacklistFileOutput << std::endl << toWriteToFile;
 		blacklistFileOutput.close();
+
 		songManager.addToBlacklist();
 		songManager.clearSongs();
 		Utils::populateVector(useCustomSongs);
+
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::playlistModeNewSong();
+
 		if (!Utils::getBool("enableNotification")) return;
+
 		if (songManager.isOriginalMenuLoop()) {
 			if (useCustomSongs && !customSong.empty()) return Utils::newNotification(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", customSong));
 			if (!useCustomSongs && !songName.empty()) return Utils::newNotification(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", songName));
 		}
+
 		if (!useCustomSongs) return Utils::newNotification(fmt::format("Blacklisted {} by {} ({}), now playing {}.", songName, songArtist, songID, Utils::getSongName()));
 		if (!customSong.empty()) return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", customSong, Utils::currentCustomSong()));
+	}
+
+	void addFavoriteButton() {
+		CCNode* menu = getChildByID("right-side-menu");
+
+		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
+			CircleButtonSprite::create(CCSprite::create("favorite-btn-sprite.png"_spr)),
+			this,
+			menu_selector(MenuLayerMLHook::onBlacklistButton)
+		);
+		btn->setID("favorite-button"_spr);
+
+		menu->addChild(btn);
+		menu->updateLayout();
+	}
+
+	void onFavoriteButton(CCObject*) {
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		SongManager& songManager = m_fields->songManager;
+
+		if (songManager.isOriginalMenuLoop()) return MenuLayerMLHook::woahThereBuddy("There's nothing to favorite! Double-check your config folder again.");
+		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
+
+		auto currentSong = songManager.getCurrentSong();
+		log::info("favoriting: {}", currentSong);
+
+		std::string toWriteToFile = currentSong;
+		std::string songName = Utils::getSongName();
+		std::string songArtist = Utils::getSongArtist();
+		int songID = Utils::getSongID();
+		std::string customSong = Utils::currentCustomSong();
+
+		if (!std::filesystem::exists(m_fields->favoritesFile)) return log::info("error finding favorites file!");
+
+		const bool useCustomSongs = Utils::getBool("useCustomSongs");
+		if (!useCustomSongs) toWriteToFile = toWriteToFile.append(fmt::format(" # [MLR] Song: {} by {} [MLR] #", songName, songArtist));
+
+		std::ofstream favoritesFileOutput;
+		favoritesFileOutput.open(m_fields->favoritesFile, std::ios_base::app);
+		favoritesFileOutput << std::endl << toWriteToFile;
+		favoritesFileOutput.close();
+		songManager.addToFavorites();
+
+		if (!Utils::getBool("enableNotification")) return;
+		if (!useCustomSongs) return Utils::newNotification(fmt::format("Favorited {} by {} ({})!", songName, songArtist, songID));
+		if (!customSong.empty()) return Utils::newNotification(fmt::format("Favorited {}!", customSong));
 	}
 
 	void addHoldSongButton() {

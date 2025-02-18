@@ -107,16 +107,34 @@ std::string SongManager::getHeldSong() {
 
 void SongManager::addToBlacklist(const std::string& song) {
 	if (!getOverrideSong().empty()) return;
+	if (std::ranges::find(m_favorites, song) != m_favorites.end()) return;
 	m_blacklist.push_back(song);
 }
 
 void SongManager::addToBlacklist() {
 	if (!getOverrideSong().empty()) return;
+	if (std::ranges::find(m_favorites, m_currentSong) != m_favorites.end()) return;
 	m_blacklist.push_back(m_currentSong);
 }
 
 std::vector<std::string> SongManager::getBlacklist() {
 	return m_blacklist;
+}
+
+void SongManager::addToFavorites(const std::string& song) {
+	if (!getOverrideSong().empty()) return;
+	if (std::ranges::find(m_blacklist, song) != m_blacklist.end()) return;
+	m_favorites.push_back(song);
+}
+
+void SongManager::addToFavorites() {
+	if (!getOverrideSong().empty()) return;
+	if (std::ranges::find(m_blacklist, m_currentSong) != m_blacklist.end()) return;
+	m_favorites.push_back(m_currentSong);
+}
+
+std::vector<std::string> SongManager::getFavorites() {
+	return m_favorites;
 }
 
 void SongManager::setOverride(const std::string_view path) {

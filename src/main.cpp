@@ -31,6 +31,23 @@ $on_mod(Loaded) {
 		}
 	}
 
+	auto favoriteTxt = configDir / R"(favorites.txt)";
+	if (!std::filesystem::exists(favoriteTxt)) {
+		std::string content = R"(# Welcome to the Menu Loop Randomizer favorites list!
+# Each line that doesn't start with a "#" will be treated as a favorited song file.
+# All lines that start with a "#" are ignored. This means you can un-favorite a song by adding "#" next to it.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# --RayDeeUx)";
+		auto result = utils::file::writeString(favoriteTxt, content);
+		if (result.isErr()) {
+			log::error("Error writing to favorites.txt");
+		}
+	}
+
 	Utils::populateVector(Utils::getBool("useCustomSongs"));
 
 	std::string override = Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride").string();

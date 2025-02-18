@@ -235,8 +235,10 @@ void Utils::populateVector(bool customSongs) {
 		--elnex
 	*/
 
-	std::vector<std::string> blacklist;
-	std::vector<std::string> otherBlacklist = SongManager::get().getBlacklist();
+	SongManager& songManager = SongManager::get();
+
+	std::vector<std::string> blacklist = {};
+	std::vector<std::string> otherBlacklist = songManager.getBlacklist();
 
 	if (auto blacklistPath = std::filesystem::exists(configDir / R"(blacklist.txt)")) {
 		std::ifstream blacklistFile((configDir / R"(blacklist.txt)"));
@@ -248,9 +250,25 @@ void Utils::populateVector(bool customSongs) {
 				blacklistStringModified = blacklistStringModified.substr(0, blacklistStringModified.find(" # [MLR] Song: "));
 			}
 			blacklist.push_back(blacklistStringModified);
-			geode::log::info("adding to blacklist: {}", blacklistStringModified);
 		}
 		geode::log::info("Finished storing blacklist. size: {}", blacklist.size());
+	}
+
+	std::vector<std::string> favorites = {};
+	std::vector<std::string> otherFavorites = songManager.getFavorites();
+
+	if (auto favoritePath = std::filesystem::exists(configDir / R"(favorites.txt)")) {
+		std::ifstream favoriteFile((configDir / R"(favorites.txt)"));
+		std::string favoriteString;
+		while (std::getline(favoriteFile, favoriteString)) {
+			if (favoriteString.starts_with('#') || favoriteString.empty()) continue;
+			std::string favoriteStringModified = favoriteString;
+			if (favoriteStringModified.ends_with(" [MLR] #")) {
+				favoriteStringModified = favoriteStringModified.substr(0, favoriteStringModified.find(" # [MLR] Song: "));
+			}
+			favorites.push_back(favoriteStringModified);
+		}
+		geode::log::info("Finished storing favorites. size: {}", favorites.size());
 	}
 
 	if (customSongs) {
@@ -258,21 +276,35 @@ void Utils::populateVector(bool customSongs) {
 			if (!std::filesystem::exists(file)) continue;
 
 			const auto& filePath = file.path();
-			auto filePathString = Utils::toNormalizedString(filePath);
+			const std::string& songPath = Utils::toNormalizedString(filePath);
+			if (!Utils::isSupportedFile(songPath)) continue;
 
 			bool isInTextBlacklist = false;
 
 			for (const std::string& string : blacklist) {
-				if (string.starts_with(filePathString)) {
+				if (string.starts_with(songPath)) {
 					isInTextBlacklist = true;
 					break;
 				}
 			}
 
-			if (!Utils::isSupportedFile(filePathString) || std::ranges::find(otherBlacklist, filePathString) != otherBlacklist.end() || isInTextBlacklist) continue;
+			if (std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end() || isInTextBlacklist) continue;
 
 			geode::log::info("Adding custom song: {}", Utils::toNormalizedString(filePath.filename()));
-			SongManager::get().addSong(filePathString);
+			songManager.addSong(songPath);
+
+			bool isInTextFavorites = false;
+			for (const std::string& string : favorites) {
+				if (string.starts_with(songPath)) {
+					isInTextFavorites = true;
+					break;
+				}
+			}
+
+			if (std::ranges::find(otherFavorites, songPath) != otherFavorites.end() || isInTextFavorites) {
+				songManager.addSong(songPath);
+				geode::log::info("Adding FAVORITE custom song: {}", Utils::toNormalizedString(filePath.filename()));
+			}
 		}
 	} else {
 		auto downloadManager = MusicDownloadManager::sharedState();
@@ -294,6 +326,7 @@ void Utils::populateVector(bool customSongs) {
 			if (!song) continue;
 
 			std::string songPath = downloadManager->pathForSong(song->m_songID);
+			if (!Utils::isSupportedFile(songPath)) continue;
 
 			bool isInTextBlacklist = false;
 
@@ -304,35 +337,33 @@ void Utils::populateVector(bool customSongs) {
 				}
 			}
 
-			if (!Utils::isSupportedFile(songPath) || std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end() || isInTextBlacklist || (qualifiedForOGMenuBlacklist && song->m_songID == 584131)) continue; // apply hardcode blacklist 584131 onto self in light of BS edge case caught by hiimjustin001: https://discord.com/channels/911701438269386882/911702535373475870/1289021323279990795
+			if (std::ranges::find(otherBlacklist, songPath) != otherBlacklist.end() || isInTextBlacklist || (qualifiedForOGMenuBlacklist && song->m_songID == 584131)) continue; // apply hardcode blacklist 584131 onto self in light of BS edge case caught by hiimjustin001: https://discord.com/channels/911701438269386882/911702535373475870/1289021323279990795
 
 			geode::log::info("Adding Newgrounds/Music Library song: {}", songPath);
-			SongManager::get().addSong(songPath);
-		}
-		// same thing as NG but for music library as well --ninXout
-		// SPOILER: IT DOESN'T WORK CROSSPLATFORM (android specifically)! --raydeeux
-		/*
-		std::filesystem::path musicLibrarySongs = dirs::getGeodeDir().parent_path() / "Resources" / "songs";
-		if (!std::filesystem::exists(musicLibrarySongs)) return;
-		for (const std::filesystem::path& dirEntry : std::filesystem::recursive_directory_iterator(musicLibrarySongs)) {
-			if (!std::filesystem::exists(dirEntry)) continue;
-
-			std::string songPath = Utils::toNormalizedString(dirEntry);
-
-			if (!Utils::isSupportedExtension(songPath)) continue;
-
-			log::info("Adding Music Library song: {}", songPath);
 			songManager.addSong(songPath);
+
+			bool isInTextFavorites = false;
+			for (const std::string& string : favorites) {
+				if (string.starts_with(songPath)) {
+					isInTextFavorites = true;
+					break;
+				}
+			}
+
+			if (std::ranges::find(otherFavorites, songPath) != otherFavorites.end() || isInTextFavorites) {
+				songManager.addSong(songPath);
+				geode::log::info("Adding FAVORITE custom song: {}", Utils::toNormalizedString(songPath));
+			}
 		}
-		*/
 	}
 }
 
 SongInfoObject* Utils::getSongInfoObject() {
 	if (Utils::getBool("useCustomSongs")) return nullptr;
-	if (SongManager::get().isOriginalMenuLoop()) return nullptr;
+	SongManager& songManager = SongManager::get();
+	if (songManager.isOriginalMenuLoop()) return nullptr;
 
-	std::string songFileName = toNormalizedString(std::filesystem::path(SongManager::get().getCurrentSong()).filename());
+	std::string songFileName = toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
 
 	// if it's not menuLoop.mp3, then get info
 	size_t dotPos = songFileName.find_last_of('.');
@@ -378,8 +409,9 @@ int Utils::getSongID() {
 
 std::string Utils::currentCustomSong() {
 	if (!Utils::getBool("useCustomSongs")) return Utils::getSongName();
-	if (SongManager::get().isOriginalMenuLoop()) return "";
-	return Utils::toNormalizedString(std::filesystem::path(SongManager::get().getCurrentSong()).filename());
+	SongManager& songManager = SongManager::get();
+	if (songManager.isOriginalMenuLoop()) return "";
+	return Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
 }
 
 std::string Utils::toNormalizedString(const std::filesystem::path& path) {

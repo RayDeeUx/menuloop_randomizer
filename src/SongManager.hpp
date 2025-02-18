@@ -29,6 +29,9 @@ class SongManager {
 	void addToBlacklist(const std::string&);
 	void addToBlacklist();
 	std::vector<std::string> getBlacklist();
+	void addToFavorites(const std::string &song);
+	void addToFavorites();
+	std::vector<std::string> getFavorites();
 	void setOverride(const std::string_view);
 	std::string getOverrideSong();
 	bool isOverride() const;
@@ -53,4 +56,5 @@ class SongManager {
 	bool m_geodify = false;
 	bool m_isOverride = false;
 	std::vector<std::string> m_blacklist;
+	std::vector<std::string> m_favorites;
 };
