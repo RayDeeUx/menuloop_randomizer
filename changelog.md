@@ -1,4 +1,9 @@
 # Menu Loop Randomizer Changelog
+## v1.8.0
+- Added "Hold Song" button. Think of it like that "Hold" button from Tetris.
+- Added "Previous Song" button (suggested by [DurexSensitive](https://github.com/DurexSensitive)). <cy>This only stores *one* song at a time. Don't expect this intentional limitation to go away.</c>
+- Added "Favorite Song" button (suggested by [AlphaQuata](https://discord.com/users/766876726566846505)). <cy>Now your favorite songs are more likely to play!</c>
+- Refactor a few things inside the code for readability and whatnot.
 ## v1.7.0
 - New logo by [dasshu_](https://linktr.ee/jaydasshu)!
 - Refactor how the song notificaton card is removed when switching scenes.
