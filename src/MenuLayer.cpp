@@ -196,7 +196,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
 			CircleButtonSprite::create(CCSprite::create("favorite-btn-sprite.png"_spr)),
 			this,
-			menu_selector(MenuLayerMLHook::onBlacklistButton)
+			menu_selector(MenuLayerMLHook::onFavoriteButton)
 		);
 		btn->setID("favorite-button"_spr);
 
