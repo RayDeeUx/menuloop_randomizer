@@ -150,6 +150,9 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
 
 		auto currentSong = songManager.getCurrentSong();
+
+		if (const auto songManagerBlacklist = songManager.getBlacklist(); std::ranges::find(songManagerBlacklist, currentSong) != songManagerBlacklist.end()) return MenuLayerMLHook::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
+
 		log::info("blacklisting: {}", currentSong);
 
 		std::string toWriteToFile = currentSong;
@@ -208,6 +211,9 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
 
 		auto currentSong = songManager.getCurrentSong();
+
+		if (const auto songManagerFavorites = songManager.getFavorites(); std::ranges::find(songManagerFavorites, currentSong) != songManagerFavorites.end()) return Utils::newNotification("You've already favorited this song! :D");
+
 		log::info("favoriting: {}", currentSong);
 
 		std::string toWriteToFile = currentSong;
