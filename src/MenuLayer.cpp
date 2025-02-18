@@ -234,6 +234,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		favoritesFileOutput << std::endl << toWriteToFile;
 		favoritesFileOutput.close();
 		songManager.addToFavorites();
+		songManager.addSong(currentSong);
 
 		if (!Utils::getBool("enableNotification")) return;
 		if (!useCustomSongs) return Utils::newNotification(fmt::format("Favorited {} by {} ({})!", songName, songArtist, songID));
