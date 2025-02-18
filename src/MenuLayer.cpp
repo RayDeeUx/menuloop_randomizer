@@ -213,6 +213,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		auto currentSong = songManager.getCurrentSong();
 
 		if (const auto songManagerFavorites = songManager.getFavorites(); std::ranges::find(songManagerFavorites, currentSong) != songManagerFavorites.end()) return Utils::newNotification("You've already favorited this song! :D");
+		if (const auto songManagerBlacklist = songManager.getBlacklist(); std::ranges::find(songManagerBlacklist, currentSong) != songManagerBlacklist.end()) return MenuLayerMLHook::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
 
 		log::info("favoriting: {}", currentSong);
 
