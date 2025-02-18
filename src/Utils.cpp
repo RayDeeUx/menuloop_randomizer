@@ -267,7 +267,7 @@ void Utils::populateVector(bool customSongs) {
 				favoriteStringModified = favoriteStringModified.substr(0, favoriteStringModified.find(" # [MLR] Song: "));
 			}
 			textFileFavorites.push_back(favoriteStringModified);
-			songManagerFavorites.push_back(favoriteStringModified);
+			songManager.addToFavorites(favoriteStringModified);
 		}
 		geode::log::info("Finished storing favorites. size: {}", textFileFavorites.size());
 	}
