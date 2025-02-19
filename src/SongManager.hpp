@@ -11,6 +11,8 @@ class SongManager {
 	}
 
 	void addSong(const std::string&);
+	void removeSong(const std::string &path);
+	int getSongsSize() const;
 	void clearSongs();
 	void pickRandomSong();
 	bool isOriginalMenuLoop() const;

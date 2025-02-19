@@ -7,6 +7,14 @@ void SongManager::addSong(const std::string& path) {
 	m_songs.push_back(path);
 }
 
+void SongManager::removeSong(const std::string& path) {
+	m_songs.erase(std::remove(m_songs.begin(), m_songs.end(), path));
+}
+
+int SongManager::getSongsSize() const {
+	return m_songs.size();
+}
+
 void SongManager::clearSongs() {
 	if (!m_songs.empty()) {
 		m_songs.clear();

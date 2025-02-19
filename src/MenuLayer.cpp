@@ -151,7 +151,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 
 		auto currentSong = songManager.getCurrentSong();
 
-		// if (const auto songManagerBlacklist = songManager.getBlacklist(); std::ranges::find(songManagerBlacklist, currentSong) != songManagerBlacklist.end()) return MenuLayerMLHook::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
+		if (const auto songManagerBlacklist = songManager.getBlacklist(); std::ranges::find(songManagerBlacklist, currentSong) != songManagerBlacklist.end()) return MenuLayerMLHook::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
 		if (const auto songManagerFavorites = songManager.getFavorites(); std::ranges::find(songManagerFavorites, currentSong) != songManagerFavorites.end()) return MenuLayerMLHook::woahThereBuddy("You've already favorited this song! Double-check your <cl>favorites.txt</c> again.");
 
 		log::info("blacklisting: {}", currentSong);
@@ -173,8 +173,15 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		blacklistFileOutput.close();
 
 		songManager.addToBlacklist();
-		songManager.clearSongs();
-		Utils::populateVector(useCustomSongs);
+		if (!Utils::getBool("dangerousBlacklisting")) {
+			songManager.clearSongs();
+			Utils::populateVector(useCustomSongs);
+		} else {
+			log::info("dangerousBlacklisting is active. added {} to blacklist, removing it from current queue", currentSong);
+			log::info("original size: {}", songManager.getSongsSize());
+			songManager.removeSong(currentSong);
+			log::info("updated size: {}", songManager.getSongsSize());
+		}
 
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::playlistModeNewSong();

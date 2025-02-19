@@ -185,10 +185,11 @@
 				}
 			]
 		},
-		"logging": {
-			"name": "Logging",
+		"dangerousBlacklisting": {
+			"name": "Dangerous Blacklisting",
+			"description": "<cl>Original idea by Aktimoose.</c>\n\nAttempts to remove the lagspike when removing songs.\n\n<c_>This is an experimental setting. You agree to hold yourself responsible for any issues that happen when this setting is enabled.</c>",
 			"type": "bool",
-			"default": true
+			"default": false
 		}
 	},
 	"resources": {

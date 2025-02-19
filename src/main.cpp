@@ -12,7 +12,6 @@ bool originalOverrideWasEmpty = false;
 
 $on_mod(Loaded) {
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
-	geode::Mod::get()->setLoggingEnabled(Utils::getBool("logging"));
 	songManager.setPlaylistMode();
 
 	auto blacklistTxt = configDir / R"(blacklist.txt)";
@@ -118,7 +117,10 @@ $on_mod(Loaded) {
 		if (Utils::getBool("playlistMode")) return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 		GameManager::sharedState()->playMenuMusic();
 	});
-	listenForSettingChanges<bool>("logging", [](bool logging) {
-		geode::Mod::get()->setLoggingEnabled(logging);
+	listenForSettingChanges<bool>("dangerousBlacklisting", [](bool dangerousBlacklisting) {
+		if (!dangerousBlacklisting) return;
+		log::info("=============== WARNING: USER HAS ENABLED `dangerousBlacklisting` SETTING ===============");
+		if (GameManager::get()->m_playerUserID.value() == 925143 || GameManager::get()->m_playerUserID.value() == 7247326) return log::info("never mind, it's just aktimoose the beta tester. don't show the alert");
+		FLAlertLayer::create("Menu Loop Randomizer", "<c_>This is an experimental setting. You agree to hold yourself responsible for any issues that happen when this setting is enabled.</c>", "I understand")->show();
 	});
 }
