@@ -13,6 +13,7 @@ class Utils {
 	static void setNewSong();
 	static void playlistModeNewSong(const bool fromGJBGL = false);
 	static void newNotification(const std::string &);
+	static std::string composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix);
 	static void newCardFromCurrentSong();
 	static void playlistModePLAndEPL();
 	static void copyCurrentSongName();

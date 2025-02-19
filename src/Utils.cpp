@@ -126,27 +126,32 @@ void Utils::newNotification(const std::string& notifString) {
 	card->runAction(sequence);
 }
 
+std::string Utils::composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix) {
+	return notifString.append(middle).append(suffix);
+}
+
 void Utils::newCardFromCurrentSong() {
 	SongManager& songManager = SongManager::get();
 	std::string songFileName = Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
 
-	std::string notifString;
+	std::string notifString = "";
 	auto prefix = geode::Mod::get()->getSettingValue<std::string>("customPrefix");
 	if (prefix != "[Empty]")
 		notifString = fmt::format("{}: ", prefix);
 
+	std::string suffix = "";
 	if (songManager.isOverride())
-		return Utils::newNotification(notifString.append(fmt::format("{} (MLR OVERRIDE)", songFileName)));
+		suffix = " (MLR OVERRIDE)";
 
 	if (songManager.isPreviousSong())
-		return Utils::newNotification(notifString.append(fmt::format("{} (PREVIOUS SONG)", songFileName)));
+		suffix = " (PREVIOUS SONG)";
 
 	if (Utils::getBool("useCustomSongs"))
-		return Utils::newNotification(notifString.append(songFileName));
+		return Utils::newNotification(composedNotifString(notifString, songFileName, suffix));
 
 	// in case that the current file selected is the original menuloop, don't gather any info
 	if (SongManager::get().isOriginalMenuLoop())
-		return Utils::newNotification(notifString.append("Original Menu Loop by RobTop"));
+		return Utils::newNotification(composedNotifString(notifString, "Original Menu Loop by RobTop", suffix));
 
 	geode::log::info("attempting to play {}", songFileName);
 	// if it's not menuLoop.mp3, then get info
@@ -154,7 +159,7 @@ void Utils::newCardFromCurrentSong() {
 
 	if (dotPos == std::string::npos) {
 		geode::log::error("{} was not a valid file name...? [NG/Music Library]", songFileName);
-		return Utils::newNotification(notifString.append("Unknown"));
+		return Utils::newNotification(composedNotifString(notifString, "Unknown", suffix));
 	}
 
 	std::string songFileNameWithoutExtension = songFileName.substr(0, dotPos);
@@ -163,13 +168,11 @@ void Utils::newCardFromCurrentSong() {
 
 	if (songFileNameAsID.isErr()) {
 		geode::log::error("{} had an invalid Song ID! [NG/Music Library]", songFileNameWithoutExtension);
-		return Utils::newNotification(notifString.append(fmt::format("Unknown ({})", songFileNameWithoutExtension)));
+		return Utils::newNotification(composedNotifString(notifString, fmt::format("Unknown ({})", songFileNameWithoutExtension), suffix));
 	}
 
-	auto songInfo = MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrap());
-
 	// sometimes songInfo is nullptr, so improvise
-	if (songInfo) {
+	if (auto songInfo = MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrap())) {
 		// default: "Song Name, Artist, Song ID"
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
 		std::string resultString = "";
@@ -185,9 +188,9 @@ void Utils::newCardFromCurrentSong() {
 			resultString = fmt::format("{}", songInfo->m_songName);
 		}
 		if (isMenuLoopFromNG) resultString = resultString.append(" [OOF!]");
-		return Utils::newNotification(notifString.append(resultString));
+		return Utils::newNotification(composedNotifString(notifString, resultString, suffix));
 	}
-	return Utils::newNotification(notifString.append(songFileName));
+	return Utils::newNotification(composedNotifString(notifString, songFileName, suffix));
 }
 
 void Utils::playlistModePLAndEPL() {
