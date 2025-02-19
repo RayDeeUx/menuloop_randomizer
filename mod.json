@@ -184,6 +184,11 @@
 					"description": "Audio files"
 				}
 			]
+		},
+		"logging": {
+			"name": "Logging",
+			"type": "bool",
+			"default": true
 		}
 	},
 	"resources": {

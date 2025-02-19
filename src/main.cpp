@@ -12,6 +12,7 @@ bool originalOverrideWasEmpty = false;
 
 $on_mod(Loaded) {
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
+	geode::Mod::get()->setLoggingEnabled(Utils::getBool("logging"));
 	songManager.setPlaylistMode();
 
 	auto blacklistTxt = configDir / R"(blacklist.txt)";
@@ -116,5 +117,8 @@ $on_mod(Loaded) {
 		}
 		if (Utils::getBool("playlistMode")) return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 		GameManager::sharedState()->playMenuMusic();
+	});
+	listenForSettingChanges<bool>("logging", [](bool logging) {
+		geode::Mod::get()->setLoggingEnabled(logging);
 	});
 }
