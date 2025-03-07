@@ -2,7 +2,7 @@
 
 // shorthand because haha yes
 #define VANILLA_GD_MENU_LOOP_DISABLED GameManager::sharedState()->getGameVariable("0122")
-#define CONFIG_DIR Mod::get()->getConfigDir()
+#define CONFIG_DIR geode::Mod::get()->getConfigDir()
 #define BLACKLIST_FILE CONFIG_DIR / R"(blacklist.txt)"
 #define FAVORITES_FILE CONFIG_DIR / R"(favorites.txt)"
 
