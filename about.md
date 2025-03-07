@@ -12,6 +12,11 @@ Just like the songs you've downloaded from Newgrounds or RobTop's Music Library,
 ## Android
 <co>*If you click the config directory shortcut and you get sent to the geode folder itself, you should go to `game/geode/config/elnexreal.menuloop_randomizer` and put the songs there.*</co>
 
+## Windows
+If you have non-English characters in the filenames for some of your songs, MLR will try its best to support it.
+### But for `Remember Last Menu Loop`...
+MLR may not remember a song with non-English characters in its file name between game restarts.
+
 # Blacklisting songs
 Ever felt like a song was an absolute dud? Click the <cl>blacklist button</c> (you'll know it when you see it) and you won't ever hear that song as a menu loop again.
 

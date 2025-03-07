@@ -439,3 +439,24 @@ void Utils::removeCardRemotely(cocos2d::CCNode* card) {
 	if (!card) return;
 	card->removeMeAndCleanup();
 }
+
+void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target) {
+	if (!menu || !target || name.empty()) return;
+
+	CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
+		geode::CircleButtonSprite::create(cocos2d::CCSprite::create(fmt::format("{}-btn-sprite.png"_spr, name).c_str())),
+		target, function
+	);
+	btn->setID(fmt::format("{}-button"_spr, name));
+
+	menu->addChild(btn);
+	menu->updateLayout();
+}
+
+void Utils::writeToFile(const std::string& toWriteToFile, std::filesystem::path fileForWriting) {
+	if (!std::filesystem::exists(fileForWriting)) return geode::log::info("error finding {}!", fileForWriting);
+	std::ofstream fileOutput;
+	fileOutput.open(fileForWriting, std::ios_base::app);
+	fileOutput << std::endl << toWriteToFile;
+	fileOutput.close();
+}

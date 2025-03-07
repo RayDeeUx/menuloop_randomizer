@@ -6,13 +6,6 @@
 using namespace geode::prelude;
 
 class $modify(MenuLayerMLHook, MenuLayer) {
-	struct Fields {
-		SongManager &songManager = SongManager::get();
-		std::filesystem::path configDir = Mod::get()->getConfigDir();
-		std::filesystem::path blacklistFile = configDir / R"(blacklist.txt)";
-		std::filesystem::path favoritesFile = configDir / R"(favorites.txt)";
-	};
-
 	void woahThereBuddy(const std::string& reason) const {
 		geode::createQuickPopup(
 			"Menu Loop Randomizer", reason,
@@ -61,24 +54,14 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	}
 
 	void addShuffleButton() {
-		CCNode* menu = getChildByID("right-side-menu");
-
-		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
-			CircleButtonSprite::create(CCSprite::create("shuffle-btn-sprite.png"_spr)),
-			this,
-			menu_selector(MenuLayerMLHook::onShuffleBtn)
-		);
-		btn->setID("shuffle-button"_spr);
-
-		menu->addChild(btn);
-		menu->updateLayout();
+		Utils::addButton("shuffle", menu_selector(MenuLayerMLHook::onShuffleButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
 	}
 
-	void onShuffleBtn(CCObject*) {
+	void onShuffleButton(CCObject*) {
 		Utils::removeCard();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
-		if (m_fields->songManager.isOriginalMenuLoop()) Utils::populateVector(Utils::getBool("useCustomSongs"));
+		if (SongManager::get().isOriginalMenuLoop()) Utils::populateVector(Utils::getBool("useCustomSongs"));
 
 		Utils::setNewSong();
 
@@ -87,17 +70,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	}
 
 	void addRegenButton() {
-		CCNode* menu = getChildByID("right-side-menu");
-
-		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
-			CircleButtonSprite::create(CCSprite::create("regen-btn-sprite.png"_spr)),
-			this,
-			menu_selector(MenuLayerMLHook::onRegenButton)
-		);
-		btn->setID("regen-button"_spr);
-
-		menu->addChild(btn);
-		menu->updateLayout();
+		Utils::addButton("regen", menu_selector(MenuLayerMLHook::onRegenButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
 	}
 
 	void onRegenButton(CCObject*) {
@@ -109,17 +82,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	}
 
 	void addCopyButton() {
-		CCNode* menu = getChildByID("right-side-menu");
-
-		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
-			CircleButtonSprite::create(CCSprite::create("copy-btn-sprite.png"_spr)),
-			this,
-			menu_selector(MenuLayerMLHook::onCopyButton)
-		);
-		btn->setID("copy-button"_spr);
-
-		menu->addChild(btn);
-		menu->updateLayout();
+		Utils::addButton("copy", menu_selector(MenuLayerMLHook::onCopyButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
 	}
 
 	void onCopyButton(CCObject*) {
@@ -129,48 +92,31 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	}
 
 	void addBlacklistButton() {
-		CCNode* menu = getChildByID("right-side-menu");
-
-		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
-			CircleButtonSprite::create(CCSprite::create("blacklist-btn-sprite.png"_spr)),
-			this,
-			menu_selector(MenuLayerMLHook::onBlacklistButton)
-		);
-		btn->setID("blacklist-button"_spr);
-
-		menu->addChild(btn);
-		menu->updateLayout();
+		Utils::addButton("blacklist", menu_selector(MenuLayerMLHook::onBlacklistButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
 	}
 
 	void onBlacklistButton(CCObject*) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-		SongManager& songManager = m_fields->songManager;
+		SongManager& songManager = SongManager::get();
 
 		if (songManager.isOriginalMenuLoop()) return MenuLayerMLHook::woahThereBuddy("There's nothing to blacklist! Open Menu Loop Randomizer's config directory and edit its <cj>blacklist.txt</c> file to bring back some songs.");
 		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
 
-		auto currentSong = songManager.getCurrentSong();
+		const std::string& currentSong = songManager.getCurrentSong();
 
 		if (const auto songManagerBlacklist = songManager.getBlacklist(); std::ranges::find(songManagerBlacklist, currentSong) != songManagerBlacklist.end()) return MenuLayerMLHook::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
 		if (const auto songManagerFavorites = songManager.getFavorites(); std::ranges::find(songManagerFavorites, currentSong) != songManagerFavorites.end()) return MenuLayerMLHook::woahThereBuddy("You've already favorited this song! Double-check your <cl>favorites.txt</c> again.");
 
 		log::info("blacklisting: {}", currentSong);
 
-		std::string toWriteToFile = currentSong;
-		std::string songName = Utils::getSongName();
-		std::string songArtist = Utils::getSongArtist();
-		int songID = Utils::getSongID();
-		std::string customSong = Utils::currentCustomSong();
-
-		if (!std::filesystem::exists(m_fields->blacklistFile)) return log::info("error finding blacklist file!");
-
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
-		if (!useCustomSongs) toWriteToFile = toWriteToFile.append(fmt::format(" # [MLR] Song: {} by {} [MLR] #", songName, songArtist));
+		const std::string& songName = Utils::getSongName();
+		const std::string& songArtist = Utils::getSongArtist();
+		const std::string& customSong = Utils::currentCustomSong();
+		const int songID = Utils::getSongID();
+		const std::string& toWriteToFile = useCustomSongs ? currentSong : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", currentSong, songName, songArtist);
 
-		std::ofstream blacklistFileOutput;
-		blacklistFileOutput.open(m_fields->blacklistFile, std::ios_base::app);
-		blacklistFileOutput << std::endl << toWriteToFile;
-		blacklistFileOutput.close();
+		Utils::writeToFile(toWriteToFile, BLACKLIST_FILE);
 
 		songManager.addToBlacklist();
 		if (!Utils::getBool("dangerousBlacklisting")) {
@@ -198,48 +144,32 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	}
 
 	void addFavoriteButton() {
-		CCNode* menu = getChildByID("right-side-menu");
-
-		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
-			CircleButtonSprite::create(CCSprite::create("favorite-btn-sprite.png"_spr)),
-			this,
-			menu_selector(MenuLayerMLHook::onFavoriteButton)
-		);
-		btn->setID("favorite-button"_spr);
-
-		menu->addChild(btn);
-		menu->updateLayout();
+		Utils::addButton("favorite", menu_selector(MenuLayerMLHook::onFavoriteButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
 	}
 
 	void onFavoriteButton(CCObject*) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-		SongManager& songManager = m_fields->songManager;
+		SongManager& songManager = SongManager::get();
 
 		if (songManager.isOriginalMenuLoop()) return MenuLayerMLHook::woahThereBuddy("There's nothing to favorite! Double-check your config folder again.");
 		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
 
-		auto currentSong = songManager.getCurrentSong();
+		const std::string& currentSong = songManager.getCurrentSong();
 
 		if (const auto songManagerFavorites = songManager.getFavorites(); std::ranges::find(songManagerFavorites, currentSong) != songManagerFavorites.end()) return Utils::newNotification("You've already favorited this song! :D");
 		if (const auto songManagerBlacklist = songManager.getBlacklist(); std::ranges::find(songManagerBlacklist, currentSong) != songManagerBlacklist.end()) return MenuLayerMLHook::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
 
 		log::info("favoriting: {}", currentSong);
 
-		std::string toWriteToFile = currentSong;
-		std::string songName = Utils::getSongName();
-		std::string songArtist = Utils::getSongArtist();
-		int songID = Utils::getSongID();
-		std::string customSong = Utils::currentCustomSong();
-
-		if (!std::filesystem::exists(m_fields->favoritesFile)) return log::info("error finding favorites file!");
-
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
-		if (!useCustomSongs) toWriteToFile = toWriteToFile.append(fmt::format(" # [MLR] Song: {} by {} [MLR] #", songName, songArtist));
+		const int songID = Utils::getSongID();
+		const std::string& songName = Utils::getSongName();
+		const std::string& songArtist = Utils::getSongArtist();
+		const std::string& customSong = Utils::currentCustomSong();
+		const std::string& toWriteToFile = useCustomSongs ? currentSong : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", currentSong, songName, songArtist);
 
-		std::ofstream favoritesFileOutput;
-		favoritesFileOutput.open(m_fields->favoritesFile, std::ios_base::app);
-		favoritesFileOutput << std::endl << toWriteToFile;
-		favoritesFileOutput.close();
+		Utils::writeToFile(toWriteToFile, FAVORITES_FILE);
+
 		songManager.addToFavorites();
 		songManager.addSong(currentSong);
 
@@ -249,22 +179,12 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	}
 
 	void addHoldSongButton() {
-		CCNode* menu = getChildByID("right-side-menu");
-
-		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
-			CircleButtonSprite::create(CCSprite::create("hold-btn-sprite.png"_spr)),
-			this,
-			menu_selector(MenuLayerMLHook::onHoldSongButton)
-		);
-		btn->setID("hold-song-button"_spr);
-
-		menu->addChild(btn);
-		menu->updateLayout();
+		Utils::addButton("hold", menu_selector(MenuLayerMLHook::onHoldSongButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
 	}
 
 	void onHoldSongButton(CCObject*) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-		SongManager& songManager = m_fields->songManager;
+		SongManager& songManager = SongManager::get();
 		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're currently playing a menu loop <cy>override</c>. Double-check your settings again.");
 		if (songManager.songSizeIsBad()) return MenuLayerMLHook::woahThereBuddy("You don't have enough songs available to do this. Visit the config directory through the mod settings and try again.");
 		const std::string& formerHeldSong = songManager.getHeldSong();
@@ -288,22 +208,12 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	}
 
 	void addPreviousButton() {
-		CCNode* menu = getChildByID("right-side-menu");
-
-		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
-			CircleButtonSprite::create(CCSprite::create("prev-btn-sprite.png"_spr)),
-			this,
-			menu_selector(MenuLayerMLHook::onPreviousButton)
-		);
-		btn->setID("hold-song-button"_spr);
-
-		menu->addChild(btn);
-		menu->updateLayout();
+		Utils::addButton("prev", menu_selector(MenuLayerMLHook::onHoldSongButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
 	}
 
 	void onPreviousButton(CCObject*) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-		SongManager& songManager = m_fields->songManager;
+		SongManager& songManager = SongManager::get();
 		if (songManager.isOverride()) return MenuLayerMLHook::woahThereBuddy("You're currently playing a menu loop <cy>override</c>. Double-check your settings again.");
 		if (songManager.songSizeIsBad()) return MenuLayerMLHook::woahThereBuddy("You don't have enough songs available to do this. Visit the config directory through the mod settings and try again.");
 		if (songManager.isPreviousSong()) {

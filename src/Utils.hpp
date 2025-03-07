@@ -26,4 +26,6 @@ class Utils {
 	static std::string toNormalizedString(const std::filesystem::path& path);
 	static void fadeOutCardRemotely(cocos2d::CCNode* card = Utils::findCardRemotely());
 	static void removeCardRemotely(cocos2d::CCNode* card = Utils::findCardRemotely());
+	static void addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target);
+	static void writeToFile(const std::string& toWriteToFile, std::filesystem::path fileForWriting);
 };
