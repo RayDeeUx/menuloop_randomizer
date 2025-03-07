@@ -54,7 +54,7 @@ namespace SongControl {
 		else Utils::playlistModeNewSong();
 		if (Utils::getBool("enableNotification")) Utils::newCardFromCurrentSong();
 	}
-	void favoriteSong(SongManager &songManager) {
+	void favoriteSong(SongManager& songManager) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		if (songManager.isOriginalMenuLoop()) return SongControl::woahThereBuddy("There's nothing to favorite! Double-check your config folder again.");
@@ -83,7 +83,7 @@ namespace SongControl {
 		if (!useCustomSongs) return Utils::newNotification(fmt::format("Favorited {} by {} ({})!", songName, songArtist, songID));
 		if (!customSong.empty()) return Utils::newNotification(fmt::format("Favorited {}!", customSong));
 	}
-	void blacklistSong(SongManager &songManager) {
+	void blacklistSong(SongManager& songManager) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		if (songManager.isOriginalMenuLoop()) return SongControl::woahThereBuddy("There's nothing to blacklist! Open Menu Loop Randomizer's config directory and edit its <cj>blacklist.txt</c> file to bring back some songs.");
@@ -139,7 +139,7 @@ namespace SongControl {
 		if (VANILLA_GD_MENU_LOOP_DISABLED || !Utils::getBool("enableNotification")) return;
 		Utils::newCardFromCurrentSong();
 	}
-	void shuffleSong(SongManager &songManager) {
+	void shuffleSong(SongManager& songManager) {
 		Utils::removeCard();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
