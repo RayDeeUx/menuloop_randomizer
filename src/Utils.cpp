@@ -23,7 +23,7 @@ int Utils::randomIndex(int size) {
 }
 
 bool Utils::isSupportedFile(const std::string_view path) {
-	return std::filesystem::exists(path) && !path.empty() && Utils::goodExtension(path);
+	return !path.empty() && Utils::goodExtension(path);
 }
 
 bool Utils::goodExtension(const std::string_view path) {
