@@ -147,8 +147,6 @@ namespace SongControl {
 
 		Utils::setNewSong();
 
-		if (Utils::getBool("enableNotification"))
-			Utils::newCardFromCurrentSong();
+		if (Utils::getBool("enableNotification")) Utils::newCardFromCurrentSong();
 	}
-
 }
