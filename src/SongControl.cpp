@@ -6,7 +6,7 @@ namespace SongControl {
 		geode::createQuickPopup(
 			"Menu Loop Randomizer", reason,
 			"Never Mind", "Open Mod Settings",
-			[this](FLAlertLayer*, bool openConfig) {
+			[](FLAlertLayer*, bool openConfig) {
 				if (!openConfig) return;
 				openSettingsPopup(geode::Mod::get());
 			}
