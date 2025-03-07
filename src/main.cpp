@@ -55,8 +55,8 @@ $on_mod(Loaded) {
 	songManager.setOverride(override);
 
 	const std::string& lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
-	bool saveSongOnGameClose = Utils::getBool("saveSongOnGameClose");
-	bool loopExists = std::filesystem::exists(lastMenuLoop);
+	const bool saveSongOnGameClose = Utils::getBool("saveSongOnGameClose");
+	const bool loopExists = std::filesystem::exists(lastMenuLoop);
 	log::info("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}\noverride: {}", lastMenuLoop, saveSongOnGameClose, loopExists, override);
 	if (!override.empty() && Utils::isSupportedFile(override)) {
 		log::info("setting songManager's current song to overridden song from settings");
