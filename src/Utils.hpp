@@ -15,6 +15,7 @@ class Utils {
 	static void newNotification(const std::string &);
 	static std::string composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix);
 	static void newCardFromCurrentSong();
+	static std::string getFormattedNGMLSongName(SongInfoObject* songInfo);
 	static void playlistModePLAndEPL();
 	static void copyCurrentSongName();
 	static void populateVector(bool);

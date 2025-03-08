@@ -138,8 +138,7 @@ void Utils::newCardFromCurrentSong() {
 	const std::string& songFileName = Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
 
 	std::string notifString = "";
-	auto prefix = geode::Mod::get()->getSettingValue<std::string>("customPrefix");
-	if (prefix != "[Empty]")
+	if (const std::string& prefix = geode::Mod::get()->getSettingValue<std::string>("customPrefix"); prefix != "[Empty]")
 		notifString = fmt::format("{}: ", prefix);
 
 	std::string suffix = "";
@@ -175,25 +174,25 @@ void Utils::newCardFromCurrentSong() {
 	}
 
 	// sometimes songInfo is nullptr, so improvise
-	if (auto songInfo = MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrap())) {
+	if (SongInfoObject* songInfo = MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrap())) {
 		// default: "Song Name, Artist, Song ID"
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
-		std::string resultString = "";
-		auto formatSetting = geode::Mod::get()->getSettingValue<std::string>("songFormatNGML");
-		bool isMenuLoopFromNG = songInfo->m_songID == 584131;
-		if (formatSetting == "Song Name, Artist, Song ID") {
-			resultString = fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
-		} else if (formatSetting == "Song Name + Artist") {
-			resultString = fmt::format("{} by {}", songInfo->m_songName, songInfo->m_artistName);
-		} else if (formatSetting == "Song Name + Song ID") {
-			resultString = fmt::format("{} ({})", songInfo->m_songName, songInfo->m_songID);
-		} else {
-			resultString = fmt::format("{}", songInfo->m_songName);
-		}
-		if (isMenuLoopFromNG) resultString = resultString.append(" [OOF!]");
+		const std::string& resultString = Utils::getFormattedNGMLSongName(songInfo);
 		return Utils::newNotification(composedNotifString(notifString, resultString, suffix));
 	}
 	return Utils::newNotification(composedNotifString(notifString, songFileName, suffix));
+}
+
+std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
+	if (Utils::getBool("useCustomSongs")) return Utils::currentCustomSong();
+	if (!songInfo) return Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
+	const std::string& formatSetting = geode::Mod::get()->getSettingValue<std::string>("songFormatNGML");
+	const bool isMenuLoopFromNG = songInfo->m_songID == 584131;
+	const std::string& robtopSuffix = isMenuLoopFromNG ? " [OOF!]" : "";
+	if (formatSetting == "Song Name, Artist, Song ID") return fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
+	if (formatSetting == "Song Name + Artist") return fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
+	if (formatSetting == "Song Name + Song ID") return fmt::format("{} ({}){}", songInfo->m_songName, songInfo->m_songID, robtopSuffix);
+	return fmt::format("{}", songInfo->m_songName);
 }
 
 void Utils::playlistModePLAndEPL() {
