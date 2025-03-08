@@ -30,7 +30,7 @@ namespace SongControl {
 		songManager.setCurrentSong(previousSong);
 		if (Utils::getBool("playlistMode")) FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
 		else GameManager::sharedState()->playMenuMusic();
-		if (Utils::getBool("enableNotification")) return Utils::newCardFromCurrentSong();
+		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 	void holdSong(SongManager& songManager) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
@@ -48,12 +48,11 @@ namespace SongControl {
 			songManager.setCurrentSong(formerHeldSong);
 			if (Utils::getBool("playlistMode")) FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
 			else GameManager::sharedState()->playMenuMusic();
-			if (!Utils::getBool("enableNotification")) return;
-			return Utils::newCardFromCurrentSong();
+			Utils::newCardAndDisplayNameFromCurrentSong();
 		}
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::playlistModeNewSong();
-		if (Utils::getBool("enableNotification")) Utils::newCardFromCurrentSong();
+		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 	void favoriteSong(SongManager& songManager) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
@@ -139,7 +138,7 @@ namespace SongControl {
 	void regenSong() {
 		Utils::removeCard();
 		if (VANILLA_GD_MENU_LOOP_DISABLED || !Utils::getBool("enableNotification")) return;
-		Utils::newCardFromCurrentSong();
+		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 	void shuffleSong(SongManager& songManager) {
 		Utils::removeCard();
@@ -152,6 +151,6 @@ namespace SongControl {
 
 		Utils::setNewSong();
 
-		if (Utils::getBool("enableNotification")) Utils::newCardFromCurrentSong();
+		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 }

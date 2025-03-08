@@ -97,7 +97,7 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 }
 void SongControlMenu::onSettingsButton(CCObject*) { geode::openSettingsPopup(geode::Mod::get()); }
 void SongControlMenu::updateCurrentLabel() {
-	const std::string& currentSong = fmt::format("Current Song: {}", Utils::toNormalizedString(std::filesystem::path(SongManager::get().getCurrentSong()).filename()));
+	const std::string& currentSong = fmt::format("Current Song: {}", SongManager::get().getCurrentSongDisplayName());
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
 	const float idealWidth = layerSize.width * 0.95f;
 	const float centerStage = layerSize.width / 2.f;

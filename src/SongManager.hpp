@@ -46,6 +46,8 @@ class SongManager {
 	std::string getPreviousSong();
 	bool isPreviousSong() const;
 	bool songSizeIsBad() const;
+	void setCurrentSongDisplayName(const std::string& displayName);
+	std::string getCurrentSongDisplayName();
 
   private:
 	SongManager();
@@ -55,6 +57,7 @@ class SongManager {
 	std::string m_heldSong = "";
 	std::string m_previousSong = "";
 	std::string m_overrideSong = "";
+	std::string m_displayName = "";
 	bool m_isMenuLoop;
 	bool m_playlistMode;
 	bool m_calledOnce = false;

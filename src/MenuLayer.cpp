@@ -19,7 +19,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 
 		const bool noClassic = Utils::getString("buttonMode") != "Classic";
 
-		if (Utils::getBool("enableNotification")) Utils::newCardFromCurrentSong();
+		Utils::newCardAndDisplayNameFromCurrentSong();
 
 		// move to front of the menu (for OCM) first
 		if (noClassic)

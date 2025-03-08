@@ -80,8 +80,7 @@ void SongManager::update(float dt) const {
 	geode::log::info("song is probably finished. Switching songs.");
 	Utils::removeCard();
 	Utils::playlistModeNewSong();
-	if (Utils::getBool("enableNotification"))
-		Utils::newCardFromCurrentSong();
+	Utils::newCardAndDisplayNameFromCurrentSong();
 }
 
 void SongManager::setCalledOnce(const bool value) {
@@ -192,4 +191,13 @@ bool SongManager::isPreviousSong() const {
 
 bool SongManager::songSizeIsBad() const {
 	return m_songs.empty() || m_songs.size() < 2;
+}
+
+void SongManager::setCurrentSongDisplayName(const std::string& displayName) {
+	// set from Utils::newCardAndDisplayNameFromCurrentSong
+	m_displayName = displayName;
+}
+
+std::string SongManager::getCurrentSongDisplayName() {
+	return m_displayName;
 }
