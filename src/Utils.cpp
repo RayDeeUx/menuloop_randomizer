@@ -10,7 +10,7 @@
 static std::regex m_songEffectRegex(R"(.*(?:\\|\/)(\S+)\.(mp3|ogg|wav|flac|oga))", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/CqvIvI/1.
 static const std::regex m_geodeAudioRegex(R"(((?!\S+geode)(?:\\|\/)(?:([a-z0-9\-_]+\.[a-z0-9\-_]+)(?:\\|\/))([\S ]+)\.(mp3|ogg|wav|flac|oga))$)", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/0b9rY1/1.
 static const std::regex m_possiblyJukeboxRegex(R"(.*.[\\\/]([\S]+))", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/Brmwbs/1.
-static const int m_desiredIndexForFileName = 1; // easier place to change index
+static constexpr int m_desiredIndexForFileName = 1; // easier place to change index
 
 int Utils::randomIndex(int size) {
 	// select a random item from the vector and return the path
@@ -54,8 +54,7 @@ cocos2d::CCNode* Utils::findCardRemotely() {
 }
 
 void Utils::removeCard() {
-	if (auto card = Utils::findCard())
-		card->removeMeAndCleanup();
+	if (const auto card = Utils::findCard()) card->removeMeAndCleanup();
 }
 
 void Utils::setNewSong() {
@@ -136,7 +135,7 @@ std::string Utils::composedNotifString(std::string notifString, const std::strin
 
 void Utils::newCardFromCurrentSong() {
 	SongManager& songManager = SongManager::get();
-	std::string songFileName = Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
+	const std::string& songFileName = Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
 
 	std::string notifString = "";
 	auto prefix = geode::Mod::get()->getSettingValue<std::string>("customPrefix");
