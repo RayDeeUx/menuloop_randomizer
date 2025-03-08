@@ -452,6 +452,11 @@ void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler fu
 	);
 	btn->setID(fmt::format("{}-button"_spr, name));
 
+	if (cocos2d::CCSprite* cocosSprite = btn->getChildByType<geode::CircleButtonSprite>(0)->getChildByType<cocos2d::CCSprite>(0)) {
+		if (name == "favorite" || name == "previous") cocosSprite->setScale(.5f);
+		else if (name == "controls" || name == "blacklist") cocosSprite->setScale(.425f);
+	}
+
 	menu->addChild(btn);
 	menu->updateLayout();
 }
