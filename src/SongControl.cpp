@@ -1,4 +1,5 @@
 #include "SongControl.hpp"
+#include "Utils.hpp"
 #include <Geode/ui/GeodeUI.hpp>
 
 namespace SongControl {
