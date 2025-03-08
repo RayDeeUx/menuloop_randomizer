@@ -22,9 +22,9 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (Utils::getBool("enableNotification")) Utils::newCardFromCurrentSong();
 
 		if (noClassic) MenuLayerMLHook::addControlsButton(); // move to front of the menu (for OCM) first
+		if (Utils::getBool("enableShuffleButton")) MenuLayerMLHook::addShuffleButton();
 		if (Utils::getBool("enableNotification") && Utils::getBool("enableNewNotification"))
 			MenuLayerMLHook::addRegenButton();
-		if (Utils::getBool("enableShuffleButton")) MenuLayerMLHook::addShuffleButton();
 		if (Utils::getBool("enableCopySongID")) MenuLayerMLHook::addCopyButton();
 
 		if (noClassic) return true;
