@@ -15,6 +15,7 @@ bool SongControlMenu::setup(const std::string& id) {
 	CCLayer* mainLayer = this->m_mainLayer;
 	mainLayer->setID("main-layer"_spr);
 
+	this->m_title->setPositionY(this->m_title->getPositionY() + 2.f);
 	this->m_title->setPositionX(mainLayer->getContentWidth() / 2.f);
 	background->initWithFile("GJ_square05.png");
 	background->setContentSize(layerSize);
@@ -40,7 +41,7 @@ bool SongControlMenu::setup(const std::string& id) {
 	SongControlMenu::updateCurrentLabel();
 
 	this->m_otherLabel = cocos2d::CCLabelBMFont::create("Tip of the Day: Menu Loop Randomizer will never be designed to be a Spotify replacement, or anything like its distant cousin Editor Music. Please keep this in mind if you have feedback on MLR. :)", "chatFont.fnt");
-	this->m_otherLabel->setPositionY((layerSize.height / 4.f) - (this->m_smallLabel->getContentHeight() / 2.f) - (this->m_otherLabel->getContentHeight() / 2.f) + 3.5f);
+	this->m_otherLabel->setPositionY((layerSize.height / 4.f) - (this->m_smallLabel->getContentHeight() / 2.f) - (this->m_otherLabel->getContentHeight() / 2.f) + 4.5f);
 	this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
 	this->m_otherLabel->setPositionX(centerStage);
@@ -49,6 +50,9 @@ bool SongControlMenu::setup(const std::string& id) {
 	mainLayer->addChild(this->m_otherLabel);
 	mainLayer->addChild(this->m_smallLabel);
 	mainLayer->addChild(this->m_songControlsMenu);
+	this->m_title->setID("title"_spr);
+	this->m_bgSprite->setID("background"_spr);
+	this->m_buttonMenu->setID("close-menu"_spr);
 	this->m_otherLabel->setID("im-not-spotify"_spr);
 	this->m_smallLabel->setID("current-song-label"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
