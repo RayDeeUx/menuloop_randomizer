@@ -30,8 +30,12 @@ bool Utils::goodExtension(const std::string_view path) {
 	return path.ends_with(".mp3") || path.ends_with(".wav") || path.ends_with(".ogg") || path.ends_with(".oga") || path.ends_with(".flac");
 }
 
-bool Utils::getBool(std::string setting) {
+bool Utils::getBool(const std::string& setting) {
 	return geode::Mod::get()->getSettingValue<bool>(setting);
+}
+
+std::string Utils::getString(const std::string& setting) {
+	return geode::Mod::get()->getSettingValue<std::string>(setting);
 }
 
 cocos2d::CCNode* Utils::findCard() {

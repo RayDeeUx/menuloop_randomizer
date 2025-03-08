@@ -37,6 +37,16 @@
 			"type": "bool",
 			"default": false
 		},
+		"buttonMode": {
+			"name": "Button Mode",
+			"description": "<cl>Original idea by dasshuDEV and Hanifinio.</c>\n\nCondensed: Moves all the buttons to a separate popup to reduce clutter on MenuLayer.\nClassic: Moves all the buttons to the right side of MenuLayer (or the bottom of MenuLayer, if you use Overcharged Main Menu).",
+			"type": "string",
+			"default": "Condensed",
+			"one-of": [
+				"Classic",
+				"Condensed"
+			]
+		},
 		"enableCopySongID": {
 			"name": "\"Copy Song ID\" Button",
 			"description": "<cl>Original idea by Akashnil. Original sprite by hiimjustin000.</c>\n\nEnables the <cj>copy Song ID</c> in the main menu.\n\n<cy>If</c> <cl>\"Use Custom Songs Instead\"</c> <cy>is enabled, this button will copy the song name instead.</c>",
