@@ -22,10 +22,10 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (Utils::getBool("enableNotification") && Utils::getBool("enableNewNotification"))
 			MenuLayerMLHook::addRegenButton();
 		if (Utils::getBool("enableShuffleButton")) MenuLayerMLHook::addShuffleButton();
+		if (Utils::getBool("enableCopySongID")) MenuLayerMLHook::addCopyButton();
 
 		if (Utils::getString("buttonMode") != "Classic") return true;
 
-		if (Utils::getBool("enableCopySongID")) MenuLayerMLHook::addCopyButton();
 		if (Utils::getBool("enableBlacklistButton")) MenuLayerMLHook::addBlacklistButton();
 		if (Utils::getBool("enableFavoriteButton")) MenuLayerMLHook::addFavoriteButton();
 		if (Utils::getBool("enableHoldSongButton")) MenuLayerMLHook::addHoldSongButton();

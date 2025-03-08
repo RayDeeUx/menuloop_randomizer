@@ -39,12 +39,12 @@
 		},
 		"buttonMode": {
 			"name": "Button Mode",
-			"description": "<cl>Original idea by dasshuDEV and Hanifinio.</c>\n\nCondensed: Moves all the buttons to a separate popup to reduce clutter on MenuLayer.\nClassic: Moves all the buttons to the right side of MenuLayer (or the bottom of MenuLayer, if you use Overcharged Main Menu).",
+			"description": "<cl>Original idea by dasshuDEV and Hanifinio.</c>\n\nReduced: Places the <cl>Blacklist Song</c>, <cl>Favorite Song</c>, <cl>Hold Song</c>, and <cl>Previous Song</c> buttons to a separate popup to reduce clutter on MenuLayer.\nClassic: Places the <cl>Blacklist Song</c>, <cl>Favorite Song</c>, <cl>Hold Song</c>, and <cl>Previous Song</c> buttons to the right side of MenuLayer (or the bottom of MenuLayer, if you use Overcharged Main Menu).",
 			"type": "string",
-			"default": "Condensed",
+			"default": "Reduced",
 			"one-of": [
 				"Classic",
-				"Condensed"
+				"Reduced"
 			]
 		},
 		"enableCopySongID": {
