@@ -24,7 +24,10 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (Utils::getBool("enableShuffleButton")) MenuLayerMLHook::addShuffleButton();
 		if (Utils::getBool("enableCopySongID")) MenuLayerMLHook::addCopyButton();
 
-		if (Utils::getString("buttonMode") != "Classic") return true;
+		if (Utils::getString("buttonMode") != "Classic") {
+			MenuLayerMLHook::addControlsButton();
+			return true;
+		}
 
 		if (Utils::getBool("enableBlacklistButton")) MenuLayerMLHook::addBlacklistButton();
 		if (Utils::getBool("enableFavoriteButton")) MenuLayerMLHook::addFavoriteButton();
@@ -39,6 +42,10 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onFavoriteButton(CCObject*) { SongControl::favoriteSong(); }
 	void onHoldSongButton(CCObject*) { SongControl::holdSong(); }
 	void onPreviousButton(CCObject*) { SongControl::previousSong(); }
+	void onControlsButton(CCObject*) {
+		if (Utils::getString("buttonMode") == "Classic") return;
+		SongControl::woahThereBuddy("This menu's not ready yet!");
+	}
 	void addShuffleButton() {
 		Utils::addButton("shuffle", menu_selector(MenuLayerMLHook::onShuffleButton), REST_OF_THE_OWL);
 	}
@@ -59,5 +66,8 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	}
 	void addPreviousButton() {
 		Utils::addButton("prev", menu_selector(MenuLayerMLHook::onPreviousButton), REST_OF_THE_OWL);
+	}
+	void addControlsButton() {
+		Utils::addButton("controls", menu_selector(MenuLayerMLHook::onControlsButton), REST_OF_THE_OWL);
 	}
 };
