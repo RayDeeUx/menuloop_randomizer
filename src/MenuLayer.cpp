@@ -17,17 +17,17 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (Loader::get()->isModLoaded("omgrod.geodify"))
 			SongManager::get().setGeodify(Loader::get()->getLoadedMod("omgrod.geodify")->getSettingValue<bool>("menu-loop"));
 
+		const bool noClassic = Utils::getString("buttonMode") != "Classic";
+
 		if (Utils::getBool("enableNotification")) Utils::newCardFromCurrentSong();
 
+		if (noClassic) MenuLayerMLHook::addControlsButton(); // move to front of the menu (for OCM) first
 		if (Utils::getBool("enableNotification") && Utils::getBool("enableNewNotification"))
 			MenuLayerMLHook::addRegenButton();
 		if (Utils::getBool("enableShuffleButton")) MenuLayerMLHook::addShuffleButton();
 		if (Utils::getBool("enableCopySongID")) MenuLayerMLHook::addCopyButton();
 
-		if (Utils::getString("buttonMode") != "Classic") {
-			MenuLayerMLHook::addControlsButton();
-			return true;
-		}
+		if (noClassic) return true;
 
 		if (Utils::getBool("enableBlacklistButton")) MenuLayerMLHook::addBlacklistButton();
 		if (Utils::getBool("enableFavoriteButton")) MenuLayerMLHook::addFavoriteButton();
