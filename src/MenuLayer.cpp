@@ -3,6 +3,8 @@
 #include "Utils.hpp"
 #include <Geode/modify/MenuLayer.hpp>
 
+#define REST_OF_THE_OWL static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this
+
 using namespace geode::prelude;
 
 class $modify(MenuLayerMLHook, MenuLayer) {
@@ -34,24 +36,24 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onHoldSongButton(CCObject*) { SongControl::holdSong(); }
 	void onPreviousButton(CCObject*) { SongControl::previousSong(); }
 	void addShuffleButton() {
-		Utils::addButton("shuffle", menu_selector(MenuLayerMLHook::onShuffleButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
+		Utils::addButton("shuffle", menu_selector(MenuLayerMLHook::onShuffleButton), REST_OF_THE_OWL);
 	}
 	void addRegenButton() {
-		Utils::addButton("regen", menu_selector(MenuLayerMLHook::onRegenButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
+		Utils::addButton("regen", menu_selector(MenuLayerMLHook::onRegenButton), REST_OF_THE_OWL);
 	}
 	void addCopyButton() {
-		Utils::addButton("copy", menu_selector(MenuLayerMLHook::onCopyButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
+		Utils::addButton("copy", menu_selector(MenuLayerMLHook::onCopyButton), REST_OF_THE_OWL);
 	}
 	void addBlacklistButton() {
-		Utils::addButton("blacklist", menu_selector(MenuLayerMLHook::onBlacklistButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
+		Utils::addButton("blacklist", menu_selector(MenuLayerMLHook::onBlacklistButton), REST_OF_THE_OWL);
 	}
 	void addFavoriteButton() {
-		Utils::addButton("favorite", menu_selector(MenuLayerMLHook::onFavoriteButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
+		Utils::addButton("favorite", menu_selector(MenuLayerMLHook::onFavoriteButton), REST_OF_THE_OWL);
 	}
 	void addHoldSongButton() {
-		Utils::addButton("hold", menu_selector(MenuLayerMLHook::onHoldSongButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
+		Utils::addButton("hold", menu_selector(MenuLayerMLHook::onHoldSongButton), REST_OF_THE_OWL);
 	}
 	void addPreviousButton() {
-		Utils::addButton("prev", menu_selector(MenuLayerMLHook::onHoldSongButton), static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this);
+		Utils::addButton("prev", menu_selector(MenuLayerMLHook::onHoldSongButton), REST_OF_THE_OWL);
 	}
 };
