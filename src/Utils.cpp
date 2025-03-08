@@ -185,7 +185,7 @@ void Utils::newCardFromCurrentSong() {
 
 std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
 	if (Utils::getBool("useCustomSongs")) return Utils::currentCustomSong();
-	if (!songInfo) return Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
+	if (!songInfo) return Utils::toNormalizedString(std::filesystem::path(SongManager::get().getCurrentSong()).filename());
 	const std::string& formatSetting = geode::Mod::get()->getSettingValue<std::string>("songFormatNGML");
 	const bool isMenuLoopFromNG = songInfo->m_songID == 584131;
 	const std::string& robtopSuffix = isMenuLoopFromNG ? " [OOF!]" : "";
