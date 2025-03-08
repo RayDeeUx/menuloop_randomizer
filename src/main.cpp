@@ -48,6 +48,7 @@ $on_mod(Loaded) {
 		}
 	}
 
+	geode::log::info("repopulating vector from on_mod(Loaded)");
 	Utils::populateVector(Utils::getBool("useCustomSongs"));
 
 	std::string override = Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride").string();
@@ -83,6 +84,7 @@ $on_mod(Loaded) {
 			if they're ng songs also push the path bc we're going to use getPathForSong
 			--elnexreal
 		*/
+		geode::log::info("repopulating vector from setting useCustomSongs change");
 		Utils::populateVector(useCustomSongs);
 
 		// change the song when you click apply, stoi will not like custom names. --elnexreal
@@ -108,6 +110,7 @@ $on_mod(Loaded) {
 		songManager.setOverride(overrideString);
 		if (!Utils::isSupportedFile(overrideString)) {
 			songManager.clearSongs();
+			geode::log::info("repopulating vector from removing override");
 			Utils::populateVector(Utils::getBool("useCustomSongs"));
 			if (Utils::isSupportedFile(Mod::get()->getSavedValue<std::string>("lastMenuLoop")) && Utils::getBool("saveSongOnGameClose") && !originalOverrideWasEmpty) {
 				log::info("setting songManager's current song to saved song from settings change");

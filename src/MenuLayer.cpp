@@ -54,6 +54,6 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		Utils::addButton("hold", menu_selector(MenuLayerMLHook::onHoldSongButton), REST_OF_THE_OWL);
 	}
 	void addPreviousButton() {
-		Utils::addButton("prev", menu_selector(MenuLayerMLHook::onHoldSongButton), REST_OF_THE_OWL);
+		Utils::addButton("prev", menu_selector(MenuLayerMLHook::onPreviousButton), REST_OF_THE_OWL);
 	}
 };

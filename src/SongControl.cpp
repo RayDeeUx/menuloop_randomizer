@@ -108,6 +108,7 @@ namespace SongControl {
 		songManager.addToBlacklist();
 		if (!Utils::getBool("dangerousBlacklisting")) {
 			songManager.clearSongs();
+			geode::log::info("repopulating vector from blacklisting current song");
 			Utils::populateVector(useCustomSongs);
 		} else {
 			geode::log::info("dangerousBlacklisting is active. added {} to blacklist, removing it from current queue", currentSong);
@@ -143,7 +144,10 @@ namespace SongControl {
 		Utils::removeCard();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
-		if (songManager.isOriginalMenuLoop()) Utils::populateVector(Utils::getBool("useCustomSongs"));
+		if (songManager.isOriginalMenuLoop()) {
+			geode::log::info("repopulating vector from shuffling song while playing original GD menuloop");
+			Utils::populateVector(Utils::getBool("useCustomSongs"));
+		}
 
 		Utils::setNewSong();
 
