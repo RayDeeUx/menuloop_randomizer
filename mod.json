@@ -61,25 +61,25 @@
 		},
 		"enableBlacklistButton": {
 			"name": "Blacklist Button",
-			"description": "<cl>Original idea by AlphaQuata.</c>\n\nEnables the <cj>blacklist button</c> in the main menu.\n\n<cy>Using this button prevents a song from being chosen as a menu loop, and chooses a new menu loop song.</c>",
+			"description": "<cl>Original idea by AlphaQuata.</c>\n\nEnables the <cj>blacklist button</c> in the main menu.\n\n<cy>Using this button prevents a song from being chosen as a menu loop, and chooses a new menu loop song.</c>\n\n<cy>Only applicable when using the \"Classic\" Button Mode.</c>",
 			"type": "bool",
 			"default": true
 		},
 		"enableFavoriteButton": {
 			"name": "Favorite Button",
-			"description": "<cl>Original idea by AlphaQuata.</c>\n\nEnables the <cj>favorite button</c> in the main menu.\n\n<cy>Using this button increases the chance a song will be chosen as a menu loop.</c>",
+			"description": "<cl>Original idea by AlphaQuata.</c>\n\nEnables the <cj>favorite button</c> in the main menu.\n\n<cy>Using this button increases the chance a song will be chosen as a menu loop.</c>\n\n<cy>Only applicable when using the \"Classic\" Button Mode.</c>",
 			"type": "bool",
 			"default": true
 		},
 		"enableHoldSongButton": {
 			"name": "Hold Song Button (READ!)",
-			"description": "Enables the <cj>\"Hold Song\" button</c> in the main menu.\n\n<cy>Like Tetris, using this button holds onto the name of the current song, and swaps menu loop songs with a previously held song (if there is one).</c>",
+			"description": "Enables the <cj>\"Hold Song\" button</c> in the main menu.\n\n<cy>Like Tetris, using this button holds onto the name of the current song, and swaps menu loop songs with a previously held song (if there is one).</c>\n\n<cy>Only applicable when using the \"Classic\" Button Mode.</c>",
 			"type": "bool",
 			"default": true
 		},
 		"enablePreviousButton": {
 			"name": "Previous Song Button (READ!)",
-			"description": "<cl>Original idea by DurexSensitive.</c>\n\nGo back <c_>one</c> song. This does <c_>NOT</c> store your entire menu loop history, only one song at a time.\n\nDon't expect this intentional limitation to go away anytime soon.",
+			"description": "<cl>Original idea by DurexSensitive.</c>\n\nGo back <c_>one</c> song. This does <c_>NOT</c> store your entire menu loop history, only one song at a time.\n\nDon't expect this intentional limitation to go away anytime soon.\n\n<cy>Only applicable when using the \"Classic\" Button Mode.</c>",
 			"type": "bool",
 			"default": true
 		},
