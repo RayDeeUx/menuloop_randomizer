@@ -2,6 +2,7 @@
 ## v1.8.1
 - Attempt to fix a bug where some filenames would be ignored.
   - The guy who reported the issue to me won't respond to my DMs to test if my bugfix worked. Shame on them, I guess.
+  - Thankfully dankmeme01 was able to test those changes, so all's well! (I hope.)
 - Created a separate menu for all buttons from this mod.
   - To revert to the original behavior, use the "Classic" `Button Mode` setting.
   - Existing mod settings for toggling the <cl>Blacklist Song</c>, <cl>Favorite Song</c>, <cl>Hold Song</c>, and <cl>Previous Song</c> buttons will only apply when using the "Classic" `Button Mode` setting.
