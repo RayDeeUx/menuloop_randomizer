@@ -1,16 +1,25 @@
 {
-	"geode": "4.0.1",
+	"geode": "4.3.1",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
-		"mac": "2.2074"
+		"mac": "2.2074",
+		"ios": "2.2074"
 	},
-	"version": "v1.8.1",
+	"version": "v1.8.2",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
-	"developers": ["RayDeeUx", "elnexreal"],
+	"developers": [
+		"RayDeeUx",
+		"elnexreal"
+	],
 	"description": "Menu Loop randomizer for GD.",
-	"tags": ["music", "interface", "enhancement"],
+	"tags": [
+		"music",
+	"offline",
+		"interface",
+		"enhancement"
+	],
 	"repository": "https://github.com/RayDeeUx/menuloop_randomizer",
 	"settings": {
 		"configdir": {
@@ -190,7 +199,13 @@
 			},
 			"filters": [
 				{
-					"files": [ "*.mp3", "*.ogg", "*.oga", "*.wav", "*.flac" ],
+					"files": [
+						"*.mp3",
+						"*.ogg",
+						"*.oga",
+						"*.wav",
+						"*.flac"
+					],
 					"description": "Audio files"
 				}
 			]

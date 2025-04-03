@@ -49,11 +49,16 @@ build-*/
 
 # ILY vscode
 **/.vscode
-.idea/
+
+# Local History for Visual Studio Code
+.history/
 
 # clangd
 .cache/
 
 # Visual Studio
 .vs/
-/cmake-*/
+
+# CLion
+.idea/
+/cmake-build-*/
