@@ -16,7 +16,7 @@
 	"description": "Menu Loop randomizer for GD.",
 	"tags": [
 		"music",
-	"offline",
+		"offline",
 		"interface",
 		"enhancement"
 	],
@@ -212,9 +212,15 @@
 		},
 		"dangerousBlacklisting": {
 			"name": "Dangerous Blacklisting",
-			"description": "<cl>Original idea by Aktimoose.</c>\n\nAttempts to remove the lagspike when removing songs.\n\n<c_>This is an experimental setting. You agree to hold yourself responsible for any issues that happen when this setting is enabled.</c>",
+			"description": "<cl>Original idea by Aktimoose.</c>\n\nAttempts to remove the lagspike when removing songs.\n\n<c_>This is an experimental setting. You agree to hold yourself responsible for any issues/lag/damages/crashes that happen when this setting is enabled.</c>",
 			"type": "bool",
 			"default": false
+		},
+		"searchDeeper": {
+			"name": "(DANGEROUS) Check Within Subdirectories",
+			"description": "<cl>Original idea by RighteousRyan.</c>\n\nSearch for songs within subdirectories.\n\n<c_>This is an EXPERIMENTAL setting. By enabling this, you will hold yourself responsible for any issues/lag/damages/crashes that happen with this setting enabled. You also agree that this setting was added despite the developer's (RayDeeUx's) lack of personal belief/confidence that this feature belongs in MLR.</c>",
+			"type": "bool",
+			"default": true
 		}
 	},
 	"resources": {

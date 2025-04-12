@@ -18,7 +18,7 @@ class Utils {
 	static std::string getFormattedNGMLSongName(SongInfoObject* songInfo);
 	static void playlistModePLAndEPL();
 	static void copyCurrentSongName();
-	static void populateVector(bool);
+	static void populateVector(const bool customSongs, std::vector<std::string> textFileBlacklist = {}, std::vector<std::string> textFileFavorites = {});
 	static SongInfoObject* getSongInfoObject();
 	static std::string getSongName();
 	static std::string getSongArtist();

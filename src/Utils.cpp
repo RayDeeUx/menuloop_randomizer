@@ -242,7 +242,7 @@ void Utils::copyCurrentSongName() {
 	geode::utils::clipboard::write(result);
 }
 
-void Utils::populateVector(bool customSongs) {
+void Utils::populateVector(const bool customSongs, std::vector<std::string> textFileBlacklist, std::vector<std::string> textFileFavorites) {
 	auto configDir = geode::Mod::get()->getConfigDir();
 	/*
 		if custom songs are enabled search for files in the config dir
@@ -252,10 +252,9 @@ void Utils::populateVector(bool customSongs) {
 
 	SongManager& songManager = SongManager::get();
 
-	std::vector<std::string> textFileBlacklist = {};
 	std::vector<std::string> songManagerBlacklist = songManager.getBlacklist();
 
-	if (auto blacklistPath = std::filesystem::exists(configDir / R"(blacklist.txt)")) {
+	if (auto blacklistPath = std::filesystem::exists(configDir / R"(blacklist.txt)"); blacklistPath && textFileBlacklist.empty()) {
 		std::ifstream blacklistFile((configDir / R"(blacklist.txt)"));
 		std::string blacklistString;
 		while (std::getline(blacklistFile, blacklistString)) {
@@ -269,10 +268,9 @@ void Utils::populateVector(bool customSongs) {
 		geode::log::info("Finished storing blacklist. size: {}", textFileBlacklist.size());
 	}
 
-	std::vector<std::string> textFileFavorites = {};
 	std::vector<std::string> songManagerFavorites = songManager.getFavorites();
 
-	if (auto favoritePath = std::filesystem::exists(configDir / R"(favorites.txt)")) {
+	if (auto favoritePath = std::filesystem::exists(configDir / R"(favorites.txt)"); favoritePath && textFileFavorites.empty()) {
 		std::ifstream favoriteFile((configDir / R"(favorites.txt)"));
 		std::string favoriteString;
 		while (std::getline(favoriteFile, favoriteString)) {
@@ -288,7 +286,11 @@ void Utils::populateVector(bool customSongs) {
 	}
 
 	if (customSongs) {
-		for (auto file : std::filesystem::directory_iterator(configDir)) {
+		for (const auto& file : std::filesystem::directory_iterator(configDir)) {
+			if (std::filesystem::is_directory(file) && Utils::getBool("searchDeeper")) {
+				Utils::populateVector(customSongs, textFileBlacklist, textFileFavorites);
+				continue;
+			}
 			if (!std::filesystem::exists(file)) continue;
 
 			const auto& filePath = file.path();
