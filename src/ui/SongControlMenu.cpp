@@ -29,32 +29,60 @@ bool SongControlMenu::setup(const std::string& id) {
 	Utils::addButton("favorite", menu_selector(SongControlMenu::onFavoriteButton), REST_OF_THE_OWL);
 	Utils::addButton("hold", menu_selector(SongControlMenu::onHoldSongButton), REST_OF_THE_OWL);
 	Utils::addButton("prev", menu_selector(SongControlMenu::onPreviousButton), REST_OF_THE_OWL);
-	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), REST_OF_THE_OWL);
 
 	geode::AxisLayout* layout = geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f);
 
-	this->m_songControlsMenu->setPosition({centerStage, layerSize.height / 2.f});
+	this->m_songControlsMenu->setPosition({centerStage, 40.f});
 	this->m_songControlsMenu->ignoreAnchorPointForPosition(false);
 	this->m_songControlsMenu->setContentSize({idealWidth, 32.f});
 	this->m_songControlsMenu->setLayout(layout);
 
+	this->m_theTimeoutCorner = cocos2d::CCMenu::create();
+
+	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), this->m_theTimeoutCorner, this);
+
+	geode::AxisLayout* layoutTimeout = geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
+
+	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 2.5f});
+	this->m_theTimeoutCorner->ignoreAnchorPointForPosition(false);
+	this->m_theTimeoutCorner->setContentSize({24.f, 24.f});
+	this->m_theTimeoutCorner->setLayout(layoutTimeout);
+
 	SongControlMenu::updateCurrentLabel();
 
-	this->m_otherLabel = cocos2d::CCLabelBMFont::create("Tip of the Day: Menu Loop Randomizer will never be designed to be a Spotify replacement, or anything like its distant cousin EditorMusic. Please keep this in mind if you have feedback on MLR. :)", "chatFont.fnt");
-	this->m_otherLabel->setPositionY((layerSize.height / 4.f) - (this->m_smallLabel->getContentHeight() / 2.f) - (this->m_otherLabel->getContentHeight() / 2.f) + 4.5f);
+	this->m_otherLabel = cocos2d::CCLabelBMFont::create("Life Pro Tip: Menu Loop Randomizer will never be designed to be a Spotify replacement, or anything like its distant cousin EditorMusic. Please keep this in mind if you have feedback on MLR. :)", "chatFont.fnt");
 	this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
-	this->m_otherLabel->setPositionX(centerStage);
+	this->m_otherLabel->setPosition({centerStage, 12.5f});
+
+	this->m_headerLabl = cocos2d::CCLabelBMFont::create("Current Song:", "chatFont.fnt");this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+	this->m_headerLabl->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+	this->m_headerLabl->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
+	this->m_headerLabl->setPosition({centerStage, 107.5f});
+
+	this->b = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
+	this->b->ignoreAnchorPointForPosition(false);
+	this->b->setPosition({centerStage, 80.f});
+	this->b->setContentSize({275.f, 30.f});
+	this->b->setColor({0, 0, 0});
+	this->b->setOpacity(128);
 
 	this->setID("SongControlMenu"_spr);
+	mainLayer->addChild(this->b);
 	mainLayer->addChild(this->m_otherLabel);
 	mainLayer->addChild(this->m_smallLabel);
+	mainLayer->addChild(this->m_headerLabl);
 	mainLayer->addChild(this->m_songControlsMenu);
+	mainLayer->addChild(this->m_theTimeoutCorner);
+
+	this->b->setID("trans-bg"_spr);
 	this->m_title->setID("title"_spr);
 	this->m_bgSprite->setID("background"_spr);
 	this->m_buttonMenu->setID("close-menu"_spr);
 	this->m_otherLabel->setID("im-not-spotify"_spr);
 	this->m_smallLabel->setID("current-song-label"_spr);
+	this->m_headerLabl->setID("current-song-header"_spr);
+	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
 
 	return true;
@@ -62,7 +90,7 @@ bool SongControlMenu::setup(const std::string& id) {
 
 SongControlMenu* SongControlMenu::create(const std::string& id) {
 	auto ret = new SongControlMenu;
-	if (ret->initAnchored(300.f, 100.f, id)) {
+	if (ret->initAnchored(300.f, 150.f, id)) {
 		ret->autorelease();
 		return ret;
 	}
@@ -80,9 +108,11 @@ void SongControlMenu::onShuffleButton(CCObject*) {
 }
 void SongControlMenu::onRegenButton(CCObject*) {
 	SongControl::regenSong();
+	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onCopyButton(CCObject*) {
 	SongControl::copySong();
+	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onBlacklistButton(CCObject*) {
 	SongControl::blacklistSong();
@@ -90,6 +120,7 @@ void SongControlMenu::onBlacklistButton(CCObject*) {
 }
 void SongControlMenu::onFavoriteButton(CCObject*) {
 	SongControl::favoriteSong();
+	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onHoldSongButton(CCObject*) {
 	SongControl::holdSong();
@@ -101,14 +132,12 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 }
 void SongControlMenu::onSettingsButton(CCObject*) { geode::openSettingsPopup(geode::Mod::get()); }
 void SongControlMenu::updateCurrentLabel() {
-	const std::string& currentSong = fmt::format("Current Song: {}", SongManager::get().getCurrentSongDisplayName());
+	const std::string& currentSong = SongManager::get().getCurrentSongDisplayName();
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
-	const float idealWidth = layerSize.width * 0.95f;
-	const float centerStage = layerSize.width / 2.f;
 	if (!this->m_smallLabel || !this->m_smallLabel->getParent() || this->m_smallLabel->getParent() != this->m_mainLayer) {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
 	} else this->m_smallLabel->setString(currentSong.c_str(), "chatFont.fnt");
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
-	this->m_smallLabel->setPosition({centerStage, (layerSize.height / 4.f) - 2.5f});
-	this->m_smallLabel->limitLabelWidth(idealWidth * .9f, 1.0f, .0001f);
+	this->m_smallLabel->limitLabelWidth(layerSize.width * 0.95f * .9f, 1.0f, .0001f);
+	this->m_smallLabel->setPosition({layerSize.width / 2.f, 80.f});
 }
