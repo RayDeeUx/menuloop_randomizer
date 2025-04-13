@@ -1,4 +1,11 @@
 # Menu Loop Randomizer Changelog
+## v1.8.2
+- Added experimental support for iOS devices.
+  - <c-ff0000>READ: ***EXPERIMENTAL***.</c> <c-00ffff>Getting this mod to compile for iOS is already enough of a pain to begin with.</c>
+- Added experimental support for searching songs in nested folders (suggested by [RighteousRyan](https://www.youtube.com/channel/UCnz-trf-dF7j8mDVOuoy4Ig)).
+  - <c-ff0000>READ: ***EXPERIMENTAL***.</c> <c-00ffff>This setting may not work as expected for those with non-English folder paths/file names, or those using MLR on mobile devices.</c>
+- Added experimental support for loading secondary folders (suggested by [RighteousRyan](https://www.youtube.com/channel/UCnz-trf-dF7j8mDVOuoy4Ig)).
+  - <c-ff0000>READ: ***EXPERIMENTAL***.</c> <c-00ffff>This setting may not work as expected for those with non-English folder paths/file names, or those using MLR on mobile devices.</c>
 ## v1.8.1
 - Attempt to fix a bug where some filenames would be ignored.
   - The guy who reported the issue to me won't respond to my DMs to test if my bugfix worked. Shame on them, I guess.
@@ -13,7 +20,7 @@
 - Refactor a few things inside the code for readability and whatnot.
 ## v1.7.0
 - New logo by [dasshu_](https://linktr.ee/jaydasshu)!
-- Refactor how the song notificaton card is removed when switching scenes.
+- Refactor how the song notification card is removed when switching scenes.
   - Playlist Mode may have been broken in the process if there is only one song available for the mod to choose from. But at that point, you might as well use a texture pack instead.
 ## v1.6.4
 - Added option to replace unsupported characters with `?`s, enabled by default.
