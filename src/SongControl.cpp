@@ -110,8 +110,8 @@ namespace SongControl {
 			songManager.clearSongs();
 			geode::log::info("repopulating vector from blacklisting current song");
 			Utils::populateVector(useCustomSongs);
-			const std::filesystem::path additionalFolder = useCustomSongs ? geode::Mod::get()->getSettingValue<std::filesystem::path>("additionalFolder") : "";
-			if (useCustomSongs && !additionalFolder.string().empty() && !geode::utils::string::contains(additionalFolder, geode::Mod::get()->getConfigDir()))
+			const std::filesystem::path& additionalFolder = useCustomSongs ? geode::Mod::get()->getSettingValue<std::filesystem::path>("additionalFolder") : "";
+			if (useCustomSongs && !additionalFolder.string().empty() && !geode::utils::string::contains(Utils::toNormalizedString(additionalFolder), Utils::toNormalizedString(geode::Mod::get()->getConfigDir())))
 				Utils::populateVector(useCustomSongs, additionalFolder);
 		} else {
 			geode::log::info("dangerousBlacklisting is active. added {} to blacklist, removing it from current queue", currentSong);
@@ -151,8 +151,8 @@ namespace SongControl {
 			geode::log::info("repopulating vector from shuffling song while playing original GD menuloop");
 			const bool useCustomSongs = Utils::getBool("useCustomSongs");
 			Utils::populateVector(useCustomSongs);
-			const std::filesystem::path additionalFolder = useCustomSongs ? geode::Mod::get()->getSettingValue<std::filesystem::path>("additionalFolder") : "";
-			if (useCustomSongs && !additionalFolder.string().empty() && !geode::utils::string::contains(additionalFolder, geode::Mod::get()->getConfigDir()))
+			const std::filesystem::path& additionalFolder = useCustomSongs ? geode::Mod::get()->getSettingValue<std::filesystem::path>("additionalFolder") : "";
+			if (useCustomSongs && !additionalFolder.string().empty() && !geode::utils::string::contains(Utils::toNormalizedString(additionalFolder), Utils::toNormalizedString(geode::Mod::get()->getConfigDir())))
 				Utils::populateVector(useCustomSongs, additionalFolder);
 		}
 

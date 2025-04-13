@@ -242,8 +242,8 @@ void Utils::copyCurrentSongName() {
 	geode::utils::clipboard::write(result);
 }
 
-void Utils::populateVector(const bool customSongs, const std::filesystem::path path, std::vector<std::string> textFileBlacklist, std::vector<std::string> textFileFavorites) {
-	if (geode::utils::string::contains(path.string(), "store_your_disabled_menuloops_here") && geode::utils::string::contains(path.string(), geode::Mod::get()->getConfigDir())) return;
+void Utils::populateVector(const bool customSongs, const std::filesystem::path& path, std::vector<std::string> textFileBlacklist, std::vector<std::string> textFileFavorites) {
+	if (geode::utils::string::contains(Utils::toNormalizedString(path), "store_your_disabled_menuloops_here") && geode::utils::string::contains(Utils::toNormalizedString(path), Utils::toNormalizedString(geode::Mod::get()->getConfigDir()))) return;
 	const std::filesystem::path configDir = path.string().empty() ? geode::Mod::get()->getConfigDir() : path;
 	/*
 		if custom songs are enabled search for files in the config dir
