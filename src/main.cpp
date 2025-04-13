@@ -49,7 +49,11 @@ $on_mod(Loaded) {
 	}
 
 	geode::log::info("repopulating vector from on_mod(Loaded)");
-	Utils::populateVector(Utils::getBool("useCustomSongs"));
+	const bool useCustomSongs = Utils::getBool("useCustomSongs");
+	Utils::populateVector(useCustomSongs);
+	const std::filesystem::path additionalFolder = useCustomSongs ? geode::Mod::get()->getSettingValue<std::filesystem::path>("additionalFolder") : "";
+	if (useCustomSongs && !additionalFolder.string().empty() && !geode::utils::string::contains(additionalFolder, geode::Mod::get()->getConfigDir()))
+		Utils::populateVector(useCustomSongs, additionalFolder);
 
 	std::string override = Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride").string();
 	originalOverrideWasEmpty = override.empty();
@@ -111,7 +115,11 @@ $on_mod(Loaded) {
 		if (!Utils::isSupportedFile(overrideString)) {
 			songManager.clearSongs();
 			geode::log::info("repopulating vector from removing override");
-			Utils::populateVector(Utils::getBool("useCustomSongs"));
+			const bool useCustomSongs = Utils::getBool("useCustomSongs");
+			Utils::populateVector(useCustomSongs);
+			const std::filesystem::path additionalFolder = useCustomSongs ? geode::Mod::get()->getSettingValue<std::filesystem::path>("additionalFolder") : "";
+			if (useCustomSongs && !additionalFolder.string().empty() && !geode::utils::string::contains(additionalFolder, geode::Mod::get()->getConfigDir()))
+				Utils::populateVector(useCustomSongs, additionalFolder);
 			if (Utils::isSupportedFile(Mod::get()->getSavedValue<std::string>("lastMenuLoop")) && Utils::getBool("saveSongOnGameClose") && !originalOverrideWasEmpty) {
 				log::info("setting songManager's current song to saved song from settings change");
 				songManager.setCurrentSongToSavedSong();

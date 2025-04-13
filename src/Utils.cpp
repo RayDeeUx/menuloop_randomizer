@@ -242,8 +242,9 @@ void Utils::copyCurrentSongName() {
 	geode::utils::clipboard::write(result);
 }
 
-void Utils::populateVector(const bool customSongs, std::vector<std::string> textFileBlacklist, std::vector<std::string> textFileFavorites) {
-	auto configDir = geode::Mod::get()->getConfigDir();
+void Utils::populateVector(const bool customSongs, const std::filesystem::path path, std::vector<std::string> textFileBlacklist, std::vector<std::string> textFileFavorites) {
+	if (geode::utils::string::contains(path.string(), "store_your_disabled_menuloops_here") && geode::utils::string::contains(path.string(), geode::Mod::get()->getConfigDir())) return;
+	const std::filesystem::path configDir = path.string().empty() ? geode::Mod::get()->getConfigDir() : path;
 	/*
 		if custom songs are enabled search for files in the config dir
 		if not, just use the newgrounds songs
@@ -288,7 +289,7 @@ void Utils::populateVector(const bool customSongs, std::vector<std::string> text
 	if (customSongs) {
 		for (const auto& file : std::filesystem::directory_iterator(configDir)) {
 			if (std::filesystem::is_directory(file) && Utils::getBool("searchDeeper")) {
-				Utils::populateVector(customSongs, textFileBlacklist, textFileFavorites);
+				Utils::populateVector(customSongs, file, textFileBlacklist, textFileFavorites);
 				continue;
 			}
 			if (!std::filesystem::exists(file)) continue;
