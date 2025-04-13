@@ -74,22 +74,13 @@ $on_mod(Loaded) {
 		std::filesystem::create_directory(configDir / R"(store_your_disabled_menuloops_here)");
 	}
 	listenForSettingChanges<bool>("useCustomSongs", [](bool useCustomSongs) {
-		// make sure m_songs is empty, we don't want to make a mess here --elnexreal
-		songManager.clearSongs();
-		songManager.resetHeldSong();
-		songManager.resetPreviousSong();
-
-		/*
-			for every custom song file, push its path to m_songs
-			if they're ng songs also push the path bc we're going to use getPathForSong
-			--elnexreal
-		*/
-		geode::log::info("repopulating vector from setting useCustomSongs change");
-		Utils::refreshTheVector();
-
-		// change the song when you click apply, stoi will not like custom names. --elnexreal
-
-		Utils::setNewSong();
+		Utils::resetSongManagerRefreshVectorSetNewSongBecause("useCustomSongs");
+	});
+	listenForSettingChanges<bool>("searchDeeper", [](bool searchDeeper) {
+		Utils::resetSongManagerRefreshVectorSetNewSongBecause("searchDeeper");
+	});
+	listenForSettingChanges<std::filesystem::path>("additionalFolder", [](std::filesystem::path searchDeeper) {
+		Utils::resetSongManagerRefreshVectorSetNewSongBecause("additionalFolder");
 	});
 	listenForSettingChanges<bool>("playlistMode", [](bool playlistMode) {
 		SongManager& songManager = SongManager::get();

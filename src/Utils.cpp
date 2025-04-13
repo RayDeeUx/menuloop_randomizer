@@ -385,6 +385,27 @@ void Utils::refreshTheVector() {
 		Utils::populateVector(useCustomSongs, additionalFolder);
 }
 
+void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_view reasonUsuallySettingName) {
+	// make sure m_songs is empty, we don't want to make a mess here --elnexreal
+	SongManager& songManager = SongManager::get();
+	songManager.clearSongs();
+	songManager.resetHeldSong();
+	songManager.resetPreviousSong();
+
+	/*
+		for every custom song file, push its path to m_songs
+		if they're ng songs also push the path bc we're going to use getPathForSong
+		--elnexreal
+	*/
+	geode::log::info("repopulating vector from setting {} change", reasonUsuallySettingName);
+	Utils::refreshTheVector();
+
+	// change the song when you click apply, stoi will not like custom names. --elnexreal
+
+	Utils::setNewSong();
+}
+
+
 SongInfoObject* Utils::getSongInfoObject() {
 	if (Utils::getBool("useCustomSongs")) return nullptr;
 	SongManager& songManager = SongManager::get();

@@ -195,7 +195,8 @@
 			"default": {
 				"win": "",
 				"mac": "",
-				"android": ""
+				"android": "",
+				"ios": ""
 			},
 			"filters": [
 				{
