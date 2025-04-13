@@ -377,6 +377,14 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 	}
 }
 
+void Utils::refreshTheVector() {
+	const bool useCustomSongs = Utils::getBool("useCustomSongs");
+	Utils::populateVector(useCustomSongs);
+	const std::filesystem::path& additionalFolder = useCustomSongs ? geode::Mod::get()->getSettingValue<std::filesystem::path>("additionalFolder") : "";
+	if (useCustomSongs && !additionalFolder.string().empty() && !geode::utils::string::contains(Utils::toNormalizedString(additionalFolder), Utils::toNormalizedString(geode::Mod::get()->getConfigDir())))
+		Utils::populateVector(useCustomSongs, additionalFolder);
+}
+
 SongInfoObject* Utils::getSongInfoObject() {
 	if (Utils::getBool("useCustomSongs")) return nullptr;
 	SongManager& songManager = SongManager::get();

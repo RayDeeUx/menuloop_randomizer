@@ -19,6 +19,7 @@ class Utils {
 	static void playlistModePLAndEPL();
 	static void copyCurrentSongName();
 	static void populateVector(const bool customSongs, const std::filesystem::path& path = "", std::vector<std::string> textFileBlacklist = {}, std::vector<std::string> textFileFavorites = {});
+	static void refreshTheVector();
 	static SongInfoObject* getSongInfoObject();
 	static std::string getSongName();
 	static std::string getSongArtist();
