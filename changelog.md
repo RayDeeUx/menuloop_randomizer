@@ -1,11 +1,11 @@
 # Menu Loop Randomizer Changelog
 ## v1.8.2
 - Added experimental support for iOS devices.
-  - <c-ff0000>READ: ***EXPERIMENTAL***.</c> <c-00ffff>Getting this mod to compile for iOS is already enough of a pain to begin with.</c>
+  - <c-ff0000>READ: ***EXPERIMENTAL***.</c> <c-ffff00>Getting this mod to compile for iOS is already enough of a pain to begin with.</c>
 - Added experimental support for searching songs in nested folders (suggested by [RighteousRyan](https://www.youtube.com/channel/UCnz-trf-dF7j8mDVOuoy4Ig)).
-  - <c-ff0000>READ: ***EXPERIMENTAL***.</c> <c-00ffff>This setting may not work as expected for those with non-English folder paths/file names, or those using MLR on mobile devices.</c>
+  - <c-ff0000>READ: ***EXPERIMENTAL***.</c> <c-ffff00>This setting may not work as expected for those with non-English folder paths/file names, or those using MLR on mobile devices.</c>
 - Added experimental support for loading secondary folders (suggested by [RighteousRyan](https://www.youtube.com/channel/UCnz-trf-dF7j8mDVOuoy4Ig)).
-  - <c-ff0000>READ: ***EXPERIMENTAL***.</c> <c-00ffff>This setting may not work as expected for those with non-English folder paths/file names, or those using MLR on mobile devices.</c>
+  - <c-ff0000>READ: ***EXPERIMENTAL***.</c> <c-ffff00>This setting may not work as expected for those with non-English folder paths/file names, or those using MLR on mobile devices.</c>
 ## v1.8.1
 - Attempt to fix a bug where some filenames would be ignored.
   - The guy who reported the issue to me won't respond to my DMs to test if my bugfix worked. Shame on them, I guess.
