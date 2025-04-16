@@ -1,5 +1,6 @@
 #include "SongManager.hpp"
 #include "ui/PlayingCard.hpp"
+#include "ui/SongControlMenu.hpp"
 #include "Utils.hpp"
 #include <random>
 #include <regex>
@@ -403,6 +404,7 @@ void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_vie
 	// change the song when you click apply, stoi will not like custom names. --elnexreal
 
 	Utils::setNewSong();
+	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) return geode::Loader::get()->queueInMainThread([scm] { scm->onRegenButton(nullptr); });
 }
 
 

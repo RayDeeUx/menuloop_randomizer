@@ -10,7 +10,6 @@ protected:
 	cocos2d::extension::CCScale9Sprite*b{};
 	bool setup(std::string const& id) override;
 	void onShuffleButton(CCObject*);
-	void onRegenButton(CCObject*);
 	void onCopyButton(CCObject*);
 	void onBlacklistButton(CCObject*);
 	void onFavoriteButton(CCObject*);
@@ -19,6 +18,7 @@ protected:
 	void onSettingsButton(CCObject*);
 public:
 	static SongControlMenu* create(const std::string& id);
+	void onRegenButton(CCObject*);
 	void updateCurrentLabel();
 	void onExit() override;
 };
