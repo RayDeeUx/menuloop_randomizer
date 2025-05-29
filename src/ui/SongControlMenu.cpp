@@ -17,8 +17,6 @@ bool SongControlMenu::setup(const std::string& id) {
 
 	this->m_title->setPositionY(this->m_title->getPositionY() + 2.f);
 	this->m_title->setPositionX(mainLayer->getContentWidth() / 2.f);
-	background->initWithFile("GJ_square05.png");
-	background->setContentSize(layerSize);
 
 	this->m_songControlsMenu = cocos2d::CCMenu::create();
 
