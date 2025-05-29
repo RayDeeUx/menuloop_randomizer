@@ -58,6 +58,8 @@ bool SongControlMenu::setup(const std::string& id) {
 	this->m_headerLabl->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
 	this->m_headerLabl->setPosition({centerStage, 107.5f});
 
+	SongControlMenu::updateCurrentLabel();
+
 	this->b = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
 	this->b->ignoreAnchorPointForPosition(false);
 	this->b->setPosition({centerStage, 80.f});
@@ -82,8 +84,6 @@ bool SongControlMenu::setup(const std::string& id) {
 	this->m_headerLabl->setID("current-song-header"_spr);
 	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
-
-	SongControlMenu::updateCurrentLabel();
 
 	return true;
 }
