@@ -143,5 +143,6 @@ void SongControlMenu::updateCurrentLabel() {
 	if (!this->m_headerLabl) return;
 	if (songManager.isOverride()) this->m_headerLabl->setString("Current Song (Custom Override):");
 	else if (songManager.isPlaylistMode()) this->m_headerLabl->setString("Current Song (Playlist Mode):");
+	else this->m_headerLabl->setString("Current Song:");
 	this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.0f, .0001f);
 }
