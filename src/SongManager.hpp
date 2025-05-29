@@ -24,7 +24,7 @@ class SongManager {
 	}
 
 	void addSong(const std::string&);
-	void removeSong(const std::string &path);
+	void removeSong(const std::string& path);
 	int getSongsSize() const;
 	void clearSongs();
 	void pickRandomSong();
@@ -32,7 +32,7 @@ class SongManager {
 	void setPlaylistMode();
 	bool isPlaylistMode() const;
 	std::string getCurrentSong();
-	void setCurrentSong(const std::string &);
+	void setCurrentSong(const std::string&);
 	void setCurrentSongToSavedSong();
 	void update(float) const;
 	bool getCalledOnce() const;
@@ -45,7 +45,7 @@ class SongManager {
 	void addToBlacklist(const std::string&);
 	void addToBlacklist();
 	std::vector<std::string> getBlacklist();
-	void addToFavorites(const std::string &song);
+	void addToFavorites(const std::string& song);
 	void addToFavorites();
 	std::vector<std::string> getFavorites();
 	void setOverride(const std::string_view);
