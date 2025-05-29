@@ -8,9 +8,19 @@
 
 class SongManager {
   public:
-	static SongManager &get() {
+	static SongManager& get() {
 		static SongManager instance;
 		return instance;
+	}
+
+	static void updateWrapper(float dt) const {
+		/*
+		if GameManager::get()->m_menuLayer is not included in the conditional statement
+		then music will be played at full blast before being set to user's preferred volume.
+		i don't think anyone wants that.
+		-- raydeeux
+		*/
+		if (GameManager::get()->m_menuLayer) SongManager::get()->update(dt);
 	}
 
 	void addSong(const std::string&);
