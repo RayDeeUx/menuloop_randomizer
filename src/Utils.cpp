@@ -132,7 +132,7 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 
 std::string Utils::composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix) {
 	if (!Utils::getBool("useCustomSongs")) SongManager::get().setCurrentSongDisplayName(middle);
-	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
+	Utils::queueUpdateSCMLabel();
 	return notifString.append(middle).append(suffix);
 }
 
@@ -475,6 +475,10 @@ void Utils::fadeOutCardRemotely(cocos2d::CCNode* card) {
 void Utils::removeCardRemotely(cocos2d::CCNode* card) {
 	if (!card) return;
 	card->removeMeAndCleanup();
+}
+
+void Utils::queueUpdateSCMLabel() {
+	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
 }
 
 void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target) {

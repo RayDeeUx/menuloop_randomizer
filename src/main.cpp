@@ -94,6 +94,7 @@ $on_mod(Loaded) {
 			return PlaylistModeWarning::create(songManager.getGeodify())->show();
 		}
 		GameManager::sharedState()->playMenuMusic();
+		Utils::queueUpdateSCMLabel();
 	});
 	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](std::filesystem::path specificSongOverride) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
@@ -111,6 +112,7 @@ $on_mod(Loaded) {
 		}
 		if (Utils::getBool("playlistMode")) return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 		GameManager::sharedState()->playMenuMusic();
+		Utils::queueUpdateSCMLabel();
 	});
 	listenForSettingChanges<bool>("dangerousBlacklisting", [](bool dangerousBlacklisting) {
 		if (!dangerousBlacklisting) return;
