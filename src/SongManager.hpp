@@ -20,7 +20,7 @@ class SongManager {
 		i don't think anyone wants that.
 		-- raydeeux
 		*/
-		if (GameManager::get()->m_menuLayer) SongManager::get()->update(dt);
+		if (GameManager::get()->m_menuLayer) SongManager::get().update(dt);
 	}
 
 	void addSong(const std::string&);
