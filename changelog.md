@@ -1,4 +1,9 @@
 # Menu Loop Randomizer Changelog
+## v1.8.3
+- Allowed the name of the currently playing song inside the controls menu to update more often.
+- Included Playlist Mode and Override Mode indicators in the controls menu.
+- Refactor some additional code.
+- Removed a controversial function hook.
 ## v1.8.2
 - Added experimental support for iOS devices.
   - <c-ff0000>READ: ***EXPERIMENTAL***.</c> <c-ffff00>Getting this mod to compile for iOS is already enough of a pain to begin with.</c>
