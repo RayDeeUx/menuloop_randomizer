@@ -46,6 +46,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onPreviousButton(CCObject*) { SongControl::previousSong(); }
 	void onControlsButton(CCObject*) {
 		if (Utils::getString("buttonMode") == "Classic") return;
-		SongControlMenu::create(SongManager::get().getCurrentSong())->show();
+		if (CCScene::get()->getChildByType<SongControlMenu>(0)) return;
+		SongControlMenu::create("GJ_square05.png")->show();
 	}
 };

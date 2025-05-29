@@ -5,7 +5,7 @@
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 
-bool SongControlMenu::setup(const std::string& id) {
+bool SongControlMenu::setup(const std::string&) {
 	this->setTitle("Menu Loop Randomizer");
 
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
@@ -48,17 +48,16 @@ bool SongControlMenu::setup(const std::string& id) {
 	this->m_theTimeoutCorner->setContentSize({24.f, 24.f});
 	this->m_theTimeoutCorner->setLayout(layoutTimeout);
 
-	SongControlMenu::updateCurrentLabel();
-
 	this->m_otherLabel = cocos2d::CCLabelBMFont::create("Life Pro Tip: Menu Loop Randomizer will never be designed to be a Spotify replacement, or anything like its distant cousin EditorMusic. Please keep this in mind if you have feedback on MLR. :)", "chatFont.fnt");
 	this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
 	this->m_otherLabel->setPosition({centerStage, 12.5f});
 
-	this->m_headerLabl = cocos2d::CCLabelBMFont::create("Current Song:", "chatFont.fnt");this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+	this->m_headerLabl = cocos2d::CCLabelBMFont::create("Current Song:", "chatFont.fnt");
 	this->m_headerLabl->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
-	this->m_headerLabl->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
 	this->m_headerLabl->setPosition({centerStage, 107.5f});
+
+	SongControlMenu::updateCurrentLabel();
 
 	this->b = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
 	this->b->ignoreAnchorPointForPosition(false);
@@ -132,7 +131,8 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 }
 void SongControlMenu::onSettingsButton(CCObject*) { geode::openSettingsPopup(geode::Mod::get()); }
 void SongControlMenu::updateCurrentLabel() {
-	const std::string& currentSong = SongManager::get().getCurrentSongDisplayName();
+	SongManager& songManager = SongManager::get();
+	const std::string& currentSong = songManager.getCurrentSongDisplayName();
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
 	if (!this->m_smallLabel || !this->m_smallLabel->getParent() || this->m_smallLabel->getParent() != this->m_mainLayer) {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
@@ -140,4 +140,9 @@ void SongControlMenu::updateCurrentLabel() {
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_smallLabel->limitLabelWidth(layerSize.width * 0.95f * .9f, 1.0f, .0001f);
 	this->m_smallLabel->setPosition({layerSize.width / 2.f, 80.f});
+	if (!this->m_headerLabl) return;
+	if (songManager.isOverride()) this->m_headerLabl->setString("Current Song (Custom Override):");
+	else if (songManager.isPlaylistMode()) this->m_headerLabl->setString("Current Song (Playlist Mode):");
+	else this->m_headerLabl->setString("Current Song:");
+	this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.0f, .0001f);
 }

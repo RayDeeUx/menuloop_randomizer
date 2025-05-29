@@ -5,7 +5,7 @@ using namespace geode::prelude;
 
 class $modify(MenuLoopCCDHook, CCDirector) {
 	void willSwitchToScene(cocos2d::CCScene* scene) {
-		CCDirector* director = get();
+		CCDirector* director = CCDirector::get();
 		CCScene* previousScene = director->getRunningScene();
 
 		director->willSwitchToScene(scene);
@@ -15,7 +15,7 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 	}
 
 	bool pushScene(cocos2d::CCScene* scene) {
-		CCDirector* director = get();
+		CCDirector* director = CCDirector::get();
 		CCScene* previousScene = director->getRunningScene();
 
 		bool result = director->pushScene(scene);
@@ -27,7 +27,7 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 	}
 
 	bool replaceScene(cocos2d::CCScene* scene) {
-		CCDirector* director = get();
+		CCDirector* director = CCDirector::get();
 		CCScene* previousScene = director->getRunningScene();
 
 		bool result = director->replaceScene(scene);
@@ -39,7 +39,7 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 	}
 
 	void popSceneWithTransition(float p0, cocos2d::PopTransition p1) {
-		CCDirector* director = get();
+		CCDirector* director = CCDirector::get();
 		CCScene* previousScene = director->getRunningScene();
 
 		director->popSceneWithTransition(p0, p1);

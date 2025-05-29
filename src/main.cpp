@@ -73,6 +73,7 @@ $on_mod(Loaded) {
 	if (!std::filesystem::exists(configDir / R"(store_your_disabled_menuloops_here)")) {
 		std::filesystem::create_directory(configDir / R"(store_your_disabled_menuloops_here)");
 	}
+	GameManager::get()->schedule(reinterpret_cast<SEL_SCHEDULE>(&SongManager::updateWrapper));
 	listenForSettingChanges<bool>("useCustomSongs", [](bool useCustomSongs) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("useCustomSongs");
 	});
@@ -88,6 +89,7 @@ $on_mod(Loaded) {
 		if (songManager.isOriginalMenuLoop()) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		Utils::queueUpdateSCMLabel();
 		if (playlistMode) {
 			FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
 			return PlaylistModeWarning::create(songManager.getGeodify())->show();
@@ -108,6 +110,7 @@ $on_mod(Loaded) {
 				songManager.setCurrentSongToSavedSong();
 			} else Utils::setNewSong();
 		}
+		geode::Loader::get()->queueInMainThread([] { Utils::queueUpdateSCMLabel(); });
 		if (Utils::getBool("playlistMode")) return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 		GameManager::sharedState()->playMenuMusic();
 	});

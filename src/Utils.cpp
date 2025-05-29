@@ -1,7 +1,7 @@
+#include "Utils.hpp"
 #include "SongManager.hpp"
 #include "ui/PlayingCard.hpp"
 #include "ui/SongControlMenu.hpp"
-#include "Utils.hpp"
 #include <random>
 #include <regex>
 #include <filesystem>
@@ -44,18 +44,17 @@ cocos2d::CCNode* Utils::findCard() {
 }
 
 cocos2d::CCNode* Utils::findCardRemotely() {
-	if (const auto gm = GameManager::get()) {
-		if (const auto menuLayer = gm->m_menuLayer) {
-			if (const auto card = menuLayer->getChildByIDRecursive("now-playing"_spr)) {
-				return card;
-			}
-		}
-	}
-	return nullptr;
+	GameManager* gm = GameManager::get();
+	if (!gm) return nullptr;
+	MenuLayer* menuLayer = gm->m_menuLayer;
+	if (!menuLayer) return nullptr;
+	cocos2d::CCNode* card = menuLayer->getChildByIDRecursive("now-playing"_spr);
+	if (!card) return nullptr;
+	return card;
 }
 
 void Utils::removeCard() {
-	if (const auto card = Utils::findCard()) card->removeMeAndCleanup();
+	if (cocos2d::CCNode* card = Utils::findCard()) card->removeMeAndCleanup();
 }
 
 void Utils::setNewSong() {
@@ -132,6 +131,8 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 }
 
 std::string Utils::composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix) {
+	if (!Utils::getBool("useCustomSongs")) SongManager::get().setCurrentSongDisplayName(middle);
+	Utils::queueUpdateSCMLabel();
 	return notifString.append(middle).append(suffix);
 }
 
@@ -146,7 +147,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 
 	std::string suffix = "";
 	if (songManager.isOverride())
-		suffix = " (MLR OVERRIDE)";
+		suffix = " (CUSTOM OVERRIDE)";
 
 	if (songManager.isPreviousSong())
 		suffix = " (PREVIOUS SONG)";
@@ -155,11 +156,8 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 		return Utils::newNotification(composedNotifString(notifString, songFileName, suffix), true);
 
 	// in case that the current file selected is the original menuloop, don't gather any info
-	if (songManager.isOriginalMenuLoop()) {
-		const std::string& robtop = "Original Menu Loop by RobTop";
-		songManager.setCurrentSongDisplayName(robtop);
-		return Utils::newNotification(composedNotifString(notifString, robtop, suffix), true);
-	}
+	if (songManager.isOriginalMenuLoop())
+		return Utils::newNotification(composedNotifString(notifString, "Original Menu Loop by RobTop", suffix), true);
 
 	geode::log::info("attempting to play {}", songFileName);
 	// if it's not menuLoop.mp3, then get info
@@ -167,18 +165,14 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 
 	if (dotPos == std::string::npos) {
 		geode::log::error("{} was not a valid file name...? [NG/Music Library]", songFileName);
-		const std::string& unknown = "Unknown";
-		songManager.setCurrentSongDisplayName(unknown);
-		return Utils::newNotification(composedNotifString(notifString, unknown, suffix), true);
+		return Utils::newNotification(composedNotifString(notifString, "Unknown", suffix), true);
 	}
 
-	std::string songFileNameWithoutExtension = songFileName.substr(0, dotPos);
-
+	const std::string& songFileNameWithoutExtension = songFileName.substr(0, dotPos);
 	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameWithoutExtension);
 
 	if (songFileNameAsID.isErr()) {
 		geode::log::error("{} had an invalid Song ID! [NG/Music Library]", songFileNameWithoutExtension);
-		songManager.setCurrentSongDisplayName(songFileNameWithoutExtension);
 		return Utils::newNotification(composedNotifString(notifString, fmt::format("Unknown ({})", songFileNameWithoutExtension), suffix), true);
 	}
 
@@ -186,11 +180,8 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 	if (SongInfoObject* songInfo = MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrap())) {
 		// default: "Song Name, Artist, Song ID"
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
-		const std::string& resultString = Utils::getFormattedNGMLSongName(songInfo);
-		songManager.setCurrentSongDisplayName(resultString);
-		return Utils::newNotification(composedNotifString(notifString, resultString, suffix), true);
+		return Utils::newNotification(composedNotifString(notifString, Utils::getFormattedNGMLSongName(songInfo), suffix), true);
 	}
-	songManager.setCurrentSongDisplayName(songFileName);
 	return Utils::newNotification(composedNotifString(notifString, songFileName, suffix), true);
 }
 
@@ -484,6 +475,10 @@ void Utils::fadeOutCardRemotely(cocos2d::CCNode* card) {
 void Utils::removeCardRemotely(cocos2d::CCNode* card) {
 	if (!card) return;
 	card->removeMeAndCleanup();
+}
+
+void Utils::queueUpdateSCMLabel() {
+	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
 }
 
 void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target) {
