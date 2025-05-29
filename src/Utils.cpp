@@ -146,7 +146,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 
 	std::string suffix = "";
 	if (songManager.isOverride())
-		suffix = " (MLR OVERRIDE)";
+		suffix = " (CUSTOM OVERRIDE)";
 
 	if (songManager.isPreviousSong())
 		suffix = " (PREVIOUS SONG)";
