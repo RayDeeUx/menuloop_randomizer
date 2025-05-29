@@ -73,7 +73,7 @@ $on_mod(Loaded) {
 	if (!std::filesystem::exists(configDir / R"(store_your_disabled_menuloops_here)")) {
 		std::filesystem::create_directory(configDir / R"(store_your_disabled_menuloops_here)");
 	}
-	GameManager::get()->schedule(schedule_selector(SongManager::updateWrapper));
+	GameManager::get()->schedule(reinterpret_cast<SEL_ScheduleHandler>(&SongManager::updateWrapper));
 	listenForSettingChanges<bool>("useCustomSongs", [](bool useCustomSongs) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("useCustomSongs");
 	});
