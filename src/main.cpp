@@ -89,12 +89,12 @@ $on_mod(Loaded) {
 		if (songManager.isOriginalMenuLoop()) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		Utils::queueUpdateSCMLabel();
 		if (playlistMode) {
 			FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
 			return PlaylistModeWarning::create(songManager.getGeodify())->show();
 		}
 		GameManager::sharedState()->playMenuMusic();
-		Utils::queueUpdateSCMLabel();
 	});
 	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](std::filesystem::path specificSongOverride) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
