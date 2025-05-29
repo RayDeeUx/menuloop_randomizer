@@ -110,9 +110,9 @@ $on_mod(Loaded) {
 				songManager.setCurrentSongToSavedSong();
 			} else Utils::setNewSong();
 		}
+		Utils::queueUpdateSCMLabel();
 		if (Utils::getBool("playlistMode")) return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 		GameManager::sharedState()->playMenuMusic();
-		Utils::queueUpdateSCMLabel();
 	});
 	listenForSettingChanges<bool>("dangerousBlacklisting", [](bool dangerousBlacklisting) {
 		if (!dangerousBlacklisting) return;
