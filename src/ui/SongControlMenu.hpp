@@ -17,7 +17,7 @@ protected:
 	void onPreviousButton(CCObject*);
 	void onSettingsButton(CCObject*);
 public:
-	static SongControlMenu* create(const std::string& id);
+	static SongControlMenu* create(const std::string&);
 	void onRegenButton(CCObject*);
 	void updateCurrentLabel();
 	void onExit() override;

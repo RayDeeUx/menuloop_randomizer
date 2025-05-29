@@ -5,7 +5,7 @@
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 
-bool SongControlMenu::setup(const std::string& id) {
+bool SongControlMenu::setup(const std::string&) {
 	this->setTitle("Menu Loop Randomizer");
 
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
@@ -17,6 +17,8 @@ bool SongControlMenu::setup(const std::string& id) {
 
 	this->m_title->setPositionY(this->m_title->getPositionY() + 2.f);
 	this->m_title->setPositionX(mainLayer->getContentWidth() / 2.f);
+	background->initWithFile("GJ_square05.png");
+	background->setContentSize(layerSize);
 
 	this->m_songControlsMenu = cocos2d::CCMenu::create();
 
