@@ -30,6 +30,7 @@ class SongManager {
 	void pickRandomSong();
 	bool isOriginalMenuLoop() const;
 	void setPlaylistMode();
+	bool isPlaylistMode() const;
 	std::string getCurrentSong();
 	void setCurrentSong(const std::string &);
 	void setCurrentSongToSavedSong();

@@ -48,14 +48,12 @@ bool SongControlMenu::setup(const std::string& id) {
 	this->m_theTimeoutCorner->setContentSize({24.f, 24.f});
 	this->m_theTimeoutCorner->setLayout(layoutTimeout);
 
-	SongControlMenu::updateCurrentLabel();
-
 	this->m_otherLabel = cocos2d::CCLabelBMFont::create("Life Pro Tip: Menu Loop Randomizer will never be designed to be a Spotify replacement, or anything like its distant cousin EditorMusic. Please keep this in mind if you have feedback on MLR. :)", "chatFont.fnt");
 	this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
 	this->m_otherLabel->setPosition({centerStage, 12.5f});
 
-	this->m_headerLabl = cocos2d::CCLabelBMFont::create("Current Song:", "chatFont.fnt");this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+	this->m_headerLabl = cocos2d::CCLabelBMFont::create("Current Song:", "chatFont.fnt");
 	this->m_headerLabl->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_headerLabl->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
 	this->m_headerLabl->setPosition({centerStage, 107.5f});
@@ -84,6 +82,8 @@ bool SongControlMenu::setup(const std::string& id) {
 	this->m_headerLabl->setID("current-song-header"_spr);
 	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
+
+	SongControlMenu::updateCurrentLabel();
 
 	return true;
 }
@@ -140,4 +140,5 @@ void SongControlMenu::updateCurrentLabel() {
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_smallLabel->limitLabelWidth(layerSize.width * 0.95f * .9f, 1.0f, .0001f);
 	this->m_smallLabel->setPosition({layerSize.width / 2.f, 80.f});
+	if (SongManager::get().isPlaylistMode() && this->m_headerLabl) this->m_headerLabl->setString("Current Song (Playlist Mode):");
 }

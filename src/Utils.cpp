@@ -191,6 +191,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 		return Utils::newNotification(composedNotifString(notifString, resultString, suffix), true);
 	}
 	songManager.setCurrentSongDisplayName(songFileName);
+	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) return geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
 	return Utils::newNotification(composedNotifString(notifString, songFileName, suffix), true);
 }
 

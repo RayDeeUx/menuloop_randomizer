@@ -65,6 +65,10 @@ void SongManager::setPlaylistMode() {
 	m_playlistMode = Utils::getBool("playlistMode");
 }
 
+bool SongManager::isPlaylistMode() const {
+	return m_playlistMode;
+}
+
 void SongManager::update(float dt) const {
 	// split for readability
 	if (VANILLA_GD_MENU_LOOP_DISABLED || !m_playlistMode) return;
