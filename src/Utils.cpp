@@ -188,10 +188,11 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
 		const std::string& resultString = Utils::getFormattedNGMLSongName(songInfo);
 		songManager.setCurrentSongDisplayName(resultString);
+		if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
 		return Utils::newNotification(composedNotifString(notifString, resultString, suffix), true);
 	}
 	songManager.setCurrentSongDisplayName(songFileName);
-	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) return geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
+	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
 	return Utils::newNotification(composedNotifString(notifString, songFileName, suffix), true);
 }
 
