@@ -1,4 +1,7 @@
 # Menu Loop Randomizer Changelog
+## v1.8.4
+- Added `Advanced Logging` toggle.
+- Added an easter egg.
 ## v1.8.3
 - Allowed the name of the currently playing song inside the controls menu to update more often.
 - Included Playlist Mode and Override Mode indicators in the controls menu.

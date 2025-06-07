@@ -11,7 +11,7 @@ const static std::regex terribleLoopRegex = std::regex(R"(^[\w]+\.mp3$)");
 class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void playMusic(gd::string path, bool shouldLoop, float fadeInTime, int channel) {
 		SongManager& songManager = SongManager::get();
-		const bool isLavaChicken = geode::utils::string::contains(static_cast<std::string>(path), "steves_lava_chicken");
+		const bool isLavaChicken = geode::utils::string::contains(static_cast<std::string>(path), "sawblade.steves_lava_chicken");
 		songManager.setLavaChicken(isLavaChicken);
 		if (isLavaChicken) {
 			songManager.setCurrentSong(static_cast<std::string>(path));
