@@ -12,13 +12,22 @@ const static std::regex terribleLoopRegex = std::regex(R"(^[\w]+\.mp3$)");
 
 class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void playMusic(gd::string path, bool shouldLoop, float fadeInTime, int channel) {
-		if (!Utils::getBool("playlistMode"))
+		SongManager& songManager = SongManager.get();
+		const bool isLavaChicken = geode::utils::string::contains(static_cast<std::string>(path), "steves_lava_chicken");
+		songManager.setLavaChicken(isLavaChicken);
+		if (isLavaChicken) {
+			songManager.setCurrentSong(static_cast<std::string>(path));
+			Utils::newCardAndDisplayNameFromCurrentSong();
+		}
+		if (!Utils::getBool("playlistMode") || isLavaChicken)
 			return FMODAudioEngine::get()->playMusic(path, shouldLoop, fadeInTime, channel);
 		log::info("playlist mode enabled.\n=== PLAYLIST MODE DEBUG INFO ===\npath: {}\nshouldLoop: {}\nfadeInTime: {}\nchannel: {}", path, shouldLoop, fadeInTime, channel);
-		for (CCScene* scene = CCScene::get(); CCObject* object : CCArrayExt<CCObject*>(scene->getChildren())) {
-			const auto node = typeinfo_cast<CCNode*>(object);
-			if (!node) continue;
-			log::info("there is a CCNode with ID: \"{}\"", node->getID());
+		if (Utils::getBool("advancedLogs")) {
+			for (CCScene* scene = CCScene::get(); CCObject* object : CCArrayExt<CCObject*>(scene->getChildren())) {
+				const auto node = typeinfo_cast<CCNode*>(object);
+				if (!node) continue;
+				log::info("there is a CCNode with ID: \"{}\"", node->getID());
+			}
 		}
 		bool desiredShouldLoop = shouldLoop;
 		std::string gdStringSucks = path;
@@ -46,7 +55,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 			if (channel == 0)
 				return log::info("attempted to loop menu music on channel zero! see if on windows or not. aborting early.");
 			#ifdef GEODE_IS_WINDOWS
-			if (!SongManager::get().getCalledOnce()) SongManager::get().setCalledOnce(true);
+			if (!songManager.getCalledOnce()) songManager.setCalledOnce(true);
 			#endif
 			return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, 0.0f, channel);
 		}

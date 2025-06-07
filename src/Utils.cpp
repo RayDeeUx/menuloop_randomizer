@@ -139,18 +139,17 @@ std::string Utils::composedNotifString(std::string notifString, const std::strin
 void Utils::newCardAndDisplayNameFromCurrentSong() {
 	SongManager& songManager = SongManager::get();
 	const std::string& songFileName = Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
-	songManager.setCurrentSongDisplayName(songFileName);
+	if (!songManager.getLavaChicken()) songManager.setCurrentSongDisplayName(songFileName);
+	else songManager.setCurrentSongDisplayName(fmt::format("{} (Please touch grass.)", songFileName));
 
 	std::string notifString = "";
 	if (const std::string& prefix = geode::Mod::get()->getSettingValue<std::string>("customPrefix"); prefix != "[Empty]")
 		notifString = fmt::format("{}: ", prefix);
 
 	std::string suffix = "";
-	if (songManager.isOverride())
-		suffix = " (CUSTOM OVERRIDE)";
-
-	if (songManager.isPreviousSong())
-		suffix = " (PREVIOUS SONG)";
+	if (songManager.getLavaChicken()) suffix = " (PLEASE TOUCH GRASS)";
+	else if (songManager.isOverride()) suffix = " (CUSTOM OVERRIDE)";
+	else if (songManager.isPreviousSong()) suffix = " (PREVIOUS SONG)";
 
 	if (Utils::getBool("useCustomSongs"))
 		return Utils::newNotification(composedNotifString(notifString, songFileName, suffix), true);

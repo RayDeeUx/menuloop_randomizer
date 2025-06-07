@@ -103,6 +103,14 @@ bool SongManager::getGeodify() const {
 	return m_geodify;
 }
 
+void SongManager::setLavaChicken(const bool value) {
+	m_isLavaChicken = value;
+}
+
+bool SongManager::getLavaChicken() const {
+	return m_isLavaChicken;
+}
+
 void SongManager::setHeldSong(const std::string_view value) {
 	if (!getOverrideSong().empty()) return;
 	m_heldSong = value;
