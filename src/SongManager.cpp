@@ -29,6 +29,7 @@ void SongManager::pickRandomSong() {
 		m_isMenuLoop = false;
 		if (m_songs.size() != 1) {
 			auto randomIndex = Utils::randomIndex(m_songs.size());
+			geode::log::info("entering a while loop maybe");
 			while (m_songs[randomIndex] == m_currentSong && std::ranges::find(m_favorites, m_songs[randomIndex]) == m_favorites.end()) {
 				geode::log::info("avoiding shuffling into the same song at index {} because it is NOT a favorite song", randomIndex);
 				randomIndex = Utils::randomIndex(m_songs.size());
