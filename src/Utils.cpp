@@ -64,7 +64,10 @@ void Utils::setNewSong() {
 	const std::string& songToBeStored = songManager.getCurrentSong();
 	if (!songToBeStored.empty()) songManager.setPreviousSong(songToBeStored);
 	else geode::log::info("no current song found, probably");
+	geode::log::info("pickRandomSong starting");
 	songManager.pickRandomSong();
+	geode::log::info("pickRandomSong complete");
+	geode::log::info("nudging the game to play menu music");
 	if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
 	GameManager::sharedState()->playMenuMusic();
 }
