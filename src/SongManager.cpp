@@ -3,6 +3,10 @@
 
 SongManager::SongManager() {}
 
+std::vector<std::string> SongManager::getSongs() {
+	return m_songs;
+}
+
 void SongManager::addSong(const std::string& path) {
 	m_songs.push_back(path);
 }

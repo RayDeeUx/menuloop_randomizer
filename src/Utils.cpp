@@ -504,8 +504,25 @@ void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler fu
 	menu->updateLayout();
 }
 
+bool Utils::notFavoritesNorBlacklist(std::filesystem::path filePath) {
+	const std::string& fileString = Utils::toNormalizedString(filePath);
+	return !geode::utils::string::endsWith(fileString, "favorites.txt") && !geode::utils::string::endsWith(fileString, "blacklist.txt");
+}
+
 void Utils::writeToFile(const std::string& toWriteToFile, std::filesystem::path fileForWriting) {
-	if (!std::filesystem::exists(fileForWriting)) return geode::log::info("error finding {}!", fileForWriting);
+	if (!std::filesystem::exists(fileForWriting) && Utils::notFavoritesNorBlacklist(fileForWriting)) {
+		std::string content = R"(# Welcome a Menu Loop Randomizer playlist file!
+# Each line that doesn't start with a "#" will be treated as a song file for the playlist.
+# All lines that start with a "#" are ignored. This means you can remove a song from the playlist by adding "#" next to it.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
+# --RayDeeUx)";
+		auto result = geode::utils::file::writeString(toWriteToFile, content);
+		if (result.isErr()) return geode::log::error("Error writing to {}", fileForWriting);
+	} else if (!std::filesystem::exists(fileForWriting)) return geode::log::info("error finding {}!", fileForWriting);
 	std::ofstream fileOutput;
 	fileOutput.open(fileForWriting, std::ios_base::app);
 	fileOutput << std::endl << toWriteToFile;

@@ -23,6 +23,7 @@ class SongManager {
 		if (GameManager::get()->m_menuLayer) SongManager::get().update(dt);
 	}
 
+	std::vector<std::string> getSongs();
 	void addSong(const std::string&);
 	void removeSong(const std::string& path);
 	int getSongsSize() const;

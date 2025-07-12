@@ -1,5 +1,6 @@
 #include "SongControlMenu.hpp"
 #include "../SongControl.hpp"
+#include "SongListLayer.hpp"
 #include "../Utils.hpp"
 #include <Geode/ui/GeodeUI.hpp>
 
@@ -129,7 +130,13 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 	SongControl::previousSong();
 	SongControlMenu::updateCurrentLabel();
 }
-void SongControlMenu::onSettingsButton(CCObject*) { geode::openSettingsPopup(geode::Mod::get()); }
+void SongControlMenu::onSettingsButton(CCObject*) {
+	if (cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed()) {
+		this->onClose(nullptr);
+		return SongListLayer::create()->showLayer(false);
+	}
+	geode::openSettingsPopup(geode::Mod::get());
+}
 void SongControlMenu::updateCurrentLabel() {
 	SongManager& songManager = SongManager::get();
 	const std::string& currentSong = songManager.getCurrentSongDisplayName();
