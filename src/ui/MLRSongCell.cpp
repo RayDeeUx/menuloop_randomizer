@@ -24,6 +24,8 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	songNameLabel->setAnchorPoint({.0f, .5f});
 	songNameLabel->setPosition({15, getContentHeight() / 2.f + 1.f});
 	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);
+	if (songData.type == SongType::Favorited) songNameLabel->setColor({255, 255, 0});
+	else if (songData.type == SongType::Blacklisted) songNameLabel->setColor({128, 128, 128});
 
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127});
 	divider->setContentSize({356.f, 0.5f});

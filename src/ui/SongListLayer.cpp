@@ -5,7 +5,7 @@
 
 SongListLayer* SongListLayer::create() {
 	auto* ret = new SongListLayer();
-	if (ret->init("Menu Loop Randomizer")) {
+	if (ret->init("Menu Loop Randomizer - Your Songs")) {
 		ret->autorelease();
 		return ret;
 	}
