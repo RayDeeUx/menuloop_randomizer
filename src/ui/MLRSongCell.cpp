@@ -38,7 +38,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 			->setGap(10.f)
 			->setAutoScale(true)
 			->setAxisReverse(true)
-			->setDefaultScaleLimits(.0001f, 1.f)
+			->setDefaultScaleLimits(.0001f, .75f)
 	);
 
 	CCMenuItemSpriteExtra* infoButton = CCMenuItemSpriteExtra::create(
