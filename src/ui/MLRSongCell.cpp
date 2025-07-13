@@ -19,19 +19,20 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 
 	this->setContentSize({356.f, 36.f});
 
-	cocos2d::CCLabelBMFont* songNameLabel = cocos2d::CCLabelBMFont::create(songData.fileName.c_str(), "bigFont.fnt");
+	const std::string& desiredFileName = geode::utils::string::replace(songData.fileName, songData.fileExtension, "");
+	cocos2d::CCLabelBMFont* songNameLabel = cocos2d::CCLabelBMFont::create(desiredFileName.c_str(), "bigFont.fnt");
 	songNameLabel->setAnchorPoint({.0f, .5f});
 	songNameLabel->setPosition({15, getContentHeight() / 2.f + 1.f});
-	songNameLabel->limitLabelWidth(356.f * .65f, .75f, .001f);
+	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);
 
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127});
 	divider->setContentSize({356.f, 0.5f});
 	divider->setAnchorPoint({0.f, 0.f});
 
 	cocos2d::CCMenu* menu = cocos2d::CCMenu::create();
-	menu->setContentSize({60.f, 30.f});
+	menu->setContentSize({30.f, 30.f});
 	menu->setAnchorPoint({.5f, .5f});
-	menu->setPosition({275.f, this->getContentHeight() / 2.f});
+	menu->setPosition({330.f, this->getContentHeight() / 2.f});
 	menu->ignoreAnchorPointForPosition(false);
 	menu->setLayout(
 		geode::RowLayout::create()

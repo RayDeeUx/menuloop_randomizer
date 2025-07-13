@@ -8,6 +8,7 @@ enum class SongType {
 
 struct SongData {
 	std::string actualFilePath;
+	std::string fileExtension;
 	std::string fileName;
 	SongType type;
 };

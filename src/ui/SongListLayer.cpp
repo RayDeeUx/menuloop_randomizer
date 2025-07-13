@@ -26,7 +26,7 @@ void SongListLayer::customSetup() {
 		"Menu Loop Randomizer",
 		"<cy>Q: I can't blacklist/favorite songs from here?!</c>\n"
 		"A: You should at least <c_>***listen***</c> to a song before making these decisions. "
-		"Also, there wasn't enough room to fit those buttons into each row.\n\n"
+		"Also, there wasn't enough room\nto fit those buttons into each row.\n\n"
 		"<cy>Q: Why did the MLR control panel just close?!</c>\n"
 		"A: Touch priority and Z ordering issues.\n<cy>(In other words, bugs not worth fixing.)</c>",
 		1.f
@@ -58,6 +58,7 @@ void SongListLayer::customSetup() {
 		std::filesystem::path songFilePath = song;
 		SongData songData = {
 			Utils::toNormalizedString(songFilePath),
+			Utils::toNormalizedString(songFilePath.extension()),
 			Utils::toNormalizedString(songFilePath.filename()), SongType::Regular
 		};
 		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songData.type = SongType::Blacklisted;
