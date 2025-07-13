@@ -14,6 +14,27 @@ SongListLayer* SongListLayer::create() {
 }
 
 void SongListLayer::customSetup() {
+	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
+	infoMenu->setLayout(
+		geode::RowLayout::create()
+			->setAutoScale(false)
+			->setAxis(geode::Axis::Row)
+			->setGap(.0f)
+	);
+	infoMenu->setContentSize({24.f, 23.f});
+	InfoAlertButton* infoBtn = InfoAlertButton::create(
+		"Menu Loop Randomizer",
+		"<cy>Q: I can't blacklist/favorite songs from here?!</c>\n"
+		"A: You should at least <c_>***listen***</c> to a song before making these decisions. "
+		"Also, there wasn't enough room to fit those buttons into each row.\n\n"
+		"<cy>Q: Why did the MLR control panel just close?!\n"
+		"A: Touch priority and Z ordering issues. <cy>(In other words, bugs not worth fixing.)</c>",
+		1.f
+	);
+	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
+	infoMenu->setPosition({437.f, 282.f});
+	this->m_mainLayer->addChild(infoMenu);
+
 	geode::ScrollLayer* scrollLayer = geode::ScrollLayer::create({356, 220});
 	scrollLayer->m_contentLayer->setLayout(
 		geode::ColumnLayout::create()
