@@ -56,7 +56,10 @@ void SongListLayer::customSetup() {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
 
 		std::filesystem::path songFilePath = song;
-		SongData songData = { Utils::toNormalizedString(songFilePath.filename()), SongType::Regular };
+		SongData songData = {
+			Utils::toNormalizedString(songFilePath),
+			Utils::toNormalizedString(songFilePath.filename()), SongType::Regular
+		};
 		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songData.type = SongType::Blacklisted;
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songData.type = SongType::Favorited;
 		alreadyAdded.push_back(song);
