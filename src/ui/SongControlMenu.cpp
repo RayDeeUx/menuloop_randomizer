@@ -50,7 +50,7 @@ bool SongControlMenu::setup(const std::string&) {
 	this->m_theTimeoutCorner->setContentSize({24.f, 24.f});
 	this->m_theTimeoutCorner->setLayout(layoutTimeout);
 
-	this->m_otherLabel = cocos2d::CCLabelBMFont::create("Life Pro Tip: Menu Loop Randomizer will never be designed to be a Spotify replacement, or anything like its distant cousin EditorMusic. Please keep this in mind if you have feedback on MLR. :)", "chatFont.fnt");
+	this->m_otherLabel = cocos2d::CCLabelBMFont::create("Hey all! Menu Loop Randomizer will never be designed to resembele Spotify, or its distant cousin EditorMusic. Please keep this in mind. :)", "chatFont.fnt");
 	this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
 	this->m_otherLabel->setPosition({centerStage, 12.5f});
