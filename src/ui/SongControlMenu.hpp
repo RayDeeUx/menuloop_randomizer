@@ -15,6 +15,7 @@ protected:
 	void onFavoriteButton(CCObject*);
 	void onHoldSongButton(CCObject*);
 	void onPreviousButton(CCObject*);
+	void onPlaylistButton(CCObject*);
 	void onSettingsButton(CCObject*);
 public:
 	static SongControlMenu* create(const std::string&);

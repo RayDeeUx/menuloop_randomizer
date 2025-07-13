@@ -30,6 +30,7 @@ bool SongControlMenu::setup(const std::string&) {
 	Utils::addButton("favorite", menu_selector(SongControlMenu::onFavoriteButton), REST_OF_THE_OWL);
 	Utils::addButton("hold", menu_selector(SongControlMenu::onHoldSongButton), REST_OF_THE_OWL);
 	Utils::addButton("prev", menu_selector(SongControlMenu::onPreviousButton), REST_OF_THE_OWL);
+	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), REST_OF_THE_OWL);
 
 	geode::AxisLayout* layout = geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f);
 
@@ -130,11 +131,11 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 	SongControl::previousSong();
 	SongControlMenu::updateCurrentLabel();
 }
+void SongControlMenu::onPlaylistButton(CCObject*) {
+	this->onClose(nullptr);
+	SongListLayer::create()->showLayer(false);
+}
 void SongControlMenu::onSettingsButton(CCObject*) {
-	if (cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed()) {
-		this->onClose(nullptr);
-		return SongListLayer::create()->showLayer(false);
-	}
 	geode::openSettingsPopup(geode::Mod::get());
 }
 void SongControlMenu::updateCurrentLabel() {
