@@ -33,6 +33,7 @@ class Utils {
 	static void queueUpdateSCMLabel();
 	static void addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target);
 	static bool notFavoritesNorBlacklist(std::filesystem::path fileForWriting);
+	static std::string getPlatform();
 	static std::string generatePlatformWarning();
 	static void writeToFile(const std::string& toWriteToFile, std::filesystem::path fileForWriting);
 };

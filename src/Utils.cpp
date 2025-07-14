@@ -515,22 +515,28 @@ bool Utils::notFavoritesNorBlacklist(std::filesystem::path filePath) {
 	return !geode::utils::string::endsWith(fileString, "favorites.txt") && !geode::utils::string::endsWith(fileString, "blacklist.txt");
 }
 
-std::string Utils::generatePlatformWarning() {
-	std::string platform = "[AN UNKNOWN PLATFORM]";
+std::string Utils::getPlatform() {
 	#ifdef GEODE_IS_IOS
-	platform = "iOS";
+	return "iOS";
 	#elif defined(GEODE_IS_ANDROID32)
-	platform = "Android (32-bit)";
+	return "Android (32-bit)";
 	#elif defined(GEODE_IS_ANDROID64)
-	platform = "Android (64-bit)";
+	return "Android (64-bit)";
 	#elif defined(GEODE_IS_WINDOWS)
-	platform = "Windows (hopefully 64-bit)";
+	return "Windows (hopefully 64-bit)";
 	#elif defined(GEODE_IS_ARM_MAC)
-	platform = "macOS (Apple Silicon/ARM)";
+	return "macOS (Apple Silicon/ARM)";
 	#elif defined(GEODE_IS_INTEL_MAC)
-	platform = "macOS (Intel)";
+	return "macOS (Intel)";
+	#else
+	return "[AN UNKNOWN PLATFORM]";
 	#endif
-	return fmt::format("THIS PLAYLIST FILE WAS CREATED ON {}. ONLY SHARE THIS PLAYLIST FILE TO OTHER USERS WHO ALSO USE MENU LOOP RANDOMIZER ON {}.", platform, platform);
+}
+
+
+std::string Utils::generatePlatformWarning() {
+	const std::string& platform = Utils::getPlatform();
+	return fmt::format("THIS PLAYLIST FILE WAS CREATED ON {}. ONLY SHARE THIS FILE WITH OTHER MLR USERS ON {}.", platform, platform);
 }
 
 void Utils::writeToFile(const std::string& toWriteToFile, std::filesystem::path fileForWriting) {
@@ -545,25 +551,25 @@ void Utils::writeToFile(const std::string& toWriteToFile, std::filesystem::path 
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # {}
-# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
 # {}
-# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
 # {}
-# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
 # {}
-# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
 # {}
-# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
 # {}
-# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
 # {}
-# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
 # {}
-# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
 # {}
-# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
 # {}
-# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
 # --RayDeeUx)",
 platformWarning, platformWarning,
 platformWarning, platformWarning,
