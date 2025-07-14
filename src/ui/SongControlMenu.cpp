@@ -135,11 +135,12 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onPlaylistButton(CCObject*) {
-	this->onClose(nullptr);
+	SongControlMenu::onClose(nullptr);
 	SongListLayer::create()->showLayer(true);
 }
 void SongControlMenu::onAddToPlylstBtn(CCObject*) {
 	SongControl::addSongToPlaylist(SongManager::get().getCurrentSong());
+	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onSettingsButton(CCObject*) {
 	geode::openSettingsPopup(geode::Mod::get());

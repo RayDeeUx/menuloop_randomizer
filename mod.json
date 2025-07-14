@@ -33,9 +33,15 @@
 			"type": "bool",
 			"default": false
 		},
+		"loadPlaylistFile": {
+			"name": "Load Playlist File Instead",
+			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will load as menu loop options.",
+			"type": "bool",
+			"default": false
+		},
 		"playlistFile": {
-			"name": "Playlist File",
-			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file of song file paths that MLR will load as menu loop options.",
+			"name": "Playlist File (.txt Files ONLY)",
+			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will either:\n- load as menu loop options.\n- edit to add new songs to the selected playlist file.",
 			"type": "file",
 			"default": "",
 			"filters": [
