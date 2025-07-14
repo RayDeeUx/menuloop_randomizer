@@ -18,7 +18,10 @@ class Utils {
 	static std::string getFormattedNGMLSongName(SongInfoObject* songInfo);
 	static void playlistModePLAndEPL();
 	static void copyCurrentSongName();
+	static void loadFromPlaylistFile(const std::filesystem::path& playlistFile);
 	static void populateVector(const bool customSongs, const std::filesystem::path& path = "", std::vector<std::string> textFileBlacklist = {}, std::vector<std::string> textFileFavorites = {});
+	static std::vector<std::string> parseBlacklistFile(const std::filesystem::path& blacklistFilePath);
+	static std::vector<std::string> parseFavoritesFile(const std::filesystem::path& favoritesFilePath);
 	static void refreshTheVector();
 	static void resetSongManagerRefreshVectorSetNewSongBecause(const std::string_view reasonUsuallySettingName);
 	static SongInfoObject* getSongInfoObject();

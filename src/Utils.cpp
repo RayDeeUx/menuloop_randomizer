@@ -233,8 +233,44 @@ void Utils::copyCurrentSongName() {
 	geode::utils::clipboard::write(result);
 }
 
+void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
+	SongManager& songManager = SongManager::get();
+	const std::filesystem::path& configDir = geode::Mod::get()->getConfigDir();
+
+	std::vector<std::string> blacklist = Utils::parseBlacklistFile(configDir / R"(blacklist.txt)");
+	std::vector<std::string> favorites = Utils::parseBlacklistFile(configDir / R"(favorites.txt)");
+
+	std::ifstream playlistFileStream(playlistFile);
+	std::string playlistFileLineString;
+	int lineCount = -1;
+	while (std::getline(playlistFileStream, playlistFileLineString)) {
+		lineCount++;
+		if (playlistFileLineString.starts_with('#') || playlistFileLineString.empty()) continue;
+		std::string playlistFileLineModified = playlistFileLineString;
+		if (playlistFileLineModified.ends_with(" [MLR] #")) {
+			playlistFileLineModified = playlistFileLineModified.substr(0, playlistFileLineModified.find(" # [MLR] Song: "));
+		}
+		if (!std::filesystem::exists(Utils::toProblematicString(playlistFileLineModified))) {
+			geode::log::info("unable to find song on line {} of playlistFile {}", lineCount, playlistFile.filename());
+			continue;
+		}
+		geode::log::info("loading song on line {} of playlistFile {}", lineCount, playlistFile.filename());
+		songManager.addSong(playlistFileLineModified);
+	}
+	geode::log::info("Finished storing playlist. loaded songs size: {}", songManager.getSongsSize());
+}
+
+
 void Utils::populateVector(const bool customSongs, const std::filesystem::path& path, std::vector<std::string> textFileBlacklist, std::vector<std::string> textFileFavorites) {
-	if (geode::utils::string::contains(Utils::toNormalizedString(path), "store_your_disabled_menuloops_here") && geode::utils::string::contains(Utils::toNormalizedString(path), Utils::toNormalizedString(geode::Mod::get()->getConfigDir()))) return;
+	if (geode::utils::string::contains(Utils::toNormalizedString(path), "store_your_disabled_menuloops_here") && geode::utils::string::contains(Utils::toNormalizedString(path), Utils::toNormalizedString(geode::Mod::get()->getConfigDir()))) return; // avoid recursion --raydeeux
+
+	// impl playlist files
+	const std::filesystem::path playlistFile = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
+	if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") && std::filesystem::exists(playlistFile) && playlistFile.extension() == ".txt") {
+		Utils::loadFromPlaylistFile(playlistFile);
+		return geode::log::info("loading from playlist file instead: {}", playlistFile);
+	}
+
 	const std::filesystem::path configDir = path.string().empty() ? geode::Mod::get()->getConfigDir() : path;
 	/*
 		if custom songs are enabled search for files in the config dir
@@ -247,34 +283,13 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 	std::vector<std::string> songManagerBlacklist = songManager.getBlacklist();
 
 	if (auto blacklistPath = std::filesystem::exists(configDir / R"(blacklist.txt)"); blacklistPath && textFileBlacklist.empty()) {
-		std::ifstream blacklistFile((configDir / R"(blacklist.txt)"));
-		std::string blacklistString;
-		while (std::getline(blacklistFile, blacklistString)) {
-			if (blacklistString.starts_with('#') || blacklistString.empty()) continue;
-			std::string blacklistStringModified = blacklistString;
-			if (blacklistStringModified.ends_with(" [MLR] #")) {
-				blacklistStringModified = blacklistStringModified.substr(0, blacklistStringModified.find(" # [MLR] Song: "));
-			}
-			textFileBlacklist.push_back(blacklistStringModified);
-		}
-		geode::log::info("Finished storing blacklist. size: {}", textFileBlacklist.size());
+		textFileBlacklist = Utils::parseBlacklistFile(blacklistPath);
 	}
 
 	std::vector<std::string> songManagerFavorites = songManager.getFavorites();
 
 	if (auto favoritePath = std::filesystem::exists(configDir / R"(favorites.txt)"); favoritePath && textFileFavorites.empty()) {
-		std::ifstream favoriteFile((configDir / R"(favorites.txt)"));
-		std::string favoriteString;
-		while (std::getline(favoriteFile, favoriteString)) {
-			if (favoriteString.starts_with('#') || favoriteString.empty()) continue;
-			std::string favoriteStringModified = favoriteString;
-			if (favoriteStringModified.ends_with(" [MLR] #")) {
-				favoriteStringModified = favoriteStringModified.substr(0, favoriteStringModified.find(" # [MLR] Song: "));
-			}
-			textFileFavorites.push_back(favoriteStringModified);
-			songManager.addToFavorites(favoriteStringModified);
-		}
-		geode::log::info("Finished storing favorites. size: {}", textFileFavorites.size());
+		textFileFavorites = Utils::parseFavoritesFile(favoritePath);
 	}
 
 	if (customSongs) {
@@ -366,6 +381,40 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 			}
 		}
 	}
+}
+
+std::vector<std::string> Utils::parseBlacklistFile(const std::filesystem::path& blacklistFilePath) {
+	std::vector<std::string> blacklistVector {};
+	std::ifstream blacklistFile(blacklistFilePath);
+	std::string blacklistString;
+	while (std::getline(blacklistFile, blacklistString)) {
+		if (blacklistString.starts_with('#') || blacklistString.empty()) continue;
+		std::string blacklistStringModified = blacklistString;
+		if (blacklistStringModified.ends_with(" [MLR] #")) {
+			blacklistStringModified = blacklistStringModified.substr(0, blacklistStringModified.find(" # [MLR] Song: "));
+		}
+		blacklistVector.push_back(blacklistStringModified);
+	}
+	geode::log::info("Finished storing blacklist. size: {}", blacklistVector.size());
+	return blacklistVector;
+}
+
+std::vector<std::string> Utils::parseFavoritesFile(const std::filesystem::path& favoritesFilePath) {
+	SongManager& songManager = SongManager::get();
+	std::vector<std::string> favoritesVector {};
+	std::ifstream favoriteFile(favoritesFilePath);
+	std::string favoriteString;
+	while (std::getline(favoriteFile, favoriteString)) {
+		if (favoriteString.starts_with('#') || favoriteString.empty()) continue;
+		std::string favoriteStringModified = favoriteString;
+		if (favoriteStringModified.ends_with(" [MLR] #")) {
+			favoriteStringModified = favoriteStringModified.substr(0, favoriteStringModified.find(" # [MLR] Song: "));
+		}
+		favoritesVector.push_back(favoriteStringModified);
+		songManager.addToFavorites(favoriteStringModified);
+	}
+	geode::log::info("Finished storing favorites. size: {}", favoritesVector.size());
+	return favoritesVector;
 }
 
 void Utils::refreshTheVector() {
