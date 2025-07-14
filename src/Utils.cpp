@@ -238,7 +238,7 @@ void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
 	const std::filesystem::path& configDir = geode::Mod::get()->getConfigDir();
 
 	std::vector<std::string> blacklist = Utils::parseBlacklistFile(configDir / R"(blacklist.txt)");
-	std::vector<std::string> favorites = Utils::parseBlacklistFile(configDir / R"(favorites.txt)");
+	std::vector<std::string> favorites = Utils::parseFavoritesFile(configDir / R"(favorites.txt)");
 
 	std::ifstream playlistFileStream(playlistFile);
 	std::string playlistFileLineString;
