@@ -42,14 +42,14 @@ bool SongControlMenu::setup(const std::string&) {
 
 	this->m_theTimeoutCorner = cocos2d::CCMenu::create();
 
-	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), this->m_theTimeoutCorner, this);
 	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), this->m_theTimeoutCorner, this);
+	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), this->m_theTimeoutCorner, this);
 
-	geode::AxisLayout* layoutTimeout = geode::ColumnLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
+	geode::AxisLayout* layoutTimeout = geode::ColumnLayout::create()->setGap(2.5f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
 
-	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 2.5f});
+	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 8.5f});
 	this->m_theTimeoutCorner->ignoreAnchorPointForPosition(false);
-	this->m_theTimeoutCorner->setContentSize({24.f, 24.f});
+	this->m_theTimeoutCorner->setContentSize({24.f, 36.f});
 	this->m_theTimeoutCorner->setLayout(layoutTimeout);
 
 	this->m_otherLabel = cocos2d::CCLabelBMFont::create("Hey all! Menu Loop Randomizer will never be designed to resembele Spotify, or its distant cousin EditorMusic. Please keep this in mind. :)", "chatFont.fnt");
