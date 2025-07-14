@@ -1,3 +1,4 @@
+#include <Geode/ui/GeodeUI.hpp>
 #include "SongListLayer.hpp"
 #include "MLRSongCell.hpp"
 #include "../Utils.hpp"
@@ -33,7 +34,24 @@ void SongListLayer::customSetup() {
 	);
 	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
 	infoMenu->setPosition({437.f, 282.f});
+	infoMenu->setID("songlayerlist-info-menu"_spr);
+	infoBtn->setID("songlayerlist-info-button"_spr);
 	this->m_mainLayer->addChild(infoMenu);
+
+	cocos2d::CCMenu* settingsMenu = cocos2d::CCMenu::create();
+	settingsMenu->setLayout(
+		geode::RowLayout::create()
+			->setAutoScale(true)
+			->setAxis(geode::Axis::Row)
+			->setGap(.0f)
+	);
+	settingsMenu->setContentSize({24.f, 23.f});
+	settingsMenu->setID("songlayerlist-controls-menu"_spr);
+	Utils::addButton("controls", menu_selector(SongListLayer::onSettingsButton), settingsMenu, this);
+	if (CCMenuItemSpriteExtra* button = settingsMenu->getChildByType<CCMenuItemSpriteExtra>(0)) button->setPosition(settingsMenu->getContentSize() / 2.f);
+	settingsMenu->setPosition({75.f, 282.f});
+	settingsMenu->setScale(.825f);
+	this->m_mainLayer->addChild(settingsMenu);
 
 	geode::ScrollLayer* scrollLayer = geode::ScrollLayer::create({356, 220});
 	scrollLayer->m_contentLayer->setLayout(
@@ -82,4 +100,9 @@ void SongListLayer::showLayer(const bool instant) {
 
 	this->setID("SongListLayer"_spr);
 	m_listLayer->setID("list-of-songs-layer"_spr);
+}
+
+void SongListLayer::onSettingsButton(CCObject*) {
+	this->keyBackClicked();
+	geode::openSettingsPopup(geode::Mod::get());
 }

@@ -7,7 +7,8 @@
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 
 bool SongControlMenu::setup(const std::string&) {
-	this->setTitle("Menu Loop Randomizer");
+	this->setTitle("Menu Loop Randomizer - Control Panel");
+	this->m_title->setScale(.45f);
 
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
 	cocos2d::extension::CCScale9Sprite* background = this->m_bgSprite;
@@ -132,8 +133,9 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onPlaylistButton(CCObject*) {
+
 	this->onClose(nullptr);
-	SongListLayer::create()->showLayer(false);
+	SongListLayer::create()->showLayer(true);
 }
 void SongControlMenu::onSettingsButton(CCObject*) {
 	geode::openSettingsPopup(geode::Mod::get());

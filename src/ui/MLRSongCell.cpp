@@ -23,9 +23,9 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	cocos2d::CCLabelBMFont* songNameLabel = cocos2d::CCLabelBMFont::create(desiredFileName.c_str(), "bigFont.fnt");
 	songNameLabel->setAnchorPoint({.0f, .5f});
 	songNameLabel->setPosition({15, getContentHeight() / 2.f + 1.f});
-	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);
-	if (songData.type == SongType::Favorited) songNameLabel->setColor({255, 255, 0});
+	if (songData.type == SongType::Favorited) songNameLabel->setFntFile("goldFont.fnt");
 	else if (songData.type == SongType::Blacklisted) songNameLabel->setColor({128, 128, 128});
+	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);
 
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127});
 	divider->setContentSize({356.f, 0.5f});
@@ -33,8 +33,8 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 
 	cocos2d::CCMenu* menu = cocos2d::CCMenu::create();
 	menu->setContentSize({30.f, 30.f});
-	menu->setAnchorPoint({.5f, .5f});
-	menu->setPosition({330.f, this->getContentHeight() / 2.f});
+	menu->setAnchorPoint({1.f, .5f});
+	menu->setPosition({340.f, this->getContentHeight() / 2.f});
 	menu->ignoreAnchorPointForPosition(false);
 	menu->setLayout(
 		geode::RowLayout::create()
@@ -44,18 +44,20 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 			->setDefaultScaleLimits(.0001f, .75f)
 	);
 
-	CCMenuItemSpriteExtra* infoButton = CCMenuItemSpriteExtra::create(
+	CCMenuItemSpriteExtra* playButton = CCMenuItemSpriteExtra::create(
 		cocos2d::CCSprite::createWithSpriteFrameName("GJ_playMusicBtn_001.png"),
 		this, menu_selector(MLRSongCell::onPlaySong)
 	);
-	menu->addChild(infoButton);
+	playButton->setID("song-cell-play-button"_spr);
+	menu->addChild(playButton);
 	menu->updateLayout();
 
 	this->addChild(songNameLabel);
 	this->addChild(divider);
 	this->addChild(menu);
 
-	songNameLabel->setID("song-label"_spr);
+	menu->setID("song-cell-menu"_spr);
+	songNameLabel->setID("song-cell-label"_spr);
 	divider->setID(fmt::format("song-cell-divider-{}"_spr, isEven));
 	this->setID(fmt::format("song-cell-{}"_spr, isEven));
 
