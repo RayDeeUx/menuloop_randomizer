@@ -336,7 +336,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 			}
 		}
 	} else {
-		auto downloadManager = MusicDownloadManager::sharedState();
+		MusicDownloadManager* downloadManager = MusicDownloadManager::sharedState();
 
 		// for every downloaded song push it to the m_songs vector --elnex
 		/*
@@ -349,9 +349,8 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 		- only reason it didn't work was because file support was limited to `.mp3`.
 		--raydeeux
 		*/
-		geode::cocos::CCArrayExt<SongInfoObject*> songs = downloadManager->getDownloadedSongs();
-		bool qualifiedForOGMenuBlacklist = geode::Mod::get()->getSavedValue<bool>("isEry");
-		for (auto song : songs) {
+		const bool qualifiedForOGMenuBlacklist = geode::Mod::get()->getSavedValue<bool>("isEry");
+		for (const auto song : geode::cocos::CCArrayExt<SongInfoObject*>(downloadManager->getDownloadedSongs())) {
 			if (!song) continue;
 
 			std::string songPath = downloadManager->pathForSong(song->m_songID);
