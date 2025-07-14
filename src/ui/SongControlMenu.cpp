@@ -91,7 +91,7 @@ bool SongControlMenu::setup(const std::string&) {
 }
 
 SongControlMenu* SongControlMenu::create(const std::string& id) {
-	auto ret = new SongControlMenu;
+	auto ret = new SongControlMenu();
 	if (ret->initAnchored(300.f, 150.f, id)) {
 		ret->autorelease();
 		return ret;
