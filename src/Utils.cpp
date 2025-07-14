@@ -533,7 +533,6 @@ std::string Utils::getPlatform() {
 	#endif
 }
 
-
 std::string Utils::generatePlatformWarning() {
 	const std::string& platform = Utils::getPlatform();
 	return fmt::format("THIS PLAYLIST FILE WAS CREATED ON {}. ONLY SHARE THIS FILE WITH OTHER MLR USERS ON {}.", platform, platform);
