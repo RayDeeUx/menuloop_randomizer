@@ -5,6 +5,7 @@
 #include <Geode/ui/GeodeUI.hpp>
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
+#define REST_OF_THE_CAT this->m_theTimeoutCorner, this
 
 bool SongControlMenu::setup(const std::string&) {
 	this->setTitle("Menu Loop Randomizer - Control Panel");
@@ -42,8 +43,8 @@ bool SongControlMenu::setup(const std::string&) {
 
 	this->m_theTimeoutCorner = cocos2d::CCMenu::create();
 
-	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), this->m_theTimeoutCorner, this);
-	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), this->m_theTimeoutCorner, this);
+	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), REST_OF_THE_CAT);
+	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), REST_OF_THE_CAT);
 
 	geode::AxisLayout* layoutTimeout = geode::ColumnLayout::create()->setGap(2.5f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
 
