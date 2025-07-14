@@ -34,7 +34,7 @@ void SongManager::pickRandomSong() {
 		if (m_songs.size() != 1) {
 			auto randomIndex = Utils::randomIndex(m_songs.size());
 			geode::log::info("entering a while loop maybe");
-			if (!std::filesystem::exists(m_songs[randomIndex])) {
+			if (!std::filesystem::exists(Utils::toProblematicString(m_songs[randomIndex]))) {
 				m_isMenuLoop = true;
 				m_currentSong = "menuLoop.mp3";
 				geode::Notification::create(

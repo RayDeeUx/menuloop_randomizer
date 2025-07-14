@@ -458,10 +458,18 @@ std::string Utils::currentCustomSong() {
 }
 
 std::string Utils::toNormalizedString(const std::filesystem::path& path) {
-	#ifdef GEODE_IS_WINDOWS
+#ifdef GEODE_IS_WINDOWS
 	return geode::utils::string::wideToUtf8(path.wstring());
-	#else
+#else
 	return path.string();
+#endif
+}
+
+std::string Utils::toProblematicString(const std::string& path) {
+	#ifdef GEODE_IS_WINDOWS
+	return geode::utils::string::utf8ToWide(path);
+	#else
+	return path;
 	#endif
 }
 
