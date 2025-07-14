@@ -41,7 +41,7 @@
 		},
 		"playlistFile": {
 			"name": "Playlist File (.txt Files ONLY)",
-			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will either:\n- load as menu loop options.\n- edit to add new songs to the selected playlist file.",
+			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will either:\n- load as menu loop options, if <cl>\"Load Playlist File Instead\"</c> is enabled.\n- edit to add new songs to the selected playlist file, if <cl>\"Load Playlist File Instead\"</c> is disabled.",
 			"type": "file",
 			"default": "",
 			"filters": [
@@ -53,8 +53,7 @@
 		},
 		"playlistMode": {
 			"name": "Playlist-like Playback Mode",
-			"description": "<cl>Original idea by TheKevinner.</c>\n\nChange menu loops after a song is finished. Requires more than 1 song available to work.",
-			"longerDescription": "<cl>Original idea by TheKevinner.</c>\n\nChange menu loops after a song is finished. Requires more than 1 song available to work.\n\n<cr>This feature is ***very*** unstable. It's best if you restart your game after toggling this setting.</c>\n\n<cy>Known issues (usually for non-Windows users):</c>\n<cy>- Songs may stop changing while/after viewing Geode UI, the Tower, the icon kit, or the shops.</c>\n<cy>- Playlist Mode disables loops from the Tower, all shops, and all vaults. (Not much of a loss; those loops get tiring after a while.)</c>\n<cy>- Playlist Mode may break when there is only one song for the mod to choose from.",
+			"description": "<cl>Original idea by TheKevinner.</c>\n\nChange menu loops after a song is finished. Requires more than 1 song available to work.\n\n<cr>This feature is ***very*** unstable. It's best if you restart your game after toggling this setting.</c>\n\n<cy>Known issues (usually for non-Windows users):</c>\n<cy>- Songs may stop changing while/after viewing Geode UI, the Tower, the icon kit, or the shops.</c>\n<cy>- Playlist Mode disables loops from the Tower, all shops, and all vaults. (Not much of a loss; those loops get tiring after a while.)</c>\n<cy>- Playlist Mode may break when there is only one song for the mod to choose from.",
 			"type": "bool",
 			"default": false
 		},
