@@ -31,7 +31,7 @@ bool SongControlMenu::setup(const std::string&) {
 	Utils::addButton("favorite", menu_selector(SongControlMenu::onFavoriteButton), REST_OF_THE_OWL);
 	Utils::addButton("hold", menu_selector(SongControlMenu::onHoldSongButton), REST_OF_THE_OWL);
 	Utils::addButton("prev", menu_selector(SongControlMenu::onPreviousButton), REST_OF_THE_OWL);
-	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), REST_OF_THE_OWL);
+	Utils::addButton("add", menu_selector(SongControlMenu::onAddToPlylstBtn), REST_OF_THE_OWL);
 
 	geode::AxisLayout* layout = geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f);
 
@@ -43,9 +43,9 @@ bool SongControlMenu::setup(const std::string&) {
 	this->m_theTimeoutCorner = cocos2d::CCMenu::create();
 
 	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), this->m_theTimeoutCorner, this);
-	Utils::addButton("add", menu_selector(SongControlMenu::onAddToPlylstBtn), this->m_theTimeoutCorner, this);
+	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), this->m_theTimeoutCorner, this);
 
-	geode::AxisLayout* layoutTimeout = geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
+	geode::AxisLayout* layoutTimeout = geode::ColumnLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
 
 	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 2.5f});
 	this->m_theTimeoutCorner->ignoreAnchorPointForPosition(false);
