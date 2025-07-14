@@ -133,7 +133,6 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onPlaylistButton(CCObject*) {
-
 	this->onClose(nullptr);
 	SongListLayer::create()->showLayer(true);
 }
