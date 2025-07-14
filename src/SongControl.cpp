@@ -153,4 +153,19 @@ namespace SongControl {
 
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
+	void addSongToPlaylist(const std::string& songPath) {
+		const std::filesystem::path playlistFilePath = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
+		if (playlistFilePath.string().empty() || !geode::utils::string::endsWith(playlistFilePath, ".txt")) {
+			return geode::Notification::create(
+				"Invalid text file selected as your MLR playlist file!",
+				geode::NotificationIcon::Error,
+				5.f
+			)->show();
+		}
+		geode::Notification::create(
+			fmt::format("Successfully added song to playlist file {}!", playlistFilePath),
+			geode::NotificationIcon::Success,
+			5.f
+		)->show();
+	}
 }

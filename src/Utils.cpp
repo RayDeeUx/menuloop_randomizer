@@ -507,9 +507,28 @@ bool Utils::notFavoritesNorBlacklist(std::filesystem::path filePath) {
 	return !geode::utils::string::endsWith(fileString, "favorites.txt") && !geode::utils::string::endsWith(fileString, "blacklist.txt");
 }
 
+std::string Utils::generatePlatformWarning() {
+	std::string platform = "[AN UNKNOWN PLATFORM]";
+	#ifdef GEODE_IS_IOS
+	platform = "iOS";
+	#elif defined(GEODE_IS_ANDROID32)
+	platform = "Android (32-bit)";
+	#elif defined(GEODE_IS_ANDROID64)
+	platform = "Android (64-bit)";
+	#elif defined(GEODE_IS_WINDOWS)
+	platform = "Windows (hopefully 64-bit)";
+	#elif defined(GEODE_IS_ARM_MAC)
+	platform = "macOS (Apple Silicon/ARM)";
+	#elif defined(GEODE_IS_INTEL_MAC)
+	platform = "macOS (Intel)";
+	#endif
+	return fmt::format("THIS PLAYLIST FILE WAS CREATED ON {}. ONLY SHARE THIS PLAYLIST FILE TO OTHER USERS WHO ALSO USE MENU LOOP RANDOMIZER ON {}.", platform, platform);
+}
+
 void Utils::writeToFile(const std::string& toWriteToFile, std::filesystem::path fileForWriting) {
 	if (!std::filesystem::exists(fileForWriting) && Utils::notFavoritesNorBlacklist(fileForWriting)) {
-		std::string content = R"(# Welcome a Menu Loop Randomizer playlist file!
+		const std::string& platformWarning = Utils::generatePlatformWarning();
+		const std::string& content = fmt::format(R"(# Welcome a Menu Loop Randomizer playlist file!
 # Each line that doesn't start with a "#" will be treated as a song file for the playlist.
 # All lines that start with a "#" are ignored. This means you can remove a song from the playlist by adding "#" next to it.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
@@ -517,7 +536,32 @@ void Utils::writeToFile(const std::string& toWriteToFile, std::filesystem::path 
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
-# --RayDeeUx)";
+# {}
+# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# {}
+# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# {}
+# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# {}
+# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# {}
+# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# {}
+# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# {}
+# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# {}
+# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# {}
+# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# {}
+# BUGS OR CRASHES CAUSED BY FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
+# --RayDeeUx)",
+platformWarning, platformWarning,
+platformWarning, platformWarning,
+platformWarning, platformWarning,
+platformWarning, platformWarning,
+platformWarning, platformWarning);
 		auto result = geode::utils::file::writeString(toWriteToFile, content);
 		if (result.isErr()) return geode::log::error("Error writing to {}", fileForWriting);
 	} else if (!std::filesystem::exists(fileForWriting)) return geode::log::info("error finding {}!", fileForWriting);

@@ -43,6 +43,7 @@ bool SongControlMenu::setup(const std::string&) {
 	this->m_theTimeoutCorner = cocos2d::CCMenu::create();
 
 	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), this->m_theTimeoutCorner, this);
+	Utils::addButton("add", menu_selector(SongControlMenu::onAddToPlylstBtn), this->m_theTimeoutCorner, this);
 
 	geode::AxisLayout* layoutTimeout = geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
 
@@ -135,6 +136,9 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 void SongControlMenu::onPlaylistButton(CCObject*) {
 	this->onClose(nullptr);
 	SongListLayer::create()->showLayer(true);
+}
+void SongControlMenu::onAddToPlylstBtn(CCObject*) {
+	SongControl::addSongToPlaylist(SongManager::get().getCurrentSong());
 }
 void SongControlMenu::onSettingsButton(CCObject*) {
 	geode::openSettingsPopup(geode::Mod::get());
