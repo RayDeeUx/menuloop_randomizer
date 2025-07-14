@@ -516,7 +516,7 @@ bool Utils::notFavoritesNorBlacklist(std::filesystem::path filePath) {
 }
 
 std::string Utils::getPlatform() {
-	#ifdef GEODE_IS_IOS
+	#if defined(GEODE_IS_IOS)
 	return "iOS";
 	#elif defined(GEODE_IS_ANDROID32)
 	return "Android (32-bit)";
