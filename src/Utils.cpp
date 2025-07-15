@@ -509,7 +509,7 @@ std::string Utils::getSongName() {
 		const std::string& platform = Utils::getPlatform();
 		std::string instructions = "you might need some extra help";
 		if (geode::utils::string::startsWith(platform, "Android")) {
-			instructions = "open your file manager [preferably ZArchiver, otherwise you would need to close Geode/Geometry Dash] and visit Android/media/com.geode.launcher/save/geode/mods/fleym.nongd/nongs"
+			instructions = "open your file manager [preferably ZArchiver, otherwise you would need to close Geode/Geometry Dash] and visit Android/media/com.geode.launcher/save/geode/mods/fleym.nongd/nongs";
 		} else if (geode::utils::string::startsWith(platform, "Windows")) {
 			instructions = "open File Explorer and visit AppData/Local/GeometryDash/geode/mods/fleym.nongd/nongs";
 		} else if (geode::utils::string::startsWith(platform, "macOS")) {
