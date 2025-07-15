@@ -131,7 +131,8 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 }
 
 std::string Utils::composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix) {
-	if (!Utils::getBool("useCustomSongs")) SongManager::get().setCurrentSongDisplayName(middle);
+	SongManager& songManager = SongManager::get();
+	if (!Utils::getBool("useCustomSongs") || !songManager.getPlaylistIsEmpty()) songManager.setCurrentSongDisplayName(middle);
 	Utils::queueUpdateSCMLabel();
 	return notifString.append(middle).append(suffix);
 }
@@ -139,6 +140,8 @@ std::string Utils::composedNotifString(std::string notifString, const std::strin
 void Utils::newCardAndDisplayNameFromCurrentSong() {
 	SongManager& songManager = SongManager::get();
 	const std::string& songFileName = Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
+	const std::string& songFileExtension = Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).extension());
+	const std::string& customSongDisplayName = geode::utils::string::replace(songFileName, songFileExtension, "");
 	if (!songManager.getLavaChicken()) songManager.setCurrentSongDisplayName(songFileName);
 	else songManager.setCurrentSongDisplayName(fmt::format("{} (My condolences for your ears.)", songFileName));
 
@@ -151,8 +154,8 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 	else if (songManager.isOverride()) suffix = " (CUSTOM OVERRIDE)";
 	else if (songManager.isPreviousSong()) suffix = " (PREVIOUS SONG)";
 
-	if (Utils::getBool("useCustomSongs"))
-		return Utils::newNotification(composedNotifString(notifString, songFileName, suffix), true);
+	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty())
+		return Utils::newNotification(composedNotifString(notifString, customSongDisplayName, suffix), true);
 
 	// in case that the current file selected is the original menuloop, don't gather any info
 	if (songManager.isOriginalMenuLoop())
@@ -171,7 +174,10 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameWithoutExtension);
 
 	if (songFileNameAsID.isErr()) {
-		if (songManager.getPlaylistIsEmpty()) geode::log::error("{} had an invalid Song ID! [NG/Music Library]", songFileNameWithoutExtension);
+		if (!songManager.getPlaylistIsEmpty()) {
+			return Utils::newNotification(composedNotifString(notifString, songFileNameWithoutExtension, suffix), true);
+		}
+		geode::log::error("{} had an invalid Song ID! [NG/Music Library]", songFileNameWithoutExtension);
 		return Utils::newNotification(composedNotifString(notifString, fmt::format("Unknown ({})", songFileNameWithoutExtension), suffix), true);
 	}
 
@@ -181,11 +187,11 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
 		return Utils::newNotification(composedNotifString(notifString, Utils::getFormattedNGMLSongName(songInfo), suffix), true);
 	}
-	return Utils::newNotification(composedNotifString(notifString, songFileName, suffix), true);
+	return Utils::newNotification(composedNotifString(notifString, customSongDisplayName, suffix), true);
 }
 
 std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
-	if (Utils::getBool("useCustomSongs")) return Utils::currentCustomSong();
+	if (Utils::getBool("useCustomSongs") && SongManager::get().getPlaylistIsEmpty()) return Utils::currentCustomSong();
 	if (!songInfo) return Utils::toNormalizedString(std::filesystem::path(SongManager::get().getCurrentSong()).filename());
 	const std::string& formatSetting = geode::Mod::get()->getSettingValue<std::string>("songFormatNGML");
 	const bool isMenuLoopFromNG = songInfo->m_songID == 584131;
@@ -535,8 +541,8 @@ int Utils::getSongID() {
 }
 
 std::string Utils::currentCustomSong() {
-	if (!Utils::getBool("useCustomSongs")) return Utils::getSongName();
 	SongManager& songManager = SongManager::get();
+	if (!Utils::getBool("useCustomSongs") || !songManager.getPlaylistIsEmpty()) return Utils::getSongName();
 	if (songManager.isOriginalMenuLoop()) return "";
 	return Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
 }
