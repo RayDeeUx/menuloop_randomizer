@@ -52,8 +52,8 @@
 			]
 		},
 		"playlistMode": {
-			"name": "Playlist-like Playback Mode",
-			"description": "<cl>Original idea by TheKevinner.</c>\n\nChange menu loops after a song is finished. Requires more than 1 song available to work.\n\n<cr>This feature is ***very*** unstable. It's best if you restart your game after toggling this setting.</c>\n\n<cy>Known issues (usually for non-Windows users):</c>\n<cy>- Songs may stop changing while/after viewing Geode UI, the Tower, the icon kit, or the shops.</c>\n<cy>- Playlist-like Playback Mode disables loops from the Tower, all shops, and all vaults. (Not much of a loss; those loops get tiring after a while.)</c>\n<cy>- Playlist-like Playback Mode may break when there is only one song for the mod to choose from.",
+			"name": "Constant Shuffle Mode",
+			"description": "<cl>Original idea by TheKevinner.</c>\n\nChange menu loops after a song is finished. Requires more than 1 song available to work.\n\n<cr>This feature is ***very*** unstable. It's best if you restart your game after toggling this setting.</c>\n\n<cy>Known issues (usually for non-Windows users):</c>\n<cy>- Songs may stop changing while/after viewing Geode UI, the Tower, the icon kit, or the shops.</c>\n<cy>- Constant Shuffle Mode disables loops from the Tower, all shops, and all vaults. (Not much of a loss; those loops get tiring after a while.)</c>\n<cy>- Constant Shuffle Mode may break when there is only one song for the mod to choose from.",
 			"type": "bool",
 			"default": false
 		},
@@ -81,7 +81,7 @@
 		},
 		"enableShuffleButton": {
 			"name": "Shuffle Button",
-			"description": "Enables the <cj>shuffle button</c> in the main menu.\n\n<cy>Using this button is not the same feature as enabling</c> <cl>\"Playlist-like Playback Mode\"</c><cy>, although it *can* work with</c> <cl>\"Playlist-like Playback Mode\"</c> <cy>enabled. This button only changes the menu loop to a different song *when pressed*, instead of when a song finishes.</c>",
+			"description": "Enables the <cj>shuffle button</c> in the main menu.\n\n<cy>Using this button is not the same feature as enabling</c> <cl>\"Constant Shuffle Mode\"</c><cy>, although it *can* work with</c> <cl>\"Constant Shuffle Mode\"</c> <cy>enabled. This button only changes the menu loop to a different song *when pressed*, instead of when a song finishes.</c>",
 			"type": "bool",
 			"default": true
 		},
@@ -195,13 +195,13 @@
 		},
 		"randomizeWhenExitingLevel": {
 			"name": "Randomize on Level Exit",
-			"description": "Randomize the song when you exit a level.\n\n<cy>This setting is ignored when \"Playlist-like Playback Mode\" is enabled.</c>",
+			"description": "Randomize the song when you exit a level.\n\n<cy>This setting is ignored when \"Constant Shuffle Mode\" is enabled.</c>",
 			"type": "bool",
 			"default": true
 		},
 		"randomizeWhenExitingEditor": {
 			"name": "Randomize on Editor Exit",
-			"description": "Randomize the song when you exit the editor.\n\n<cy>This setting is ignored when \"Playlist-like Playback Mode\" is enabled.</c>",
+			"description": "Randomize the song when you exit the editor.\n\n<cy>This setting is ignored when \"Constant Shuffle Mode\" is enabled.</c>",
 			"type": "bool",
 			"default": true
 		},

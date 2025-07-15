@@ -3,18 +3,18 @@
 - Added "playlists" support (suggested by [TheTrueNyxa](https://discord.com/users/702243715812556863))!
   - Add songs to a playlist file, then activate `Load Playlist File Instead` to load your playlist file!
   - Favorite songs lists and song blacklists still apply.
-  - Playlist-like Playback Mode (formerly `Playlist Mode`) is also supported.
+  - Constant Shuffle Mode (formerly `Playlist Mode`) is also supported.
 - Added a new menu to see the names of all loaded songs.
   - Gold song names indicate a favorited song.
   - Green song names indicate a currently playing song.
   - No, I will not be adding a search bar.
-- Retroactively rename `Playlist Mode` to `Playlist-like Playback Mode` across as many front-facing areas as possible to avoid confusion with more recent features (see first bullet point).
+- Retroactively rename `Playlist Mode` to `Constant Shuffle Mode` across as many front-facing areas as possible to avoid confusion with more recent features (see first bullet point).
 ## v1.8.4
 - Added `Advanced Logging` toggle.
 - Added an easter egg.
 ## v1.8.3
 - Allowed the name of the currently playing song inside the controls menu to update more often.
-- Included Playlist-like Playback Mode and Override Mode indicators in the controls menu.
+- Included Constant Shuffle Mode and Override Mode indicators in the controls menu.
 - Refactor some additional code.
 - Removed a controversial function hook.
 ## v1.8.2
@@ -39,10 +39,10 @@
 ## v1.7.0
 - New logo by [dasshu_](https://linktr.ee/jaydasshu)!
 - Refactor how the song notification card is removed when switching scenes.
-  - Playlist-like Playback Mode may have been broken in the process if there is only one song available for the mod to choose from. But at that point, you might as well use a texture pack instead.
+  - Constant Shuffle Mode may have been broken in the process if there is only one song available for the mod to choose from. But at that point, you might as well use a texture pack instead.
 ## v1.6.4
 - Added option to replace unsupported characters with `?`s, enabled by default.
-- Only display extended warnings for `Playlist-like Playback Mode` when enabling it from mod settings.
+- Only display extended warnings for `Constant Shuffle Mode` when enabling it from mod settings.
 - Preparing in advance for some naughty behavior from other mods.
 - Changed logging level in anticipation of future changes to Geode.
 - Removed Goro Akechi.
@@ -54,16 +54,16 @@
 ## v1.6.1
 - Redo the button for blacklisting songs. Base icon shape provided by [FREAKINGDAN](https://github.com/freakingdan).
 - Reduce confusion when copying song names/IDs while playing songs replaced by Jukebox/Auto Nong. {Reported by CyBlanc}
-- Fix a bug where some songs downloaded from vanilla GD wouldn't be treated properly in Playlist-like Playback Mode (potentially related to "No Songs Limit" being enabled). {Reported by ita_player}
-- Make the setting description for Playlist-like Playback Mode a scrollable setting description. {Reported by hiimjustin000}
-- _Attempt_ to fix a bug where setting the music volume to 0 while on Playlist-like Playback Mode would re-start a song while failing to end the original playback. {Reported by EmirNoob}
+- Fix a bug where some songs downloaded from vanilla GD wouldn't be treated properly in Constant Shuffle Mode (potentially related to "No Songs Limit" being enabled). {Reported by ita_player}
+- Make the setting description for Constant Shuffle Mode a scrollable setting description. {Reported by hiimjustin000}
+- _Attempt_ to fix a bug where setting the music volume to 0 while on Constant Shuffle Mode would re-start a song while failing to end the original playback. {Reported by EmirNoob}
 ## v1.6.0
 - Added "Copy Song ID" button (suggested by [Akashnil](https://discord.com/users/1068096599701590056)). <cy>Custom songs and NONGs will not return a song ID. They will fall back to its song name instead.</c> <cy>Button sprite adapted from [hiimjustin000](https://github.com/hiimjustin000) with permission.</c>
-- Added "Blacklist Song" button (suggested by [AlphaQuata](https://discord.com/users/766876726566846505)). <cy>This button works regardless of your custom songs or Playlist-like Playback Mode choices.</c> <cy>To manually un-blacklist a song, open `blacklist.txt` in the mod's config directory and edit it accordingly.</c>
-- Fix a bug where Playlist-like Playback Mode would ignore the in-game "Menu Music" toggle if that was disabled.
+- Added "Blacklist Song" button (suggested by [AlphaQuata](https://discord.com/users/766876726566846505)). <cy>This button works regardless of your custom songs or Constant Shuffle Mode choices.</c> <cy>To manually un-blacklist a song, open `blacklist.txt` in the mod's config directory and edit it accordingly.</c>
+- Fix a bug where Constant Shuffle Mode would ignore the in-game "Menu Music" toggle if that was disabled.
 - Fix another bug where "Remember Last Menu Loop" would remember the original menu loop from GD's resources. 
 ## v1.5.0
-- Added "Playlist-like Playback Mode" (suggested by [TheKevineer](https://discord.com/users/633040761256017963)). <cy>This feature is incredibly unstable, especially outside of Windows. I have done everything I could to keep its behavior consistent between Windows, macOS, and Android, but any crashes/issues from this feature are either beyond my control or have been acknowledged during beta testing without an obvious/more immediate fix.</c>
+- Added "Constant Shuffle Mode" (suggested by [TheKevineer](https://discord.com/users/633040761256017963)). <cy>This feature is incredibly unstable, especially outside of Windows. I have done everything I could to keep its behavior consistent between Windows, macOS, and Android, but any crashes/issues from this feature are either beyond my control or have been acknowledged during beta testing without an obvious/more immediate fix.</c>
 - Added "Remember Last Menu Loop" (suggested by [HexCodesGMD](https://discord.com/users/1222327935315218506)).
 - Renamed and reordered a few settings to reduce confusion.
 - Added config directory shortcut button.

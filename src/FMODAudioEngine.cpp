@@ -19,7 +19,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		}
 		if (!Utils::getBool("playlistMode") || isLavaChicken)
 			return FMODAudioEngine::get()->playMusic(path, shouldLoop, fadeInTime, channel);
-		log::info("playlist-like playback mode enabled.\n=== PLAYLIST-LIKE PLAYBACK MODE DEBUG INFO ===\npath: {}\nshouldLoop: {}\nfadeInTime: {}\nchannel: {}", path, shouldLoop, fadeInTime, channel);
+		log::info("Constant Shuffle Mode enabled.\n=== Constant Shuffle Mode DEBUG INFO ===\npath: {}\nshouldLoop: {}\nfadeInTime: {}\nchannel: {}", path, shouldLoop, fadeInTime, channel);
 		if (CCScene* scene = CCScene::get(); Utils::getBool("advancedLogs") && scene && scene->getChildren()) {
 			for (CCObject* object : CCArrayExt<CCObject*>(scene->getChildren())) {
 				const auto node = typeinfo_cast<CCNode*>(object);
@@ -29,13 +29,13 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		bool desiredShouldLoop = shouldLoop;
 		std::string gdStringSucks = path;
 		std::smatch smatch;
-		if (std::regex_match(gdStringSucks, smatch, terribleLoopRegex)) return log::info("terrible loop detected while playlist-like playback mode is active: {}", gdStringSucks);
+		if (std::regex_match(gdStringSucks, smatch, terribleLoopRegex)) return log::info("terrible loop detected while Constant Shuffle Mode is active: {}", gdStringSucks);
 		const bool isMenuLoop = std::regex_match(gdStringSucks, smatch, geometryDashRegex);
 		if (GJBaseGameLayer::get() && !isMenuLoop) return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 		if (fadeInTime == 0 && gdStringSucks == "shop.mp3") return;
 		if (shouldLoop && fadeInTime == 1.0f) {
 			if (!isMenuLoop && !utils::string::contains(gdStringSucks, "/Library/Caches/")) {
-				log::info("non-menu loop found while playlist mode is enabled: {}", gdStringSucks);
+				log::info("non-menu loop found while constant shuffle mode is enabled: {}", gdStringSucks);
 				return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 			}
 			/*
