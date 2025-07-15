@@ -18,5 +18,10 @@ public:
 	static MLRSongCell* create(const SongData& songData, const bool isEven);
 	bool init(const SongData& songData, const bool isEven);
 	void onPlaySong(CCObject*);
+	void update(float delta);
 	SongData m_songData;
+	cocos2d::CCLabelBMFont* m_songNameLabel;
+	cocos2d::CCLayerColor* m_divider;
+	cocos2d::CCMenu* m_menu;
+	CCMenuItemSpriteExtra* m_playButton;
 };

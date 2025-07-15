@@ -52,6 +52,11 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	menu->addChild(playButton);
 	menu->updateLayout();
 
+	m_menu = menu;
+	m_songNameLabel = songNameLabel;
+	m_divider = divider;
+	m_playButton = playButton;
+
 	this->addChild(songNameLabel);
 	this->addChild(divider);
 	this->addChild(menu);
@@ -61,15 +66,28 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	divider->setID(fmt::format("song-cell-divider-{}"_spr, isEven));
 	this->setID(fmt::format("song-cell-{}"_spr, isEven));
 
+	this->scheduleUpdate();
+
 	return true;
 }
 
 void MLRSongCell::onPlaySong(CCObject*) {
-	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	SongManager& songManager = SongManager::get();
+	if (this->m_songData.actualFilePath == songManager.getCurrentSong()) return;
+	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	songManager.setCurrentSong(m_songData.actualFilePath);
 	fmod->m_backgroundMusicChannel->stop();
 	if (Utils::getBool("playlistMode")) fmod->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
 	else GameManager::sharedState()->playMenuMusic();
 	Utils::newCardAndDisplayNameFromCurrentSong();
+}
+
+void MLRSongCell::update(float delta) {
+	const bool isCurrentSong = this->m_songData.actualFilePath == SongManager::get().getCurrentSong();
+
+	if (isCurrentSong) this->m_songNameLabel->setColor({0, 255, 0});
+	else this->m_songNameLabel->setColor({255, 255, 255});
+
+	this->m_menu->setVisible(!isCurrentSong);
+	this->m_playButton->setEnabled(!isCurrentSong);
 }
