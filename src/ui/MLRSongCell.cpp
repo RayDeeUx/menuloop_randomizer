@@ -90,7 +90,10 @@ void MLRSongCell::onPlaySong(CCObject*) {
 void MLRSongCell::update(float delta) {
 	const bool isCurrentSong = this->m_songData.actualFilePath == SongManager::get().getCurrentSong();
 
-	if (isCurrentSong) this->m_songNameLabel->setColor({0, (128 + 64), 0});
+	if (isCurrentSong) {
+		if (this->m_songData.type == SongType::Favorited) this->m_songNameLabel->setColor({0, 255, 255});
+		else this->m_songNameLabel->setColor({0, 255, 0});
+	}
 	else this->m_songNameLabel->setColor({255, 255, 255});
 
 	this->m_menu->setVisible(!isCurrentSong);
