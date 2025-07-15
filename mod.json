@@ -63,6 +63,18 @@
 			"type": "bool",
 			"default": false
 		},
+		"songFormatNGML": {
+			"name": "Newgrounds/Music Library Song Name Format",
+			"description": "Choose the format you prefer for \"Now Playing\" notifications or the Song List menu.\n\n<cy>Only applies to Newgrounds/Music Library songs.</c>",
+			"type": "string",
+			"default": "Song Name, Artist, Song ID",
+			"one-of": [
+				"Song Name",
+				"Song Name + Artist",
+				"Song Name + Song ID",
+				"Song Name, Artist, Song ID"
+			]
+		},
 		"buttonMode": {
 			"name": "Button Mode",
 			"description": "<cl>Original idea by dasshuDEV and Hanifinio.</c>\n\nReduced: Places the <cl>Blacklist Song</c>, <cl>Favorite Song</c>, <cl>Hold Song</c>, <cl>Previous Song</c>, <cl>Add to Playlist</c>, and <cl>View Song List</c> buttons to a separate popup to reduce clutter on MenuLayer.\n\nClassic: Places the <cl>Blacklist Song</c>, <cl>Favorite Song</c>, <cl>Hold Song</c>, <cl>Previous Song</c>, <cl>Add to Playlist</c>, and <cl>View Song List</c> buttons to the right side of MenuLayer (or the bottom of MenuLayer, if you use Overcharged Main Menu).",
@@ -144,18 +156,6 @@
 			"type": "bool",
 			"default": true
 		},
-		"songFormatNGML": {
-			"name": "Notifs: Song Name Format",
-			"description": "Choose the format you prefer for the \"Now Playing\" notification here.\n<cy>Only applies when using Newgrounds/Music Library songs as the menu loop.</c>",
-			"type": "string",
-			"default": "Song Name, Artist, Song ID",
-			"one-of": [
-				"Song Name",
-				"Song Name + Artist",
-				"Song Name + Song ID",
-				"Song Name, Artist, Song ID"
-			]
-		},
 		"customPrefix": {
 			"name": "Notifs: Prefix",
 			"description": "Set your prefix for the \"Now Playing\" notification here.\n\n<cy>To disable the prefix, set it to </c><cl>\"[Empty]\"</c><cy>.</c>",
@@ -219,7 +219,7 @@
 		},
 		"specificSongOverride": {
 			"name": "Specific Menu Loop File Override",
-			"description": "Here in case you *hate* the randomizer elements from this mod.\n<cy>Leave blank to disable.</c>",
+			"description": "In case you *hate* the randomizer elements from this mod.\n\n<cy>Leave this as blank to disable this option.</c>",
 			"type": "file",
 			"default": {
 				"win": "",
