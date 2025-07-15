@@ -620,7 +620,7 @@ std::string Utils::generatePlatformWarning() {
 void Utils::writeToFile(const std::string& toWriteToFile, std::filesystem::path fileForWriting) {
 	if (!std::filesystem::exists(fileForWriting) && Utils::notFavoritesNorBlacklist(fileForWriting)) {
 		const std::string& platformWarning = Utils::generatePlatformWarning();
-		const std::string& playlistSpecificIntro = fmt::format(R"(# Welcome a Menu Loop Randomizer playlist file!
+		const std::string& playlistSpecificIntro = fmt::format(R"(# Welcome to a Menu Loop Randomizer playlist file!
 # Each line that doesn't start with a "#" will be treated as a song file for the playlist.
 # All lines that start with a "#" are ignored. This means you can remove a song from the playlist by adding "#" next to it.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
