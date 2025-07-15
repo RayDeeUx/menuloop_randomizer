@@ -23,8 +23,13 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	cocos2d::CCLabelBMFont* songNameLabel = cocos2d::CCLabelBMFont::create(desiredFileName.c_str(), "bigFont.fnt");
 	songNameLabel->setAnchorPoint({.0f, .5f});
 	songNameLabel->setPosition({15, getContentHeight() / 2.f + 1.f});
+
 	if (songData.type == SongType::Favorited) songNameLabel->setFntFile("goldFont.fnt");
 	else if (songData.type == SongType::Blacklisted) songNameLabel->setColor({128, 128, 128});
+
+	if (const int songID = geode::utils::numFromString<int>(desiredFileName).unwrapOr(-1); songID != -1) {
+		if (SongInfoObject* songInfoObject = MusicDownloadManager::sharedState()->getSongInfoObject(songID)) songNameLabel->setString(Utils::getFormattedNGMLSongName(songInfoObject).c_str());
+	}
 	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);
 
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127});
@@ -85,7 +90,7 @@ void MLRSongCell::onPlaySong(CCObject*) {
 void MLRSongCell::update(float delta) {
 	const bool isCurrentSong = this->m_songData.actualFilePath == SongManager::get().getCurrentSong();
 
-	if (isCurrentSong) this->m_songNameLabel->setColor({0, 255, 0});
+	if (isCurrentSong) this->m_songNameLabel->setColor({0, (128 + 64), 0});
 	else this->m_songNameLabel->setColor({255, 255, 255});
 
 	this->m_menu->setVisible(!isCurrentSong);
