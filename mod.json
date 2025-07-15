@@ -65,7 +65,7 @@
 		},
 		"buttonMode": {
 			"name": "Button Mode",
-			"description": "<cl>Original idea by dasshuDEV and Hanifinio.</c>\n\nReduced: Places the <cl>Blacklist Song</c>, <cl>Favorite Song</c>, <cl>Hold Song</c>, and <cl>Previous Song</c> buttons to a separate popup to reduce clutter on MenuLayer.\nClassic: Places the <cl>Blacklist Song</c>, <cl>Favorite Song</c>, <cl>Hold Song</c>, and <cl>Previous Song</c> buttons to the right side of MenuLayer (or the bottom of MenuLayer, if you use Overcharged Main Menu).",
+			"description": "<cl>Original idea by dasshuDEV and Hanifinio.</c>\n\nReduced: Places the <cl>Blacklist Song</c>, <cl>Favorite Song</c>, <cl>Hold Song</c>, <cl>Previous Song</c>, <cl>Add to Playlist</c>, and <cl>View Song List</c> buttons to a separate popup to reduce clutter on MenuLayer.\n\nClassic: Places the <cl>Blacklist Song</c>, <cl>Favorite Song</c>, <cl>Hold Song</c>, and <cl>Previous Song</c> buttons to the right side of MenuLayer (or the bottom of MenuLayer, if you use Overcharged Main Menu).",
 			"type": "string",
 			"default": "Reduced",
 			"one-of": [
@@ -106,6 +106,18 @@
 		"enablePreviousButton": {
 			"name": "Previous Song Button (READ!)",
 			"description": "<cl>Original idea by DurexSensitive.</c>\n\nGo back <c_>one</c> song. This does <c_>NOT</c> store your entire menu loop history, only one song at a time.\n\nDon't expect this intentional limitation to go away anytime soon.\n\n<cy>Only applicable when using the \"Classic\" Button Mode.</c>",
+			"type": "bool",
+			"default": true
+		},
+		"enableAddToPlaylistButton": {
+			"name": "Add To Playlist Button (READ!)",
+			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nAdds the currently playing song to the selected <cl>Playlist File</c> (see other mod settings).\n\n<cy>Only applicable when using the \"Classic\" Button Mode.</c>",
+			"type": "bool",
+			"default": true
+		},
+		"enableViewSongListButton": {
+			"name": "View Song List Button (READ!)",
+			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nLets you view the names of the menu loops MLR has loaded.\n\n<cy>Only applicable when using the \"Classic\" Button Mode.</c>",
 			"type": "bool",
 			"default": true
 		},

@@ -4,6 +4,8 @@
 #include "Utils.hpp"
 #include <Geode/modify/MenuLayer.hpp>
 
+#include "ui/SongListLayer.hpp"
+
 #define REST_OF_THE_OWL static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this
 
 using namespace geode::prelude;
@@ -35,6 +37,8 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (Utils::getBool("enableFavoriteButton")) Utils::addButton("favorite", menu_selector(MenuLayerMLHook::onFavoriteButton), REST_OF_THE_OWL);
 		if (Utils::getBool("enableHoldSongButton")) Utils::addButton("hold", menu_selector(MenuLayerMLHook::onHoldSongButton), REST_OF_THE_OWL);
 		if (Utils::getBool("enablePreviousButton")) Utils::addButton("prev", menu_selector(MenuLayerMLHook::onPreviousButton), REST_OF_THE_OWL);
+		if (Utils::getBool("enableAddToPlaylistButton")) Utils::addButton("add", menu_selector(MenuLayerMLHook::onAddToPlylstBtn), REST_OF_THE_OWL);
+		if (Utils::getBool("enableViewSongListButton")) Utils::addButton("playlist", menu_selector(MenuLayerMLHook::onSongListButton), REST_OF_THE_OWL);
 		return true;
 	}
 	void onShuffleButton(CCObject*) { SongControl::shuffleSong(); }
@@ -44,6 +48,8 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onFavoriteButton(CCObject*) { SongControl::favoriteSong(); }
 	void onHoldSongButton(CCObject*) { SongControl::holdSong(); }
 	void onPreviousButton(CCObject*) { SongControl::previousSong(); }
+	void onAddToPlylstBtn(CCObject*) { SongControl::addSongToPlaylist(SongManager::get().getCurrentSong()); }
+	void onSongListButton(CCObject*) { SongListLayer::create()->showLayer(true); }
 	void onControlsButton(CCObject*) {
 		if (Utils::getString("buttonMode") == "Classic") return;
 		if (CCScene::get()->getChildByType<SongControlMenu>(0)) return;
