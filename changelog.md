@@ -5,6 +5,9 @@
   - Favorite songs lists and song blacklists still apply.
   - Playlist-like Playback Mode (formerly `Playlist Mode`) is also supported.
 - Added a new menu to see the names of all loaded songs.
+  - Gold song names indicate a favorited song.
+  - Green song names indicate a currently playing song.
+  - No, I will not be adding a search bar.
 - Retroactively rename `Playlist Mode` to `Playlist-like Playback Mode` across as many front-facing areas as possible to avoid confusion with more recent features (see first bullet point).
 ## v1.8.4
 - Added `Advanced Logging` toggle.
