@@ -171,7 +171,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameWithoutExtension);
 
 	if (songFileNameAsID.isErr()) {
-		geode::log::error("{} had an invalid Song ID! [NG/Music Library]", songFileNameWithoutExtension);
+		if (songManager.getPlaylistIsEmpty()) geode::log::error("{} had an invalid Song ID! [NG/Music Library]", songFileNameWithoutExtension);
 		return Utils::newNotification(composedNotifString(notifString, fmt::format("Unknown ({})", songFileNameWithoutExtension), suffix), true);
 	}
 
@@ -481,8 +481,8 @@ void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_vie
 
 
 SongInfoObject* Utils::getSongInfoObject() {
-	if (Utils::getBool("useCustomSongs") && !Utils::getBool("loadPlaylistFile")) return nullptr;
 	SongManager& songManager = SongManager::get();
+	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return nullptr;
 	if (songManager.isOriginalMenuLoop()) return nullptr;
 
 	const std::string& songFileName = toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
@@ -505,15 +505,20 @@ std::string Utils::getSongName() {
 	const auto songInfo = Utils::getSongInfoObject();
 	if (!songInfo) return "";
 	std::string ret = songInfo->m_songName;
-	#ifndef __APPLE__
 	if (geode::utils::string::contains(ret, "nong")) {
-		std::string instructions = "open File Explorer and visit AppData/Local/GeometryDash/geode/mods/fleym.nongd/nongs";
-		#ifdef GEODE_IS_ANDROID
-		instructions = "open your file manager [preferably ZArchiver, otherwise you would need to close Geode/Geometry Dash] and visit Android/media/com.geode.launcher/save/geode/mods/fleym.nongd/nongs";
-		#endif
+		const std::string& platform = Utils::getPlatform();
+		std::string instructions = "you might need some extra help";
+		if (geode::utils::string::startsWith(platform, "Android")) {
+			instructions = "open your file manager [preferably ZArchiver, otherwise you would need to close Geode/Geometry Dash] and visit Android/media/com.geode.launcher/save/geode/mods/fleym.nongd/nongs"
+		} else if (geode::utils::string::startsWith(platform, "Windows")) {
+			instructions = "open File Explorer and visit AppData/Local/GeometryDash/geode/mods/fleym.nongd/nongs";
+		} else if (geode::utils::string::startsWith(platform, "macOS")) {
+			instructions = "open Finder and visit ~/Library/Application Support/GeometryDash/geode/mods/fleym.nongd/nongs";
+		} else if (geode::utils::string::startsWith(platform, "iOS")) {
+			instructions = "maybe start with the Files app? There's no knowing what the setup on your iOS device is like, to be fair...";
+		}
 		return fmt::format("{} (To find this song, {})", ret, instructions);
 	}
-	#endif
 	return ret;
 }
 
