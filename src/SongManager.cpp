@@ -75,17 +75,17 @@ bool SongManager::isOriginalMenuLoop() const {
 	return m_isMenuLoop;
 }
 
-void SongManager::setPlaylistMode() {
-	m_playlistMode = Utils::getBool("playlistMode");
+void SongManager::setConstantShuffleMode() {
+	m_constantShuffleMode = Utils::getBool("playlistMode");
 }
 
-bool SongManager::isPlaylistMode() const {
-	return m_playlistMode;
+bool SongManager::getConstantShuffleMode() const {
+	return m_constantShuffleMode;
 }
 
 void SongManager::update(float dt) const {
 	// split for readability
-	if (VANILLA_GD_MENU_LOOP_DISABLED || !m_playlistMode) return;
+	if (VANILLA_GD_MENU_LOOP_DISABLED || !m_constantShuffleMode) return;
 	if (GJBaseGameLayer::get() || m_isMenuLoop || m_songs.size() < 2) return;
 	auto fmod = FMODAudioEngine::get();
 	if (!fmod) return;

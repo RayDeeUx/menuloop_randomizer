@@ -1,4 +1,4 @@
-#include "PlaylistModeWarning.hpp"
+#include "ConstantShuffleModeWarning.hpp"
 #include "SongManager.hpp"
 #include "Utils.hpp"
 #include "Settings.hpp"
@@ -12,7 +12,7 @@ bool originalOverrideWasEmpty = false;
 
 $on_mod(Loaded) {
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
-	songManager.setPlaylistMode();
+	songManager.setConstantShuffleMode();
 
 	auto blacklistTxt = configDir / R"(blacklist.txt)";
 	if (!std::filesystem::exists(blacklistTxt)) {
@@ -89,16 +89,16 @@ $on_mod(Loaded) {
 	listenForSettingChanges<std::filesystem::path>("playlistFile", [](std::filesystem::path playlistFile) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("playlistFile");
 	});
-	listenForSettingChanges<bool>("playlistMode", [](bool playlistMode) {
+	listenForSettingChanges<bool>("playlistMode", [](bool constantShuffleMode) {
 		SongManager& songManager = SongManager::get();
-		songManager.setPlaylistMode();
+		songManager.setConstantShuffleMode();
 		if (songManager.isOriginalMenuLoop()) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		Utils::queueUpdateSCMLabel();
-		if (playlistMode) {
+		if (constantShuffleMode) {
 			FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
-			return PlaylistModeWarning::create(songManager.getGeodify())->show();
+			return ConstantShuffleModeWarning::create(songManager.getGeodify())->show();
 		}
 		GameManager::sharedState()->playMenuMusic();
 	});
