@@ -608,19 +608,20 @@ std::string Utils::getPlatform() {
 	#elif defined(GEODE_IS_INTEL_MAC)
 	return "macOS (Intel)";
 	#else
-	return "[AN UNKNOWN PLATFORM]";
+	return "[an unknown platform]";
 	#endif
 }
 
 std::string Utils::generatePlatformWarning() {
 	const std::string& platform = Utils::getPlatform();
-	return fmt::format("THIS PLAYLIST FILE WAS CREATED ON {}. ONLY SHARE THIS FILE WITH OTHER MLR USERS ON {}.", platform, platform);
+	return fmt::format("This playlist file was created using {}. Only share this file with other MLR users on {}.", platform, platform);
 }
 
 void Utils::writeToFile(const std::string& toWriteToFile, std::filesystem::path fileForWriting) {
 	if (!std::filesystem::exists(fileForWriting) && Utils::notFavoritesNorBlacklist(fileForWriting)) {
 		const std::string& platformWarning = Utils::generatePlatformWarning();
 		const std::string& playlistSpecificIntro = fmt::format(R"(# Welcome to a Menu Loop Randomizer playlist file!
+# This playlist is named "{}".
 # Each line that doesn't start with a "#" will be treated as a song file for the playlist.
 # All lines that start with a "#" are ignored. This means you can remove a song from the playlist by adding "#" next to it.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
@@ -648,7 +649,7 @@ void Utils::writeToFile(const std::string& toWriteToFile, std::filesystem::path 
 # BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
 # {}
 # BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED.
-# --RayDeeUx)",
+# --RayDeeUx)", fileForWriting.filename(),
 platformWarning, platformWarning,
 platformWarning, platformWarning,
 platformWarning, platformWarning,
