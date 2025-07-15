@@ -72,7 +72,7 @@ void Utils::setNewSong() {
 void Utils::playlistModeNewSong(const bool fromGJBGL) {
 	if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 	if (!Utils::getBool("playlistMode")) return Utils::setNewSong();
-	geode::log::info("attempting to hijack menuloop channel to use playlist mode");
+	geode::log::info("attempting to hijack menuloop channel to use playlist-like playback mode");
 	const auto fmod = FMODAudioEngine::sharedEngine();
 	float fmodIsCBrained;
 	const FMOD_RESULT fmodResult = fmod->m_backgroundMusicChannel->getVolume(&fmodIsCBrained);

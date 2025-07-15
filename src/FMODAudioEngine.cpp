@@ -19,7 +19,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		}
 		if (!Utils::getBool("playlistMode") || isLavaChicken)
 			return FMODAudioEngine::get()->playMusic(path, shouldLoop, fadeInTime, channel);
-		log::info("playlist mode enabled.\n=== PLAYLIST MODE DEBUG INFO ===\npath: {}\nshouldLoop: {}\nfadeInTime: {}\nchannel: {}", path, shouldLoop, fadeInTime, channel);
+		log::info("playlist-like playback mode enabled.\n=== PLAYLIST-LIKE PLAYBACK MODE DEBUG INFO ===\npath: {}\nshouldLoop: {}\nfadeInTime: {}\nchannel: {}", path, shouldLoop, fadeInTime, channel);
 		if (CCScene* scene = CCScene::get(); Utils::getBool("advancedLogs") && scene && scene->getChildren()) {
 			for (CCObject* object : CCArrayExt<CCObject*>(scene->getChildren())) {
 				const auto node = typeinfo_cast<CCNode*>(object);
@@ -29,7 +29,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		bool desiredShouldLoop = shouldLoop;
 		std::string gdStringSucks = path;
 		std::smatch smatch;
-		if (std::regex_match(gdStringSucks, smatch, terribleLoopRegex)) return log::info("terrible loop detected while playlist mode is active: {}", gdStringSucks);
+		if (std::regex_match(gdStringSucks, smatch, terribleLoopRegex)) return log::info("terrible loop detected while playlist-like playback mode is active: {}", gdStringSucks);
 		const bool isMenuLoop = std::regex_match(gdStringSucks, smatch, geometryDashRegex);
 		if (GJBaseGameLayer::get() && !isMenuLoop) return FMODAudioEngine::get()->playMusic(path, desiredShouldLoop, fadeInTime, channel);
 		if (fadeInTime == 0 && gdStringSucks == "shop.mp3") return;
