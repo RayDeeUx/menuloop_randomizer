@@ -544,11 +544,11 @@ std::string Utils::toNormalizedString(const std::filesystem::path& path) {
 	#endif
 }
 
-std::string Utils::toProblematicString(const std::string& path) {
+std::filesystem::path Utils::toProblematicString(const std::string& path) {
 	#ifdef GEODE_IS_WINDOWS
-	return geode::utils::string::utf8ToWide(path);
+	return std::filesystem::path(geode::utils::string::utf8ToWide(path));
 	#else
-	return path;
+	return std::filesystem::path(path);
 	#endif
 }
 
