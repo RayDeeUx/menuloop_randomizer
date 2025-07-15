@@ -254,8 +254,24 @@ void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
 			geode::log::info("unable to find song on line {} of playlistFile {}", lineCount, playlistFile.filename());
 			continue;
 		}
+		const std::string& songPath = Utils::toNormalizedString(playlistFileLineModified);
+
+		if (!Utils::isSupportedFile(songPath)) {
+			geode::log::info("song {} is not supported (check file extension!)", songPath);
+			continue;
+		}
+		if (std::ranges::find(blacklist, songPath) != blacklist.end()) {
+			geode::log::info("song {} is in blacklist.", songPath);
+			continue;
+		}
+
 		geode::log::info("loading song on line {} of playlistFile {}", lineCount, playlistFile.filename());
 		songManager.addSong(playlistFileLineModified);
+		geode::log::info("adding song from line {} of playlistFile {}", lineCount, songPath);
+		if (std::ranges::find(favorites, songPath) != favorites.end()) {
+			songManager.addSong(playlistFileLineModified);
+			geode::log::info("adding song from line {} of playlistFile {} ***AGAIN because favorited***", lineCount, songPath);
+		}
 	}
 	geode::log::info("Finished storing playlist. loaded songs size: {}", songManager.getSongsSize());
 }

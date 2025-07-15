@@ -35,7 +35,7 @@
 		},
 		"loadPlaylistFile": {
 			"name": "Load Playlist File Instead",
-			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will load as menu loop options.",
+			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will load as menu loop options.\n\nNote that your `blacklist.txt` and `favorites.txt` files will still apply.",
 			"type": "bool",
 			"default": false
 		},
