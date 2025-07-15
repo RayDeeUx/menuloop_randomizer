@@ -168,7 +168,7 @@ namespace SongControl {
 		}
 
 		const std::filesystem::path playlistFilePath = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
-		if (playlistFilePath.string().empty() || !geode::utils::string::endsWith(playlistFilePath, ".txt")) {
+		if (playlistFilePath.string().empty() || !geode::utils::string::endsWith(playlistFilePath, ".txt") || !Utils::notFavoritesNorBlacklist(playlistFilePath)) {
 			return geode::Notification::create(
 				"Invalid text file selected as your MLR playlist file!",
 				geode::NotificationIcon::Error, 5.f
