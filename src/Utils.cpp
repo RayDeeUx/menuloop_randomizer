@@ -481,11 +481,11 @@ void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_vie
 
 
 SongInfoObject* Utils::getSongInfoObject() {
-	if (Utils::getBool("useCustomSongs")) return nullptr;
+	if (Utils::getBool("useCustomSongs") && !Utils::getBool("loadPlaylistFile")) return nullptr;
 	SongManager& songManager = SongManager::get();
 	if (songManager.isOriginalMenuLoop()) return nullptr;
 
-	std::string songFileName = toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
+	const std::string& songFileName = toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
 
 	// if it's not menuLoop.mp3, then get info
 	size_t dotPos = songFileName.find_last_of('.');
