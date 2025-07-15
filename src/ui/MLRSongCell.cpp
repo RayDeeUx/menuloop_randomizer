@@ -78,8 +78,10 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 
 void MLRSongCell::onPlaySong(CCObject*) {
 	SongManager& songManager = SongManager::get();
-	if (this->m_songData.actualFilePath == songManager.getCurrentSong()) return;
+	const std::string& currentSong = songManager.getCurrentSong();
+	if (this->m_songData.actualFilePath == currentSong) return;
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
+	songManager.setPreviousSong(currentSong);
 	songManager.setCurrentSong(m_songData.actualFilePath);
 	fmod->m_backgroundMusicChannel->stop();
 	if (Utils::getBool("playlistMode")) fmod->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
