@@ -185,10 +185,10 @@ namespace SongControl {
 		const std::string& songArtist = Utils::getSongArtist();
 		const std::string& toWriteToFile = useCustomSongs ? songPath : fmt::format("{} # [MLR] Song: {} by {} | Platform: {} [MLR] #", songPath, songName, songArtist, Utils::getPlatform());
 
-		Utils::writeToFile(toWriteToFile, FAVORITES_FILE);
+		Utils::writeToFile(toWriteToFile, playlistFilePath);
 
 		geode::Notification::create(
-			fmt::format("Successfully added song to playlist file {}!", playlistFilePath),
+			fmt::format("Successfully added song to playlist file {}!", playlistFilePath.filename()),
 			geode::NotificationIcon::Success,
 			5.f
 		)->show();
