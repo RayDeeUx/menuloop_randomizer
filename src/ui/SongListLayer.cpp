@@ -29,8 +29,8 @@ void SongListLayer::customSetup() {
 		"A: You should at least <c_>***listen***</c> to a song before making these decisions. "
 		"Also, there wasn't enough room\nto fit those buttons into each row.\n\n"
 		"<cy>Q: Why did the MLR control panel just close?!</c>\n"
-		"A: Touch priority and Z ordering issues.\n<cy>(In other words, bugs not worth fixing.)</c>\n"
-		"<cy>Q: Add a search bar!</c> A: No.",
+		"A: Touch priority and Z ordering issues.\n<cy>(In other words, bugs not worth fixing.)</c>\n\n"
+		"<cy>Q: Add a search bar!</c> A: <c_>No. Never. Learn how to scroll through a list.</c>",
 		1.f
 	);
 	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
