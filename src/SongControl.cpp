@@ -163,8 +163,7 @@ namespace SongControl {
 		if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") && !songManager.getPlaylistIsEmpty()) {
 			return geode::Notification::create(
 				"You've already loaded an MLR playlist file!",
-				geode::NotificationIcon::Error,
-				10.f
+				geode::NotificationIcon::Error, 10.f
 			)->show();
 		}
 
@@ -172,8 +171,7 @@ namespace SongControl {
 		if (playlistFilePath.string().empty() || !geode::utils::string::endsWith(playlistFilePath, ".txt")) {
 			return geode::Notification::create(
 				"Invalid text file selected as your MLR playlist file!",
-				geode::NotificationIcon::Error,
-				5.f
+				geode::NotificationIcon::Error, 5.f
 			)->show();
 		}
 
@@ -189,8 +187,7 @@ namespace SongControl {
 
 		geode::Notification::create(
 			fmt::format("Successfully added song to playlist file {}!", playlistFilePath.filename()),
-			geode::NotificationIcon::Success,
-			5.f
+			geode::NotificationIcon::Success, 5.f
 		)->show();
 	}
 }
