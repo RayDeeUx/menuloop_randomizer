@@ -58,7 +58,7 @@ namespace SongControl {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		if (songManager.isOriginalMenuLoop()) return SongControl::woahThereBuddy("There's nothing to favorite! Double-check your config folder again.");
-		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
+		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're trying to favorite your own <cy>override</c>. Double-check your settings again.");
 
 		const std::string& currentSong = songManager.getCurrentSong();
 
@@ -154,6 +154,20 @@ namespace SongControl {
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 	void addSongToPlaylist(const std::string& songPath) {
+		SongManager& songManager = SongManager::get();
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+
+		if (songManager.isOriginalMenuLoop()) return SongControl::woahThereBuddy("There's nothing to add to your playlist! Double-check your config folder again.");
+		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're trying to add your own <cy>override</c> to your playlist. Double-check your settings again.");
+
+		if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") && !songManager.getPlaylistIsEmpty()) {
+			return geode::Notification::create(
+				"You've already loaded an MLR playlist file!",
+				geode::NotificationIcon::Error,
+				10.f
+			)->show();
+		}
+
 		const std::filesystem::path playlistFilePath = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
 		if (playlistFilePath.string().empty() || !geode::utils::string::endsWith(playlistFilePath, ".txt")) {
 			return geode::Notification::create(
@@ -162,6 +176,17 @@ namespace SongControl {
 				5.f
 			)->show();
 		}
+
+		geode::log::info("adding {} to {} ({})", songPath, playlistFilePath.filename(), playlistFilePath);
+
+		const bool useCustomSongs = Utils::getBool("useCustomSongs");
+
+		const std::string& songName = Utils::getSongName();
+		const std::string& songArtist = Utils::getSongArtist();
+		const std::string& toWriteToFile = useCustomSongs ? songPath : fmt::format("{} # [MLR] Song: {} by {} | Platform: {} [MLR] #", songPath, songName, songArtist, Utils::getPlatform());
+
+		Utils::writeToFile(toWriteToFile, FAVORITES_FILE);
+
 		geode::Notification::create(
 			fmt::format("Successfully added song to playlist file {}!", playlistFilePath),
 			geode::NotificationIcon::Success,

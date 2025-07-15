@@ -280,11 +280,24 @@ void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
 void Utils::populateVector(const bool customSongs, const std::filesystem::path& path, std::vector<std::string> textFileBlacklist, std::vector<std::string> textFileFavorites) {
 	if (geode::utils::string::contains(Utils::toNormalizedString(path), "store_your_disabled_menuloops_here") && geode::utils::string::contains(Utils::toNormalizedString(path), Utils::toNormalizedString(geode::Mod::get()->getConfigDir()))) return; // avoid recursion --raydeeux
 
+	SongManager& songManager = SongManager::get();
+
 	// impl playlist files
 	const std::filesystem::path playlistFile = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
 	if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") && std::filesystem::exists(playlistFile) && playlistFile.extension() == ".txt") {
-		Utils::loadFromPlaylistFile(playlistFile);
-		return geode::log::info("loading from playlist file instead: {}", playlistFile);
+		bool isPlaylistEmpty = true;
+		std::ifstream playlistFileStream(playlistFile);
+		std::string playlistFileLineString;
+		while (std::getline(playlistFileStream, playlistFileLineString) && isPlaylistEmpty) {
+			if (playlistFileLineString.starts_with('#')) continue;
+			if (!playlistFileLineString.empty()) isPlaylistEmpty = false;
+		}
+		songManager.setPlaylistIsEmpty(isPlaylistEmpty);
+		if (!isPlaylistEmpty) {
+			Utils::loadFromPlaylistFile(playlistFile);
+			return geode::log::info("loading from playlist file instead: {}", playlistFile);
+		}
+		geode::log::info("playlist file {} is empty. load songs w/o playlist.", playlistFile);
 	}
 
 	const std::filesystem::path configDir = path.string().empty() ? geode::Mod::get()->getConfigDir() : path;
@@ -293,8 +306,6 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 		if not, just use the newgrounds songs
 		--elnex
 	*/
-
-	SongManager& songManager = SongManager::get();
 
 	std::vector<std::string> songManagerBlacklist = songManager.getBlacklist();
 	const std::filesystem::path& blacklistPath = configDir / R"(blacklist.txt)";

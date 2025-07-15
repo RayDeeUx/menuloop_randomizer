@@ -32,7 +32,9 @@ bool SongControlMenu::setup(const std::string&) {
 	Utils::addButton("favorite", menu_selector(SongControlMenu::onFavoriteButton), REST_OF_THE_OWL);
 	Utils::addButton("hold", menu_selector(SongControlMenu::onHoldSongButton), REST_OF_THE_OWL);
 	Utils::addButton("prev", menu_selector(SongControlMenu::onPreviousButton), REST_OF_THE_OWL);
-	Utils::addButton("add", menu_selector(SongControlMenu::onAddToPlylstBtn), REST_OF_THE_OWL);
+	if (!geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") || SongManager::get().getPlaylistIsEmpty()) {
+		Utils::addButton("add", menu_selector(SongControlMenu::onAddToPlylstBtn), REST_OF_THE_OWL);
+	}
 
 	geode::AxisLayout* layout = geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f);
 
@@ -139,6 +141,7 @@ void SongControlMenu::onPlaylistButton(CCObject*) {
 	SongListLayer::create()->showLayer(true);
 }
 void SongControlMenu::onAddToPlylstBtn(CCObject*) {
+	if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile")) return geode::log::info("tried adding current song to a playlist file. BOOOOOOOOOOOOO");
 	SongControl::addSongToPlaylist(SongManager::get().getCurrentSong());
 	SongControlMenu::updateCurrentLabel();
 }

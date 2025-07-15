@@ -125,6 +125,14 @@ bool SongManager::getLavaChicken() const {
 	return m_isLavaChicken;
 }
 
+void SongManager::setPlaylistIsEmpty(const bool value) {
+	m_playlistIsEmpty = value;
+}
+
+bool SongManager::getPlaylistIsEmpty() const {
+	return m_playlistIsEmpty;
+}
+
 void SongManager::setHeldSong(const std::string_view value) {
 	if (!getOverrideSong().empty()) return;
 	m_heldSong = value;

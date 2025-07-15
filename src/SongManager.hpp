@@ -42,6 +42,8 @@ class SongManager {
 	void setGeodify(const bool);
 	void setLavaChicken(const bool);
 	bool getLavaChicken() const;
+	void setPlaylistIsEmpty(const bool);
+	bool getPlaylistIsEmpty() const;
 	void setHeldSong(const std::string_view value);
 	void resetHeldSong();
 	std::string getHeldSong();
@@ -78,6 +80,7 @@ class SongManager {
 	bool m_geodify = false;
 	bool m_isOverride = false;
 	bool m_isLavaChicken = false;
+	bool m_playlistIsEmpty = false;
 	std::vector<std::string> m_blacklist;
 	std::vector<std::string> m_favorites;
 };
