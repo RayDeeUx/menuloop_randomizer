@@ -24,13 +24,14 @@ void SongListLayer::customSetup() {
 	);
 	infoMenu->setContentSize({24.f, 23.f});
 	InfoAlertButton* infoBtn = InfoAlertButton::create(
-		"Menu Loop Randomizer",
+		"Menu Loop Randomizer - FAQ",
 		"<cy>Q: I can't blacklist/favorite songs from here?!</c>\n"
 		"A: You should at least <c_>***listen***</c> to a song before making these decisions. "
 		"Also, there wasn't enough room\nto fit those buttons into each row.\n\n"
 		"<cy>Q: Why did the MLR control panel just close?!</c>\n"
 		"A: Touch priority and Z ordering issues.\n<cy>(In other words, bugs not worth fixing.)</c>\n\n"
-		"<cy>Q: Add a search bar!</c> A: <c_>No. Never. Learn how to scroll through a list.</c>",
+		"<cy>Q: Add a search bar!</c>\n"
+		"A: <c_>No. Never. Learn how to scroll through a list.</c>",
 		1.f
 	);
 	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
@@ -101,6 +102,39 @@ void SongListLayer::showLayer(const bool instant) {
 
 	this->setID("SongListLayer"_spr);
 	m_listLayer->setID("list-of-songs-layer"_spr);
+
+	CCNode* titleLabel = m_listLayer->getChildByID("title");
+	if (!titleLabel) return;
+
+	const SongManager& songManager = SongManager::get();
+
+	const std::string& playlistFileName = songManager.getPlaylistIsEmpty() ? "None" : geode::utils::string::replace(Utils::toNormalizedString(geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile").filename()), ".txt", "");
+	cocos2d::CCLabelBMFont* currentPlaylistLabel = cocos2d::CCLabelBMFont::create(fmt::format("Selected Playlist: {}", playlistFileName).c_str(), "bigFont.fnt");
+	currentPlaylistLabel->setPosition({83.5f, 0.f});
+	currentPlaylistLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);
+	currentPlaylistLabel->setZOrder(titleLabel->getZOrder());
+
+	const std::string& loadPlaylistFileInstead = Utils::getBool("loadPlaylistFile") ? "ON" : "OFF";
+	cocos2d::CCLabelBMFont* loadPlaylistFileLabel = cocos2d::CCLabelBMFont::create(fmt::format("Load Playlist File: {}", loadPlaylistFileInstead).c_str(), "bigFont.fnt");
+	loadPlaylistFileLabel->setPosition({83.5f, -11.f});
+	loadPlaylistFileLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);
+	loadPlaylistFileLabel->setZOrder(titleLabel->getZOrder());
+
+	const std::string& isConstantShuffleMode = songManager.getConstantShuffleMode() ? "ON" : "OFF";
+	cocos2d::CCLabelBMFont* constantShuffleModeLabel = cocos2d::CCLabelBMFont::create(fmt::format("Constant Shuffle Mode: {}", isConstantShuffleMode).c_str(), "bigFont.fnt");
+	constantShuffleModeLabel->setPosition({272.5f, 0.f});
+	constantShuffleModeLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);
+	constantShuffleModeLabel->setZOrder(titleLabel->getZOrder());
+
+	cocos2d::CCLabelBMFont* platformLabel = cocos2d::CCLabelBMFont::create(fmt::format("Platform: {}", Utils::getPlatform()).c_str(), "bigFont.fnt");
+	platformLabel->setPosition({272.5f, -11.f});
+	platformLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);
+	platformLabel->setZOrder(titleLabel->getZOrder());
+
+	m_listLayer->addChild(currentPlaylistLabel);
+	m_listLayer->addChild(loadPlaylistFileLabel);
+	m_listLayer->addChild(constantShuffleModeLabel);
+	m_listLayer->addChild(platformLabel);
 }
 
 void SongListLayer::onSettingsButton(CCObject*) {
