@@ -9,6 +9,7 @@
   - Green song names indicate a currently playing song.
   - No, I will not be adding a search bar.
 - Retroactively rename `Playlist Mode` to `Constant Shuffle Mode` across as many front-facing areas as possible to avoid confusion with more recent features (see first bullet point).
+- Moved repository URL to Codeberg.
 ## v1.8.4
 - Added `Advanced Logging` toggle.
 - Added an easter egg.

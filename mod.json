@@ -20,7 +20,7 @@
 		"interface",
 		"enhancement"
 	],
-	"repository": "https://github.com/RayDeeUx/menuloop_randomizer",
+	"repository": "https://codeberg.org/RayDeeUx/menuloop_randomizer",
 	"settings": {
 		"configdir": {
 			"name": "Config Dir: Store Custom Songs + Edit Song Blacklist",
