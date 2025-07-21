@@ -27,8 +27,9 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	if (songData.type == SongType::Favorited) songNameLabel->setFntFile("goldFont.fnt");
 	else if (songData.type == SongType::Blacklisted) songNameLabel->setColor({128, 128, 128});
 
-	if (const int songID = geode::utils::numFromString<int>(desiredFileName).unwrapOr(-1); songID != -1) {
-		if (SongInfoObject* songInfoObject = MusicDownloadManager::sharedState()->getSongInfoObject(songID)) songNameLabel->setString(Utils::getFormattedNGMLSongName(songInfoObject).c_str());
+	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
+	if (const int songID = geode::utils::numFromString<int>(desiredFileName).unwrapOr(-1); songID > 0 && !mdm->m_resourceSongUnorderedSet.contains(songID) && mdm->isSongDownloaded(songID) && Utils::toNormalizedString(songData.actualFilePath) == Utils::toNormalizedString(mdm->pathForSong(songID))) {
+		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) songNameLabel->setString(Utils::getFormattedNGMLSongName(songInfoObject).c_str());
 	}
 	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);
 
