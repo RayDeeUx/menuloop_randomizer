@@ -28,7 +28,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	else if (songData.type == SongType::Blacklisted) songNameLabel->setColor({128, 128, 128});
 
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
-	if (const int songID = geode::utils::numFromString<int>(desiredFileName).unwrapOr(-1); songID > 0 && !mdm->m_resourceSongUnorderedSet.contains(songID) && mdm->isSongDownloaded(songID) && Utils::toNormalizedString(songData.actualFilePath) == Utils::toNormalizedString(mdm->pathForSong(songID))) {
+	if (const int songID = geode::utils::numFromString<int>(desiredFileName).unwrapOr(-1); songID > 0 && !mdm->isResourceSong(songID) && mdm->isSongDownloaded(songID) && Utils::toNormalizedString(songData.actualFilePath) == Utils::toNormalizedString(mdm->pathForSong(songID))) {
 		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) songNameLabel->setString(Utils::getFormattedNGMLSongName(songInfoObject).c_str());
 	}
 	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);

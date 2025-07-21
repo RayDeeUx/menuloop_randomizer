@@ -6,6 +6,7 @@
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 #define REST_OF_THE_CAT this->m_theTimeoutCorner, this
+#define REST_OF_THE_DOG this->m_buttonMenu, this
 
 bool SongControlMenu::setup(const std::string&) {
 	this->setTitle("Menu Loop Randomizer - Control Panel");
@@ -46,16 +47,21 @@ bool SongControlMenu::setup(const std::string&) {
 	this->m_theTimeoutCorner = cocos2d::CCMenu::create();
 
 	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), REST_OF_THE_CAT);
-	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), REST_OF_THE_CAT);
+	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), REST_OF_THE_DOG);
 
 	geode::AxisLayout* layoutTimeout = geode::ColumnLayout::create()->setGap(2.5f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
+
+	if (CCNode* controlsButton = this->m_buttonMenu->getChildByID("controls-button"_spr)) {
+		controlsButton->setPosition({m_mainLayer->getContentSize() - 3.f});
+		controlsButton->setScale(.8f);
+	}
 
 	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 8.5f});
 	this->m_theTimeoutCorner->ignoreAnchorPointForPosition(false);
 	this->m_theTimeoutCorner->setContentSize({24.f, 36.f});
 	this->m_theTimeoutCorner->setLayout(layoutTimeout);
 
-	this->m_otherLabel = cocos2d::CCLabelBMFont::create("Hey all! Menu Loop Randomizer will never be designed to resembele Spotify, or its distant cousin EditorMusic. Please keep this in mind. :)", "chatFont.fnt");
+	this->m_otherLabel = cocos2d::CCLabelBMFont::create("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :)", "chatFont.fnt");
 	this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
 	this->m_otherLabel->setPosition({centerStage, 12.5f});
