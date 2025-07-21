@@ -585,16 +585,22 @@ void Utils::queueUpdateSCMLabel() {
 void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target) {
 	if (!menu || !target || name.empty()) return;
 
-	CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
-		geode::CircleButtonSprite::create(cocos2d::CCSprite::create(fmt::format("{}-btn-sprite.png"_spr, name).c_str())),
-		target, function
-	);
+	geode::CircleButtonSprite* visualSprite = geode::CircleButtonSprite::create(cocos2d::CCSprite::create(fmt::format("{}-btn-sprite.png"_spr, name).c_str()));
+	if (name == "controls" && menu->getTag() == 7212025) {
+		visualSprite->setScale(.5f);
+	}
+
+	CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(visualSprite, target, function);
 	btn->setID(fmt::format("{}-button"_spr, name));
 
 	if (cocos2d::CCSprite* cocosSprite = btn->getChildByType<geode::CircleButtonSprite>(0)->getChildByType<cocos2d::CCSprite>(0)) {
-		if (name == "favorite" || name == "prev") cocosSprite->setScale(.5f);
-		else if (name == "controls" || name == "blacklist") cocosSprite->setScale(.4f);
-		else if (name == "playlist" || name == "add") cocosSprite->setScale(.5f);
+		if (name == "favorite" || name == "prev") {
+			cocosSprite->setScale(.5f);
+		} else if (name == "controls" || name == "blacklist") {
+			cocosSprite->setScale(.4f);
+		} else if (name == "playlist" || name == "add") {
+			cocosSprite->setScale(.5f);
+		}
 	}
 
 	menu->addChild(btn);

@@ -44,16 +44,16 @@ bool SongControlMenu::setup(const std::string&) {
 	this->m_songControlsMenu->setContentSize({idealWidth, 32.f});
 	this->m_songControlsMenu->setLayout(layout);
 
+	this->m_buttonMenu->setTag(7212025);
 	this->m_theTimeoutCorner = cocos2d::CCMenu::create();
 
 	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), REST_OF_THE_CAT);
 	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), REST_OF_THE_DOG);
 
-	geode::AxisLayout* layoutTimeout = geode::ColumnLayout::create()->setGap(2.5f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
+	geode::AxisLayout* layoutTimeout = geode::ColumnLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, .65f)->setAutoScale(true);
 
 	if (CCNode* controlsButton = this->m_buttonMenu->getChildByID("controls-button"_spr)) {
 		controlsButton->setPosition({m_mainLayer->getContentSize() - 3.f});
-		controlsButton->setScale(.8f);
 	}
 
 	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 8.5f});
