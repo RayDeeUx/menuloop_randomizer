@@ -160,7 +160,7 @@ namespace SongControl {
 		if (songManager.isOriginalMenuLoop()) return SongControl::woahThereBuddy("There's nothing to add to your playlist! Double-check your config folder again.");
 		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're trying to add your own <cy>override</c> to your playlist. Double-check your settings again.");
 
-		if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") && !songManager.getPlaylistIsEmpty()) {
+		if (Utils::getBool("loadPlaylistFile") && !songManager.getPlaylistIsEmpty()) {
 			return geode::Notification::create(
 				"You've already loaded an MLR playlist file!",
 				geode::NotificationIcon::Error, 10.f

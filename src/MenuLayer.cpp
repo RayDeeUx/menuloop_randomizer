@@ -37,7 +37,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (Utils::getBool("enableFavoriteButton")) Utils::addButton("favorite", menu_selector(MenuLayerMLHook::onFavoriteButton), REST_OF_THE_OWL);
 		if (Utils::getBool("enableHoldSongButton")) Utils::addButton("hold", menu_selector(MenuLayerMLHook::onHoldSongButton), REST_OF_THE_OWL);
 		if (Utils::getBool("enablePreviousButton")) Utils::addButton("prev", menu_selector(MenuLayerMLHook::onPreviousButton), REST_OF_THE_OWL);
-		if (Utils::getBool("enableAddToPlaylistButton")) Utils::addButton("add", menu_selector(MenuLayerMLHook::onAddToPlylstBtn), REST_OF_THE_OWL);
+		if (Utils::getBool("enableAddToPlaylistButton") && (!Utils::getBool("loadPlaylistFile") || SongManager::get().getPlaylistIsEmpty())) Utils::addButton("add", menu_selector(MenuLayerMLHook::onAddToPlylstBtn), REST_OF_THE_OWL);
 		if (Utils::getBool("enableViewSongListButton")) Utils::addButton("playlist", menu_selector(MenuLayerMLHook::onSongListButton), REST_OF_THE_OWL);
 		return true;
 	}

@@ -102,6 +102,7 @@ void Utils::constantShuffleModeNewSong(const bool fromGJBGL) {
 
 // create notif card stuff
 void Utils::newNotification(const std::string& notifString, const bool checkSetting) {
+	if (!GameManager::get() || !GameManager::get()->m_menuLayer) return;
 	if (cocos2d::CCNode* oldCard = Utils::findCardRemotely()) oldCard->removeMeAndCleanup();
 	if (checkSetting && !Utils::getBool("enableNotification")) return;
 

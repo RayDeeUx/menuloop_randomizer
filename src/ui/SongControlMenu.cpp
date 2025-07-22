@@ -31,7 +31,7 @@ bool SongControlMenu::setup(const std::string&) {
 	Utils::addButton("favorite", menu_selector(SongControlMenu::onFavoriteButton), REST_OF_THE_OWL);
 	Utils::addButton("hold", menu_selector(SongControlMenu::onHoldSongButton), REST_OF_THE_OWL);
 	Utils::addButton("prev", menu_selector(SongControlMenu::onPreviousButton), REST_OF_THE_OWL);
-	if (!geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") || SongManager::get().getPlaylistIsEmpty()) {
+	if (!Utils::getBool("loadPlaylistFile") || SongManager::get().getPlaylistIsEmpty()) {
 		Utils::addButton("add", menu_selector(SongControlMenu::onAddToPlylstBtn), REST_OF_THE_OWL);
 	}
 
@@ -148,8 +148,15 @@ void SongControlMenu::onPlaylistButton(CCObject*) {
 	SongListLayer::create()->showLayer(true);
 }
 void SongControlMenu::onAddToPlylstBtn(CCObject*) {
-	if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile")) return geode::log::info("tried adding current song to a playlist file. BOOOOOOOOOOOOO");
-	SongControl::addSongToPlaylist(SongManager::get().getCurrentSong());
+	SongManager& songManager = SongManager::get();
+	if (Utils::getBool("loadPlaylistFile") && !songManager.getPlaylistIsEmpty()) {
+		geode::log::info("tried adding current song to a playlist file. BOOOOOOOOOOOOO");
+		return geode::Notification::create(
+			"You've already loaded an MLR playlist file!",
+			geode::NotificationIcon::Error, 10.f
+		)->show();
+	}
+	SongControl::addSongToPlaylist(songManager.getCurrentSong());
 	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onSettingsButton(CCObject*) {
