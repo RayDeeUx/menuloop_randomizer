@@ -49,7 +49,7 @@ void SongListLayer::customSetup() {
 	);
 	settingsMenu->setContentSize({24.f, 23.f});
 	settingsMenu->setID("songlayerlist-controls-menu"_spr);
-	Utils::addButton("controls", menu_selector(SongListLayer::onSettingsButton), settingsMenu, this);
+	Utils::addButton("settings", menu_selector(SongListLayer::onSettingsButton), settingsMenu, this);
 	if (CCMenuItemSpriteExtra* button = settingsMenu->getChildByType<CCMenuItemSpriteExtra>(0)) button->setPosition(settingsMenu->getContentSize() / 2.f);
 	settingsMenu->setPosition({75.f, 282.f});
 	settingsMenu->setScale(.825f);
