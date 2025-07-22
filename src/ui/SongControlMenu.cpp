@@ -5,8 +5,6 @@
 #include <Geode/ui/GeodeUI.hpp>
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
-#define REST_OF_THE_CAT this->m_theTimeoutCorner, this
-#define REST_OF_THE_DOG this->m_buttonMenu, this
 
 bool SongControlMenu::setup(const std::string&) {
 	this->setTitle("Menu Loop Randomizer - Control Panel");
@@ -44,22 +42,23 @@ bool SongControlMenu::setup(const std::string&) {
 	this->m_songControlsMenu->setContentSize({idealWidth, 32.f});
 	this->m_songControlsMenu->setLayout(layout);
 
-	this->m_buttonMenu->setTag(7212025);
 	this->m_theTimeoutCorner = cocos2d::CCMenu::create();
+	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), this->m_theTimeoutCorner, this);
+	geode::AxisLayout* layoutTimeout = geode::ColumnLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
 
-	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), REST_OF_THE_CAT);
-	Utils::addButton("controls", menu_selector(SongControlMenu::onSettingsButton), REST_OF_THE_DOG);
+	this->m_openSongListMenu = cocos2d::CCMenu::create();
+	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), this->m_openSongListMenu, this);
+	geode::AxisLayout* layoutSongList = geode::RowLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
 
-	geode::AxisLayout* layoutTimeout = geode::ColumnLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, .65f)->setAutoScale(true);
-
-	if (CCNode* controlsButton = this->m_buttonMenu->getChildByID("controls-button"_spr)) {
-		controlsButton->setPosition({m_mainLayer->getContentSize() - 3.f});
-	}
-
-	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 8.5f});
+	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 2.5f});
 	this->m_theTimeoutCorner->ignoreAnchorPointForPosition(false);
-	this->m_theTimeoutCorner->setContentSize({24.f, 36.f});
+	this->m_theTimeoutCorner->setContentSize({24.f, 24.f});
 	this->m_theTimeoutCorner->setLayout(layoutTimeout);
+
+	this->m_openSongListMenu->setPosition({280.f, this->m_title->getPositionY() - 51.5f});
+	this->m_openSongListMenu->ignoreAnchorPointForPosition(false);
+	this->m_openSongListMenu->setContentSize({27.f, 27.f});
+	this->m_openSongListMenu->setLayout(layoutSongList);
 
 	this->m_otherLabel = cocos2d::CCLabelBMFont::create("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :)", "chatFont.fnt");
 	this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
@@ -70,21 +69,22 @@ bool SongControlMenu::setup(const std::string&) {
 	this->m_headerLabl->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_headerLabl->setPosition({centerStage, 107.5f});
 
-	SongControlMenu::updateCurrentLabel();
-
 	this->b = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
 	this->b->ignoreAnchorPointForPosition(false);
-	this->b->setPosition({centerStage, 80.f});
-	this->b->setContentSize({275.f, 30.f});
+	this->b->setContentSize({250.f, 30.f});
+	this->b->setAnchorPoint({0.f, .5f});
+	this->b->setPosition({12.5f, 80.f});
 	this->b->setColor({0, 0, 0});
 	this->b->setOpacity(128);
+
+	SongControlMenu::updateCurrentLabel();
 
 	this->setID("SongControlMenu"_spr);
 	mainLayer->addChild(this->b);
 	mainLayer->addChild(this->m_otherLabel);
-	mainLayer->addChild(this->m_smallLabel);
 	mainLayer->addChild(this->m_headerLabl);
 	mainLayer->addChild(this->m_songControlsMenu);
+	mainLayer->addChild(this->m_openSongListMenu);
 	mainLayer->addChild(this->m_theTimeoutCorner);
 
 	this->b->setID("trans-bg"_spr);
@@ -95,6 +95,7 @@ bool SongControlMenu::setup(const std::string&) {
 	this->m_smallLabel->setID("current-song-label"_spr);
 	this->m_headerLabl->setID("current-song-header"_spr);
 	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
+	this->m_openSongListMenu->setID("song-list-menu"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
 
 	return true;
@@ -157,13 +158,12 @@ void SongControlMenu::onSettingsButton(CCObject*) {
 void SongControlMenu::updateCurrentLabel() {
 	SongManager& songManager = SongManager::get();
 	const std::string& currentSong = songManager.getCurrentSongDisplayName();
-	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
-	if (!this->m_smallLabel || !this->m_smallLabel->getParent() || this->m_smallLabel->getParent() != this->m_mainLayer) {
+	if (!this->m_smallLabel || !this->m_smallLabel->getParent() || this->m_smallLabel->getParent() != this->b) {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
+		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center);
 	} else this->m_smallLabel->setString(currentSong.c_str(), "chatFont.fnt");
+	this->m_smallLabel->limitLabelWidth(this->b->getContentWidth() - 20.f, 1.0f, .0001f);
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
-	this->m_smallLabel->limitLabelWidth(layerSize.width * 0.95f * .9f, 1.0f, .0001f);
-	this->m_smallLabel->setPosition({layerSize.width / 2.f, 80.f});
 	if (!this->m_headerLabl) return;
 	if (songManager.isOverride()) this->m_headerLabl->setString("Current Song (Custom Override):");
 	else if (songManager.getConstantShuffleMode()) this->m_headerLabl->setString("Current Song (Constant Shuffle Mode):");
