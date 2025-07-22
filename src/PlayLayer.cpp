@@ -16,8 +16,8 @@ class $modify(MenuLoopPLHook, PlayLayer) {
 		Utils::removeCardRemotely();
 
 		if (Utils::getBool("playlistMode")) {
-			Utils::playlistModePLAndEPL();
-			Utils::playlistModeNewSong();
+			Utils::constantShuffleModePLAndEPL();
+			Utils::constantShuffleModeNewSong();
 		}
 	}
 };

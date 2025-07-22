@@ -45,8 +45,8 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 		Utils::removeCardRemotely();
 
 		if (Utils::getBool("playlistMode")) {
-			Utils::playlistModePLAndEPL();
-			Utils::playlistModeNewSong();
+			Utils::constantShuffleModePLAndEPL();
+			Utils::constantShuffleModeNewSong();
 		}
 	}
 	void FLAlert_Clicked(FLAlertLayer* p0, bool btnTwo) {
@@ -94,8 +94,8 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 		Utils::removeCardRemotely();
 
 		if (Utils::getBool("playlistMode")) {
-			Utils::playlistModePLAndEPL();
-			Utils::playlistModeNewSong();
+			Utils::constantShuffleModePLAndEPL();
+			Utils::constantShuffleModeNewSong();
 		}
 	}
 	#endif

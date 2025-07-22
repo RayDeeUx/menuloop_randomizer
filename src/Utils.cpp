@@ -58,7 +58,7 @@ void Utils::removeCard() {
 }
 
 void Utils::setNewSong() {
-	if (Utils::getBool("playlistMode")) return Utils::playlistModeNewSong();
+	if (Utils::getBool("playlistMode")) return Utils::constantShuffleModeNewSong();
 	FMODAudioEngine::sharedEngine()->m_backgroundMusicChannel->stop();
 	SongManager& songManager = SongManager::get();
 	const std::string& songToBeStored = songManager.getCurrentSong();
@@ -69,7 +69,7 @@ void Utils::setNewSong() {
 	GameManager::sharedState()->playMenuMusic();
 }
 
-void Utils::playlistModeNewSong(const bool fromGJBGL) {
+void Utils::constantShuffleModeNewSong(const bool fromGJBGL) {
 	if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 	if (!Utils::getBool("playlistMode")) return Utils::setNewSong();
 	geode::log::info("attempting to hijack menuloop channel to use Constant Shuffle Mode");
@@ -202,8 +202,8 @@ std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
 	return fmt::format("{}", songInfo->m_songName);
 }
 
-void Utils::playlistModePLAndEPL() {
-	if (Utils::getBool("playlistMode") && GJBaseGameLayer::get()) return Utils::playlistModeNewSong(true);
+void Utils::constantShuffleModePLAndEPL() {
+	if (Utils::getBool("playlistMode") && GJBaseGameLayer::get()) return Utils::constantShuffleModeNewSong(true);
 }
 
 void Utils::copyCurrentSongName() {
@@ -290,6 +290,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 
 	// impl playlist files
 	const std::filesystem::path playlistFile = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
+	songManager.setPlaylistFileName();
 	if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") && std::filesystem::exists(playlistFile) && playlistFile.extension() == ".txt") {
 		bool isPlaylistEmpty = true;
 		std::ifstream playlistFileStream(playlistFile);

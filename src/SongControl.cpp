@@ -51,7 +51,7 @@ namespace SongControl {
 			Utils::newCardAndDisplayNameFromCurrentSong();
 		}
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
-		else Utils::playlistModeNewSong();
+		else Utils::constantShuffleModeNewSong();
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 	void favoriteSong(SongManager& songManager) {
@@ -118,7 +118,7 @@ namespace SongControl {
 		}
 
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
-		else Utils::playlistModeNewSong();
+		else Utils::constantShuffleModeNewSong();
 
 		if (!Utils::getBool("enableNotification")) return;
 

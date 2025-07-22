@@ -168,5 +168,9 @@ void SongControlMenu::updateCurrentLabel() {
 	if (songManager.isOverride()) this->m_headerLabl->setString("Current Song (Custom Override):");
 	else if (songManager.getConstantShuffleMode()) this->m_headerLabl->setString("Current Song (Constant Shuffle Mode):");
 	else this->m_headerLabl->setString("Current Song:");
+	if (!songManager.getPlaylistIsEmpty()) {
+		const std::string& newHeaderString = geode::utils::string::replace(this->m_headerLabl->getString(), "Song", fmt::format("Song from {}", songManager.getPlaylistFileName()));
+		this->m_headerLabl->setString(newHeaderString.c_str());
+	}
 	this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.0f, .0001f);
 }

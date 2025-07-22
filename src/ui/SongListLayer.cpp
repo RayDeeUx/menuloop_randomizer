@@ -106,9 +106,9 @@ void SongListLayer::showLayer(const bool instant) {
 	CCNode* titleLabel = m_listLayer->getChildByID("title");
 	if (!titleLabel) return;
 
-	const SongManager& songManager = SongManager::get();
+	SongManager& songManager = SongManager::get();
 
-	const std::string& playlistFileName = songManager.getPlaylistIsEmpty() ? "None" : geode::utils::string::replace(Utils::toNormalizedString(geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile").filename()), ".txt", "");
+	const std::string& playlistFileName = songManager.getPlaylistIsEmpty() ? "None" : songManager.getPlaylistFileName();
 	cocos2d::CCLabelBMFont* currentPlaylistLabel = cocos2d::CCLabelBMFont::create(fmt::format("Playlist: {}", playlistFileName).c_str(), "bigFont.fnt");
 	currentPlaylistLabel->setPosition({83.5f, 0.f});
 	currentPlaylistLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);

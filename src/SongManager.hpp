@@ -32,6 +32,8 @@ class SongManager {
 	bool isOriginalMenuLoop() const;
 	void setConstantShuffleMode();
 	bool getConstantShuffleMode() const;
+	void setPlaylistFileName();
+	std::string getPlaylistFileName();
 	std::string getCurrentSong();
 	void setCurrentSong(const std::string&);
 	void setCurrentSongToSavedSong();
@@ -74,6 +76,7 @@ class SongManager {
 	std::string m_previousSong = "";
 	std::string m_overrideSong = "";
 	std::string m_displayName = "";
+	std::string m_playlistName = "";
 	bool m_isMenuLoop;
 	bool m_constantShuffleMode;
 	bool m_calledOnce = false;

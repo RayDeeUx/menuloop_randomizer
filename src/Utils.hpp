@@ -11,12 +11,12 @@ class Utils {
 	static cocos2d::CCNode* findCard();
 	static cocos2d::CCNode* findCardRemotely();
 	static void setNewSong();
-	static void playlistModeNewSong(const bool fromGJBGL = false);
+	static void constantShuffleModeNewSong(const bool fromGJBGL = false);
 	static void newNotification(const std::string& notifString, const bool checkSetting = false);
 	static std::string composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix);
 	static void newCardAndDisplayNameFromCurrentSong();
 	static std::string getFormattedNGMLSongName(SongInfoObject* songInfo);
-	static void playlistModePLAndEPL();
+	static void constantShuffleModePLAndEPL();
 	static void copyCurrentSongName();
 	static void loadFromPlaylistFile(const std::filesystem::path& playlistFile);
 	static void populateVector(const bool customSongs, const std::filesystem::path& path = "", std::vector<std::string> textFileBlacklist = {}, std::vector<std::string> textFileFavorites = {});
