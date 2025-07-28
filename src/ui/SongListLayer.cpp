@@ -93,10 +93,10 @@ void SongListLayer::customSetup() {
 	scrollLayer->scrollToTop();
 
 	m_listLayer->addChild(scrollLayer);
+	cocos2d::CCScene::get()->addChild(this);
 }
 
 void SongListLayer::showLayer(const bool instant) {
-	cocos2d::CCScene::get()->addChild(this);
 	this->m_mainLayer->setPositionY(0.f);
 	this->setVisible(true);
 	this->setOpacity(128);
