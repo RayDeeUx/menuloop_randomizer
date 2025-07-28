@@ -175,6 +175,7 @@ bool SongListLayer::setup(const std::string&) {
 
 	this->setID("SongListLayer"_spr);
 	this->m_bgSprite->setID("background"_spr);
+	this->m_closeBtn->setID("close-button"_spr);
 	this->m_buttonMenu->setID("close-menu"_spr);
 
 	return true;

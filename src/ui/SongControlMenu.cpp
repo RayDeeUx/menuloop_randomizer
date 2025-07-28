@@ -90,6 +90,7 @@ bool SongControlMenu::setup(const std::string&) {
 	this->b->setID("trans-bg"_spr);
 	this->m_title->setID("title"_spr);
 	this->m_bgSprite->setID("background"_spr);
+	this->m_closeBtn->setID("close-button"_spr);
 	this->m_buttonMenu->setID("close-menu"_spr);
 	this->m_otherLabel->setID("im-not-spotify"_spr);
 	this->m_smallLabel->setID("current-song-label"_spr);
