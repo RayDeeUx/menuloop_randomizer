@@ -98,6 +98,8 @@ bool SongControlMenu::setup(const std::string&) {
 	this->m_openSongListMenu->setID("song-list-menu"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
 
+	this->m_noElasticity = true;
+
 	return true;
 }
 
