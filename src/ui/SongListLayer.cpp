@@ -2,6 +2,7 @@
 #include "SongListLayer.hpp"
 #include "MLRSongCell.hpp"
 #include "../Utils.hpp"
+#include "../SongControl.hpp"
 #include "../SongManager.hpp"
 
 SongListLayer* SongListLayer::create(const std::string& id) {
@@ -24,7 +25,7 @@ bool SongListLayer::setup(const std::string&) {
 	CCLayer* mainLayer = this->m_mainLayer;
 	mainLayer->setID("main-layer"_spr);
 
-	background->initWithFile("GJ_square05.png");
+	background->initWithFile("GJ_square01.png");
 	background->setContentSize(layerSize);
 
 	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
@@ -60,10 +61,10 @@ bool SongListLayer::setup(const std::string&) {
 			->setGap(.0f)
 	);
 	settingsMenu->setContentSize({24.f, 23.f});
-	settingsMenu->setID("songlayerlist-controls-menu"_spr);
+	settingsMenu->setID("songlayerlist-settings-menu"_spr);
 	Utils::addButton("settings", menu_selector(SongListLayer::onSettingsButton), settingsMenu, this);
 	if (CCMenuItemSpriteExtra* button = settingsMenu->getChildByType<CCMenuItemSpriteExtra>(0)) button->setPosition(settingsMenu->getContentSize() / 2.f);
-	settingsMenu->setPosition({400.f, this->m_title->getPositionY()});
+	settingsMenu->setPosition({395.f, this->m_title->getPositionY()});
 	settingsMenu->setScale(.825f);
 	this->m_mainLayer->addChild(settingsMenu);
 
@@ -108,6 +109,12 @@ bool SongListLayer::setup(const std::string&) {
 	scrollLayer->ignoreAnchorPointForPosition(false);
 	this->m_mainLayer->addChildAtPosition(scrollLayer, geode::Anchor::Center);
 
+	geode::ListBorders* listBorder = geode::ListBorders::create();
+	listBorder->setContentSize(scrollLayer->getContentSize());
+	listBorder->ignoreAnchorPointForPosition(false);
+	listBorder->setID("songs-list-border"_spr);
+	this->m_mainLayer->addChildAtPosition(listBorder, geode::Anchor::Center);
+
 	constexpr float labelWidth = 280.f * .45f;
 
 	const std::string& playlistFileName = songManager.getPlaylistIsEmpty() ? "None" : songManager.getPlaylistFileName();
@@ -140,11 +147,27 @@ bool SongListLayer::setup(const std::string&) {
 	constexpr float topRowYPos = 28.5f;
 	constexpr float bottomRowYPos = 17.5f;
 	constexpr float arbitraryPaddingValue = 10.f;
+	constexpr float abridgedControlsMenuYPos = (bottomRowYPos + topRowYPos) / 2.f;
 
 	this->m_mainLayer->addChildAtPosition(currentPlaylistLabel, geode::Anchor::BottomLeft, {(layerSize.width - sllWidth) + arbitraryPaddingValue + offset, bottomRowYPos});
 	this->m_mainLayer->addChildAtPosition(loadPlaylistFileLabel, geode::Anchor::BottomLeft, {(layerSize.width - sllWidth) + arbitraryPaddingValue + offset, topRowYPos});
 	this->m_mainLayer->addChildAtPosition(constantShuffleModeLabel, geode::Anchor::BottomLeft, {sllWidth - offset - arbitraryPaddingValue, bottomRowYPos});
 	this->m_mainLayer->addChildAtPosition(platformLabel, geode::Anchor::BottomLeft, {sllWidth - offset - arbitraryPaddingValue, topRowYPos});
+
+	cocos2d::CCMenu* abridgedControlsMenu = cocos2d::CCMenu::create();
+	geode::Layout* layout = geode::RowLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(1.5f);
+	abridgedControlsMenu->setLayout(layout);
+
+	Utils::addButton("shuffle", menu_selector(SongListLayer::onShuffleButton), abridgedControlsMenu, this);
+	Utils::addButton("copy", menu_selector(SongListLayer::onCopyButton), abridgedControlsMenu, this);
+	Utils::addButton("prev", menu_selector(SongListLayer::onPreviousButton), abridgedControlsMenu, this);
+
+	abridgedControlsMenu->setPosition({layerSize.width / 2.f, abridgedControlsMenuYPos});
+	abridgedControlsMenu->ignoreAnchorPointForPosition(false);
+	abridgedControlsMenu->setContentSize({80.f, 24.f});
+	abridgedControlsMenu->updateLayout();
+	abridgedControlsMenu->setID("abridged-controls-menu"_spr);
+	this->m_mainLayer->addChild(abridgedControlsMenu);
 
 	return true;
 }
@@ -152,4 +175,14 @@ bool SongListLayer::setup(const std::string&) {
 void SongListLayer::onSettingsButton(CCObject*) {
 	this->keyBackClicked();
 	geode::openSettingsPopup(geode::Mod::get());
+}
+
+void SongListLayer::onShuffleButton(CCObject*) {
+	SongControl::shuffleSong();
+}
+void SongListLayer::onCopyButton(CCObject*) {
+	SongControl::copySong();
+}
+void SongListLayer::onPreviousButton(CCObject*) {
+	SongControl::previousSong();
 }
