@@ -93,7 +93,7 @@ void SongListLayer::customSetup() {
 	scrollLayer->scrollToTop();
 
 	m_listLayer->addChild(scrollLayer);
-	GameManager::get()->m_menuLayer->addChild(this);
+	if (this && GameManager::get()->m_menuLayer) GameManager::get()->m_menuLayer->addChild(this);
 }
 
 void SongListLayer::showLayer(const bool instant) {
