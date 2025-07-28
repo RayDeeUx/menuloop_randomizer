@@ -7,6 +7,6 @@ public:
 	void onSettingsButton(CCObject*);
 	void onShuffleButton(CCObject*);
 	void onCopyButton(CCObject*);
-	void onFavoriteButton(CCObject*);
 	void onPreviousButton(CCObject*);
+	void onControlsButton(CCObject*);
 };

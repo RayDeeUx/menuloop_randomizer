@@ -1,13 +1,14 @@
 #include <Geode/ui/GeodeUI.hpp>
 #include "SongListLayer.hpp"
 #include "MLRSongCell.hpp"
+#include "SongControlMenu.hpp"
 #include "../Utils.hpp"
 #include "../SongControl.hpp"
 #include "../SongManager.hpp"
 
 SongListLayer* SongListLayer::create(const std::string& id) {
 	auto* ret = new SongListLayer();
-	if (ret->initAnchored(420.f, 300.f, id)) {
+	if (ret->initAnchored(420.f, 290.f, id)) {
 		ret->autorelease();
 		return ret;
 	}
@@ -144,8 +145,8 @@ bool SongListLayer::setup(const std::string&) {
 
 	const float sllWidth = scrollLayer->getContentWidth();
 	constexpr float offset = 25.f;
-	constexpr float topRowYPos = 28.5f;
-	constexpr float bottomRowYPos = 17.5f;
+	constexpr float topRowYPos = 27.5f;
+	constexpr float bottomRowYPos = 16.5f;
 	constexpr float arbitraryPaddingValue = 10.f;
 	constexpr float abridgedControlsMenuYPos = (bottomRowYPos + topRowYPos) / 2.f;
 
@@ -161,6 +162,7 @@ bool SongListLayer::setup(const std::string&) {
 	Utils::addButton("shuffle", menu_selector(SongListLayer::onShuffleButton), abridgedControlsMenu, this);
 	Utils::addButton("copy", menu_selector(SongListLayer::onCopyButton), abridgedControlsMenu, this);
 	Utils::addButton("prev", menu_selector(SongListLayer::onPreviousButton), abridgedControlsMenu, this);
+	Utils::addButton("controls", menu_selector(SongListLayer::onControlsButton), abridgedControlsMenu, this);
 
 	abridgedControlsMenu->setPosition({layerSize.width / 2.f, abridgedControlsMenuYPos});
 	abridgedControlsMenu->ignoreAnchorPointForPosition(false);
@@ -185,4 +187,8 @@ void SongListLayer::onCopyButton(CCObject*) {
 }
 void SongListLayer::onPreviousButton(CCObject*) {
 	SongControl::previousSong();
+}
+void SongListLayer::onControlsButton(CCObject*) {
+	this->onClose(nullptr);
+	SongControlMenu::create("GJ_square05.png")->show();
 }
