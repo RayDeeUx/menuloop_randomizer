@@ -146,8 +146,10 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onPlaylistButton(CCObject*) {
+	SongListLayer* sll = SongListLayer::create();
+	if (!sll) return;
 	SongControlMenu::onClose(nullptr);
-	SongListLayer::create()->showLayer(true);
+	sll->showLayer(true);
 }
 void SongControlMenu::onAddToPlylstBtn(CCObject*) {
 	SongManager& songManager = SongManager::get();
