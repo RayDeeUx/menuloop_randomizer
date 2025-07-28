@@ -4,9 +4,9 @@
 #include "../Utils.hpp"
 #include "../SongManager.hpp"
 
-SongListLayer* SongListLayer::create() {
+SongListLayer* SongListLayer::create(const std::string& id) {
 	auto* ret = new SongListLayer();
-	if (ret->init("Menu Loop Randomizer - Your Songs")) {
+	if (ret->initAnchored(420.f, 300.f, id)) {
 		ret->autorelease();
 		return ret;
 	}
@@ -14,7 +14,19 @@ SongListLayer* SongListLayer::create() {
 	return nullptr;
 }
 
-void SongListLayer::customSetup() {
+bool SongListLayer::setup(const std::string&) {
+	this->m_noElasticity = true;
+	this->setTitle("Menu Loop Randomizer - Your Songs");
+	this->m_title->setID("song-list-title"_spr);
+
+	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
+	cocos2d::extension::CCScale9Sprite* background = this->m_bgSprite;
+	CCLayer* mainLayer = this->m_mainLayer;
+	mainLayer->setID("main-layer"_spr);
+
+	background->initWithFile("GJ_square05.png");
+	background->setContentSize(layerSize);
+
 	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
 	infoMenu->setLayout(
 		geode::RowLayout::create()
@@ -35,7 +47,7 @@ void SongListLayer::customSetup() {
 		1.f
 	);
 	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
-	infoMenu->setPosition({437.f, 282.f});
+	infoMenu->setPosition({layerSize - 3.f});
 	infoMenu->setID("songlayerlist-info-menu"_spr);
 	infoBtn->setID("songlayerlist-info-button"_spr);
 	this->m_mainLayer->addChild(infoMenu);
@@ -51,7 +63,7 @@ void SongListLayer::customSetup() {
 	settingsMenu->setID("songlayerlist-controls-menu"_spr);
 	Utils::addButton("settings", menu_selector(SongListLayer::onSettingsButton), settingsMenu, this);
 	if (CCMenuItemSpriteExtra* button = settingsMenu->getChildByType<CCMenuItemSpriteExtra>(0)) button->setPosition(settingsMenu->getContentSize() / 2.f);
-	settingsMenu->setPosition({75.f, 282.f});
+	settingsMenu->setPosition({400.f, this->m_title->getPositionY()});
 	settingsMenu->setScale(.825f);
 	this->m_mainLayer->addChild(settingsMenu);
 
@@ -92,52 +104,45 @@ void SongListLayer::customSetup() {
 	scrollLayer->m_contentLayer->updateLayout();
 	scrollLayer->scrollToTop();
 
-	m_listLayer->addChild(scrollLayer);
-}
-
-void SongListLayer::showLayer(const bool instant) {
-	cocos2d::CCScene* scene = cocos2d::CCScene::get();
-	if (!scene) return;
-	scene->addChild(this);
-	this->m_mainLayer->setPositionY(0.f);
-	this->setVisible(true);
-	this->setOpacity(128);
-
-	this->setID("SongListLayer"_spr);
-	m_listLayer->setID("list-of-songs-layer"_spr);
-
-	CCNode* titleLabel = m_listLayer->getChildByID("title");
-	if (!titleLabel) return;
-
-	SongManager& songManager = SongManager::get();
+	scrollLayer->setID("list-of-songs"_spr);
+	scrollLayer->ignoreAnchorPointForPosition(false);
+	this->m_mainLayer->addChildAtPosition(scrollLayer, geode::Anchor::Center);
 
 	const std::string& playlistFileName = songManager.getPlaylistIsEmpty() ? "None" : songManager.getPlaylistFileName();
 	cocos2d::CCLabelBMFont* currentPlaylistLabel = cocos2d::CCLabelBMFont::create(fmt::format("Playlist: {}", playlistFileName).c_str(), "bigFont.fnt");
-	currentPlaylistLabel->setPosition({83.5f, 0.f});
 	currentPlaylistLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);
-	currentPlaylistLabel->setZOrder(titleLabel->getZOrder());
+	currentPlaylistLabel->setZOrder(this->m_title->getZOrder());
 
 	const std::string& loadPlaylistFileInstead = Utils::getBool("loadPlaylistFile") ? "ON" : "OFF";
 	cocos2d::CCLabelBMFont* loadPlaylistFileLabel = cocos2d::CCLabelBMFont::create(fmt::format("Load Playlist File: {}", loadPlaylistFileInstead).c_str(), "bigFont.fnt");
-	loadPlaylistFileLabel->setPosition({83.5f, -11.f});
 	loadPlaylistFileLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);
-	loadPlaylistFileLabel->setZOrder(titleLabel->getZOrder());
+	loadPlaylistFileLabel->setZOrder(this->m_title->getZOrder());
 
 	const std::string& isConstantShuffleMode = songManager.getConstantShuffleMode() ? "ON" : "OFF";
 	cocos2d::CCLabelBMFont* constantShuffleModeLabel = cocos2d::CCLabelBMFont::create(fmt::format("Constant Shuffle Mode: {}", isConstantShuffleMode).c_str(), "bigFont.fnt");
-	constantShuffleModeLabel->setPosition({272.5f, 0.f});
 	constantShuffleModeLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);
-	constantShuffleModeLabel->setZOrder(titleLabel->getZOrder());
+	constantShuffleModeLabel->setZOrder(this->m_title->getZOrder());
 
 	cocos2d::CCLabelBMFont* platformLabel = cocos2d::CCLabelBMFont::create(fmt::format("Platform: {}", Utils::getPlatform()).c_str(), "bigFont.fnt");
-	platformLabel->setPosition({272.5f, -11.f});
 	platformLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);
-	platformLabel->setZOrder(titleLabel->getZOrder());
+	platformLabel->setZOrder(this->m_title->getZOrder());
 
-	m_listLayer->addChild(currentPlaylistLabel);
-	m_listLayer->addChild(loadPlaylistFileLabel);
-	m_listLayer->addChild(constantShuffleModeLabel);
-	m_listLayer->addChild(platformLabel);
+	currentPlaylistLabel->setID("current-playlist-label"_spr);
+	loadPlaylistFileLabel->setID("load-playlist-file-label"_spr);
+	constantShuffleModeLabel->setID("constant-shuffle-mode-label"_spr);
+	platformLabel->setID("platform-label"_spr);
+
+	currentPlaylistLabel->ignoreAnchorPointForPosition(false);
+	loadPlaylistFileLabel->ignoreAnchorPointForPosition(false);
+	constantShuffleModeLabel->ignoreAnchorPointForPosition(false);
+	platformLabel->ignoreAnchorPointForPosition(false);
+
+	this->m_mainLayer->addChildAtPosition(currentPlaylistLabel, geode::Anchor::BottomLeft, {100.5f, 15.f});
+	this->m_mainLayer->addChildAtPosition(loadPlaylistFileLabel, geode::Anchor::BottomLeft, {100.5f, 26.f});
+	this->m_mainLayer->addChildAtPosition(constantShuffleModeLabel, geode::Anchor::BottomLeft, {320.5f, 15.f});
+	this->m_mainLayer->addChildAtPosition(platformLabel, geode::Anchor::BottomLeft, {320.5f, 26.f});
+
+	return true;
 }
 
 void SongListLayer::onSettingsButton(CCObject*) {

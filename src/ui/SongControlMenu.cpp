@@ -1,8 +1,8 @@
+#include <Geode/ui/GeodeUI.hpp>
 #include "SongControlMenu.hpp"
-#include "../SongControl.hpp"
 #include "SongListLayer.hpp"
 #include "../Utils.hpp"
-#include <Geode/ui/GeodeUI.hpp>
+#include "../SongControl.hpp"
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 
@@ -146,10 +146,8 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onPlaylistButton(CCObject*) {
-	SongListLayer* sll = SongListLayer::create();
-	if (!sll) return;
 	SongControlMenu::onClose(nullptr);
-	sll->showLayer(true);
+	SongListLayer::create("GJ_square05.png")->show();
 }
 void SongControlMenu::onAddToPlylstBtn(CCObject*) {
 	SongManager& songManager = SongManager::get();

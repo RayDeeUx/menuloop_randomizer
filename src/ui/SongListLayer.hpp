@@ -1,9 +1,8 @@
 #pragma once
 
-class SongListLayer : GJDropDownLayer {
+class SongListLayer final : public geode::Popup<const std::string&> {
 public:
-	static SongListLayer* create();
-	virtual void customSetup();
-	virtual void showLayer(const bool instant);
+	static SongListLayer* create(const std::string&);
+	bool setup(const std::string&) override;
 	void onSettingsButton(CCObject*);
 };
