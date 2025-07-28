@@ -173,6 +173,10 @@ bool SongListLayer::setup(const std::string&) {
 	abridgedControlsMenu->setID("abridged-controls-menu"_spr);
 	this->m_mainLayer->addChild(abridgedControlsMenu);
 
+	this->setID("SongListLayer"_spr);
+	this->m_bgSprite->setID("background"_spr);
+	this->m_buttonMenu->setID("close-menu"_spr);
+
 	return true;
 }
 
