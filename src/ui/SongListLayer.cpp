@@ -97,8 +97,6 @@ void SongListLayer::customSetup() {
 
 void SongListLayer::showLayer(const bool instant) {
 	GJDropDownLayer::showLayer(instant);
-	this->removeFromParentAndCleanup(false);
-	cocos2d::CCScene::get()->addChild(this);
 
 	this->setID("SongListLayer"_spr);
 	m_listLayer->setID("list-of-songs-layer"_spr);
