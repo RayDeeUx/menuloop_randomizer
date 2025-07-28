@@ -108,24 +108,22 @@ bool SongListLayer::setup(const std::string&) {
 	scrollLayer->ignoreAnchorPointForPosition(false);
 	this->m_mainLayer->addChildAtPosition(scrollLayer, geode::Anchor::Center);
 
+	constexpr float labelWidth = 280.f * .45f;
+
 	const std::string& playlistFileName = songManager.getPlaylistIsEmpty() ? "None" : songManager.getPlaylistFileName();
 	cocos2d::CCLabelBMFont* currentPlaylistLabel = cocos2d::CCLabelBMFont::create(fmt::format("Playlist: {}", playlistFileName).c_str(), "bigFont.fnt");
-	currentPlaylistLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);
-	currentPlaylistLabel->setZOrder(this->m_title->getZOrder());
+	currentPlaylistLabel->limitLabelWidth(labelWidth, 1.f, .0001f);
 
 	const std::string& loadPlaylistFileInstead = Utils::getBool("loadPlaylistFile") ? "ON" : "OFF";
 	cocos2d::CCLabelBMFont* loadPlaylistFileLabel = cocos2d::CCLabelBMFont::create(fmt::format("Load Playlist File: {}", loadPlaylistFileInstead).c_str(), "bigFont.fnt");
-	loadPlaylistFileLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);
-	loadPlaylistFileLabel->setZOrder(this->m_title->getZOrder());
+	loadPlaylistFileLabel->limitLabelWidth(labelWidth, 1.f, .0001f);
 
 	const std::string& isConstantShuffleMode = songManager.getConstantShuffleMode() ? "ON" : "OFF";
 	cocos2d::CCLabelBMFont* constantShuffleModeLabel = cocos2d::CCLabelBMFont::create(fmt::format("Constant Shuffle Mode: {}", isConstantShuffleMode).c_str(), "bigFont.fnt");
-	constantShuffleModeLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);
-	constantShuffleModeLabel->setZOrder(this->m_title->getZOrder());
+	constantShuffleModeLabel->limitLabelWidth(labelWidth, 1.f, .0001f);
 
 	cocos2d::CCLabelBMFont* platformLabel = cocos2d::CCLabelBMFont::create(fmt::format("Platform: {}", Utils::getPlatform()).c_str(), "bigFont.fnt");
-	platformLabel->limitLabelWidth(279.f * .45f, 1.f, .0001f);
-	platformLabel->setZOrder(this->m_title->getZOrder());
+	platformLabel->limitLabelWidth(labelWidth, 1.f, .0001f);
 
 	currentPlaylistLabel->setID("current-playlist-label"_spr);
 	loadPlaylistFileLabel->setID("load-playlist-file-label"_spr);
@@ -137,10 +135,16 @@ bool SongListLayer::setup(const std::string&) {
 	constantShuffleModeLabel->ignoreAnchorPointForPosition(false);
 	platformLabel->ignoreAnchorPointForPosition(false);
 
-	this->m_mainLayer->addChildAtPosition(currentPlaylistLabel, geode::Anchor::BottomLeft, {100.5f, 15.f});
-	this->m_mainLayer->addChildAtPosition(loadPlaylistFileLabel, geode::Anchor::BottomLeft, {100.5f, 26.f});
-	this->m_mainLayer->addChildAtPosition(constantShuffleModeLabel, geode::Anchor::BottomLeft, {320.5f, 15.f});
-	this->m_mainLayer->addChildAtPosition(platformLabel, geode::Anchor::BottomLeft, {320.5f, 26.f});
+	const float sllWidth = scrollLayer->getContentWidth();
+	constexpr float offset = 25.f;
+	constexpr float topRowYPos = 28.5f;
+	constexpr float bottomRowYPos = 17.5f;
+	constexpr float arbitraryPaddingValue = 10.f;
+
+	this->m_mainLayer->addChildAtPosition(currentPlaylistLabel, geode::Anchor::BottomLeft, {(layerSize.width - sllWidth) + arbitraryPaddingValue + offset, bottomRowYPos});
+	this->m_mainLayer->addChildAtPosition(loadPlaylistFileLabel, geode::Anchor::BottomLeft, {(layerSize.width - sllWidth) + arbitraryPaddingValue + offset, topRowYPos});
+	this->m_mainLayer->addChildAtPosition(constantShuffleModeLabel, geode::Anchor::BottomLeft, {sllWidth - offset - arbitraryPaddingValue, bottomRowYPos});
+	this->m_mainLayer->addChildAtPosition(platformLabel, geode::Anchor::BottomLeft, {sllWidth - offset - arbitraryPaddingValue, topRowYPos});
 
 	return true;
 }
