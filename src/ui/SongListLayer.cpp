@@ -38,12 +38,14 @@ bool SongListLayer::setup(const std::string&) {
 	);
 	infoMenu->setContentSize({24.f, 23.f});
 	InfoAlertButton* infoBtn = InfoAlertButton::create(
-		"Menu Loop Randomizer - FAQ",
-		"<cy>Q: I can't blacklist/favorite songs from here?!</c>\n"
-		"A: You should at least <c_>***listen***</c> to a song before making these decisions. "
-		"Also, there wasn't enough room\nto fit those buttons into each row.\n\n"
-		"<cy>Q: Why did the MLR control panel just close?!</c>\n"
-		"A: Touch priority and Z ordering issues.\n<cy>(In other words, bugs not worth fixing.)</c>\n\n"
+		"Menu Loop Randomizer - Help/FAQ",
+		"Play button = switch songs.\n"
+		"Yellow = <cy>favorited</c> song. Green = <cg>current</c> song.\n"
+		"Buttons at the bottom let you <cl>shuffle to a new song</c>,\n"
+		"<cl>copy the current song's name</c>, <cl>go back one song</c>,\n"
+		"and <cy>(if on \"Reduced\" Button Mode)</c> <cl>reopen the control panel</c>.\n\n"
+		"<cy>Q: I can't blacklist or favorite songs from here?!</c>\n"
+		"A: <c_>***Listen***</c> to them first.\n\n"
 		"<cy>Q: Add a search bar!</c>\n"
 		"A: <c_>No. Never. Learn how to scroll through a list.</c>",
 		1.f
@@ -162,7 +164,7 @@ bool SongListLayer::setup(const std::string&) {
 	Utils::addButton("shuffle", menu_selector(SongListLayer::onShuffleButton), abridgedControlsMenu, this);
 	Utils::addButton("copy", menu_selector(SongListLayer::onCopyButton), abridgedControlsMenu, this);
 	Utils::addButton("prev", menu_selector(SongListLayer::onPreviousButton), abridgedControlsMenu, this);
-	Utils::addButton("controls", menu_selector(SongListLayer::onControlsButton), abridgedControlsMenu, this);
+	if (Utils::getString("buttonMode") != "Classic") Utils::addButton("controls", menu_selector(SongListLayer::onControlsButton), abridgedControlsMenu, this);
 
 	abridgedControlsMenu->setPosition({layerSize.width / 2.f, abridgedControlsMenuYPos});
 	abridgedControlsMenu->ignoreAnchorPointForPosition(false);
