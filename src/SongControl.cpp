@@ -48,7 +48,7 @@ namespace SongControl {
 			songManager.setCurrentSong(formerHeldSong);
 			if (Utils::getBool("playlistMode")) FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
 			else GameManager::sharedState()->playMenuMusic();
-			Utils::newCardAndDisplayNameFromCurrentSong();
+			return Utils::newCardAndDisplayNameFromCurrentSong();
 		}
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::constantShuffleModeNewSong();
