@@ -131,6 +131,27 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 	card->runAction(sequence);
 }
 
+void Utils::composeAndSetCurrentSongDisplayNameOnlyWhenBlacklistingSongs() {
+	SongManager& songManager = SongManager::get();
+	const std::filesystem::path& currentSong = std::filesystem::path(songManager.getCurrentSong());
+	const std::string& songFileName = Utils::toNormalizedString(currentSong.filename());
+	const std::string& songFileExtension = Utils::toNormalizedString(currentSong.extension());
+	const std::string& customSongDisplayName = geode::utils::string::replace(songFileName, songFileExtension, "");
+	if (songManager.getLavaChicken()) return songManager.setCurrentSongDisplayName(fmt::format("{} (My condolences for your ears.)", songFileName));
+	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return songManager.setCurrentSongDisplayName(customSongDisplayName);
+	if (songManager.isOriginalMenuLoop()) return songManager.setCurrentSongDisplayName("Original Menu Loop by RobTop");
+	const size_t dotPos = songFileName.find_last_of('.');
+	if (dotPos == std::string::npos) return songManager.setCurrentSongDisplayName("Unknown");
+	const std::string& songFileNameWithoutExtension = songFileName.substr(0, dotPos);
+	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameWithoutExtension);
+	if (songFileNameAsID.isErr()) {
+		if (!songManager.getPlaylistIsEmpty()) return songManager.setCurrentSongDisplayName(songFileNameWithoutExtension);
+		return songManager.setCurrentSongDisplayName(fmt::format("Unknown ({})", songFileNameWithoutExtension));
+	}
+	if (SongInfoObject* songInfo = MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrap())) return songManager.setCurrentSongDisplayName(Utils::getFormattedNGMLSongName(songInfo));
+	return songManager.setCurrentSongDisplayName(customSongDisplayName);
+}
+
 std::string Utils::composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix) {
 	SongManager& songManager = SongManager::get();
 	if (!Utils::getBool("useCustomSongs") || !songManager.getPlaylistIsEmpty()) songManager.setCurrentSongDisplayName(middle);
@@ -164,7 +185,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 
 	geode::log::info("attempting to play {}", songFileName);
 	// if it's not menuLoop.mp3, then get info
-	size_t dotPos = songFileName.find_last_of('.');
+	const size_t dotPos = songFileName.find_last_of('.');
 
 	if (dotPos == std::string::npos) {
 		geode::log::error("{} was not a valid file name...? [NG/Music Library]", songFileName);

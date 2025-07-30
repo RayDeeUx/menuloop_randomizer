@@ -10,6 +10,6 @@ namespace SongControl {
 	void blacklistSong(SongManager& songManager = SongManager::get());
 	void copySong();
 	void regenSong();
-	void shuffleSong(SongManager& songManager = SongManager::get());
+	void shuffleSong(const SongManager& songManager = SongManager::get());
 	void addSongToPlaylist(const std::string& songPath = SongManager::get().getCurrentSong());
 }

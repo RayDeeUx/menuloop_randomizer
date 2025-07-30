@@ -13,6 +13,7 @@ class Utils {
 	static void setNewSong();
 	static void constantShuffleModeNewSong(const bool fromGJBGL = false);
 	static void newNotification(const std::string& notifString, const bool checkSetting = false);
+	static void composeAndSetCurrentSongDisplayNameOnlyWhenBlacklistingSongs();
 	static std::string composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix);
 	static void newCardAndDisplayNameFromCurrentSong();
 	static std::string getFormattedNGMLSongName(SongInfoObject* songInfo);

@@ -120,6 +120,9 @@ namespace SongControl {
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::constantShuffleModeNewSong();
 
+		Utils::composeAndSetCurrentSongDisplayNameOnlyWhenBlacklistingSongs();
+		Utils::queueUpdateSCMLabel();
+
 		if (songManager.isOriginalMenuLoop()) {
 			if (useCustomSongs && !customSong.empty()) return Utils::newNotification(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", customSong));
 			if (!useCustomSongs && !songName.empty()) return Utils::newNotification(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", songName));
@@ -127,8 +130,6 @@ namespace SongControl {
 
 		if (!useCustomSongs) return Utils::newNotification(fmt::format("Blacklisted {} by {} ({}), now playing {}.", songName, songArtist, songID, Utils::getSongName()));
 		if (!customSong.empty()) return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", customSong, Utils::currentCustomSong()));
-
-		Utils::queueUpdateSCMLabel();
 	}
 	void copySong() {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
@@ -140,7 +141,7 @@ namespace SongControl {
 		if (VANILLA_GD_MENU_LOOP_DISABLED || !Utils::getBool("enableNotification")) return;
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
-	void shuffleSong(SongManager& songManager) {
+	void shuffleSong(const SongManager& songManager) {
 		Utils::removeCard();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
