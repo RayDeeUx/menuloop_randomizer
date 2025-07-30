@@ -120,8 +120,6 @@ namespace SongControl {
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::constantShuffleModeNewSong();
 
-		if (!Utils::getBool("enableNotification")) return;
-
 		if (songManager.isOriginalMenuLoop()) {
 			if (useCustomSongs && !customSong.empty()) return Utils::newNotification(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", customSong));
 			if (!useCustomSongs && !songName.empty()) return Utils::newNotification(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", songName));
