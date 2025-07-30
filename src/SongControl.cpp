@@ -129,6 +129,8 @@ namespace SongControl {
 
 		if (!useCustomSongs) return Utils::newNotification(fmt::format("Blacklisted {} by {} ({}), now playing {}.", songName, songArtist, songID, Utils::getSongName()));
 		if (!customSong.empty()) return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", customSong, Utils::currentCustomSong()));
+
+		Utils::queueUpdateSCMLabel();
 	}
 	void copySong() {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
