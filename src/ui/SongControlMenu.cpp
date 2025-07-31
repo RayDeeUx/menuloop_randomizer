@@ -195,6 +195,7 @@ void SongControlMenu::onAddToPlylstBtn(CCObject*) {
 	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onSettingsButton(CCObject*) {
+	SongControlMenu::onClose(nullptr);
 	geode::openSettingsPopup(geode::Mod::get());
 }
 void SongControlMenu::updateCurrentLabel() {

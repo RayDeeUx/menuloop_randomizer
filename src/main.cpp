@@ -90,7 +90,7 @@ $on_mod(Loaded) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("loadPlaylistFile");
 		if (!loadPlaylistFile) return;
 		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
-		MDPopup* popup = MDPopup::create("MLR Playlist Files: A Warning", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Enabling this setting implies that you understand this.</c>", "I Understand");
+		MDPopup* popup = MDPopup::create("MLR Playlist Files: A Warning", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", "I Understand");
 		popup->setTag(7302025);
 		popup->setID("playlist-files-warning"_spr);
 		popup->m_noElasticity = true;
@@ -99,7 +99,7 @@ $on_mod(Loaded) {
 	listenForSettingChanges<std::filesystem::path>("playlistFile", [](std::filesystem::path playlistFile) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("playlistFile");
 		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
-		MDPopup* popup = MDPopup::create("MLR Playlist Files: A Warning", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Changing this setting implies that you understand this.</c>", "I Understand");
+		MDPopup* popup = MDPopup::create("MLR Playlist Files: A Warning", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", "I Understand");
 		popup->setTag(7302025);
 		popup->setID("playlist-files-warning"_spr);
 		popup->m_noElasticity = true;
