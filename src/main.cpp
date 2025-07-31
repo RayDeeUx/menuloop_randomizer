@@ -90,23 +90,19 @@ $on_mod(Loaded) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("loadPlaylistFile");
 		if (!loadPlaylistFile) return;
 		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
-		MDPopup* popup = MDPopup::create("MLR Playlist Files: A Warning", "## ***<c_>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Enabling this setting implies that you understand this.</c>", "I Understand");
+		MDPopup* popup = MDPopup::create("MLR Playlist Files: A Warning", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Enabling this setting implies that you understand this.</c>", "I Understand");
 		popup->setTag(7302025);
 		popup->setID("playlist-files-warning"_spr);
 		popup->m_noElasticity = true;
-		popup->setKeyboardEnabled(false);
-		popup->setKeypadEnabled(false);
 		popup->show();
 	});
 	listenForSettingChanges<std::filesystem::path>("playlistFile", [](std::filesystem::path playlistFile) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("playlistFile");
 		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
-		MDPopup* popup = MDPopup::create("MLR Playlist Files: A Warning", "## ***<c_>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Changing this setting implies that you understand this.</c>", "I Understand");
+		MDPopup* popup = MDPopup::create("MLR Playlist Files: A Warning", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Changing this setting implies that you understand this.</c>", "I Understand");
 		popup->setTag(7302025);
 		popup->setID("playlist-files-warning"_spr);
 		popup->m_noElasticity = true;
-		popup->setKeyboardEnabled(false);
-		popup->setKeypadEnabled(false);
 		popup->show();
 	});
 	listenForSettingChanges<bool>("playlistMode", [](bool constantShuffleMode) {
@@ -146,8 +142,6 @@ $on_mod(Loaded) {
 		if (GameManager::get()->m_playerUserID.value() == 925143 || GameManager::get()->m_playerUserID.value() == 7247326) return log::info("never mind, it's just aktimoose the beta tester. don't show the alert");
 		FLAlertLayer* alert = FLAlertLayer::create("Menu Loop Randomizer", "<c_>This is an experimental setting. You agree to hold yourself responsible for any issues that happen when this setting is enabled.</c>", "I Understand");
 		alert->m_noElasticity = true;
-		alert->setKeyboardEnabled(false);
-		alert->setKeypadEnabled(false);
 		alert->show();
 	});
 }
