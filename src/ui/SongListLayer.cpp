@@ -36,7 +36,7 @@ bool SongListLayer::setup(const std::string&) {
 			->setAxis(geode::Axis::Row)
 			->setGap(.0f)
 	);
-	infoMenu->setContentSize({24.f, 23.f});
+	infoMenu->setContentSize({24.f * .75f, 23.f * .75f});
 	InfoAlertButton* infoBtn = InfoAlertButton::create(
 		"Menu Loop Randomizer - Help/FAQ",
 		"Play button = switch songs.\n"
@@ -48,7 +48,7 @@ bool SongListLayer::setup(const std::string&) {
 		"A: <c_>***Listen***</c> to them first.\n\n"
 		"<cy>Q: Add a search bar!</c>\n"
 		"A: <c_>No. Never. Learn how to scroll through a list.</c>",
-		1.f
+		.75f
 	);
 	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
 	infoMenu->setPosition({layerSize - 3.f});
