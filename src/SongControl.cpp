@@ -172,7 +172,7 @@ namespace SongControl {
 		}
 
 		const std::filesystem::path& songAsPath = Utils::toProblematicString(songManager.getCurrentSong());
-		if (const geode::Result<int> result = geode::utils::numFromString<int>(geode::utils::string::replace(songAsPath.filename(), songAsPath.extension(), "")); result.isOk()) {
+		if (const geode::Result<int> result = geode::utils::numFromString<int>(geode::utils::string::replace(Utils::toNormalizedString(songAsPath.filename()), Utils::toNormalizedString(songAsPath.extension()), "")); result.isOk()) {
 			const int songID = result.unwrapOr(-1);
 			MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 			if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID); songInfoObject && mdm->isResourceSong(songID)) {

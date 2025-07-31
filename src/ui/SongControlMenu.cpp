@@ -195,7 +195,7 @@ void SongControlMenu::onAddToPlylstBtn(CCObject*) {
 	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onSettingsButton(CCObject*) {
-	SongControlMenu::onClose(nullptr);
+	if (CCNode* node = this->m_mainLayer->getChildByID("control-panel-info-menu"_spr)) node->removeMeAndCleanup();
 	geode::openSettingsPopup(geode::Mod::get());
 }
 void SongControlMenu::updateCurrentLabel() {
