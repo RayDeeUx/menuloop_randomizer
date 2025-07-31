@@ -178,7 +178,7 @@ namespace SongControl {
 			if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID); songInfoObject && mdm->isResourceSong(songID)) {
 				songManager.incrementTowerRepeatCount();
 				std::string displayString = fmt::format("{} can't be in a playlist! ", songInfoObject->m_songName);
-				if (songManager.getTowerRepeatCount() > 1) displayString += fmt::format("Touch grass {} times instead.", repeats);
+				if (const int repeats = songManager.getTowerRepeatCount(); repeats > 1) displayString += fmt::format("Touch grass {} times instead.", repeats);
 				else displayString += "It's a resource song!";
 				return geode::Notification::create(
 					displayString,
@@ -188,7 +188,7 @@ namespace SongControl {
 			songManager.resetTowerRepeatCount();
 		} else songManager.resetTowerRepeatCount();
 
-		const std::filesystem::path playlistFilePath = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
+		const std::filesystem::path& playlistFilePath = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
 		if (playlistFilePath.string().empty() || playlistFilePath.extension() != ".txt" || !Utils::notFavoritesNorBlacklist(playlistFilePath)) {
 			return geode::Notification::create(
 				"Invalid text file selected as your MLR playlist file!",

@@ -311,7 +311,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 	SongManager& songManager = SongManager::get();
 
 	// impl playlist files
-	const std::filesystem::path playlistFile = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
+	const std::filesystem::path& playlistFile = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
 	songManager.setPlaylistFileName();
 	if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") && std::filesystem::exists(playlistFile) && playlistFile.extension() == ".txt") {
 		bool isPlaylistEmpty = true;
@@ -329,7 +329,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 		geode::log::info("playlist file {} is empty. load songs w/o playlist.", playlistFile);
 	}
 
-	const std::filesystem::path configDir = path.string().empty() ? geode::Mod::get()->getConfigDir() : path;
+	const std::filesystem::path& configDir = path.string().empty() ? geode::Mod::get()->getConfigDir() : path;
 	/*
 		if custom songs are enabled search for files in the config dir
 		if not, just use the newgrounds songs
