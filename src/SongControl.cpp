@@ -89,19 +89,19 @@ namespace SongControl {
 		if (songManager.isOriginalMenuLoop()) return SongControl::woahThereBuddy("There's nothing to blacklist! Open Menu Loop Randomizer's config directory and edit its <cj>blacklist.txt</c> file to bring back some songs.");
 		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
 
-		const std::string& currentSong = songManager.getCurrentSong();
+		const std::string& songBeingBlacklisted = songManager.getCurrentSong();
 
-		if (const auto songManagerBlacklist = songManager.getBlacklist(); std::ranges::find(songManagerBlacklist, currentSong) != songManagerBlacklist.end()) return SongControl::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
-		if (const auto songManagerFavorites = songManager.getFavorites(); std::ranges::find(songManagerFavorites, currentSong) != songManagerFavorites.end()) return SongControl::woahThereBuddy("You've already favorited this song! Double-check your <cl>favorites.txt</c> again.");
+		if (const auto songManagerBlacklist = songManager.getBlacklist(); std::ranges::find(songManagerBlacklist, songBeingBlacklisted) != songManagerBlacklist.end()) return SongControl::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
+		if (const auto songManagerFavorites = songManager.getFavorites(); std::ranges::find(songManagerFavorites, songBeingBlacklisted) != songManagerFavorites.end()) return SongControl::woahThereBuddy("You've already favorited this song! Double-check your <cl>favorites.txt</c> again.");
 
-		geode::log::info("blacklisting: {}", currentSong);
+		geode::log::info("blacklisting: {}", songBeingBlacklisted);
 
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 		const std::string& songName = Utils::getSongName();
 		const std::string& songArtist = Utils::getSongArtist();
 		const std::string& customSong = Utils::currentCustomSong();
 		const int songID = Utils::getSongID();
-		const std::string& toWriteToFile = useCustomSongs ? currentSong : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", currentSong, songName, songArtist);
+		const std::string& toWriteToFile = useCustomSongs ? songBeingBlacklisted : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", songBeingBlacklisted, songName, songArtist);
 
 		Utils::writeToFile(toWriteToFile, BLACKLIST_FILE);
 
@@ -111,9 +111,9 @@ namespace SongControl {
 			geode::log::info("repopulating vector from blacklisting current song");
 			Utils::refreshTheVector();
 		} else {
-			geode::log::info("dangerousBlacklisting is active. added {} to blacklist, removing it from current queue", currentSong);
+			geode::log::info("dangerousBlacklisting is active. added {} to blacklist, removing it from current queue", songBeingBlacklisted);
 			geode::log::info("original size: {}", songManager.getSongsSize());
-			songManager.removeSong(currentSong);
+			songManager.removeSong(songBeingBlacklisted);
 			geode::log::info("updated size: {}", songManager.getSongsSize());
 		}
 
@@ -128,7 +128,10 @@ namespace SongControl {
 			if (!useCustomSongs && !songName.empty()) return Utils::newNotification(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", songName));
 		}
 
-		if (!useCustomSongs) return Utils::newNotification(fmt::format("Blacklisted {} by {} ({}), now playing {}.", songName, songArtist, songID, Utils::getSongName()));
+		if (!useCustomSongs) {
+			if (songID != -1) return Utils::newNotification(fmt::format("Blacklisted {} by {} ({}), now playing {}.", songName, songArtist, songID, Utils::getSongName()));
+			return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", Utils::toNormalizedString(std::filesystem::path(songBeingBlacklisted).filename()), Utils::getSongName()));
+		}
 		if (!customSong.empty()) return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", customSong, Utils::currentCustomSong()));
 	}
 	void copySong() {
