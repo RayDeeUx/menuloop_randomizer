@@ -186,9 +186,8 @@ namespace SongControl {
 					geode::NotificationIcon::Error, 5.f
 				)->show();
 			}
-		}
-
-		songManager.resetTowerRepeatCount();
+			songManager.resetTowerRepeatCount();
+		} else songManager.resetTowerRepeatCount();
 
 		const std::filesystem::path playlistFilePath = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
 		if (playlistFilePath.string().empty() || playlistFilePath.extension() != ".txt" || !Utils::notFavoritesNorBlacklist(playlistFilePath)) {
