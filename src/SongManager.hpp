@@ -66,6 +66,9 @@ class SongManager {
 	bool songSizeIsBad() const;
 	void setCurrentSongDisplayName(const std::string& displayName);
 	std::string getCurrentSongDisplayName();
+	void incrementTowerRepeatCount();
+	void resetTowerRepeatCount();
+	int getTowerRepeatCount() const;
 
   private:
 	SongManager();
@@ -86,4 +89,5 @@ class SongManager {
 	bool m_playlistIsEmpty = false;
 	std::vector<std::string> m_blacklist;
 	std::vector<std::string> m_favorites;
+	int m_towerRepeatCount;
 };

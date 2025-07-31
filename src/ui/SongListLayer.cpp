@@ -178,6 +178,8 @@ bool SongListLayer::setup(const std::string&) {
 	this->m_closeBtn->setID("close-button"_spr);
 	this->m_buttonMenu->setID("close-menu"_spr);
 
+	songManager.resetTowerRepeatCount();
+
 	return true;
 }
 

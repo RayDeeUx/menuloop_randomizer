@@ -243,3 +243,15 @@ void SongManager::setCurrentSongDisplayName(const std::string& displayName) {
 std::string SongManager::getCurrentSongDisplayName() {
 	return m_displayName;
 }
+
+void SongManager::incrementTowerRepeatCount() {
+	m_towerRepeatCount = m_towerRepeatCount + 1;
+}
+
+void SongManager::resetTowerRepeatCount() {
+	m_towerRepeatCount = 0;
+}
+
+int SongManager::getTowerRepeatCount() const {
+	return m_towerRepeatCount;
+}

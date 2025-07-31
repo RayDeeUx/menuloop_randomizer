@@ -171,6 +171,25 @@ namespace SongControl {
 			)->show();
 		}
 
+		const std::filesystem::path& songAsPath = Utils::toProblematicString(songManager.getCurrentSong());
+		if (const geode::Result<int> result = geode::utils::numFromString<int>(geode::utils::string::replace(songAsPath.filename(), songAsPath.extension(), "")); result.isOk()) {
+			const int songID = result.unwrapOr(-1);
+			MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
+			if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID); songInfoObject && mdm->isResourceSong(songID)) {
+				songManager.incrementTowerRepeatCount();
+				int repeats = songManager.getTowerRepeatCount();
+				std::string displayString = fmt::format("{} can't be in a playlist!", songInfoObject->m_songName);
+				if (repeats > 1) displayString += fmt::format(" Touch grass {} times instead.", repeats);
+				else displayString += "It's a resource song!";
+				return geode::Notification::create(
+					displayString,
+					geode::NotificationIcon::Error, 5.f
+				)->show();
+			}
+		}
+
+		songManager.resetTowerRepeatCount();
+
 		const std::filesystem::path playlistFilePath = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
 		if (playlistFilePath.string().empty() || playlistFilePath.extension() != ".txt" || !Utils::notFavoritesNorBlacklist(playlistFilePath)) {
 			return geode::Notification::create(
