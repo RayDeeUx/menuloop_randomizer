@@ -10,6 +10,8 @@
   - No, I will not be adding a search bar.
 - Retroactively rename `Playlist Mode` to `Constant Shuffle Mode` across as many front-facing areas as possible to avoid confusion with more recent features (see first bullet point).
 - Fix an issue where changing some settings didn't render a new song title card. Oops!
+- Fix an issue where blacklisting songs didn't update the name of the song chosen as the new menu loop. Oops!
+- Removed elasticity from MLR menu opening animations. <c-FF0000>Non-negotiable change.</c>
 - Moved repository URL to Codeberg.
 ## v1.8.4
 - Added `Advanced Logging` toggle.

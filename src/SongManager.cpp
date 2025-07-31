@@ -91,7 +91,6 @@ std::string SongManager::getPlaylistFileName() {
 	return m_playlistName;
 }
 
-
 void SongManager::update(float dt) const {
 	// split for readability
 	if (VANILLA_GD_MENU_LOOP_DISABLED || !m_constantShuffleMode) return;

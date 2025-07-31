@@ -515,19 +515,15 @@ SongInfoObject* Utils::getSongInfoObject() {
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return nullptr;
 	if (songManager.isOriginalMenuLoop()) return nullptr;
 
-	const std::string& songFileName = toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
+	const std::string& songFileName = Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
 
 	// if it's not menuLoop.mp3, then get info
 	size_t dotPos = songFileName.find_last_of('.');
-
 	if (dotPos == std::string::npos) return nullptr;
 
-	std::string songFileNameAsAtring = songFileName.substr(0, dotPos);
-
+	const std::string& songFileNameAsAtring = songFileName.substr(0, dotPos);
 	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameAsAtring);
-
 	if (songFileNameAsID.isErr()) return nullptr;
-
 	return MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrap());
 }
 

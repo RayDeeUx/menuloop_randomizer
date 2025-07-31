@@ -50,6 +50,38 @@ bool SongControlMenu::setup(const std::string&) {
 	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), this->m_openSongListMenu, this);
 	geode::AxisLayout* layoutSongList = geode::RowLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
 
+	SongManager& songManager = SongManager::get();
+	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
+	infoMenu->setLayout(
+		geode::RowLayout::create()
+			->setAutoScale(false)
+			->setAxis(geode::Axis::Row)
+			->setGap(.0f)
+	);
+	infoMenu->setContentSize({24.f * .75f, 23.f * .75f});
+	InfoAlertButton* infoBtn = InfoAlertButton::create(
+		"Menu Loop Randomizer - Debug/FAQ",
+		fmt::format(
+			"Platform: <cl>{}</c>\n"
+			"Constant Shuffle Mode: <cl>{}</c>\n"
+			"Current playlist file: <cl>{}</c> (Loaded: <cl>{}</c>)\n\n"
+			"<cy>Q: Why do I see overlapping elements?</c>\n"
+			"A: Install <cl>Happy Textures by Alphalaneous</c>.\n<c_>This is a non-negotiable solution.</c>\n\n"
+			"<cy>Q: Add</c> <cl>[feature suggestion that makes this mod act like Spotify or EditorMusic, but with the menu loop]</c><cy>!</c>\n"
+			"A: <c_>No. Never.</c>",
+			Utils::getPlatform(),
+			songManager.getConstantShuffleMode() ? "ON" : "OFF",
+			songManager.getPlaylistFileName(),
+			Utils::getBool("loadPlaylistFile") ? "True" : "False"
+		),
+		.75f
+	);
+	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
+	infoMenu->setPosition({layerSize - 3.f});
+	infoMenu->setID("control-panel-info-menu"_spr);
+	infoBtn->setID("control-panel-info-button"_spr);
+	this->m_mainLayer->addChild(infoMenu);
+
 	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 2.5f});
 	this->m_theTimeoutCorner->ignoreAnchorPointForPosition(false);
 	this->m_theTimeoutCorner->setContentSize({24.f, 24.f});
