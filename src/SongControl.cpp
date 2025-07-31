@@ -178,8 +178,8 @@ namespace SongControl {
 			if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID); songInfoObject && mdm->isResourceSong(songID)) {
 				songManager.incrementTowerRepeatCount();
 				int repeats = songManager.getTowerRepeatCount();
-				std::string displayString = fmt::format("{} can't be in a playlist!", songInfoObject->m_songName);
-				if (repeats > 1) displayString += fmt::format(" Touch grass {} times instead.", repeats);
+				std::string displayString = fmt::format("{} can't be in a playlist! ", songInfoObject->m_songName);
+				if (repeats > 1) displayString += fmt::format("Touch grass {} times instead.", repeats);
 				else displayString += "It's a resource song!";
 				return geode::Notification::create(
 					displayString,
