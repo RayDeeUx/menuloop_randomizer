@@ -35,13 +35,13 @@
 		},
 		"loadPlaylistFile": {
 			"name": "Load Playlist File Instead",
-			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will load as menu loop options.\n\nNote that your `blacklist.txt` and `favorites.txt` files will still apply.",
+			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will load as menu loop options.\n\nNote that your `blacklist.txt` and `favorites.txt` files will still apply.\n\n## ***<c_>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***",
 			"type": "bool",
 			"default": false
 		},
 		"playlistFile": {
 			"name": "Playlist File (.txt Files ONLY)",
-			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will either:\n- load as menu loop options, if <cl>\"Load Playlist File Instead\"</c> is enabled.\n- edit to add new songs to the selected playlist file, if <cl>\"Load Playlist File Instead\"</c> is disabled.",
+			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will either:\n- load as menu loop options, if <cl>\"Load Playlist File Instead\"</c> is enabled.\n- edit to add new songs to the selected playlist file, if <cl>\"Load Playlist File Instead\"</c> is disabled.\n\n## ***<c_>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***",
 			"type": "file",
 			"default": "{mod_config_dir}/playlistOne.txt",
 			"filters": [

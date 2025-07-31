@@ -83,14 +83,27 @@ $on_mod(Loaded) {
 	listenForSettingChanges<bool>("searchDeeper", [](bool searchDeeper) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("searchDeeper");
 	});
-	listenForSettingChanges<std::filesystem::path>("additionalFolder", [](std::filesystem::path searchDeeper) {
+	listenForSettingChanges<std::filesystem::path>("additionalFolder", [](std::filesystem::path additionalFolder) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("additionalFolder");
 	});
 	listenForSettingChanges<bool>("loadPlaylistFile", [](bool loadPlaylistFile) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("loadPlaylistFile");
+		if (!loadPlaylistFile) return;
+		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
+		MDPopup* popup = MDPopup::create("MLR Playlist Files: A Warning", "## ***<c_>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***", "I Understand");
+		popup->setTag(7302025);
+		popup->setID("playlist-files-warning"_spr);
+		popup->m_noElasticity = true;
+		popup->show();
 	});
 	listenForSettingChanges<std::filesystem::path>("playlistFile", [](std::filesystem::path playlistFile) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("playlistFile");
+		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
+		MDPopup* popup = MDPopup::create("MLR Playlist Files: A Warning", "## ***<c_>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***", "I Understand");
+		popup->setTag(7302025);
+		popup->setID("playlist-files-warning"_spr);
+		popup->m_noElasticity = true;
+		popup->show();
 	});
 	listenForSettingChanges<bool>("playlistMode", [](bool constantShuffleMode) {
 		SongManager& songManager = SongManager::get();
@@ -122,11 +135,5 @@ $on_mod(Loaded) {
 		geode::Loader::get()->queueInMainThread([] { Utils::queueUpdateSCMLabel(); });
 		if (Utils::getBool("playlistMode")) return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 		GameManager::sharedState()->playMenuMusic();
-	});
-	listenForSettingChanges<bool>("dangerousBlacklisting", [](bool dangerousBlacklisting) {
-		if (!dangerousBlacklisting) return;
-		log::info("=============== WARNING: USER HAS ENABLED `dangerousBlacklisting` SETTING ===============");
-		if (GameManager::get()->m_playerUserID.value() == 925143 || GameManager::get()->m_playerUserID.value() == 7247326) return log::info("never mind, it's just aktimoose the beta tester. don't show the alert");
-		FLAlertLayer::create("Menu Loop Randomizer", "<c_>This is an experimental setting. You agree to hold yourself responsible for any issues that happen when this setting is enabled.</c>", "I understand")->show();
 	});
 }
