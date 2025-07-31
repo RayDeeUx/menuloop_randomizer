@@ -8,6 +8,8 @@ protected:
 	cocos2d::CCMenu* m_songControlsMenu {};
 	cocos2d::CCMenu* m_theTimeoutCorner {};
 	cocos2d::CCMenu* m_openSongListMenu {};
+	cocos2d::CCMenu* m_infoMenu         {};
+	InfoAlertButton* m_infoButton       {};
 	cocos2d::extension::CCScale9Sprite*b{};
 	bool setup(std::string const& id) override;
 	void onShuffleButton(CCObject*);

@@ -51,15 +51,15 @@ bool SongControlMenu::setup(const std::string&) {
 	geode::AxisLayout* layoutSongList = geode::RowLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
 
 	SongManager& songManager = SongManager::get();
-	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
-	infoMenu->setLayout(
+	this->m_infoMenu = cocos2d::CCMenu::create();
+	this->m_infoMenu->setLayout(
 		geode::RowLayout::create()
 			->setAutoScale(false)
 			->setAxis(geode::Axis::Row)
 			->setGap(.0f)
 	);
-	infoMenu->setContentSize({24.f * .75f, 23.f * .75f});
-	InfoAlertButton* infoBtn = InfoAlertButton::create(
+	this->m_infoMenu->setContentSize({24.f * .75f, 23.f * .75f});
+	this->m_infoButton = InfoAlertButton::create(
 		"Menu Loop Randomizer - Debug/FAQ",
 		fmt::format(
 			"Platform: <cl>{}</c>\n"
@@ -76,11 +76,11 @@ bool SongControlMenu::setup(const std::string&) {
 		),
 		.75f
 	);
-	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
-	infoMenu->setPosition({layerSize - 3.f});
-	infoMenu->setID("control-panel-info-menu"_spr);
-	infoBtn->setID("control-panel-info-button"_spr);
-	this->m_mainLayer->addChild(infoMenu);
+	this->m_infoMenu->addChildAtPosition(this->m_infoButton, geode::Anchor::Center);
+	this->m_infoMenu->setPosition({layerSize - 3.f});
+	this->m_infoMenu->setID("control-panel-info-menu"_spr);
+	this->m_infoButton->setID("control-panel-info-button"_spr);
+	this->m_mainLayer->addChild(m_infoMenu);
 
 	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 2.5f});
 	this->m_theTimeoutCorner->ignoreAnchorPointForPosition(false);
@@ -180,7 +180,7 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 }
 void SongControlMenu::onPlaylistButton(CCObject*) {
 	SongControlMenu::onClose(nullptr);
-	SongListLayer::create("GJ_square05.png")->show();
+	SongListLayer::create("GJ_square02.png")->show();
 }
 void SongControlMenu::onAddToPlylstBtn(CCObject*) {
 	SongManager& songManager = SongManager::get();
@@ -195,8 +195,13 @@ void SongControlMenu::onAddToPlylstBtn(CCObject*) {
 	SongControlMenu::updateCurrentLabel();
 }
 void SongControlMenu::onSettingsButton(CCObject*) {
-	if (CCNode* node = this->m_mainLayer->getChildByID("control-panel-info-menu"_spr)) node->removeMeAndCleanup();
 	geode::openSettingsPopup(geode::Mod::get());
+	if (this->m_infoMenu) this->m_infoMenu->setScale(0.f);
+	if (this->m_infoButton) {
+		this->m_infoButton->setScale(0.f);
+		this->m_infoButton->setEnabled(false);
+		this->m_infoButton->m_pfnSelector = nullptr;
+	}
 }
 void SongControlMenu::updateCurrentLabel() {
 	SongManager& songManager = SongManager::get();

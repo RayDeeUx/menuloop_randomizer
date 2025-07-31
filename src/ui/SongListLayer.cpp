@@ -26,7 +26,7 @@ bool SongListLayer::setup(const std::string&) {
 	CCLayer* mainLayer = this->m_mainLayer;
 	mainLayer->setID("main-layer"_spr);
 
-	background->initWithFile("GJ_square01.png");
+	background->initWithFile("GJ_square02.png");
 	background->setContentSize(layerSize);
 
 	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
@@ -113,6 +113,7 @@ bool SongListLayer::setup(const std::string&) {
 	this->m_mainLayer->addChildAtPosition(scrollLayer, geode::Anchor::Center);
 
 	geode::ListBorders* listBorder = geode::ListBorders::create();
+	listBorder->setSpriteFrames("GJ_commentTop2_001.png", "GJ_commentSide2_001.png");
 	listBorder->setContentSize(scrollLayer->getContentSize());
 	listBorder->ignoreAnchorPointForPosition(false);
 	listBorder->setID("songs-list-border"_spr);
