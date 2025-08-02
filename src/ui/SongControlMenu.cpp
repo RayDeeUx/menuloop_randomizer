@@ -125,7 +125,7 @@ bool SongControlMenu::setup(const std::string&) {
 			cocos2d::CCScaleTo::create(0.f, originalScale * 1.0f),
 			cocos2d::CCDelayTime::create(0.25f),
 			nullptr
-			);
+		);
 		cocos2d::CCSequence* sequenceBottom = cocos2d::CCSequence::create(
 			cocos2d::CCTintTo::create(0.f, 255, 255, 255),
 			cocos2d::CCScaleTo::create(0.f, originalScale * 1.0f),
