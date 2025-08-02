@@ -150,7 +150,7 @@ void Utils::composeAndSetCurrentSongDisplayNameOnlyWhenBlacklistingSongs() {
 		return songManager.setCurrentSongDisplayName(fmt::format("Unknown ({})", songFileNameWithoutExtension));
 	}
 	const int songID = songFileNameAsID.unwrapOr(-1);
-	if (songManager.getSawbladeCustomSongsFolder() && songID > 0) return songManager.setCurrentSongDisplayName(fmt::format("{} - Custom Songs Folder by Sawblade is loaded :(", customSongDisplayName));
+	if (songManager.getSawbladeCustomSongsFolder() && songID > 0) return songManager.setCurrentSongDisplayName(fmt::format("{} - Song info could not be reliably fetched", customSongDisplayName));
 	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID)) return songManager.setCurrentSongDisplayName(Utils::getFormattedNGMLSongName(songInfo));
 	return songManager.setCurrentSongDisplayName(customSongDisplayName);
 }
@@ -211,7 +211,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 	const int songID = songFileNameAsID.unwrapOr(-1);
 
 	if (songManager.getSawbladeCustomSongsFolder() && songID > 0) {
-		return Utils::newNotification(composedNotifString(notifString, fmt::format("{} - Custom Songs Folder by Sawblade is loaded :(", songFileNameWithoutExtension), suffix), true);
+		return Utils::newNotification(composedNotifString(notifString, fmt::format("{} - Song info could not be reliably fetched", songFileNameWithoutExtension), suffix), true);
 	}
 
 	// sometimes songInfo is nullptr, so improvise
