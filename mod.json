@@ -270,9 +270,6 @@
 			"resources/*.png"
 		]
 	},
-	"dependencies": {
-		"geode.node-ids": ">=1.16.0"
-	},
 	"links": {
 		"community": "https://discord.gg/WqZBYdBWZW",
 		"homepage": "https://discord.com/channels/822510988409831486/1206371881222144020"
