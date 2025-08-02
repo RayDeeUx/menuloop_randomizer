@@ -70,10 +70,10 @@ namespace SongControl {
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 		const int songID = Utils::getSongID();
 
-		const std::string& songName = Utils::getSongName();
-		const std::string& songArtist = Utils::getSongArtist();
-		const std::string& customSong = Utils::currentCustomSong();
-		const std::string& toWriteToFile = useCustomSongs ? currentSong : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", currentSong, songName, songArtist);
+		const std::string& songName = songID > 0 ? Utils::getSongName() : "";
+		const std::string& songArtist = songID > 0 ? Utils::getSongArtist() : "";
+		const std::string& customSong = songID < 1 ? Utils::currentCustomSong() : "";
+		const std::string& toWriteToFile = useCustomSongs || songID < 1 ? currentSong : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", currentSong, songName, songArtist);
 
 		Utils::writeToFile(toWriteToFile, FAVORITES_FILE);
 
@@ -100,10 +100,10 @@ namespace SongControl {
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 		const int songID = Utils::getSongID();
 
-		const std::string& songName = Utils::getSongName();
-		const std::string& songArtist = Utils::getSongArtist();
-		const std::string& customSong = Utils::currentCustomSong();
-		const std::string& toWriteToFile = useCustomSongs ? songBeingBlacklisted : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", songBeingBlacklisted, songName, songArtist);
+		const std::string& songName = songID > 0 ? Utils::getSongName() : "";
+		const std::string& songArtist = songID > 0 ? Utils::getSongArtist() : "";
+		const std::string& customSong = songID < 1 ? Utils::currentCustomSong() : "";
+		const std::string& toWriteToFile = useCustomSongs || songID < 1 ? songBeingBlacklisted : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", songBeingBlacklisted, songName, songArtist);
 
 		Utils::writeToFile(toWriteToFile, BLACKLIST_FILE);
 

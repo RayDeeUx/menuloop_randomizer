@@ -523,7 +523,20 @@ SongInfoObject* Utils::getSongInfoObject() {
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return nullptr;
 	if (songManager.isOriginalMenuLoop()) return nullptr;
 
-	const std::string& songFileName = Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
+	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
+	const std::filesystem::path& currentSongFilePath = std::filesystem::path(songManager.getCurrentSong());
+
+	const geode::Mod* mod = geode::Mod::get();
+	const std::string& altDirString = Utils::toNormalizedString(mod->getSettingValue<std::filesystem::path>("additionalFolder"));
+	const bool isFromConfigDir = geode::utils::string::startsWith(Utils::toNormalizedString(currentSongFilePath.parent_path()), Utils::toNormalizedString(mod->getConfigDir()));
+	const bool isFromAlternateDir = !altDirString.empty() && geode::utils::string::startsWith(Utils::toNormalizedString(currentSongFilePath.parent_path()), altDirString);
+	geode::log::info("isFromConfigDir: {}", isFromConfigDir);
+	geode::log::info("isFromAlternateDir: {}", isFromAlternateDir);
+	if (isFromConfigDir || isFromAlternateDir) {
+		geode::log::info("{} is not a vanilla song.", Utils::toNormalizedString(currentSongFilePath));
+		return nullptr;
+	}
+	const std::string& songFileName = Utils::toNormalizedString(currentSongFilePath.filename());
 
 	// if it's not menuLoop.mp3, then get info
 	size_t dotPos = songFileName.find_last_of('.');
@@ -532,7 +545,7 @@ SongInfoObject* Utils::getSongInfoObject() {
 	const std::string& songFileNameAsAtring = songFileName.substr(0, dotPos);
 	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameAsAtring);
 	if (songFileNameAsID.isErr()) return nullptr;
-	return MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrapOr(-1));
+	return mdm->getSongInfoObject(songFileNameAsID.unwrapOr(-1));
 }
 
 std::string Utils::getSongName() {
