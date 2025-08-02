@@ -150,7 +150,7 @@ void Utils::composeAndSetCurrentSongDisplayNameOnlyWhenBlacklistingSongs() {
 		return songManager.setCurrentSongDisplayName(fmt::format("Unknown ({})", songFileNameWithoutExtension));
 	}
 	const int songID = songFileNameAsID.unwrapOr(-1);
-	if (songManager.getSawbladeCustomSongsFolder() && (mdm->isResourceSong(songID) || mdm->isSongDownloaded(songID)) && Utils::toNormalizedString(mdm->pathForSong(songID)) != Utils::toNormalizedString(currentSong)) return songManager.setCurrentSongDisplayName(fmt::format("{} - Custom Songs Folder by Sawblade is loaded :(", customSongDisplayName));
+	if (songManager.getSawbladeCustomSongsFolder() && songID > 0) return songManager.setCurrentSongDisplayName(fmt::format("{} - Custom Songs Folder by Sawblade is loaded :(", customSongDisplayName));
 	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID)) return songManager.setCurrentSongDisplayName(Utils::getFormattedNGMLSongName(songInfo));
 	return songManager.setCurrentSongDisplayName(customSongDisplayName);
 }
