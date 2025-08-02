@@ -255,3 +255,11 @@ void SongManager::resetTowerRepeatCount() {
 int SongManager::getTowerRepeatCount() const {
 	return m_towerRepeatCount;
 }
+
+void SongManager::setSawbladeCustomSongsFolder(const bool value) {
+	m_sawbladeCustomSongsFolder = value;
+}
+
+bool SongManager::getSawbladeCustomSongsFolder() const {
+	return m_sawbladeCustomSongsFolder;
+}

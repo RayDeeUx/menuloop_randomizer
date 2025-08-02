@@ -4,12 +4,15 @@
 
 namespace SongControl {
 	void woahThereBuddy(const std::string& reason) {
+		const bool isCustomSongsReason = geode::utils::string::contains(reason, "Custom Songs Folder by Sawblade");
+		const std::string& btnTwo = !isCustomSongsReason ? "Open Mod Settings" : "Manage Custom Songs Folder Mod";
 		geode::createQuickPopup(
 			"Menu Loop Randomizer", reason,
-			"Never Mind", "Open Mod Settings",
-			[](FLAlertLayer*, bool openConfig) {
+			"Never Mind", btnTwo.c_str(),
+			[isCustomSongsReason](FLAlertLayer*, bool openConfig) {
 				if (!openConfig) return;
-				openSettingsPopup(geode::Mod::get());
+				if (!isCustomSongsReason) openSettingsPopup(geode::Mod::get());
+				openInfoPopup(geode::Loader::get()->getLoadedMod("sawblade.custom_song_folder"));
 			}
 		);
 	}
@@ -69,6 +72,8 @@ namespace SongControl {
 
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 		const int songID = Utils::getSongID();
+		if (songID > 0 && songManager.getSawbladeCustomSongsFolder()) return SongControl::woahThereBuddy("Custom Songs Folder by Sawblade is currently loaded! Disable it to favorite this song.");
+
 		const std::string& songName = Utils::getSongName();
 		const std::string& songArtist = Utils::getSongArtist();
 		const std::string& customSong = Utils::currentCustomSong();
@@ -97,10 +102,12 @@ namespace SongControl {
 		geode::log::info("blacklisting: {}", songBeingBlacklisted);
 
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
+		const int songID = Utils::getSongID();
+		if (songID > 0 && songManager.getSawbladeCustomSongsFolder()) return SongControl::woahThereBuddy("Custom Songs Folder by Sawblade is currently loaded! Disable it to blacklist this song.");
+
 		const std::string& songName = Utils::getSongName();
 		const std::string& songArtist = Utils::getSongArtist();
 		const std::string& customSong = Utils::currentCustomSong();
-		const int songID = Utils::getSongID();
 		const std::string& toWriteToFile = useCustomSongs ? songBeingBlacklisted : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", songBeingBlacklisted, songName, songArtist);
 
 		Utils::writeToFile(toWriteToFile, BLACKLIST_FILE);
@@ -174,8 +181,10 @@ namespace SongControl {
 		const std::filesystem::path& songAsPath = Utils::toProblematicString(songManager.getCurrentSong());
 		if (const geode::Result<int> result = geode::utils::numFromString<int>(geode::utils::string::replace(Utils::toNormalizedString(songAsPath.filename()), Utils::toNormalizedString(songAsPath.extension()), "")); result.isOk()) {
 			const int songID = result.unwrapOr(-1);
+			if (songID > 0 && songManager.getSawbladeCustomSongsFolder()) return SongControl::woahThereBuddy("Custom Songs Folder by Sawblade is currently loaded! Disable it to add this song to your MLR playlist.");
 			MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
-			if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID); songInfoObject && mdm->isResourceSong(songID)) {
+			SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID);
+			if (songInfoObject && mdm->isResourceSong(songID)) {
 				songManager.incrementTowerRepeatCount();
 				std::string displayString = fmt::format("{} can't be in a playlist! ", songInfoObject->m_songName);
 				if (const int repeats = songManager.getTowerRepeatCount(); repeats > 1) displayString += fmt::format("Touch grass {} times instead.", repeats);

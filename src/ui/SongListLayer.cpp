@@ -29,48 +29,6 @@ bool SongListLayer::setup(const std::string&) {
 	background->initWithFile("GJ_square02.png");
 	background->setContentSize(layerSize);
 
-	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
-	infoMenu->setLayout(
-		geode::RowLayout::create()
-			->setAutoScale(false)
-			->setAxis(geode::Axis::Row)
-			->setGap(.0f)
-	);
-	infoMenu->setContentSize({24.f * .75f, 23.f * .75f});
-	InfoAlertButton* infoBtn = InfoAlertButton::create(
-		"Menu Loop Randomizer - Help/FAQ",
-		"Play button = switch songs.\n"
-		"Yellow = <cy>favorited</c> song. Green = <cg>current</c> song.\n"
-		"Buttons at the bottom let you <cl>shuffle to a new song</c>,\n"
-		"<cl>copy the current song's name</c>, <cl>go back one song</c>,\n"
-		"and <cy>(if on \"Reduced\" Button Mode)</c> <cl>reopen the control panel</c>.\n\n"
-		"<cy>Q: I can't blacklist or favorite songs from here?!</c>\n"
-		"A: <c_>***Listen***</c> to them first.\n\n"
-		"<cy>Q: Add a search bar!</c>\n"
-		"A: <c_>No. Never. Learn how to scroll through a list.</c>",
-		.75f
-	);
-	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
-	infoMenu->setPosition({layerSize - 3.f});
-	infoMenu->setID("songlayerlist-info-menu"_spr);
-	infoBtn->setID("songlayerlist-info-button"_spr);
-	this->m_mainLayer->addChild(infoMenu);
-
-	cocos2d::CCMenu* settingsMenu = cocos2d::CCMenu::create();
-	settingsMenu->setLayout(
-		geode::RowLayout::create()
-			->setAutoScale(true)
-			->setAxis(geode::Axis::Row)
-			->setGap(.0f)
-	);
-	settingsMenu->setContentSize({24.f, 23.f});
-	settingsMenu->setID("songlayerlist-settings-menu"_spr);
-	Utils::addButton("settings", menu_selector(SongListLayer::onSettingsButton), settingsMenu, this);
-	if (CCMenuItemSpriteExtra* button = settingsMenu->getChildByType<CCMenuItemSpriteExtra>(0)) button->setPosition(settingsMenu->getContentSize() / 2.f);
-	settingsMenu->setPosition({395.f, this->m_title->getPositionY()});
-	settingsMenu->setScale(.825f);
-	this->m_mainLayer->addChild(settingsMenu);
-
 	geode::ScrollLayer* scrollLayer = geode::ScrollLayer::create({356, 220});
 	scrollLayer->m_contentLayer->setLayout(
 		geode::ColumnLayout::create()
@@ -101,7 +59,7 @@ bool SongListLayer::setup(const std::string&) {
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songData.type = SongType::Favorited;
 		alreadyAdded.push_back(song);
 
-		scrollLayer->m_contentLayer->addChild(MLRSongCell::create(songData, isEven));
+		if (MLRSongCell* songCell = MLRSongCell::create(songData, isEven)) scrollLayer->m_contentLayer->addChild(songCell);
 		isEven = !isEven;
 	}
 
@@ -118,6 +76,47 @@ bool SongListLayer::setup(const std::string&) {
 	listBorder->ignoreAnchorPointForPosition(false);
 	listBorder->setID("songs-list-border"_spr);
 	this->m_mainLayer->addChildAtPosition(listBorder, geode::Anchor::Center);
+
+	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
+	infoMenu->setLayout(
+		geode::RowLayout::create()
+			->setAutoScale(false)
+			->setAxis(geode::Axis::Row)
+			->setGap(.0f)
+	);
+	infoMenu->setContentSize({24.f * .75f, 23.f * .75f});
+	InfoAlertButton* infoBtn = InfoAlertButton::create(
+		"Menu Loop Randomizer - Help/FAQ",
+		"Play button = switch songs.\n"
+		"Yellow = <cy>favorited</c> song. Green = <cg>current</c> song.\n"
+		"You can <cl>shuffle to a new song</c>, <cl>copy the current song's name</c>,\n"
+		"<cl>go back one song</c>, and <cl>reopen the control panel</c>.\n\n"
+		"<cy>Q: I can't blacklist or favorite songs from here?!</c>\n"
+		"A: <c_>***Listen***</c> to them first.\n\n"
+		"<cy>Q: Add a search bar!</c>\n"
+		"A: <c_>No. Never. Learn how to scroll through a list.</c>",
+		.75f
+	);
+	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
+	infoMenu->setPosition({layerSize - 3.f});
+	infoMenu->setID("songlayerlist-info-menu"_spr);
+	infoBtn->setID("songlayerlist-info-button"_spr);
+	this->m_mainLayer->addChild(infoMenu);
+
+	cocos2d::CCMenu* settingsMenu = cocos2d::CCMenu::create();
+	settingsMenu->setLayout(
+		geode::RowLayout::create()
+			->setAutoScale(true)
+			->setAxis(geode::Axis::Row)
+			->setGap(.0f)
+	);
+	settingsMenu->setContentSize({24.f, 23.f});
+	settingsMenu->setID("songlayerlist-settings-menu"_spr);
+	Utils::addButton("settings", menu_selector(SongListLayer::onSettingsButton), settingsMenu, this);
+	if (CCMenuItemSpriteExtra* button = settingsMenu->getChildByType<CCMenuItemSpriteExtra>(0)) button->setPosition(settingsMenu->getContentSize() / 2.f);
+	settingsMenu->setPosition({395.f, this->m_title->getPositionY()});
+	settingsMenu->setScale(.825f);
+	this->m_mainLayer->addChild(settingsMenu);
 
 	constexpr float labelWidth = 280.f * .45f;
 

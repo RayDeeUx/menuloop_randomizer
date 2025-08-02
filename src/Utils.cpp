@@ -144,11 +144,14 @@ void Utils::composeAndSetCurrentSongDisplayNameOnlyWhenBlacklistingSongs() {
 	if (dotPos == std::string::npos) return songManager.setCurrentSongDisplayName("Unknown");
 	const std::string& songFileNameWithoutExtension = songFileName.substr(0, dotPos);
 	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameWithoutExtension);
+	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	if (songFileNameAsID.isErr()) {
 		if (!songManager.getPlaylistIsEmpty()) return songManager.setCurrentSongDisplayName(songFileNameWithoutExtension);
 		return songManager.setCurrentSongDisplayName(fmt::format("Unknown ({})", songFileNameWithoutExtension));
 	}
-	if (SongInfoObject* songInfo = MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrap())) return songManager.setCurrentSongDisplayName(Utils::getFormattedNGMLSongName(songInfo));
+	const int songID = songFileNameAsID.unwrapOr(-1);
+	if (songManager.getSawbladeCustomSongsFolder() && (mdm->isResourceSong(songID) || mdm->isSongDownloaded(songID)) && Utils::toNormalizedString(mdm->pathForSong(songID)) != Utils::toNormalizedString(currentSong)) return songManager.setCurrentSongDisplayName(fmt::format("{} - Custom Songs Folder by Sawblade is loaded :(", customSongDisplayName));
+	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID)) return songManager.setCurrentSongDisplayName(Utils::getFormattedNGMLSongName(songInfo));
 	return songManager.setCurrentSongDisplayName(customSongDisplayName);
 }
 
@@ -161,8 +164,9 @@ std::string Utils::composedNotifString(std::string notifString, const std::strin
 
 void Utils::newCardAndDisplayNameFromCurrentSong() {
 	SongManager& songManager = SongManager::get();
-	const std::string& songFileName = Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
-	const std::string& songFileExtension = Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).extension());
+	const std::filesystem::path& currentSong = std::filesystem::path(songManager.getCurrentSong());
+	const std::string& songFileName = Utils::toNormalizedString(currentSong.filename());
+	const std::string& songFileExtension = Utils::toNormalizedString(currentSong.extension());
 	const std::string& customSongDisplayName = geode::utils::string::replace(songFileName, songFileExtension, "");
 	if (!songManager.getLavaChicken()) songManager.setCurrentSongDisplayName(songFileName);
 	else songManager.setCurrentSongDisplayName(fmt::format("{} (My condolences for your ears.)", songFileName));
@@ -203,8 +207,15 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 		return Utils::newNotification(composedNotifString(notifString, fmt::format("Unknown ({})", songFileNameWithoutExtension), suffix), true);
 	}
 
+	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
+	const int songID = songFileNameAsID.unwrapOr(-1);
+
+	if (songManager.getSawbladeCustomSongsFolder() && songID > 0) {
+		return Utils::newNotification(composedNotifString(notifString, fmt::format("{} - Custom Songs Folder by Sawblade is loaded :(", songFileNameWithoutExtension), suffix), true);
+	}
+
 	// sometimes songInfo is nullptr, so improvise
-	if (SongInfoObject* songInfo = MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrap())) {
+	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID)) {
 		// default: "Song Name, Artist, Song ID"
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
 		return Utils::newNotification(composedNotifString(notifString, Utils::getFormattedNGMLSongName(songInfo), suffix), true);
@@ -303,7 +314,6 @@ void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
 	}
 	geode::log::info("Finished storing playlist. loaded songs size: {}", songManager.getSongsSize());
 }
-
 
 void Utils::populateVector(const bool customSongs, const std::filesystem::path& path, std::vector<std::string> textFileBlacklist, std::vector<std::string> textFileFavorites) {
 	if (geode::utils::string::contains(Utils::toNormalizedString(path), "store_your_disabled_menuloops_here") && geode::utils::string::contains(Utils::toNormalizedString(path), Utils::toNormalizedString(geode::Mod::get()->getConfigDir()))) return; // avoid recursion --raydeeux
@@ -509,7 +519,6 @@ void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_vie
 	if (Utils::getBool("enableNotification")) Utils::newCardAndDisplayNameFromCurrentSong();
 }
 
-
 SongInfoObject* Utils::getSongInfoObject() {
 	SongManager& songManager = SongManager::get();
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return nullptr;
@@ -524,7 +533,7 @@ SongInfoObject* Utils::getSongInfoObject() {
 	const std::string& songFileNameAsAtring = songFileName.substr(0, dotPos);
 	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameAsAtring);
 	if (songFileNameAsID.isErr()) return nullptr;
-	return MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrap());
+	return MusicDownloadManager::sharedState()->getSongInfoObject(songFileNameAsID.unwrapOr(-1));
 }
 
 std::string Utils::getSongName() {
