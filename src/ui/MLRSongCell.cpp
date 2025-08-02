@@ -29,9 +29,8 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	const int songID = geode::utils::numFromString<int>(desiredFileName).unwrapOr(-1);
-	if (songID > 0 && SongManager::get().getSawbladeCustomSongsFolder()) {
-		songNameLabel->setString(fmt::format("{} - Song info could not be reliably fetched", songID).c_str());
-	} else if (songID > 0) {
+	if (songID > 0) {
+		// if (SongManager::get().getSawbladeCustomSongsFolder()) songNameLabel->setString(fmt::format("{} - Song info could not be reliably fetched", songID).c_str());
 		const bool songExistsLocally = mdm->isResourceSong(songID) || mdm->isSongDownloaded(songID);
 		const bool pathsMatch = Utils::toNormalizedString(songData.actualFilePath) == Utils::toNormalizedString(static_cast<std::string>(mdm->pathForSong(songID)));
 		if (songExistsLocally && pathsMatch) {

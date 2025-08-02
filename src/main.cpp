@@ -72,6 +72,7 @@ $on_mod(Loaded) {
 		log::info("randomizing songManager's current song through on_mod(Loaded)");
 		songManager.pickRandomSong();
 	}
+	Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs();
 
 	if (!std::filesystem::exists(configDir / R"(store_your_disabled_menuloops_here)")) {
 		std::filesystem::create_directory(configDir / R"(store_your_disabled_menuloops_here)");

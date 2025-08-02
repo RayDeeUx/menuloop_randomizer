@@ -131,7 +131,7 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 	card->runAction(sequence);
 }
 
-void Utils::composeAndSetCurrentSongDisplayNameOnlyWhenBlacklistingSongs() {
+void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs() {
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSong = std::filesystem::path(songManager.getCurrentSong());
 	const std::string& songFileName = Utils::toNormalizedString(currentSong.filename());
@@ -150,8 +150,9 @@ void Utils::composeAndSetCurrentSongDisplayNameOnlyWhenBlacklistingSongs() {
 		return songManager.setCurrentSongDisplayName(fmt::format("Unknown ({})", songFileNameWithoutExtension));
 	}
 	const int songID = songFileNameAsID.unwrapOr(-1);
-	if (songManager.getSawbladeCustomSongsFolder() && songID > 0) return songManager.setCurrentSongDisplayName(fmt::format("{} - Song info could not be reliably fetched", customSongDisplayName));
-	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID)) return songManager.setCurrentSongDisplayName(Utils::getFormattedNGMLSongName(songInfo));
+	const bool songExistsLocally = mdm->isResourceSong(songID) || mdm->isSongDownloaded(songID);
+	const bool pathsMatch = Utils::toNormalizedString(currentSong) == Utils::toNormalizedString(static_cast<std::string>(mdm->pathForSong(songID)));
+	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && songExistsLocally && pathsMatch) return songManager.setCurrentSongDisplayName(Utils::getFormattedNGMLSongName(songInfo));
 	return songManager.setCurrentSongDisplayName(customSongDisplayName);
 }
 
@@ -209,13 +210,11 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	const int songID = songFileNameAsID.unwrapOr(-1);
-
-	if (songManager.getSawbladeCustomSongsFolder() && songID > 0) {
-		return Utils::newNotification(composedNotifString(notifString, fmt::format("{} - Song info could not be reliably fetched", songFileNameWithoutExtension), suffix), true);
-	}
+	const bool songExistsLocally = mdm->isResourceSong(songID) || mdm->isSongDownloaded(songID);
+	const bool pathsMatch = Utils::toNormalizedString(currentSong) == Utils::toNormalizedString(static_cast<std::string>(mdm->pathForSong(songID)));
 
 	// sometimes songInfo is nullptr, so improvise
-	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID)) {
+	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && songExistsLocally && pathsMatch) {
 		// default: "Song Name, Artist, Song ID"
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
 		return Utils::newNotification(composedNotifString(notifString, Utils::getFormattedNGMLSongName(songInfo), suffix), true);

@@ -91,8 +91,8 @@ bool SongListLayer::setup(const std::string&) {
 		"Yellow = <cy>favorited</c> song. Green = <cg>current</c> song.\n"
 		"You can <cl>shuffle to a new song</c>, <cl>copy the current song's name</c>,\n"
 		"<cl>go back one song</c>, and <cl>reopen the control panel</c>.\n\n"
-		"<cy>Q: I can't blacklist or favorite songs from here?!</c>\n"
-		"A: <c_>***Listen***</c> to them first.\n\n"
+		"<cy>Q: I'm seeing numbers for most of my songs?!</c>\n"
+		"A: Someone probably goofed up, which is out of my reach.\n\n"
 		"<cy>Q: Add a search bar!</c>\n"
 		"A: <c_>No. Never. Learn how to scroll through a list.</c>",
 		.75f

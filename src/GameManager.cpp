@@ -13,8 +13,8 @@ class $modify(MenuLoopGMHook, GameManager) {
 		std::string currentSong = songManager.getCurrentSong();
 		log::info("Game close detected. Most recent songManager song: {}", currentSong);
 
-		if (songManager.getSawbladeCustomSongsFolder()) log::info("however sawblade's CustomSongsFolder is loaded, so do not save it");
-		else if (songManager.isOverride()) log::info("however this is an override, so do not save it");
+		// if (songManager.getSawbladeCustomSongsFolder()) log::info("however sawblade's CustomSongsFolder is loaded, so do not save it");
+		if (songManager.isOverride()) log::info("however this is an override, so do not save it");
 		else Mod::get()->setSavedValue<std::string>("lastMenuLoop", currentSong);
 
 		GameManager::encodeDataTo(p0);
