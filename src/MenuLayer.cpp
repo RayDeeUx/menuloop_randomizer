@@ -22,7 +22,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (loader->isModLoaded("omgrod.geodify"))
 			songManager.setGeodify(loader->getLoadedMod("omgrod.geodify")->getSettingValue<bool>("menu-loop"));
 
-		// songManager.setSawbladeCustomSongsFolder(loader->isModLoaded("sawblade.custom_song_folder"));
+		songManager.setSawbladeCustomSongsFolder(loader->isModLoaded("sawblade.custom_song_folder"));
 
 		const std::string& buttonMode = Utils::getString("buttonMode");
 

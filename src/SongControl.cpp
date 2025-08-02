@@ -69,7 +69,6 @@ namespace SongControl {
 
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 		const int songID = Utils::getSongID();
-		// if (songID > 0 && songManager.getSawbladeCustomSongsFolder()) return SongControl::woahThereBuddy("Your songs folder is not in the same spot as the vanilla songs folder! Figure out why to favorite this song.");
 
 		const std::string& songName = Utils::getSongName();
 		const std::string& songArtist = Utils::getSongArtist();
@@ -100,7 +99,6 @@ namespace SongControl {
 
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 		const int songID = Utils::getSongID();
-		// if (songID > 0 && songManager.getSawbladeCustomSongsFolder()) return SongControl::woahThereBuddy("Your songs folder is not in the same spot as the vanilla songs folder! Figure out why to blacklist this song.");
 
 		const std::string& songName = Utils::getSongName();
 		const std::string& songArtist = Utils::getSongArtist();
@@ -178,7 +176,6 @@ namespace SongControl {
 		const std::filesystem::path& songAsPath = Utils::toProblematicString(songManager.getCurrentSong());
 		if (const geode::Result<int> result = geode::utils::numFromString<int>(geode::utils::string::replace(Utils::toNormalizedString(songAsPath.filename()), Utils::toNormalizedString(songAsPath.extension()), "")); result.isOk()) {
 			const int songID = result.unwrapOr(-1);
-			// if (songID > 0 && songManager.getSawbladeCustomSongsFolder()) return SongControl::woahThereBuddy("Your songs folder is not in the same spot as the vanilla songs folder! Figure out why to add this song to your MLR playlist.");
 			MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 			SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID);
 			if (songInfoObject && mdm->isResourceSong(songID)) {
