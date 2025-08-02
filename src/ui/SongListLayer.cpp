@@ -49,11 +49,12 @@ bool SongListLayer::setup(const std::string&) {
 	for (const std::string& song : songs) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
 
-		std::filesystem::path songFilePath = song;
+		std::filesystem::path songFilePath = Utils::toProblematicString(song);
 		SongData songData = {
 			Utils::toNormalizedString(songFilePath),
 			Utils::toNormalizedString(songFilePath.extension()),
-			Utils::toNormalizedString(songFilePath.filename()), SongType::Regular
+			Utils::toNormalizedString(songFilePath.filename()), SongType::Regular,
+			Utils::isFromConfigOrAlternateDir(songFilePath.parent_path())
 		};
 		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songData.type = SongType::Blacklisted;
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songData.type = SongType::Favorited;
@@ -87,9 +88,9 @@ bool SongListLayer::setup(const std::string&) {
 	infoMenu->setContentSize({24.f * .75f, 23.f * .75f});
 	InfoAlertButton* infoBtn = InfoAlertButton::create(
 		"Menu Loop Randomizer - Help/FAQ",
-		"Play button = switch songs.\n"
 		"Yellow = <cy>favorited</c> song. Green = <cg>current</c> song.\n"
-		"You can <cl>shuffle to a new song</c>, <cl>copy the current song's name</c>,\n"
+		"Italicized = NG/ML song from a different path than expected.\n"
+		"You can <cl>shuffle songs</c>, <cl>copy the current song's name</c>,\n"
 		"<cl>go back one song</c>, and <cl>reopen the control panel</c>.\n\n"
 		"<cy>Q: I'm seeing numbers for most of my songs?!</c>\n"
 		"A: Someone probably goofed up, which is out of my reach.\n\n"

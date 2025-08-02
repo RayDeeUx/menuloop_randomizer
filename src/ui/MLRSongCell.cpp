@@ -29,8 +29,14 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	const int songID = geode::utils::numFromString<int>(desiredFileName).unwrapOr(-1);
-	if (songID > 0 && !Utils::isFromConfigOrAlternateDir(Utils::toProblematicString(songData.actualFilePath))) {
-		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) songNameLabel->setString(Utils::getFormattedNGMLSongName(songInfoObject).c_str());
+	if (songID > 0 && !songData.isFromConfigOrAltDir) {
+		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) {
+			songNameLabel->setString(Utils::getFormattedNGMLSongName(songInfoObject).c_str());
+			const bool isFromNonVanillaSongsFolder =
+				Utils::toProblematicString(songData.actualFilePath) !=
+				Utils::toProblematicString(static_cast<std::string>(mdm->pathForSong(songID)));
+			if (isFromNonVanillaSongsFolder) songNameLabel->setSkewX(10.f);
+		}
 		else songNameLabel->setString(fmt::format("{} - No song info found :(", songID).c_str());
 	}
 	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);

@@ -11,6 +11,7 @@ struct SongData {
 	std::string fileExtension;
 	std::string fileName;
 	SongType type;
+	bool isFromConfigOrAltDir;
 };
 
 class MLRSongCell : public cocos2d::CCLayerColor {
