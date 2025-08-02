@@ -24,7 +24,14 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 
 		// songManager.setSawbladeCustomSongsFolder(loader->isModLoaded("sawblade.custom_song_folder"));
 
-		const bool noClassic = Utils::getString("buttonMode") != "Classic";
+		const std::string& buttonMode = Utils::getString("buttonMode");
+
+		if (buttonMode == "Minimal") {
+			Utils::addButton("controls", menu_selector(MenuLayerMLHook::onControlsButton), REST_OF_THE_OWL);
+			return true;
+		}
+
+		const bool noClassic = buttonMode != "Classic";
 
 		Utils::newCardAndDisplayNameFromCurrentSong();
 

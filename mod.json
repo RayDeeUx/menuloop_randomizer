@@ -82,7 +82,8 @@
 			"default": "Reduced",
 			"one-of": [
 				"Classic",
-				"Reduced"
+				"Reduced",
+				"Minimal"
 			]
 		},
 		"enableCopySongID": {
