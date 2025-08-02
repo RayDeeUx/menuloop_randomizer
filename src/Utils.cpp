@@ -510,9 +510,7 @@ void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_vie
 	// change the song when you click apply, stoi will not like custom names. --elnexreal
 
 	Utils::setNewSong();
-	geode::log::info("set a new song, finding SCM?");
 	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) return geode::Loader::get()->queueInMainThread([scm] { scm->onRegenButton(nullptr); });
-	geode::log::info("no SCM found");
 	if (Utils::getBool("enableNotification")) Utils::newCardAndDisplayNameFromCurrentSong();
 }
 
