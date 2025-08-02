@@ -173,6 +173,7 @@ bool SongListLayer::setup(const std::string&) {
 	abridgedControlsMenu->setID("abridged-controls-menu"_spr);
 	this->m_mainLayer->addChild(abridgedControlsMenu);
 
+	/*
 	if (songManager.getSawbladeCustomSongsFolder()) {
 		cocos2d::CCLabelBMFont* customSongsFolderBottom = cocos2d::CCLabelBMFont::create("CUSTOM SONGS FOLDER BY SAWBLADE IS LOADED!!! BUGS REPORTS WILL BE IGNORED.", "chatFont.fnt");
 		cocos2d::CCLabelBMFont* customSongsFolderTop = cocos2d::CCLabelBMFont::create("CUSTOM SONGS FOLDER BY SAWBLADE IS LOADED!!! BUGS REPORTS WILL BE IGNORED.", "chatFont.fnt");
@@ -187,7 +188,7 @@ bool SongListLayer::setup(const std::string&) {
 			cocos2d::CCScaleTo::create(0.f, originalScale * 1.0f),
 			cocos2d::CCDelayTime::create(0.25f),
 			nullptr
-			);
+		);
 		cocos2d::CCSequence* sequenceBottom = cocos2d::CCSequence::create(
 			cocos2d::CCTintTo::create(0.f, 255, 255, 255),
 			cocos2d::CCScaleTo::create(0.f, originalScale * 1.0f),
@@ -202,6 +203,7 @@ bool SongListLayer::setup(const std::string&) {
 		this->m_mainLayer->addChildAtPosition(customSongsFolderBottom, geode::Anchor::Bottom, {0, -6.f});
 		this->m_mainLayer->addChildAtPosition(customSongsFolderTop, geode::Anchor::Top, {0, 6.f});
 	}
+	*/
 
 	this->setID("SongListLayer"_spr);
 	this->m_bgSprite->setID("background"_spr);

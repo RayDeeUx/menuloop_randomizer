@@ -111,6 +111,7 @@ bool SongControlMenu::setup(const std::string&) {
 
 	SongControlMenu::updateCurrentLabel();
 
+	/*
 	if (songManager.getSawbladeCustomSongsFolder()) {
 		cocos2d::CCLabelBMFont* customSongsFolderBottom = cocos2d::CCLabelBMFont::create("CUSTOM SONGS FOLDER BY SAWBLADE IS LOADED!!! BUGS REPORTS WILL BE IGNORED.", "chatFont.fnt");
 		cocos2d::CCLabelBMFont* customSongsFolderTop = cocos2d::CCLabelBMFont::create("CUSTOM SONGS FOLDER BY SAWBLADE IS LOADED!!! BUGS REPORTS WILL BE IGNORED.", "chatFont.fnt");
@@ -140,6 +141,7 @@ bool SongControlMenu::setup(const std::string&) {
 		this->m_mainLayer->addChildAtPosition(customSongsFolderBottom, geode::Anchor::Bottom, {0, -26.f});
 		this->m_mainLayer->addChildAtPosition(customSongsFolderTop, geode::Anchor::Top, {0, 26.f});
 	}
+	*/
 
 	this->setID("SongControlMenu"_spr);
 	mainLayer->addChild(this->b);
