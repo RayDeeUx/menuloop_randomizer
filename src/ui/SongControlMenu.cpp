@@ -111,6 +111,36 @@ bool SongControlMenu::setup(const std::string&) {
 
 	SongControlMenu::updateCurrentLabel();
 
+	if (songManager.getSawbladeCustomSongsFolder()) {
+		cocos2d::CCLabelBMFont* customSongsFolderBottom = cocos2d::CCLabelBMFont::create("CUSTOM SONGS FOLDER BY SAWBLADE IS LOADED!!! BUGS REPORTS WILL BE IGNORED.", "chatFont.fnt");
+		cocos2d::CCLabelBMFont* customSongsFolderTop = cocos2d::CCLabelBMFont::create("CUSTOM SONGS FOLDER BY SAWBLADE IS LOADED!!! BUGS REPORTS WILL BE IGNORED.", "chatFont.fnt");
+		customSongsFolderBottom->limitLabelWidth(this->m_mainLayer->getContentWidth(), 1.f, .0001f);
+		customSongsFolderTop->limitLabelWidth(this->m_mainLayer->getContentWidth(), 1.f, .0001f);
+		const float originalScale = customSongsFolderBottom->getScale();
+		cocos2d::CCSequence* sequenceTop = cocos2d::CCSequence::create(
+			cocos2d::CCTintTo::create(0.f, 255,   0,   0),
+			cocos2d::CCScaleTo::create(0.f, originalScale * 1.1f),
+			cocos2d::CCDelayTime::create(0.25f),
+			cocos2d::CCTintTo::create(0.f, 255, 255, 255),
+			cocos2d::CCScaleTo::create(0.f, originalScale * 1.0f),
+			cocos2d::CCDelayTime::create(0.25f),
+			nullptr
+			);
+		cocos2d::CCSequence* sequenceBottom = cocos2d::CCSequence::create(
+			cocos2d::CCTintTo::create(0.f, 255, 255, 255),
+			cocos2d::CCScaleTo::create(0.f, originalScale * 1.0f),
+			cocos2d::CCDelayTime::create(0.25f),
+			cocos2d::CCTintTo::create(0.f, 255,   0,   0),
+			cocos2d::CCScaleTo::create(0.f, originalScale * 1.1f),
+			cocos2d::CCDelayTime::create(0.25f),
+			nullptr
+		);
+		customSongsFolderBottom->runAction(cocos2d::CCRepeatForever::create(sequenceBottom));
+		customSongsFolderTop->runAction(cocos2d::CCRepeatForever::create(sequenceTop));
+		this->m_mainLayer->addChildAtPosition(customSongsFolderBottom, geode::Anchor::Bottom, {0, -26.f});
+		this->m_mainLayer->addChildAtPosition(customSongsFolderTop, geode::Anchor::Top, {0, 26.f});
+	}
+
 	this->setID("SongControlMenu"_spr);
 	mainLayer->addChild(this->b);
 	mainLayer->addChild(this->m_otherLabel);
