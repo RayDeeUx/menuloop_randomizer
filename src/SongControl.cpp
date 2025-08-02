@@ -192,7 +192,7 @@ namespace SongControl {
 		} else songManager.resetTowerRepeatCount();
 
 		const std::filesystem::path& playlistFilePath = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
-		if (playlistFilePath.string().empty() || playlistFilePath.extension() != ".txt" || !Utils::notFavoritesNorBlacklist(playlistFilePath)) {
+		if (const std::string& normalizedPlaylistPath = Utils::toNormalizedString(playlistFilePath); normalizedPlaylistPath.empty() || Utils::toNormalizedString(playlistFilePath.extension()) != ".txt" || !Utils::notFavoritesNorBlacklist(playlistFilePath)) {
 			return geode::Notification::create(
 				"Invalid text file selected as your MLR playlist file!",
 				geode::NotificationIcon::Error, 5.f

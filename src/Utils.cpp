@@ -637,7 +637,7 @@ void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler fu
 	if (menu->getLayout()) menu->updateLayout();
 }
 
-bool Utils::notFavoritesNorBlacklist(std::filesystem::path filePath) {
+bool Utils::notFavoritesNorBlacklist(const std::filesystem::path& filePath) {
 	const std::string& fileString = Utils::toNormalizedString(filePath);
 	return !geode::utils::string::endsWith(fileString, "favorites.txt") && !geode::utils::string::endsWith(fileString, "blacklist.txt");
 }
@@ -665,7 +665,7 @@ std::string Utils::generatePlatformWarning() {
 	return fmt::format("This playlist file was created using {}. ***__YOU REALLY SHOULD NOT BE SHARING THIS FILE WITH OTHERS__***, but if you have to, only share this file with other MLR users on {}.", platform, platform);
 }
 
-void Utils::writeToFile(const std::string& toWriteToFile, std::filesystem::path fileForWriting) {
+void Utils::writeToFile(const std::string& toWriteToFile, const std::filesystem::path& fileForWriting) {
 	if (!std::filesystem::exists(fileForWriting) && Utils::notFavoritesNorBlacklist(fileForWriting)) {
 		const std::string& platformWarning = Utils::generatePlatformWarning();
 		const std::string& playlistSpecificIntro = fmt::format(R"(# Welcome to a Menu Loop Randomizer playlist file!
@@ -706,12 +706,12 @@ platformWarning, platformWarning);
 		auto result = geode::utils::file::writeString(fileForWriting, playlistSpecificIntro);
 		if (result.isErr()) return geode::log::error("Error writing to {}", fileForWriting);
 	} else if (!std::filesystem::exists(fileForWriting)) return geode::log::info("error finding {}!", fileForWriting);
-	std::string toWriteToFileFinal = toWriteToFile;
-	if (geode::utils::string::endsWith(toWriteToFileFinal, " [MLR] #") && SongManager::get().getSawbladeCustomSongsFolder()) {
-		toWriteToFileFinal = geode::utils::string::replace(toWriteToFileFinal, " [MLR] #", " (Note: This was added to this file while using a non-vanilla custom songs folder location.) [MLR] #");
-	}
 	std::ofstream fileOutput;
 	fileOutput.open(fileForWriting, std::ios_base::app);
-	fileOutput << std::endl << toWriteToFileFinal;
+	if (geode::utils::string::endsWith(toWriteToFile, " [MLR] #") && SongManager::get().getSawbladeCustomSongsFolder()) {
+		fileOutput << std::endl << geode::utils::string::replace(toWriteToFile, " [MLR] #", " (Note: This was added to this file while using a non-vanilla custom songs folder location.) [MLR] #");
+	} else {
+		fileOutput << std::endl << toWriteToFile;
+	}
 	fileOutput.close();
 }
