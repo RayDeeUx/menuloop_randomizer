@@ -150,9 +150,8 @@ void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs
 		return songManager.setCurrentSongDisplayName(fmt::format("Unknown ({})", songFileNameWithoutExtension));
 	}
 	const int songID = songFileNameAsID.unwrapOr(-1);
-	const bool songExistsLocally = mdm->isResourceSong(songID) || mdm->isSongDownloaded(songID);
-	const bool pathsMatch = Utils::toNormalizedString(currentSong) == Utils::toNormalizedString(static_cast<std::string>(mdm->pathForSong(songID)));
-	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && songExistsLocally && pathsMatch) return songManager.setCurrentSongDisplayName(Utils::getFormattedNGMLSongName(songInfo));
+	const bool isNotFromConfigOrAltDir = !Utils::isFromConfigOrAlternateDir(Utils::toProblematicString(currentSong));
+	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && isNotFromConfigOrAltDir) return songManager.setCurrentSongDisplayName(Utils::getFormattedNGMLSongName(songInfo));
 	return songManager.setCurrentSongDisplayName(customSongDisplayName);
 }
 
@@ -210,11 +209,10 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	const int songID = songFileNameAsID.unwrapOr(-1);
-	const bool songExistsLocally = mdm->isResourceSong(songID) || mdm->isSongDownloaded(songID);
-	const bool pathsMatch = Utils::toNormalizedString(currentSong) == Utils::toNormalizedString(static_cast<std::string>(mdm->pathForSong(songID)));
+	const bool isNotFromConfigOrAltDir = !Utils::isFromConfigOrAlternateDir(Utils::toProblematicString(currentSong));
 
 	// sometimes songInfo is nullptr, so improvise
-	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && songExistsLocally && pathsMatch) {
+	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && isNotFromConfigOrAltDir) {
 		// default: "Song Name, Artist, Song ID"
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
 		return Utils::newNotification(composedNotifString(notifString, Utils::getFormattedNGMLSongName(songInfo), suffix), true);
@@ -518,6 +516,14 @@ void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_vie
 	if (Utils::getBool("enableNotification")) Utils::newCardAndDisplayNameFromCurrentSong();
 }
 
+bool Utils::isFromConfigOrAlternateDir(const std::filesystem::path& parentPath) {
+	const geode::Mod* mod = geode::Mod::get();
+	const std::string& altDirString = Utils::toNormalizedString(mod->getSettingValue<std::filesystem::path>("additionalFolder"));
+	const bool isFromConfigDir = geode::utils::string::startsWith(Utils::toNormalizedString(parentPath), Utils::toNormalizedString(mod->getConfigDir()));
+	const bool isFromAlternateDir = !altDirString.empty() && geode::utils::string::startsWith(Utils::toNormalizedString(parentPath), altDirString);
+	return isFromConfigDir || isFromAlternateDir;
+}
+
 SongInfoObject* Utils::getSongInfoObject() {
 	SongManager& songManager = SongManager::get();
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return nullptr;
@@ -526,16 +532,8 @@ SongInfoObject* Utils::getSongInfoObject() {
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	const std::filesystem::path& currentSongFilePath = std::filesystem::path(songManager.getCurrentSong());
 
-	const geode::Mod* mod = geode::Mod::get();
-	const std::string& altDirString = Utils::toNormalizedString(mod->getSettingValue<std::filesystem::path>("additionalFolder"));
-	const bool isFromConfigDir = geode::utils::string::startsWith(Utils::toNormalizedString(currentSongFilePath.parent_path()), Utils::toNormalizedString(mod->getConfigDir()));
-	const bool isFromAlternateDir = !altDirString.empty() && geode::utils::string::startsWith(Utils::toNormalizedString(currentSongFilePath.parent_path()), altDirString);
-	geode::log::info("isFromConfigDir: {}", isFromConfigDir);
-	geode::log::info("isFromAlternateDir: {}", isFromAlternateDir);
-	if (isFromConfigDir || isFromAlternateDir) {
-		geode::log::info("{} is not a vanilla song.", Utils::toNormalizedString(currentSongFilePath));
-		return nullptr;
-	}
+	if (Utils::isFromConfigOrAlternateDir(currentSongFilePath.parent_path())) return nullptr;
+
 	const std::string& songFileName = Utils::toNormalizedString(currentSongFilePath.filename());
 
 	// if it's not menuLoop.mp3, then get info
