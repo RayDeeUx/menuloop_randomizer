@@ -539,7 +539,7 @@ SongInfoObject* Utils::getSongInfoObject() {
 	if (dotPos == std::string::npos) return nullptr;
 
 	const std::string& songFileNameAsAtring = songFileName.substr(0, dotPos);
-	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameAsAtring);
+	const geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameAsAtring);
 	if (songFileNameAsID.isErr()) return nullptr;
 	return mdm->getSongInfoObject(songFileNameAsID.unwrapOr(-1));
 }
