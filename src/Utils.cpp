@@ -150,7 +150,7 @@ void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs
 		return songManager.setCurrentSongDisplayName(fmt::format("Unknown ({})", songFileNameWithoutExtension));
 	}
 	const int songID = songFileNameAsID.unwrapOr(-1);
-	const bool isNotFromConfigOrAltDir = !Utils::isFromConfigOrAlternateDir(Utils::toProblematicString(currentSong));
+	const bool isNotFromConfigOrAltDir = !Utils::isFromConfigOrAlternateDir(currentSong);
 	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && isNotFromConfigOrAltDir) return songManager.setCurrentSongDisplayName(Utils::getFormattedNGMLSongName(songInfo));
 	return songManager.setCurrentSongDisplayName(customSongDisplayName);
 }
@@ -209,7 +209,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	const int songID = songFileNameAsID.unwrapOr(-1);
-	const bool isNotFromConfigOrAltDir = !Utils::isFromConfigOrAlternateDir(Utils::toProblematicString(currentSong));
+	const bool isNotFromConfigOrAltDir = !Utils::isFromConfigOrAlternateDir(currentSong);
 
 	// sometimes songInfo is nullptr, so improvise
 	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && isNotFromConfigOrAltDir) {
