@@ -197,7 +197,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 	}
 
 	const std::string& songFileNameWithoutExtension = songFileName.substr(0, dotPos);
-	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameWithoutExtension);
+	const geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameWithoutExtension);
 
 	if (songFileNameAsID.isErr()) {
 		if (!songManager.getPlaylistIsEmpty()) {
