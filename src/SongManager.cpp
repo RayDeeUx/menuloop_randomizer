@@ -71,7 +71,7 @@ void SongManager::setCurrentSongToSavedSong() {
 	const auto lastMenuLoop = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 	const auto lastMenuLoopPath = geode::Mod::get()->getSavedValue<std::filesystem::path>("lastMenuLoopPath");
 	if (std::filesystem::exists(Utils::toProblematicString(lastMenuLoop))) m_currentSong = lastMenuLoop;
-	else if (std::filesystem::exists(lastMenuLoopPath)) m_currentSong = lastMenuLoopPath;
+	else if (std::filesystem::exists(lastMenuLoopPath)) m_currentSong = Utils::toNormalizedString(lastMenuLoopPath);
 }
 
 bool SongManager::isOriginalMenuLoop() const {
