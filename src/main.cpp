@@ -54,7 +54,7 @@ $on_mod(Loaded) {
 	geode::log::info("repopulating vector from on_mod(Loaded)");
 	Utils::refreshTheVector();
 
-	std::string override = Utils::toNormalizedString(Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride"));
+	const std::string& override = Utils::toNormalizedString(Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride"));
 	originalOverrideWasEmpty = override.empty();
 	songManager.setOverride(override);
 
