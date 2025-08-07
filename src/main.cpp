@@ -54,14 +54,15 @@ $on_mod(Loaded) {
 	geode::log::info("repopulating vector from on_mod(Loaded)");
 	Utils::refreshTheVector();
 
-	std::string override = Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride").string();
+	std::string override = Utils::toNormalizedString(Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride"));
 	originalOverrideWasEmpty = override.empty();
 	songManager.setOverride(override);
 
 	const std::string& lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
+	const std::filesystem::path& lastMenuLoopPath = Mod::get()->getSavedValue<std::filesystem::path>("lastMenuLoopPath");
 	const bool saveSongOnGameClose = Utils::getBool("saveSongOnGameClose");
-	const bool loopExists = std::filesystem::exists(lastMenuLoop);
-	log::info("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}\noverride: {}", lastMenuLoop, saveSongOnGameClose, loopExists, override);
+	const bool loopExists = std::filesystem::exists(Utils::toProblematicString(lastMenuLoop)) || std::filesystem::exists(lastMenuLoopPath);
+	log::info("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\nlast menu loop as path: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}\noverride: {}", lastMenuLoop, lastMenuLoopPath, saveSongOnGameClose, loopExists, override);
 	if (!override.empty() && Utils::isSupportedFile(override)) {
 		log::info("setting songManager's current song to overridden song from settings");
 		songManager.setCurrentSongToOverride();
@@ -122,7 +123,7 @@ $on_mod(Loaded) {
 	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](std::filesystem::path specificSongOverride) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
-		const std::string& overrideString = specificSongOverride.string();
+		const std::string& overrideString = Utils::toNormalizedString(specificSongOverride);
 		songManager.setOverride(overrideString);
 		if (!Utils::isSupportedFile(overrideString)) {
 			songManager.clearSongs();
