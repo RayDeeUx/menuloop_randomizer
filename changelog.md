@@ -1,19 +1,23 @@
 # Menu Loop Randomizer Changelog
 ## v1.9.0
-- Added "playlists" support (suggested by [TheTrueNyxa](https://discord.com/users/702243715812556863))!
+- <cg>Added</c> "playlists" support (suggested by [TheTrueNyxa](https://discord.com/users/702243715812556863))!
   - Add songs to a playlist file, then activate `Load Playlist File Instead` to load your playlist file!
   - Favorite songs lists and song blacklists still apply.
   - Constant Shuffle Mode (formerly `Playlist Mode`) is also supported.
-- Added a new menu to see the names of all loaded songs.
-  - Gold song names indicate a favorited song, and green song names indicate a currently playing song.
+- <cg>Added</c> a new menu to see the names of all loaded songs.
+  - <c-FFCC00>Gold</c> song names indicate a favorited song, and <cg>green</c> song names indicate a currently playing song.
+  - *Italicized* song names indicate a NG/ML song that came from a different directory than expected (currently can happen with Custom Songs Folder by Sawblade).
   - Each song entry (besides the currently playing one) has a play button so you can change songs anytime.
   - <c-FF0000>No, I will not be adding a search bar.</c>
-- Added `Minimal` as an option for `Button Mode`.
-- Retroactively rename `Playlist Mode` to `Constant Shuffle Mode` across as many front-facing areas as possible to avoid confusion with more recent features (see first bullet point).
-- Fix an issue where changing some settings didn't render a new song title card. Oops!
-- Fix an issue where blacklisting songs didn't update the name of the song chosen as the new menu loop. Oops!
-- Removed elasticity from MLR menu opening animations. <c-FF0000>Non-negotiable change.</c>
-- Moved repository URL to Codeberg.
+- <cg>Added</c> `Minimal` as an option for `Button Mode`.
+  - Only one button appears in this Button Mode: the "Control Panel" button.
+- <co>Fix</c> an issue where changing some settings didn't render a new song title card. Oops!
+- <co>Fix</c> an issue where blacklisting songs didn't update the name of the song chosen as the new menu loop. Oops!
+- <co>Attempted to improve</c> compatibility with song file path names that use non-UTF-8 encoding.
+  - This is most noticeable on Windows. We just ***love*** and ***appreciate*** Microsoft for its ***revolutionary*** forward-thinking mindset by ***refusing*** to support UTF-8 for nearly ***two decades***, don't we? :)
+- <co>Retroactively rename</c> `Playlist Mode` to `Constant Shuffle Mode` across as many front-facing areas as possible to avoid confusion with more recent features (see first bullet point).
+- <cr>Removed</c> elasticity from MLR menu opening animations. <c-FF0000>***This is a non-negotiable change.***</c>
+- <c-aaaaaa>Moved</c> repository URL to Codeberg.
 ## v1.8.4
 - Added `Advanced Logging` toggle.
 - Added an easter egg.
