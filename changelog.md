@@ -1,4 +1,8 @@
 # Menu Loop Randomizer Changelog
+## v1.9.1
+- Against all odds, GitHub decided to mark 1.9.0 as a draft release.
+  - Pretend I slapped a bunch of profanities in here. >:(
+- Nothing in this binary has changed, this is purely a dummy update so everyone fetches the update properly this time.
 ## v1.9.0
 - <cg>Added</c> "playlists" support (suggested by [TheTrueNyxa](https://discord.com/users/702243715812556863))!
   - Add songs to a playlist file, then activate `Load Playlist File Instead` to load your playlist file!

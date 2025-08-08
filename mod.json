@@ -6,7 +6,7 @@
 		"ios": "2.2074",
 		"android": "2.2074"
 	},
-	"version": "v1.9.0",
+	"version": "v1.9.1",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developers": [
@@ -20,7 +20,7 @@
 		"interface",
 		"enhancement"
 	],
-	"repository": "https://codeberg.org/RayDeeUx/menuloop_randomizer",
+	"repository": "https://github.com/RayDeeUx/menuloop_randomizer",
 	"settings": {
 		"configdir": {
 			"name": "Config Dir: Store Custom Songs + Edit Song Blacklist",
