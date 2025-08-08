@@ -14,7 +14,7 @@
 - <co>Fix</c> an issue where changing some settings didn't render a new song title card. Oops!
 - <co>Fix</c> an issue where blacklisting songs didn't update the name of the song chosen as the new menu loop. Oops!
 - <co>Attempted to improve</c> compatibility with song file path names that use non-UTF-8 encoding.
-  - This is most noticeable on Windows. We just ***love*** and ***appreciate*** Microsoft for its ***revolutionary*** forward-thinking mindset by ***refusing*** to support UTF-8 for nearly ***two decades***, don't we? :)
+  - This is most noticeable on Windows. We just ***love*** and ***appreciate*** M\*cr\*s\*ft for its ***revolutionary*** forward-thinking mindset by ***refusing*** to support UTF-8 for nearly ***two decades***, don't we? :)
 - <co>Retroactively rename</c> `Playlist Mode` to `Constant Shuffle Mode` across as many front-facing areas as possible to avoid confusion with more recent features (see first bullet point).
 - <cr>Removed</c> elasticity from MLR menu opening animations. <c-FF0000>***This is a non-negotiable change.***</c>
 - <c-aaaaaa>Moved</c> repository URL to Codeberg.
