@@ -1,4 +1,6 @@
 # Menu Loop Randomizer Changelog
+## v1.9.3
+- Move releases to be hosted on Codeberg instead. Octocat is being a big meanie this week and that's probably the last straw.
 ## v1.9.2
 - GitHub keeps marking releases as drafts for some reason.
 ## v1.9.1
