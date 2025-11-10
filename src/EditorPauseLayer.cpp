@@ -13,10 +13,6 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		Utils::removeCardRemotely();
 
-		// if (Utils::getBool("playlistMode")) {
-		// 	Utils::constantShuffleModePLAndEPL();
-		// 	Utils::constantShuffleModeNewSong();
-		// }
 	}
 	#else
 	/*
@@ -39,10 +35,6 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		Utils::removeCardRemotely();
 
-		// if (Utils::getBool("playlistMode")) {
-		// 	Utils::constantShuffleModePLAndEPL();
-		// 	Utils::constantShuffleModeNewSong();
-		// }
 	}
 	void FLAlert_Clicked(FLAlertLayer* p0, bool btnTwo) {
 		bool shouldClose = p0->getTag() == 1 && btnTwo;
@@ -87,10 +79,6 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		Utils::removeCardRemotely();
 
-		// if (Utils::getBool("playlistMode")) {
-		// 	Utils::constantShuffleModePLAndEPL();
-		// 	Utils::constantShuffleModeNewSong();
-		// }
 	}
 	#endif
 };
