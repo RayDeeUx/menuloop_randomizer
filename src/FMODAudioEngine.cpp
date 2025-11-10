@@ -1,12 +1,8 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
 #include <Geode/modify/FMODAudioEngine.hpp>
-#include <regex>
 
 using namespace geode::prelude;
-
-const static std::regex geometryDashRegex = std::regex(R"(^.*(?:(?:Geometry ?Dash.*|com\.geode\.launcher)|config.(?:[\w])*\.(?:[\w])*).(?:.*)\.(?:mp3|ogg|oga|flac|wav)$)");
-const static std::regex terribleLoopRegex = std::regex(R"(^[\w]+\.mp3$)");
 
 class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void update(float dt) {
@@ -20,7 +16,16 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		FMOD::Sound* sound;
 		unsigned int length = 0;
 		FMOD::Channel* menuLoopChannelProbably = FMODAudioEngine::get()->getActiveMusicChannel(channelNumber);
-		const bool isSongManagerSong = FMODAudioEngine::get()->getActiveMusic(channelNumber) == SongManager::get().getCurrentSong();
+		const auto activeSong = FMODAudioEngine::get()->getActiveMusic(channelNumber);
+		const auto songManagerSong = SongManager::get().getCurrentSong();
+		const bool isSongManagerSong = activeSong == songManagerSong;
+		if (!isSongManagerSong) {
+			if (Utils::getBool("advancedLogs")) {
+				log::info("activeSong: {}", activeSong);
+				log::info("songManagerSong: {}", songManagerSong);
+			}
+			return;
+		}
 		menuLoopChannelProbably->isPlaying(&isPlaying);
 		menuLoopChannelProbably->getPosition(&position, 1);
 		menuLoopChannelProbably->getCurrentSound(&sound);
