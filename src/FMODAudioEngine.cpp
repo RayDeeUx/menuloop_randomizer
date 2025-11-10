@@ -34,11 +34,11 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 			log::info("isSongManagerSong: {}", isSongManagerSong);
 			log::info("position: {}", position);
 			log::info("isPlaying: {}", isPlaying);
-			log::info("length - 50: {}", length - 50);
-			log::info("(length - 50) < position: {}", (length - 50) < position);
+			log::info("length - 100: {}", length - 100);
+			log::info("(length - 100) < position: {}", (length - 100) < position);
 			log::info("===========================");
 		}
-		if ((length - 50) < position) {
+		if ((length - 100) < position) {
 			geode::log::info("song is probably finished. Switching songs.");
 			Utils::removeCard();
 			Utils::constantShuffleModeNewSong();

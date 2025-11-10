@@ -1,4 +1,10 @@
 # Menu Loop Randomizer Changelog
+## v1.10.0
+- Rewrite `Constant Shuffle Mode`.
+  - It should shuffle songs more consistently than before.
+  - It should also not override/break menu loops from other screens in Geometry Dash anymore, or menu loops from other Geode mods.
+- Add JIT-less iOS support. (Begrudgingly.)
+- Remove all support for custom songs from the levels in The Tower.
 ## v1.9.3
 - Move releases to be hosted on Codeberg instead. Octocat is being a big meanie this week and that's probably the last straw.
 ## v1.9.2
