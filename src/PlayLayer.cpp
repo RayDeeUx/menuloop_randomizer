@@ -5,19 +5,15 @@
 using namespace geode::prelude;
 
 class $modify(MenuLoopPLHook, PlayLayer) {
-	struct Fields {
-		SongManager &songManager = SongManager::get();
-	};
 	void onQuit() {
-		if (Utils::getBool("randomizeWhenExitingLevel"))
-			m_fields->songManager.pickRandomSong();
+		if (Utils::getBool("randomizeWhenExitingLevel")) SongManager::get().pickRandomSong();
 
 		PlayLayer::onQuit();
 		Utils::removeCardRemotely();
 
-		if (Utils::getBool("playlistMode")) {
-			Utils::constantShuffleModePLAndEPL();
-			Utils::constantShuffleModeNewSong();
-		}
+		// if (Utils::getBool("playlistMode")) {
+		// 	Utils::constantShuffleModePLAndEPL();
+		// 	Utils::constantShuffleModeNewSong();
+		// }
 	}
 };

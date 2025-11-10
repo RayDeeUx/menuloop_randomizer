@@ -28,8 +28,7 @@ namespace SongControl {
 		}
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		songManager.setCurrentSong(previousSong);
-		if (Utils::getBool("playlistMode")) FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
-		else GameManager::sharedState()->playMenuMusic();
+		GameManager::sharedState()->playMenuMusic();
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 	void holdSong(SongManager& songManager) {
@@ -46,8 +45,7 @@ namespace SongControl {
 		if (!formerHeldSong.empty()) {
 			FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 			songManager.setCurrentSong(formerHeldSong);
-			if (Utils::getBool("playlistMode")) FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
-			else GameManager::sharedState()->playMenuMusic();
+			GameManager::sharedState()->playMenuMusic();
 			return Utils::newCardAndDisplayNameFromCurrentSong();
 		}
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();

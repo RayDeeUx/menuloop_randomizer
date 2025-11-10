@@ -94,24 +94,6 @@ std::string SongManager::getPlaylistFileName() {
 	return m_playlistName;
 }
 
-void SongManager::update(float dt) const {
-	// split for readability
-	if (VANILLA_GD_MENU_LOOP_DISABLED || !m_constantShuffleMode) return;
-	if (GJBaseGameLayer::get() || m_isMenuLoop || m_songs.size() < 2) return;
-	auto fmod = FMODAudioEngine::get();
-	if (!fmod) return;
-	// geode::log::info("channelIsPlaying: {}", fmod->isMusicPlaying(0));
-	#ifdef GEODE_IS_WINDOWS
-	if (fmod->isMusicPlaying(0)) return;
-	#else
-	if (fmod->isMusicPlaying(1)) return;
-	#endif
-	geode::log::info("song is probably finished. Switching songs.");
-	Utils::removeCard();
-	Utils::constantShuffleModeNewSong();
-	Utils::newCardAndDisplayNameFromCurrentSong();
-}
-
 void SongManager::setCalledOnce(const bool value) {
 	m_calledOnce = value;
 }

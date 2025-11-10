@@ -13,16 +13,6 @@ class SongManager {
 		return instance;
 	}
 
-	void updateWrapper(float dt) const {
-		/*
-		if GameManager::get()->m_menuLayer is not included in the conditional statement
-		then music will be played at full blast before being set to user's preferred volume.
-		i don't think anyone wants that.
-		-- raydeeux
-		*/
-		if (GameManager::get()->m_menuLayer) SongManager::get().update(dt);
-	}
-
 	std::vector<std::string> getSongs();
 	void addSong(const std::string&);
 	void removeSong(const std::string& path);
@@ -37,7 +27,6 @@ class SongManager {
 	std::string getCurrentSong();
 	void setCurrentSong(const std::string&);
 	void setCurrentSongToSavedSong();
-	void update(float) const;
 	bool getCalledOnce() const;
 	void setCalledOnce(const bool);
 	bool getGeodify() const;

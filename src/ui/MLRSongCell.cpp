@@ -93,8 +93,7 @@ void MLRSongCell::onPlaySong(CCObject*) {
 	songManager.setPreviousSong(currentSong);
 	songManager.setCurrentSong(m_songData.actualFilePath);
 	fmod->m_backgroundMusicChannel->stop();
-	if (Utils::getBool("playlistMode")) fmod->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
-	else GameManager::sharedState()->playMenuMusic();
+	GameManager::sharedState()->playMenuMusic();
 	Utils::newCardAndDisplayNameFromCurrentSong();
 }
 

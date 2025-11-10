@@ -5,22 +5,18 @@
 using namespace geode::prelude;
 
 class $modify(MenuLoopEPLHook, EditorPauseLayer) {
-	struct Fields {
-		SongManager &songManager = SongManager::get();
-	};
 	#ifndef __APPLE__
 	void onExitEditor(CCObject *sender) {
-		if (Utils::getBool("randomizeWhenExitingEditor"))
-			m_fields->songManager.pickRandomSong();
+		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
 
 		EditorPauseLayer::onExitEditor(sender);
 
 		Utils::removeCardRemotely();
 
-		if (Utils::getBool("playlistMode")) {
-			Utils::constantShuffleModePLAndEPL();
-			Utils::constantShuffleModeNewSong();
-		}
+		// if (Utils::getBool("playlistMode")) {
+		// 	Utils::constantShuffleModePLAndEPL();
+		// 	Utils::constantShuffleModeNewSong();
+		// }
 	}
 	#else
 	/*
@@ -37,17 +33,16 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 	-- raydeeux
 	*/
 	void onSaveAndExit(CCObject *sender) {
-		if (Utils::getBool("randomizeWhenExitingEditor"))
-			m_fields->songManager.pickRandomSong();
+		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
 
 		EditorPauseLayer::onSaveAndExit(sender);
 
 		Utils::removeCardRemotely();
 
-		if (Utils::getBool("playlistMode")) {
-			Utils::constantShuffleModePLAndEPL();
-			Utils::constantShuffleModeNewSong();
-		}
+		// if (Utils::getBool("playlistMode")) {
+		// 	Utils::constantShuffleModePLAndEPL();
+		// 	Utils::constantShuffleModeNewSong();
+		// }
 	}
 	void FLAlert_Clicked(FLAlertLayer* p0, bool btnTwo) {
 		bool shouldClose = p0->getTag() == 1 && btnTwo;
@@ -86,17 +81,16 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		if (!shouldClose) return EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 
-		if (Utils::getBool("randomizeWhenExitingEditor"))
-			m_fields->songManager.pickRandomSong();
+		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
 
 		EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 
 		Utils::removeCardRemotely();
 
-		if (Utils::getBool("playlistMode")) {
-			Utils::constantShuffleModePLAndEPL();
-			Utils::constantShuffleModeNewSong();
-		}
+		// if (Utils::getBool("playlistMode")) {
+		// 	Utils::constantShuffleModePLAndEPL();
+		// 	Utils::constantShuffleModeNewSong();
+		// }
 	}
 	#endif
 };

@@ -72,7 +72,6 @@ void Utils::setNewSong() {
 void Utils::constantShuffleModeNewSong(const bool fromGJBGL) {
 	if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 	if (!Utils::getBool("playlistMode")) return Utils::setNewSong();
-	geode::log::info("attempting to hijack menuloop channel to use Constant Shuffle Mode");
 	const auto fmod = FMODAudioEngine::sharedEngine();
 	float fmodIsCBrained;
 	const FMOD_RESULT fmodResult = fmod->m_backgroundMusicChannel->getVolume(&fmodIsCBrained);
@@ -88,14 +87,14 @@ void Utils::constantShuffleModeNewSong(const bool fromGJBGL) {
 	geode::log::info("is it over?");
 	if (songManager.getCalledOnce() || !Utils::getBool("saveSongOnGameClose")) {
 		geode::log::info("playing song as normal");
-		fmod->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
+		GameManager::sharedState()->playMenuMusic();
 		if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
 	} else {
 		const bool override = songManager.isOverride();
 		const std::string& song = override ? songManager.getOverrideSong() : geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 		geode::log::info("playing song from {}: {}", override ? "override" : "saved value", song);
 		songManager.setCurrentSong(song);
-		fmod->playMusic(song, true, 1.0f, 1);
+		GameManager::sharedState()->playMenuMusic();
 	}
 	songManager.setCalledOnce(true);
 }
@@ -415,6 +414,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 		const bool qualifiedForOGMenuBlacklist = geode::Mod::get()->getSavedValue<bool>("isEry");
 		for (const auto song : geode::cocos::CCArrayExt<SongInfoObject*>(downloadManager->getDownloadedSongs())) {
 			if (!song) continue;
+			if (downloadManager->isResourceSong(song->m_songID)) continue; // resource songs not supported!!!
 
 			std::string songPath = downloadManager->pathForSong(song->m_songID);
 			if (!Utils::isSupportedFile(songPath)) continue;

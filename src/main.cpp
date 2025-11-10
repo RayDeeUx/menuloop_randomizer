@@ -78,7 +78,6 @@ $on_mod(Loaded) {
 	if (!std::filesystem::exists(configDir / R"(store_your_disabled_menuloops_here)")) {
 		std::filesystem::create_directory(configDir / R"(store_your_disabled_menuloops_here)");
 	}
-	GameManager::get()->schedule(reinterpret_cast<SEL_SCHEDULE>(&SongManager::updateWrapper));
 	listenForSettingChanges<bool>("useCustomSongs", [](bool useCustomSongs) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("useCustomSongs");
 	});
@@ -115,7 +114,7 @@ $on_mod(Loaded) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		Utils::queueUpdateSCMLabel();
 		if (constantShuffleMode) {
-			FMODAudioEngine::get()->playMusic(songManager.getCurrentSong(), true, 1.0f, 1);
+			GameManager::sharedState()->playMenuMusic();
 			return ConstantShuffleModeWarning::create(songManager.getGeodify())->show();
 		}
 		GameManager::sharedState()->playMenuMusic();
@@ -135,7 +134,6 @@ $on_mod(Loaded) {
 			} else Utils::setNewSong();
 		}
 		geode::Loader::get()->queueInMainThread([] { Utils::queueUpdateSCMLabel(); });
-		if (Utils::getBool("playlistMode")) return FMODAudioEngine::get()->playMusic(SongManager::get().getCurrentSong(), true, 1.0f, 1);
 		GameManager::sharedState()->playMenuMusic();
 	});
 	listenForSettingChanges<bool>("dangerousBlacklisting", [](bool dangerousBlacklisting) {
