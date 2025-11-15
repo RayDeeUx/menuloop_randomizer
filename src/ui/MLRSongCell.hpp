@@ -12,12 +12,15 @@ struct SongData {
 	std::string fileName;
 	SongType type;
 	bool isFromConfigOrAltDir;
+	bool isEmpty = false;
 };
 
 class MLRSongCell : public cocos2d::CCLayerColor {
 public:
 	static MLRSongCell* create(const SongData& songData, const bool isEven);
+	static MLRSongCell* createEmpty(const bool isEven);
 	bool init(const SongData& songData, const bool isEven);
+	bool initEmpty(const bool isEven);
 	void onPlaySong(CCObject*);
 	void update(float delta);
 	SongData m_songData;

@@ -13,11 +13,35 @@ MLRSongCell* MLRSongCell::create(const SongData& SongData, const bool isEven) {
 	return nullptr;
 }
 
+MLRSongCell* MLRSongCell::createEmpty(const bool isEven) {
+	auto* ret = new MLRSongCell();
+
+	if (ret->initEmpty(isEven)) {
+		ret->autorelease();
+		return ret;
+	}
+	delete ret;
+	return nullptr;
+}
+
+bool MLRSongCell::initEmpty(const bool isEven) {
+	SongData dummySongData = SongData {"", "", "", SongType::Regular, false, true};
+	return MLRSongCell::init(dummySongData, isEven);
+}
+
 bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	if (!CCLayerColor::initWithColor(isEven ? cocos2d::ccColor4B{161, 88, 44, 255} : cocos2d::ccColor4B{194, 114, 62, 255})) return false;
 	m_songData = songData;
 
 	this->setContentSize({356.f, 36.f});
+
+	if (songData.isEmpty) {
+		this->setColor(isEven ? cocos2d::ccColor3B{42, 55, 136} : cocos2d::ccColor3B{34, 42, 119});
+		this->setID("this-cell-intentionally-blank"_spr);
+		this->setUserObject("this-cell-intentionally-blank"_spr, cocos2d::CCBool::create(true));
+		this->setTag(11152025);
+		return true;
+	}
 
 	const std::string& desiredFileName = geode::utils::string::replace(songData.fileName, songData.fileExtension, "");
 	cocos2d::CCLabelBMFont* songNameLabel = cocos2d::CCLabelBMFont::create(desiredFileName.c_str(), "bigFont.fnt");

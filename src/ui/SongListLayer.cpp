@@ -31,13 +31,13 @@ bool SongListLayer::setup(const std::string&) {
 	background->setContentSize(layerSize);
 
 	geode::ScrollLayer* scrollLayer = geode::ScrollLayer::create({356, 220});
-	scrollLayer->m_contentLayer->setLayout(
-		geode::ColumnLayout::create()
-			->setAxisReverse(true)
-			->setAxisAlignment(geode::AxisAlignment::End)
-			->setAutoGrowAxis(220.f)
-			->setGap(.0f)
-	);
+	geode::AxisLayout* WHOTHEFUCKMADEIGNOREINVISIBLECHILDRENAVOIDRETURNTYPE = geode::ColumnLayout::create()
+		->setAxisReverse(true)
+		->setAxisAlignment(geode::AxisAlignment::End)
+		->setAutoGrowAxis(220.f)
+		->setGap(.0f);
+	WHOTHEFUCKMADEIGNOREINVISIBLECHILDRENAVOIDRETURNTYPE->ignoreInvisibleChildren(true);
+	scrollLayer->m_contentLayer->setLayout(WHOTHEFUCKMADEIGNOREINVISIBLECHILDRENAVOIDRETURNTYPE);
 
 	SongManager& songManager = SongManager::get();
 	const std::vector<std::string> blacklist = songManager.getBlacklist();
@@ -46,6 +46,7 @@ bool SongListLayer::setup(const std::string&) {
 	std::vector<std::string> alreadyAdded {};
 
 	bool isEven = false;
+	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false));
 
 	for (const std::string& song : songs) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
@@ -75,7 +76,7 @@ bool SongListLayer::setup(const std::string&) {
 	// search code UI graciously provided by hiimjasmine00
 	cocos2d::CCMenu* searchBarMenu = cocos2d::CCMenu::create();
 	searchBarMenu->setContentSize({ 350.f, 35.f });
-	searchBarMenu->setPosition({ 35.f, 220.f });
+	searchBarMenu->setPosition({ 35.f, 218.f });
 	searchBarMenu->setID("song-list-search-menu"_spr);
 	this->m_mainLayer->addChild(searchBarMenu);
 
@@ -97,6 +98,17 @@ bool SongListLayer::setup(const std::string&) {
 	clearButton->setPosition({ 330.f, 17.f });
 	clearButton->setID("song-list-clear-button"_spr);
 	searchBarMenu->addChild(clearButton);
+
+	cocos2d::CCSprite* coverItUpSquare = cocos2d::CCSprite::createWithSpriteFrameName("pixelart_base_001.png");
+	coverItUpSquare->setColor({155, 154, 155});
+	coverItUpSquare->setScale(16.f);
+	coverItUpSquare->setID("dont-tell-people-that-my-parent-is-an-edit-hsv-button-lmao"_spr);
+	clearButton->addChildAtPosition(coverItUpSquare, geode::Anchor::Center);
+
+	cocos2d::CCSprite* coverItUpX = cocos2d::CCSprite::createWithSpriteFrameName("GJ_deleteIcon_001.png");
+	coverItUpX->setScale(.6f);
+	coverItUpX->setID("dont-tell-people-that-im-not-actually-a-delete-button-lmao"_spr);
+	clearButton->addChildAtPosition(coverItUpX, geode::Anchor::Center);
 
 	geode::TextInput* searchBar = geode::TextInput::create(370.f, "Search Songs...");
 	searchBar->setTextAlign(geode::TextInputAlign::Left);
