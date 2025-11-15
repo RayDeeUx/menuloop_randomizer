@@ -25,7 +25,7 @@ MLRSongCell* MLRSongCell::createEmpty(const bool isEven) {
 }
 
 bool MLRSongCell::initEmpty(const bool isEven) {
-	SongData dummySongData = SongData {"", "", "", SongType::Regular, false, true};
+	SongData dummySongData = SongData {"", "", "", "", SongType::Regular, false, true};
 	return MLRSongCell::init(dummySongData, isEven);
 }
 
@@ -44,7 +44,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	}
 
 	const std::string& desiredFileName = geode::utils::string::replace(songData.fileName, songData.fileExtension, "");
-	cocos2d::CCLabelBMFont* songNameLabel = cocos2d::CCLabelBMFont::create(desiredFileName.c_str(), "bigFont.fnt");
+	cocos2d::CCLabelBMFont* songNameLabel = cocos2d::CCLabelBMFont::create(songData.displayName.c_str(), "bigFont.fnt");
 	songNameLabel->setAnchorPoint({.0f, .5f});
 	songNameLabel->setPosition({15, getContentHeight() / 2.f + 1.f});
 
@@ -54,17 +54,14 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	const int songID = geode::utils::numFromString<int>(desiredFileName).unwrapOr(-1);
 	if (songID > 0 && !songData.isFromConfigOrAltDir) {
-		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) {
-			songNameLabel->setString(Utils::getFormattedNGMLSongName(songInfoObject).c_str());
-			const bool isFromNonVanillaSongsFolder =
-				Utils::toProblematicString(songData.actualFilePath) !=
-				Utils::toProblematicString(static_cast<std::string>(mdm->pathForSong(songID)));
-			if (isFromNonVanillaSongsFolder) songNameLabel->setSkewX(10.f);
+		if (mdm->getSongInfoObject(songID)) {
+			if (Utils::toProblematicString(songData.actualFilePath) != Utils::toProblematicString(static_cast<std::string>(mdm->pathForSong(songID)))) {
+				songNameLabel->setSkewX(10.f);
+			}
 		}
-		else songNameLabel->setString(fmt::format("{} - No song info found :(", songID).c_str());
 	}
 	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);
-	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songNameLabel->getString()));
+	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.displayName));
 
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127});
 	divider->setContentSize({356.f, 0.5f});

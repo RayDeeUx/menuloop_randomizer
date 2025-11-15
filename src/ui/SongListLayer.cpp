@@ -16,6 +16,50 @@ SongListLayer* SongListLayer::create(const std::string& id) {
 	return nullptr;
 }
 
+void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString) {
+	const std::vector<std::string> blacklist = songManager.getBlacklist();
+	const std::vector<std::string> favorites = songManager.getFavorites();
+	const std::vector<std::string> songs = songManager.getSongs();
+	std::vector<std::string> alreadyAdded {};
+
+	bool isEven = false;
+	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false));
+
+	for (const std::string& song : songs) {
+		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
+
+		std::filesystem::path songFilePath = Utils::toProblematicString(song);
+		SongData songData = {
+			Utils::toNormalizedString(songFilePath),
+			Utils::toNormalizedString(songFilePath.extension()),
+			Utils::toNormalizedString(songFilePath.filename()), "", SongType::Regular,
+			Utils::isFromConfigOrAlternateDir(songFilePath.parent_path()), false
+		};
+		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songData.type = SongType::Blacklisted;
+		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songData.type = SongType::Favorited;
+
+		songData.displayName = SongListLayer::generateDisplayName(songData);
+
+		if (!queryString.empty()) {
+			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.displayName), geode::utils::string::toLower(queryString));
+			geode::log::info("songData.displayName: {}", songData.displayName);
+			geode::log::info("queryString: {}", queryString);
+			geode::log::info("contains: {}", contains);
+			geode::log::info("==============================================");
+			if (!contains) continue;
+		}
+
+		if (MLRSongCell* songCell = MLRSongCell::create(songData, isEven)) {
+			scrollLayer->m_contentLayer->addChild(songCell);
+			alreadyAdded.push_back(song);
+		}
+		isEven = !isEven;
+	}
+
+	scrollLayer->m_contentLayer->updateLayout();
+	scrollLayer->scrollToTop();
+}
+
 bool SongListLayer::setup(const std::string&) {
 	this->setUserObject("user95401.scrollbar_everywhere/scrollbar", cocos2d::CCBool::create(true)); // fuck off, user95401.
 	this->m_noElasticity = true;
@@ -40,34 +84,7 @@ bool SongListLayer::setup(const std::string&) {
 	scrollLayer->m_contentLayer->setLayout(WHOTHEFUCKMADEIGNOREINVISIBLECHILDRENAVOIDRETURNTYPE);
 
 	SongManager& songManager = SongManager::get();
-	const std::vector<std::string> blacklist = songManager.getBlacklist();
-	const std::vector<std::string> favorites = songManager.getFavorites();
-	const std::vector<std::string> songs = songManager.getSongs();
-	std::vector<std::string> alreadyAdded {};
-
-	bool isEven = false;
-	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false));
-
-	for (const std::string& song : songs) {
-		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
-
-		std::filesystem::path songFilePath = Utils::toProblematicString(song);
-		SongData songData = {
-			Utils::toNormalizedString(songFilePath),
-			Utils::toNormalizedString(songFilePath.extension()),
-			Utils::toNormalizedString(songFilePath.filename()), SongType::Regular,
-			Utils::isFromConfigOrAlternateDir(songFilePath.parent_path())
-		};
-		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songData.type = SongType::Blacklisted;
-		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songData.type = SongType::Favorited;
-		alreadyAdded.push_back(song);
-
-		if (MLRSongCell* songCell = MLRSongCell::create(songData, isEven)) scrollLayer->m_contentLayer->addChild(songCell);
-		isEven = !isEven;
-	}
-
-	scrollLayer->m_contentLayer->updateLayout();
-	scrollLayer->scrollToTop();
+	SongListLayer::addSongsToScrollLayer(scrollLayer, songManager);
 
 	scrollLayer->setID("list-of-songs"_spr);
 	scrollLayer->ignoreAnchorPointForPosition(false);
@@ -282,20 +299,13 @@ bool SongListLayer::setup(const std::string&) {
 	return true;
 }
 
-void SongListLayer::searchSongs(const std::string& queryString) const {
+void SongListLayer::searchSongs(const std::string& queryString) {
 	CCNode* contentLayer = this->m_mainLayer->getChildByID("list-of-songs"_spr)->getChildByID("content-layer");
 	if (!contentLayer || !contentLayer->getLayout()) return;
-	for (MLRSongCell* songCell : geode::cocos::CCArrayExt<MLRSongCell*>(contentLayer->getChildren())) {
-		if (!songCell || songCell->getTag() == 11152025) continue;
-		if (queryString.empty()) {
-			songCell->setVisible(true);
-			continue;
-		}
-		CCObject* songName = songCell->getUserObject("song-name"_spr);
-		if (!songName) continue;
-		songCell->setVisible(geode::utils::string::contains(static_cast<cocos2d::CCString*>(songName)->getCString(), queryString));
-	}
+	contentLayer->removeAllChildrenWithCleanup(true);
+	SongListLayer::addSongsToScrollLayer(static_cast<geode::ScrollLayer*>(contentLayer->getParent()), SongManager::get(), queryString);
 	contentLayer->updateLayout();
+	static_cast<geode::ScrollLayer*>(contentLayer->getParent())->scrollToTop();
 }
 
 void SongListLayer::onSettingsButton(CCObject*) {
@@ -315,4 +325,17 @@ void SongListLayer::onPreviousButton(CCObject*) {
 void SongListLayer::onControlsButton(CCObject*) {
 	this->onClose(nullptr);
 	SongControlMenu::create("GJ_square05.png")->show();
+}
+
+std::string SongListLayer::generateDisplayName(SongData &songData) {
+	std::string displayName = geode::utils::string::replace(songData.fileName, songData.fileExtension, "");
+
+	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
+	const int songID = geode::utils::numFromString<int>(displayName).unwrapOr(-1);
+	if (songID > 0 && !songData.isFromConfigOrAltDir) {
+		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) displayName = Utils::getFormattedNGMLSongName(songInfoObject);
+		else displayName = fmt::format("{} - No song info found :(", songID);
+	}
+
+	return displayName;
 }

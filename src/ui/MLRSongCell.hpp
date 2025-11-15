@@ -10,6 +10,7 @@ struct SongData {
 	std::string actualFilePath;
 	std::string fileExtension;
 	std::string fileName;
+	std::string displayName;
 	SongType type;
 	bool isFromConfigOrAltDir;
 	bool isEmpty = false;
