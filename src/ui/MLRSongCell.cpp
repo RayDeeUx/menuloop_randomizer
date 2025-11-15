@@ -36,7 +36,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	this->setContentSize({356.f, 36.f});
 
 	if (songData.isEmpty) {
-		this->setColor(isEven ? cocos2d::ccColor3B{42, 55, 136} : cocos2d::ccColor3B{34, 42, 119});
+		this->setOpacity(0);
 		this->setID("this-cell-intentionally-blank"_spr);
 		this->setUserObject("this-cell-intentionally-blank"_spr, cocos2d::CCBool::create(true));
 		this->setTag(11152025);
