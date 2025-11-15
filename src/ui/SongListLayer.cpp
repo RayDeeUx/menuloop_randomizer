@@ -63,7 +63,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	else scrollLayer->m_contentLayer->setPositionY(0.f);
 
 	if (CCNode* scrollBar = this->m_mainLayer->getChildByID("song-list-scrollbar"_spr)) {
-		scrollBar->setVisible(alreadyAdded.size() > 5);
+		scrollBar->setPositionY(alreadyAdded.size() > 5 ? 145.f : 99999.f);
 	}
 }
 
@@ -167,7 +167,7 @@ bool SongListLayer::setup(const std::string&) {
 	scrollBar->setID("song-list-scrollbar"_spr);
 	scrollBar->setPositionY(scrollLayer->getPositionY());
 	scrollBar->setPositionX(scrollLayer->getPositionX() + (scrollLayer->getContentWidth() / 2.f) + 5.f);
-	scrollBar->setVisible(scrollLayer->m_contentLayer->getChildrenCount() > 6);
+	scrollBar->setPositionY(scrollLayer->m_contentLayer->getChildrenCount() > 6 ? 145.f : 99999.f);
 
 	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
 	infoMenu->setLayout(
