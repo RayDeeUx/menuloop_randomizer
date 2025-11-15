@@ -185,8 +185,8 @@ bool SongListLayer::setup(const std::string&) {
 		"<cl>go back one song</c>, and <cl>reopen the control panel</c>.\n\n"
 		"<cy>Q: I'm seeing numbers for most of my songs?!</c>\n"
 		"A: Someone probably goofed up, which is out of my reach.\n\n"
-		"<cy>Q: Add a search bar!</c>\n"
-		"A: <c_>No. Never. Learn how to scroll through a list.</c>",
+		"<cy>Q: Make this mod act more closely to Spotify!</c>\n"
+		"A: <c_>No. Never.</c>",
 		.75f
 	);
 	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
