@@ -85,15 +85,19 @@ bool SongListLayer::setup(const std::string&) {
 	searchBarMenu->addChild(searchBackground);
 
 	CCMenuItemSpriteExtra* searchButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("gj_findBtn_001.png", 0.7f, [this](auto) {
-		geode::log::info("query: {}", static_cast<geode::TextInput*>(this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr))->getString());
+		CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
+		if (!searchBar) return;
+		SongListLayer::searchSongs(static_cast<geode::TextInput*>(searchBar)->getString());
 	});
 	searchButton->setPosition({ 302.f, 17.f });
 	searchButton->setID("song-list-search-button"_spr);
 	searchBarMenu->addChild(searchButton);
 
 	CCMenuItemSpriteExtra* clearButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("GJ_editHSVBtn2_001.png", 0.7f, [this](auto) {
-		auto input = static_cast<geode::TextInput*>(this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr));
-		input->setString("", true);
+		CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
+		if (!searchBar) return;
+		static_cast<geode::TextInput*>(searchBar)->setString("", false);
+		SongListLayer::searchSongs(static_cast<geode::TextInput*>(searchBar)->getString());
 	});
 	clearButton->setPosition({ 330.f, 17.f });
 	clearButton->setID("song-list-clear-button"_spr);
@@ -276,6 +280,22 @@ bool SongListLayer::setup(const std::string&) {
 	songManager.resetTowerRepeatCount();
 
 	return true;
+}
+
+void SongListLayer::searchSongs(const std::string& queryString) const {
+	CCNode* contentLayer = this->m_mainLayer->getChildByID("list-of-songs"_spr)->getChildByID("content-layer");
+	if (!contentLayer || !contentLayer->getLayout()) return;
+	for (MLRSongCell* songCell : geode::cocos::CCArrayExt<MLRSongCell*>(contentLayer->getChildren())) {
+		if (!songCell || songCell->getTag() == 11152025) continue;
+		if (queryString.empty()) {
+			songCell->setVisible(true);
+			continue;
+		}
+		CCObject* songName = songCell->getUserObject("song-name"_spr);
+		if (!songName) continue;
+		songCell->setVisible(geode::utils::string::contains(static_cast<cocos2d::CCString*>(songName)->getCString(), queryString));
+	}
+	contentLayer->updateLayout();
 }
 
 void SongListLayer::onSettingsButton(CCObject*) {

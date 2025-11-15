@@ -9,4 +9,5 @@ public:
 	void onCopyButton(CCObject*);
 	void onPreviousButton(CCObject*);
 	void onControlsButton(CCObject*);
+	void searchSongs(const std::string& queryString) const;
 };

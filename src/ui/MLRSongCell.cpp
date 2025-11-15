@@ -64,6 +64,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 		else songNameLabel->setString(fmt::format("{} - No song info found :(", songID).c_str());
 	}
 	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);
+	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songNameLabel->getString()));
 
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127});
 	divider->setContentSize({356.f, 0.5f});
