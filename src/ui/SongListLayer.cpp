@@ -146,6 +146,7 @@ bool SongListLayer::setup(const std::string&) {
 	searchBarMenu->addChild(searchBar);
 
 	CCTextInputNode* inputNode = searchBar->getInputNode();
+	inputNode->setAllowedChars("1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm,.()[]{};:'\"\\|/<>!@#$%^&* `~");
 	inputNode->setLabelPlaceholderScale(.5f);
 	inputNode->setMaxLabelScale(.5f);
 
