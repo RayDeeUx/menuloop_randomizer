@@ -17,6 +17,7 @@ SongListLayer* SongListLayer::create(const std::string& id) {
 }
 
 bool SongListLayer::setup(const std::string&) {
+	this->setUserObject("user95401.scrollbar_everywhere/scrollbar", cocos2d::CCBool::create(true)); // fuck off, user95401.
 	this->m_noElasticity = true;
 	this->setTitle("Menu Loop Randomizer - Your Songs");
 	this->m_title->setID("song-list-title"_spr);
@@ -71,12 +72,61 @@ bool SongListLayer::setup(const std::string&) {
 	scrollLayer->ignoreAnchorPointForPosition(false);
 	this->m_mainLayer->addChildAtPosition(scrollLayer, geode::Anchor::Center);
 
+	// search code UI graciously provided by hiimjasmine00
+	cocos2d::CCMenu* searchBarMenu = cocos2d::CCMenu::create();
+	searchBarMenu->setContentSize({ 350.f, 35.f });
+	searchBarMenu->setPosition({ 35.f, 220.f });
+	searchBarMenu->setID("song-list-search-menu"_spr);
+	this->m_mainLayer->addChild(searchBarMenu);
+
+	auto searchBackground = CCLayerColor::create({ 194, 114, 62, 255 }, 350.f, 35.f);
+	searchBackground->setID("song-list-search-background"_spr);
+	searchBarMenu->addChild(searchBackground);
+
+	CCMenuItemSpriteExtra* searchButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("gj_findBtn_001.png", 0.7f, [this](auto) {
+		geode::log::info("query: {}", static_cast<geode::TextInput*>(this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr))->getString());
+	});
+	searchButton->setPosition({ 302.f, 17.f });
+	searchButton->setID("song-list-search-button"_spr);
+	searchBarMenu->addChild(searchButton);
+
+	CCMenuItemSpriteExtra* clearButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("GJ_editHSVBtn2_001.png", 0.7f, [this](auto) {
+		auto input = static_cast<geode::TextInput*>(this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr));
+		input->setString("", true);
+	});
+	clearButton->setPosition({ 330.f, 17.f });
+	clearButton->setID("song-list-clear-button"_spr);
+	searchBarMenu->addChild(clearButton);
+
+	geode::TextInput* searchBar = geode::TextInput::create(370.f, "Search Songs...");
+	searchBar->setTextAlign(geode::TextInputAlign::Left);
+	searchBar->setPosition({ 145.f, 17.f });
+	searchBar->setScale(.75f);
+	searchBar->setID("song-list-search-bar"_spr);
+	searchBarMenu->addChild(searchBar);
+
+	CCTextInputNode* inputNode = searchBar->getInputNode();
+	inputNode->setLabelPlaceholderScale(.5f);
+	inputNode->setMaxLabelScale(.5f);
+
+	CCLayerColor* searchBarDivider = CCLayerColor::create({0, 0, 0, 127});
+	searchBarDivider->setContentSize({350.f, .5f});
+	searchBarDivider->setAnchorPoint({0.f, 0.f});
+	searchBarDivider->setID("song-list-search-divider"_spr);
+	searchBarMenu->addChild(searchBarDivider);
+
 	geode::ListBorders* listBorder = geode::ListBorders::create();
 	listBorder->setSpriteFrames("GJ_commentTop2_001.png", "GJ_commentSide2_001.png");
 	listBorder->setContentSize(scrollLayer->getContentSize());
 	listBorder->ignoreAnchorPointForPosition(false);
 	listBorder->setID("songs-list-border"_spr);
 	this->m_mainLayer->addChildAtPosition(listBorder, geode::Anchor::Center);
+
+	geode::Scrollbar* scrollBar = geode::Scrollbar::create(scrollLayer);
+	this->m_mainLayer->addChild(scrollBar);
+	scrollBar->setID("song-list-scrollbar"_spr);
+	scrollBar->setPositionY(scrollLayer->getPositionY());
+	scrollBar->setPositionX(scrollLayer->getPositionX() + (scrollLayer->getContentWidth() / 2.f) + 5.f);
 
 	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
 	infoMenu->setLayout(

@@ -1,4 +1,7 @@
 # Menu Loop Randomizer Changelog
+## v1.10.1
+- Add a scrollbar.
+- Move binary releases to Codeberg.
 ## v1.10.0
 - Rewrite `Constant Shuffle Mode`.
   - It should shuffle songs more consistently than before.
