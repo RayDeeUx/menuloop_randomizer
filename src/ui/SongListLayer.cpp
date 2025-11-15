@@ -57,7 +57,14 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	}
 
 	scrollLayer->m_contentLayer->updateLayout();
-	scrollLayer->scrollToTop();
+	scrollLayer->m_contentLayer->setContentHeight((alreadyAdded.size() * 36.f) + 36.f);
+	scrollLayer->m_disableMovement = alreadyAdded.size() < 6;
+	if (alreadyAdded.size() > 5) scrollLayer->scrollToTop();
+	else scrollLayer->m_contentLayer->setPositionY(0.f);
+
+	if (CCNode* scrollBar = this->m_mainLayer->getChildByID("song-list-scrollbar"_spr)) {
+		scrollBar->setVisible(alreadyAdded.size() > 5);
+	}
 }
 
 bool SongListLayer::setup(const std::string&) {
@@ -160,6 +167,7 @@ bool SongListLayer::setup(const std::string&) {
 	scrollBar->setID("song-list-scrollbar"_spr);
 	scrollBar->setPositionY(scrollLayer->getPositionY());
 	scrollBar->setPositionX(scrollLayer->getPositionX() + (scrollLayer->getContentWidth() / 2.f) + 5.f);
+	scrollBar->setVisible(scrollLayer->m_contentLayer->getChildrenCount() > 6);
 
 	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
 	infoMenu->setLayout(
@@ -304,8 +312,6 @@ void SongListLayer::searchSongs(const std::string& queryString) {
 	if (!contentLayer || !contentLayer->getLayout()) return;
 	contentLayer->removeAllChildrenWithCleanup(true);
 	SongListLayer::addSongsToScrollLayer(static_cast<geode::ScrollLayer*>(contentLayer->getParent()), SongManager::get(), queryString);
-	contentLayer->updateLayout();
-	static_cast<geode::ScrollLayer*>(contentLayer->getParent())->scrollToTop();
 }
 
 void SongListLayer::onSettingsButton(CCObject*) {
