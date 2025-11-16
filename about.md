@@ -4,6 +4,8 @@ Are you bored of hearing the same menu song <cr>over & over</cr>? Well... **No m
 This mod allows you to randomize the menu song every time you open the game, picking from a random downloaded song from <cl>Newgrounds + RobTop's Music Library (including NCS)</c> or <cl>your own songs</c>.\
 `.mp3`, `.ogg`/`.oga`, `.wav`, and `.flac` files are supported.
 
+*Note: To randomize menu loop __**starting points**__, see [Colon's Menu Loop Start Time mod](mod:colon.menu_loop_start_time). While the two mods **are** compatible with each other, you'd be better off using its "Chaos Mode" setting. Your call.*
+
 # Adding custom songs
 If you want to add your own songs to the mod you should go to the mod's settings menu, then "Click me to open the Config Directory!".\
 Just like the songs you've downloaded from Newgrounds or RobTop's Music Library, `.mp3` and `.ogg` files are supported.\
