@@ -33,7 +33,7 @@ void SongManager::pickRandomSong() {
 		m_isMenuLoop = false;
 		if (m_songs.size() != 1) {
 			auto randomIndex = Utils::randomIndex(m_songs.size());
-			geode::log::info("entering a while loop maybe");
+			if (SongManager::get().getAdvancedLogs()) geode::log::info("entering a while loop maybe");
 			if (!std::filesystem::exists(Utils::toProblematicString(m_songs[randomIndex]))) {
 				m_isMenuLoop = true;
 				m_currentSong = "menuLoop.mp3";
@@ -44,7 +44,7 @@ void SongManager::pickRandomSong() {
 				return geode::log::info("unable to find song {}!", m_songs[randomIndex]);
 			}
 			while (m_songs[randomIndex] == m_currentSong && std::ranges::find(m_favorites, m_songs[randomIndex]) == m_favorites.end()) {
-				geode::log::info("avoiding shuffling into the same song at index {} because it is NOT a favorite song", randomIndex);
+				if (SongManager::get().getAdvancedLogs()) geode::log::info("avoiding shuffling into the same song at index {} because it is NOT a favorite song", randomIndex);
 				randomIndex = Utils::randomIndex(m_songs.size());
 			}
 			m_currentSong = m_songs[randomIndex];
@@ -247,4 +247,12 @@ void SongManager::setSawbladeCustomSongsFolder(const bool value) {
 
 bool SongManager::getSawbladeCustomSongsFolder() const {
 	return m_sawbladeCustomSongsFolder;
+}
+
+void SongManager::setAdvancedLogs(const bool value) {
+	m_advancedLogs = value;
+}
+
+bool SongManager::getAdvancedLogs() const {
+	return m_advancedLogs;
 }

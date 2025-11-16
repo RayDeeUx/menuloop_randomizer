@@ -60,6 +60,8 @@ class SongManager {
 	int getTowerRepeatCount() const;
 	void setSawbladeCustomSongsFolder(const bool value);
 	bool getSawbladeCustomSongsFolder() const;
+	void setAdvancedLogs(const bool value);
+	bool getAdvancedLogs() const;
 
   private:
 	SongManager();
@@ -79,6 +81,7 @@ class SongManager {
 	bool m_isLavaChicken = false;
 	bool m_playlistIsEmpty = false;
 	bool m_sawbladeCustomSongsFolder = false;
+	bool m_advancedLogs = false;
 	std::vector<std::string> m_blacklist;
 	std::vector<std::string> m_favorites;
 	int m_towerRepeatCount;

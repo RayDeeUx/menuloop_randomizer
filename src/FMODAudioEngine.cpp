@@ -7,9 +7,10 @@ using namespace geode::prelude;
 class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void update(float dt) {
 		FMODAudioEngine::update(dt);
-		if (!SongManager::get().getConstantShuffleMode()) return;
+		SongManager& songManager = SongManager::get();
+		if (!songManager.getConstantShuffleMode() || songManager.isOverride()) return;
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-		if (GJBaseGameLayer::get() || SongManager::get().isOriginalMenuLoop() || SongManager::get().getSongsSize() < 2) return;
+		if (GJBaseGameLayer::get() || songManager.isOriginalMenuLoop() || songManager.getSongsSize() < 2) return;
 		constexpr int channelNumber = 0;
 		bool isPlaying = true;
 		unsigned int position = 0;
@@ -17,10 +18,10 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		unsigned int length = 0;
 		FMOD::Channel* menuLoopChannelProbably = FMODAudioEngine::get()->getActiveMusicChannel(channelNumber);
 		const auto activeSong = FMODAudioEngine::get()->getActiveMusic(channelNumber);
-		const auto songManagerSong = SongManager::get().getCurrentSong();
+		const auto songManagerSong = songManager.getCurrentSong();
 		const bool isSongManagerSong = activeSong == songManagerSong;
 		if (!isSongManagerSong) {
-			if (Utils::getBool("advancedLogs")) {
+			if (SongManager::get().getAdvancedLogs()) {
 				log::info("activeSong: {}", activeSong);
 				log::info("songManagerSong: {}", songManagerSong);
 			}
@@ -30,7 +31,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		menuLoopChannelProbably->getPosition(&position, 1);
 		menuLoopChannelProbably->getCurrentSound(&sound);
 		sound->getLength(&length, 1);
-		if (Utils::getBool("advancedLogs")) {
+		if (SongManager::get().getAdvancedLogs()) {
 			log::info("isSongManagerSong: {}", isSongManagerSong);
 			log::info("position: {}", position);
 			log::info("isPlaying: {}", isPlaying);

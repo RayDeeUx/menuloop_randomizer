@@ -42,10 +42,12 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 		if (!queryString.empty()) {
 			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.displayName), geode::utils::string::toLower(queryString));
-			geode::log::info("songData.displayName: {}", songData.displayName);
-			geode::log::info("queryString: {}", queryString);
-			geode::log::info("contains: {}", contains);
-			geode::log::info("==============================================");
+			if (SongManager::get().getAdvancedLogs()) {
+				geode::log::info("songData.displayName: {}", songData.displayName);
+				geode::log::info("queryString: {}", queryString);
+				geode::log::info("contains: {}", contains);
+				geode::log::info("==============================================");
+			}
 			if (!contains) continue;
 		}
 

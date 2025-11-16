@@ -197,7 +197,7 @@ namespace SongControl {
 			)->show();
 		}
 
-		geode::log::info("adding {} to {} ({})", songPath, playlistFilePath.filename(), playlistFilePath);
+		if (SongManager::get().getAdvancedLogs()) geode::log::info("adding {} to {} ({})", songPath, playlistFilePath.filename(), playlistFilePath);
 
 		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 

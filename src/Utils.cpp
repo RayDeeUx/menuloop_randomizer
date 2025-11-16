@@ -84,15 +84,15 @@ void Utils::constantShuffleModeNewSong(const bool fromGJBGL) {
 		else geode::log::info("no current song found, probably");
 	}
 	songManager.pickRandomSong();
-	geode::log::info("is it over?");
+	if (SongManager::get().getAdvancedLogs()) geode::log::info("is it over?");
 	if (songManager.getCalledOnce() || !Utils::getBool("saveSongOnGameClose")) {
-		geode::log::info("playing song as normal");
+		 if (SongManager::get().getAdvancedLogs()) geode::log::info("playing song as normal");
 		GameManager::sharedState()->playMenuMusic();
 		if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
 	} else {
 		const bool override = songManager.isOverride();
 		const std::string& song = override ? songManager.getOverrideSong() : geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
-		geode::log::info("playing song from {}: {}", override ? "override" : "saved value", song);
+		if (SongManager::get().getAdvancedLogs()) geode::log::info("playing song from {}: {}", override ? "override" : "saved value", song);
 		songManager.setCurrentSong(song);
 		GameManager::sharedState()->playMenuMusic();
 	}
@@ -243,7 +243,7 @@ void Utils::copyCurrentSongName() {
 	std::string result = "";
 	currentSongName = std::regex_replace(currentSongName, std::regex(R"(com\.geode\.launcher\/)"), ""); // android is cring, original is [ "com\.geode\.launcher\/" ]
 	currentSongName = fmt::format("/{}", currentSongName); // adding an extra slash to get it working on all possible paths. this is because combo burst does some stuff under the hood i am too scared to look at and i don't want to define more regex than necessary.
-	geode::log::info("path after: {}", currentSongName);
+	if (SongManager::get().getAdvancedLogs()) geode::log::info("path after: {}", currentSongName);
 	if (currentSongName.find("geode") != std::string::npos && (currentSongName.find("mods") != std::string::npos || currentSongName.find("config") != std::string::npos)) {
 		if (std::regex_search(currentSongName, geodeMatch, m_geodeAudioRegex)) {
 			result = geodeMatch[geodeMatch.size() - 2].str();
@@ -296,13 +296,13 @@ void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
 			continue;
 		}
 		if (std::ranges::find(blacklist, songPath) != blacklist.end()) {
-			geode::log::info("song {} is in blacklist.", songPath);
+			if (SongManager::get().getAdvancedLogs()) geode::log::info("song {} is in blacklist.", songPath);
 			continue;
 		}
 
-		geode::log::info("loading song on line {} of playlistFile {}", lineCount, playlistFile.filename());
+		if (SongManager::get().getAdvancedLogs()) geode::log::info("loading song on line {} of playlistFile {}", lineCount, playlistFile.filename());
 		songManager.addSong(playlistFileLineModified);
-		geode::log::info("adding song from line {} of playlistFile {}", lineCount, songPath);
+		if (SongManager::get().getAdvancedLogs()) geode::log::info("adding song from line {} of playlistFile {}", lineCount, songPath);
 		if (std::ranges::find(favorites, songPath) != favorites.end()) {
 			songManager.addSong(playlistFileLineModified);
 			geode::log::info("adding song from line {} of playlistFile {} ***AGAIN because favorited***", lineCount, songPath);
@@ -381,7 +381,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 
 			if (std::ranges::find(songManagerBlacklist, songPath) != songManagerBlacklist.end() || isInTextBlacklist) continue;
 
-			geode::log::info("Adding custom song: {}", Utils::toNormalizedString(filePath.filename()));
+			if (SongManager::get().getAdvancedLogs()) geode::log::info("Adding custom song: {}", Utils::toNormalizedString(filePath.filename()));
 			songManager.addSong(songPath);
 
 			bool isInTextFavorites = false;
@@ -394,7 +394,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 
 			if (std::ranges::find(songManagerFavorites, songPath) != songManagerFavorites.end() || isInTextFavorites) {
 				songManager.addSong(songPath);
-				geode::log::info("Adding FAVORITE custom song: {}", Utils::toNormalizedString(filePath.filename()));
+				if (SongManager::get().getAdvancedLogs()) geode::log::info("Adding FAVORITE custom song: {}", Utils::toNormalizedString(filePath.filename()));
 			}
 		}
 	} else {
@@ -430,7 +430,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 
 			if (std::ranges::find(songManagerBlacklist, songPath) != songManagerBlacklist.end() || isInTextBlacklist || (qualifiedForOGMenuBlacklist && song->m_songID == 584131)) continue; // apply hardcode blacklist 584131 onto self in light of BS edge case caught by hiimjustin001: https://discord.com/channels/911701438269386882/911702535373475870/1289021323279990795
 
-			geode::log::info("Adding Newgrounds/Music Library song: {}", songPath);
+			if (SongManager::get().getAdvancedLogs()) geode::log::info("Adding Newgrounds/Music Library song: {}", songPath);
 			songManager.addSong(songPath);
 
 			bool isInTextFavorites = false;
@@ -443,7 +443,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 
 			if (std::ranges::find(songManagerFavorites, songPath) != songManagerFavorites.end() || isInTextFavorites) {
 				songManager.addSong(songPath);
-				geode::log::info("Adding FAVORITE Newgrounds/Music Library song: {}", Utils::toNormalizedString(songPath));
+				if (SongManager::get().getAdvancedLogs()) geode::log::info("Adding FAVORITE Newgrounds/Music Library song: {}", Utils::toNormalizedString(songPath));
 			}
 		}
 	}
@@ -461,7 +461,7 @@ std::vector<std::string> Utils::parseBlacklistFile(const std::filesystem::path& 
 		}
 		blacklistVector.push_back(blacklistStringModified);
 	}
-	geode::log::info("Finished storing blacklist. size: {}", blacklistVector.size());
+	if (SongManager::get().getAdvancedLogs()) geode::log::info("Finished storing blacklist. size: {}", blacklistVector.size());
 	return blacklistVector;
 }
 
@@ -479,7 +479,7 @@ std::vector<std::string> Utils::parseFavoritesFile(const std::filesystem::path& 
 		favoritesVector.push_back(favoriteStringModified);
 		songManager.addToFavorites(favoriteStringModified);
 	}
-	geode::log::info("Finished storing favorites. size: {}", favoritesVector.size());
+	if (SongManager::get().getAdvancedLogs()) geode::log::info("Finished storing favorites. size: {}", favoritesVector.size());
 	return favoritesVector;
 }
 
@@ -503,9 +503,9 @@ void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_vie
 		if they're ng songs also push the path bc we're going to use getPathForSong
 		--elnexreal
 	*/
-	geode::log::info("repopulating vector from setting {} change", reasonUsuallySettingName);
+	if (SongManager::get().getAdvancedLogs()) geode::log::info("repopulating vector from setting {} change", reasonUsuallySettingName);
 	Utils::refreshTheVector();
-	geode::log::info("finished refreshing the vector");
+	if (SongManager::get().getAdvancedLogs()) geode::log::info("finished refreshing the vector");
 
 	// change the song when you click apply, stoi will not like custom names. --elnexreal
 

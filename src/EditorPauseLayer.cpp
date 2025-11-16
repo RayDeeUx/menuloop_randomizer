@@ -69,7 +69,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 		}
 		*/
 
-		if (Utils::getBool("advancedLogs")) log::info("shouldClose: {} (p0->getTag() == 1: {}, btnTwo: {})", shouldClose, p0->getTag() == 1, btnTwo); // log::info calls since that's kinda this mod's thing
+		if (SongManager::get().getAdvancedLogs()) log::info("shouldClose: {} (p0->getTag() == 1: {}, btnTwo: {})", shouldClose, p0->getTag() == 1, btnTwo); // log::info calls since that's kinda this mod's thing
 
 		if (!shouldClose) return EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 

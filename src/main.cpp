@@ -13,6 +13,7 @@ bool originalOverrideWasEmpty = false;
 $on_mod(Loaded) {
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 	songManager.setConstantShuffleMode();
+	songManager.setAdvancedLogs(Mod::get()->getSettingValue<bool>("advancedLogs"));
 	if (!std::filesystem::exists(configDir / "playlistOne.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistOne.txt");
 	if (!std::filesystem::exists(configDir / "playlistTwo.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistTwo.txt");
 	if (!std::filesystem::exists(configDir / "playlistThree.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistThree.txt");
@@ -51,7 +52,7 @@ $on_mod(Loaded) {
 		}
 	}
 
-	geode::log::info("repopulating vector from on_mod(Loaded)");
+	if (SongManager::get().getAdvancedLogs()) geode::log::info("repopulating vector from on_mod(Loaded)");
 	Utils::refreshTheVector();
 
 	const std::string& override = Utils::toNormalizedString(Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride"));
@@ -64,10 +65,10 @@ $on_mod(Loaded) {
 	const bool loopExists = std::filesystem::exists(Utils::toProblematicString(lastMenuLoop)) || std::filesystem::exists(lastMenuLoopPath);
 	log::info("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\nlast menu loop as path: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}\noverride: {}", lastMenuLoop, lastMenuLoopPath, saveSongOnGameClose, loopExists, override);
 	if (!override.empty() && Utils::isSupportedFile(override)) {
-		log::info("setting songManager's current song to overridden song from settings");
+		if (SongManager::get().getAdvancedLogs()) log::info("setting songManager's current song to overridden song from settings");
 		songManager.setCurrentSongToOverride();
 	} else if (!lastMenuLoop.empty() && Utils::isSupportedFile(lastMenuLoop) && loopExists && saveSongOnGameClose) {
-		log::info("setting songManager's current song to saved song from on_mod(Loaded)");
+		if (SongManager::get().getAdvancedLogs()) log::info("setting songManager's current song to saved song from on_mod(Loaded)");
 		songManager.setCurrentSongToSavedSong();
 	} else {
 		log::info("randomizing songManager's current song through on_mod(Loaded)");
@@ -129,7 +130,7 @@ $on_mod(Loaded) {
 			geode::log::info("repopulating vector from removing override");
 			Utils::refreshTheVector();
 			if (Utils::isSupportedFile(Mod::get()->getSavedValue<std::string>("lastMenuLoop")) && Utils::getBool("saveSongOnGameClose") && !originalOverrideWasEmpty) {
-				log::info("setting songManager's current song to saved song from settings change");
+				if (SongManager::get().getAdvancedLogs()) log::info("setting songManager's current song to saved song from settings change");
 				songManager.setCurrentSongToSavedSong();
 			} else Utils::setNewSong();
 		}
@@ -143,5 +144,8 @@ $on_mod(Loaded) {
 		FLAlertLayer* alert = FLAlertLayer::create("Menu Loop Randomizer", "<c_>This is an experimental setting. You agree to hold yourself responsible for any issues that happen when this setting is enabled.</c>", "I Understand");
 		alert->m_noElasticity = true;
 		alert->show();
+	});
+	listenForSettingChanges<bool>("advancedLogs", [](bool newAdvancedLogs) {
+		SongManager::get().setAdvancedLogs(newAdvancedLogs);
 	});
 }
