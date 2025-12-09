@@ -256,3 +256,17 @@ void SongManager::setAdvancedLogs(const bool value) {
 bool SongManager::getAdvancedLogs() const {
 	return m_advancedLogs;
 }
+
+void SongManager::setLastMenuLoopPosition(const int millisecond) {
+	m_lastPosition = millisecond;
+}
+
+int SongManager::getLastMenuLoopPosition() const {
+	return m_lastPosition;
+}
+
+void SongManager::restoreLastMenuLoopPosition() {
+	geode::Mod* colon = geode::Loader::get()->getLoadedMod("colon.menu_loop_start_time");
+	if (colon && colon->getSettingValue<bool>("enable")) return;
+	FMODAudioEngine::get()->setMusicTimeMS(SongManager::get().getLastMenuLoopPosition(), false, 0);
+}

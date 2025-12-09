@@ -8,6 +8,13 @@ class $modify(MenuLoopGMHook, GameManager) {
 	gd::string getMenuMusicFile() {
 		return SongManager::get().getCurrentSong();
 	}
+	void fadeInMenuMusic() {
+		auto oldTrack = FMODAudioEngine::sharedEngine()->getActiveMusic(0);
+		GameManager::fadeInMenuMusic();
+		if (oldTrack != FMODAudioEngine::sharedEngine()->getActiveMusic(0)) {
+			SongManager::get().restoreLastMenuLoopPosition();
+		}
+	}
 	void encodeDataTo(DS_Dictionary* p0) {
 		SongManager& songManager = SongManager::get();
 		std::string currentSong = songManager.getCurrentSong();

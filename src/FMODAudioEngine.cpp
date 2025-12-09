@@ -8,9 +8,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void update(float dt) {
 		FMODAudioEngine::update(dt);
 		SongManager& songManager = SongManager::get();
-		if (!songManager.getConstantShuffleMode() || songManager.isOverride()) return;
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-		if (GJBaseGameLayer::get() || songManager.isOriginalMenuLoop() || songManager.getSongsSize() < 2) return;
 		constexpr int channelNumber = 0;
 		bool isPlaying = true;
 		unsigned int position = 0;
@@ -30,6 +28,9 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		menuLoopChannelProbably->isPlaying(&isPlaying);
 		menuLoopChannelProbably->getPosition(&position, 1);
 		menuLoopChannelProbably->getCurrentSound(&sound);
+		songManager.setLastMenuLoopPosition(position);
+		if (!songManager.getConstantShuffleMode() || songManager.isOverride()) return;
+		if (GJBaseGameLayer::get() || songManager.isOriginalMenuLoop() || songManager.getSongsSize() < 2) return;
 		sound->getLength(&length, 1);
 		if (SongManager::get().getAdvancedLogs()) {
 			log::info("isSongManagerSong: {}", isSongManagerSong);

@@ -62,6 +62,9 @@ class SongManager {
 	bool getSawbladeCustomSongsFolder() const;
 	void setAdvancedLogs(const bool value);
 	bool getAdvancedLogs() const;
+	void setLastMenuLoopPosition(const int millisecond);
+	int getLastMenuLoopPosition() const;
+	static void restoreLastMenuLoopPosition();
 
   private:
 	SongManager();
@@ -82,6 +85,7 @@ class SongManager {
 	bool m_playlistIsEmpty = false;
 	bool m_sawbladeCustomSongsFolder = false;
 	bool m_advancedLogs = false;
+	int m_lastPosition = 0;
 	std::vector<std::string> m_blacklist;
 	std::vector<std::string> m_favorites;
 	int m_towerRepeatCount;
