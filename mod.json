@@ -207,16 +207,32 @@
 			}
 		},
 		"randomizeWhenExitingLevel": {
-			"name": "Randomize on Level Exit",
-			"description": "Randomize the song when you exit a level.\n\n<cy>This setting is ignored when \"Constant Shuffle Mode\" is enabled.</c>",
+			"name": "Randomize Menu Loop on Level Exit",
+			"description": "Randomize the song when you exit a level.\n\n<cy>This setting is ignored when \"Constant Shuffle Mode\" or \"Continue Menu Loop on Level Exit\" is enabled.</c>",
 			"type": "bool",
-			"default": true
+			"default": true,
+			"enable-if": "!restoreWhenExitingLevel"
 		},
 		"randomizeWhenExitingEditor": {
-			"name": "Randomize on Editor Exit",
-			"description": "Randomize the song when you exit the editor.\n\n<cy>This setting is ignored when \"Constant Shuffle Mode\" is enabled.</c>",
+			"name": "Randomize Menu Loop on Editor Exit",
+			"description": "Randomize the song when you exit the editor.\n\n<cy>This setting is ignored when \"Constant Shuffle Mode\" or \"Continue Menu Loop on Editor Exit\" is enabled.</c>",
 			"type": "bool",
-			"default": true
+			"default": true,
+			"enable-if": "!restoreWhenExitingEditor"
+		},
+		"restoreWhenExitingLevel": {
+			"name": "Continue Menu Loop on Level Exit",
+			"description": "Continue the song from where you left off when you exit a level.\n\n<cy>This setting is ignored when \"Constant Shuffle Mode\" or \"Randomize Menu Loop on Level Exit\" is enabled.</c>",
+			"type": "bool",
+			"default": false,
+			"enable-if": "!randomizeWhenExitingLevel"
+		},
+		"restoreWhenExitingEditor": {
+			"name": "Continue Menu Loop on Editor Exit",
+			"description": "Continue the song from where you left off when you exit the editor.\n\n<cy>This setting is ignored when \"Constant Shuffle Mode\" or \"Randomize Menu Loop on Editor Exit\" is enabled.</c>",
+			"type": "bool",
+			"default": false,
+			"enable-if": "!randomizeWhenExitingEditor"
 		},
 		"specificSongOverride": {
 			"name": "Specific Menu Loop File Override",

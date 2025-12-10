@@ -65,6 +65,8 @@ class SongManager {
 	void setLastMenuLoopPosition(const int millisecond);
 	int getLastMenuLoopPosition() const;
 	static void restoreLastMenuLoopPosition();
+	void setShouldRestoreMenuLoopPoint(const bool value);
+	bool getShouldRestoreMenuLoopPoint() const;
 
   private:
 	SongManager();
@@ -85,6 +87,7 @@ class SongManager {
 	bool m_playlistIsEmpty = false;
 	bool m_sawbladeCustomSongsFolder = false;
 	bool m_advancedLogs = false;
+	bool m_shouldRestoreMenuLoopPoint = false;
 	int m_lastPosition = 0;
 	std::vector<std::string> m_blacklist;
 	std::vector<std::string> m_favorites;

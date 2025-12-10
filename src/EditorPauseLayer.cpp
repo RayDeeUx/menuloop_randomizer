@@ -8,6 +8,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 	#ifndef __APPLE__
 	void onExitEditor(CCObject *sender) {
 		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
+		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
 
 		EditorPauseLayer::onExitEditor(sender);
 
@@ -30,6 +31,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 	*/
 	void onSaveAndExit(CCObject *sender) {
 		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
+		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
 
 		EditorPauseLayer::onSaveAndExit(sender);
 
@@ -74,6 +76,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 		if (!shouldClose) return EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 
 		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
+		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
 
 		EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 

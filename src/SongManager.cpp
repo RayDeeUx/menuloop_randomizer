@@ -271,3 +271,11 @@ void SongManager::restoreLastMenuLoopPosition() {
 	if (colon && colon->getSettingValue<bool>("enable")) return;
 	FMODAudioEngine::get()->setMusicTimeMS(SongManager::get().getLastMenuLoopPosition(), false, 0);
 }
+
+void SongManager::setShouldRestoreMenuLoopPoint(const bool value) {
+	m_shouldRestoreMenuLoopPoint = value;
+}
+
+bool SongManager::getShouldRestoreMenuLoopPoint() const {
+	return m_shouldRestoreMenuLoopPoint;
+}
