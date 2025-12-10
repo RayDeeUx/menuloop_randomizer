@@ -9,17 +9,16 @@ class $modify(MenuLoopGMHook, GameManager) {
 		return SongManager::get().getCurrentSong();
 	}
 	void fadeInMenuMusic() {
+		// code taken verbatim from colon. i've had two too many toddlers nagging me to add this feature to the mod now so here we are
+		auto oldTrack = FMODAudioEngine::sharedEngine()->getActiveMusic(0);
+		GameManager::fadeInMenuMusic();
 		// ensure compat with colon
 		geode::Mod* colon = geode::Loader::get()->getLoadedMod("colon.menu_loop_start_time");
 		if (colon && colon->getSettingValue<bool>("enable")) return;
 		if (!SongManager::get().getShouldRestoreMenuLoopPoint()) return;
-		// code taken verbatim from colon. i've had two too many toddlers nagging me to add this feature to the mod now so here we are
-		auto oldTrack = FMODAudioEngine::sharedEngine()->getActiveMusic(0);
-		GameManager::fadeInMenuMusic();
-		if (oldTrack != FMODAudioEngine::sharedEngine()->getActiveMusic(0)) {
-			SongManager::get().restoreLastMenuLoopPosition();
-			SongManager::get().setShouldRestoreMenuLoopPoint(false);
-		}
+		if (oldTrack == FMODAudioEngine::sharedEngine()->getActiveMusic(0)) return;
+		SongManager::get().restoreLastMenuLoopPosition();
+		SongManager::get().setShouldRestoreMenuLoopPoint(false);
 	}
 	void encodeDataTo(DS_Dictionary* p0) {
 		SongManager& songManager = SongManager::get();
