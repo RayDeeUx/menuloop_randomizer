@@ -222,14 +222,14 @@
 		},
 		"restoreWhenExitingLevel": {
 			"name": "Continue Menu Loop on Level Exit",
-			"description": "<cp>***__THIS SETTING IS IGNORED IF COLON'S MENU LOOP START TIME MOD IS LOADED AND ENABLED.__***</c>\n<c-aaaaaa>Naggingly suggested by Myron472/GlydeR and Abagur900.</c>\n\nContinue the song from where you left off when you exit a level.\n\n<cy>This setting is ignored when \"Constant Shuffle Mode\" or \"Randomize Menu Loop on Level Exit\" is enabled. If either of these settings are enabled, menu loops will ALWAYS be randomized when leaving a level.</c>\n\n<c-ff0000>This does ***__NOT__*** continue menu loops from where you started off between game restarts.</c>",
+			"description": "<cp>***__THIS SETTING IS IGNORED IF COLON'S MENU LOOP START TIME MOD IS LOADED AND ENABLED.__***</c>\n<c-aaaaaa>Naggingly suggested by Myron472/GlydeR and Abagur900.</c>\n\nContinue the song from where you left off when you exit a level.\n\n<cy>This setting is ignored when \"Randomize Menu Loop on Level Exit\" is enabled. If that other setting is enabled, menu loops will ALWAYS be randomized when leaving a level.</c>\n\n<c-ff0000>This does ***__NOT__*** continue menu loops from where you started off between game restarts.</c>",
 			"type": "bool",
 			"default": false,
 			"enable-if": "!randomizeWhenExitingLevel"
 		},
 		"restoreWhenExitingEditor": {
 			"name": "Continue Menu Loop on Editor Exit",
-			"description": "<cp>***__THIS SETTING IS IGNORED IF COLON'S MENU LOOP START TIME MOD IS LOADED AND ENABLED.__***</c>\n<c-aaaaaa>Naggingly suggested by Myron472/GlydeR and Abagur900.</c>\n\nContinue the song from where you left off when you exit the editor.\n\n<cy>This setting is ignored when \"Constant Shuffle Mode\" or \"Randomize Menu Loop on Editor Exit\" is enabled. If either of these settings are enabled, menu loops will ALWAYS be randomized when leaving the editor.</c>\n\n<c-ff0000>This does ***__NOT__*** continue menu loops from where you started off between game restarts.</c>",
+			"description": "<cp>***__THIS SETTING IS IGNORED IF COLON'S MENU LOOP START TIME MOD IS LOADED AND ENABLED.__***</c>\n<c-aaaaaa>Naggingly suggested by Myron472/GlydeR and Abagur900.</c>\n\nContinue the song from where you left off when you exit the editor.\n\n<cy>This setting is ignored when \"Randomize Menu Loop on Editor Exit\" is enabled. If that other setting is enabled, menu loops will ALWAYS be randomized when leaving the editor.</c>\n\n<c-ff0000>This does ***__NOT__*** continue menu loops from where you started off between game restarts.</c>",
 			"type": "bool",
 			"default": false,
 			"enable-if": "!randomizeWhenExitingEditor"
