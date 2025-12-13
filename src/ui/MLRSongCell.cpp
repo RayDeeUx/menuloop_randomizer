@@ -30,7 +30,7 @@ bool MLRSongCell::initEmpty(const bool isEven) {
 }
 
 bool MLRSongCell::init(const SongData& songData, const bool isEven) {
-	if (!CCLayerColor::initWithColor(isEven ? cocos2d::ccColor4B{161, 88, 44, 255} : cocos2d::ccColor4B{194, 114, 62, 255})) return false;
+	if (!CCLayerColor::initWithColor(isEven ? cocos2d::ccColor4B{160, 90, 45, 254} : cocos2d::ccColor4B{195, 115, 60, 254})) return false;
 	m_songData = songData;
 
 	this->setContentSize({356.f, 36.f});
@@ -101,6 +101,9 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	songNameLabel->setID("song-cell-label"_spr);
 	divider->setID(fmt::format("song-cell-divider-{}"_spr, isEven));
 	this->setID(fmt::format("song-cell-{}"_spr, isEven));
+
+	this->setOpacity(255);
+	this->setColor(isEven ? cocos2d::ccColor4B{161, 88, 44} : cocos2d::ccColor4B{194, 114, 62});
 
 	this->scheduleUpdate();
 
