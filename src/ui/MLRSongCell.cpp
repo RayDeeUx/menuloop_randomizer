@@ -103,7 +103,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	this->setID(fmt::format("song-cell-{}"_spr, isEven));
 
 	this->setOpacity(255);
-	this->setColor(isEven ? cocos2d::ccColor4B{161, 88, 44} : cocos2d::ccColor4B{194, 114, 62});
+	this->setColor(isEven ? cocos2d::ccColor3B{161, 88, 44} : cocos2d::ccColor3B{194, 114, 62});
 
 	this->scheduleUpdate();
 
