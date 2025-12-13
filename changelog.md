@@ -1,7 +1,7 @@
 # Menu Loop Randomizer Changelog
 ## v1.10.2
 - Add `Continue Menu Loop on Level Exit` and `Continue Menu Loop on Editor Exit` (suggested by [Myron472/GlydeR](https://github.com/Myron472) and [Abagur900](https://github.com/Abagur900)).
-  - <c-ff0000>***__READ:__*** **__These two toggles will__** ***__ONLY__*** **__work if you disable [Colon's Menu Loop Start Time mod](mod:colon.menu_loop_start_time)!!!__**</c>
+  - <c-ff0000>***__READ:__*** **__These two toggles will__** ***__ONLY__*** **__work if you disable [Colon's Menu Loop Start Time mod](mod:colon.menu_loop_start_time)!!!__** [You can either disable it through its mod settings or through Geode's buttons, either is fine.]</c>
   - This toggle is mutually exclusive with the `Randomize Menu Loop on Level Exit` and `Randomize Menu Loop on Editor Exit` toggles.
   - If `Randomize Menu Loop on Level Exit` is enabled, it will apply first, and ignore your preference for `Continue Menu Loop on Level Exit`.
   - The same logic applies to the `Randomize Menu Loop on Editor Exit` and `Continue Menu Loop on Editor Exit` toggles.
