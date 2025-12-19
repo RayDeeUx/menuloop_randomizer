@@ -374,8 +374,12 @@ void SongListLayer::onScrollTopButton(CCObject*) {
 void SongListLayer::onScrollCurButton(CCObject*) {
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
 	if (!contentLayer || contentLayer->getChildrenCount() < 8) return; // cmon bruh it's in plain sight lol
-	const float desiredPosition = ((contentLayer->getContentHeight() + contentLayer->getParent()->getContentHeight()) * -1.f * .5f) + contentLayer->getParent()->getContentHeight();
+	CCNode* currentCell = contentLayer->getChildByTag(12192025);
+	const float theAbsolluteTop = contentLayer->getContentHeight() * -1.f + contentLayer->getParent()->getContentHeight();
+	const float centerOrCurrent = (cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() || !currentCell) ? ((contentLayer->getContentHeight() + contentLayer->getParent()->getContentHeight()) * -1.f * .5f) : ((currentCell->getPositionY() * -1.f) - (contentLayer->getParent()->getContentHeight() / 2.f) + 20.f);
+	const float desiredPosition = centerOrCurrent + contentLayer->getParent()->getContentHeight();
 	if (desiredPosition > 0.f) contentLayer->setPositionY(0.f);
+	else if (desiredPosition < theAbsolluteTop) contentLayer->setPositionY(theAbsolluteTop);
 	else contentLayer->setPositionY(desiredPosition);
 }
 

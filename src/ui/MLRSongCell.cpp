@@ -129,10 +129,13 @@ void MLRSongCell::checkIfCurrentSong() const {
 	const bool isCurrentSong = this->m_songData.actualFilePath == SongManager::get().getCurrentSong();
 
 	if (isCurrentSong) {
+		this->m_songNameLabel->getParent()->setTag(12192025);
 		if (this->m_songData.type == SongType::Favorited) this->m_songNameLabel->setColor({0, 255, 255});
 		else this->m_songNameLabel->setColor({0, 255, 0});
+	} else {
+		this->m_songNameLabel->getParent()->setTag(-1);
+		this->m_songNameLabel->setColor({255, 255, 255});
 	}
-	else this->m_songNameLabel->setColor({255, 255, 255});
 
 	this->m_menu->setVisible(!isCurrentSong);
 	this->m_playButton->setEnabled(!isCurrentSong);
