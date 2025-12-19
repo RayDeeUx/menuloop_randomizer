@@ -359,11 +359,11 @@ CCContentLayer* SongListLayer::getContentLayer() const {
 }
 
 void SongListLayer::onScrollTopButton(CCObject*) {
-	if (auto contentLayer = SongListLayer::getContentLayer()) contentLayer->setPositionY(contentLayer->getContentHeight() * -1.f);
+	if (auto contentLayer = SongListLayer::getContentLayer()) contentLayer->setPositionY((contentLayer->getContentHeight() * -1.f) + contentLayer->getParent()->getContentHeight());
 }
 
 void SongListLayer::onScrollCurButton(CCObject*) {
-	if (auto contentLayer = SongListLayer::getContentLayer()) contentLayer->setPositionY(contentLayer->getContentHeight() * .5f * -1.f);
+	if (auto contentLayer = SongListLayer::getContentLayer()) contentLayer->setPositionY((contentLayer->getContentHeight() * -1.f * .5f) + contentLayer->getParent()->getContentHeight());
 }
 
 void SongListLayer::onScrollBtmButton(CCObject*) {
