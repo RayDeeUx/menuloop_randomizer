@@ -65,7 +65,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	else scrollLayer->m_contentLayer->setPositionY(0.f);
 
 	if (CCNode* scrollBar = this->m_mainLayer->getChildByID("song-list-scrollbar"_spr)) {
-		scrollBar->setPositionY(alreadyAdded.size() > 5 ? scrollLayer->getPositionY() : 99999.f);
+		scrollBar->setPositionY(alreadyAdded.size() > 5 ? 145.f : 99999.f);
 	}
 }
 
@@ -171,7 +171,7 @@ bool SongListLayer::setup(const std::string&) {
 	this->m_mainLayer->addChild(scrollBar);
 	scrollBar->setID("song-list-scrollbar"_spr);
 	scrollBar->setPositionX(scrollLayer->getPositionX() + (scrollLayer->getContentWidth() / 2.f) + 5.f);
-	scrollBar->setPositionY(scrollLayer->m_contentLayer->getChildrenCount() > 6 ? scrollLayer->getPositionY() : 99999.f);
+	scrollBar->setPositionY(scrollLayer->m_contentLayer->getChildrenCount() > 6 ? 145.f : 99999.f);
 
 	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
 	infoMenu->setLayout(
@@ -352,19 +352,22 @@ void SongListLayer::onControlsButton(CCObject*) {
 	SongControlMenu::create("GJ_square05.png")->show();
 }
 
-void SongListLayer::onScrollTopButton(CCObject*) {
+CCContentLayer* SongListLayer::getContentLayer() const {
 	CCNode* scrollLayer = this->m_mainLayer->getChildByID("list-of-songs"_spr);
-	if (scrollLayer) static_cast<geode::ScrollLayer*>(scrollLayer)->scrollToTop();
+	if (scrollLayer) return static_cast<geode::ScrollLayer*>(scrollLayer)->m_contentLayer;
+	return nullptr;
+}
+
+void SongListLayer::onScrollTopButton(CCObject*) {
+	if (auto contentLayer = SongListLayer::getContentLayer()) contentLayer->setPositionY(contentLayer->getContentHeight() * -1.f);
 }
 
 void SongListLayer::onScrollCurButton(CCObject*) {
-	CCNode* scrollLayer = this->m_mainLayer->getChildByID("list-of-songs"_spr);
-	if (scrollLayer) scrollLayer->setPositionY(scrollLayer->getContentHeight() * .5f * -1);
+	if (auto contentLayer = SongListLayer::getContentLayer()) contentLayer->setPositionY(contentLayer->getContentHeight() * .5f * -1.f);
 }
 
 void SongListLayer::onScrollBtmButton(CCObject*) {
-	CCNode* scrollLayer = this->m_mainLayer->getChildByID("list-of-songs"_spr);
-	if (scrollLayer) scrollLayer->setPositionY(0.f);
+	if (auto contentLayer = SongListLayer::getContentLayer()) contentLayer->setPositionY(0.f);
 }
 
 void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {

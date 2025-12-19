@@ -13,6 +13,7 @@ public:
 	void onCopyButton(CCObject*);
 	void onPreviousButton(CCObject*);
 	void onControlsButton(CCObject*);
+	CCContentLayer* getContentLayer() const;
 	void onScrollTopButton(CCObject*);
 	void onScrollCurButton(CCObject*);
 	void onScrollBtmButton(CCObject*);
