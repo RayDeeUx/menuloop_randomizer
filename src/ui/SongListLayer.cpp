@@ -67,6 +67,10 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	if (CCNode* scrollBar = this->m_mainLayer->getChildByID("song-list-scrollbar"_spr)) {
 		scrollBar->setPositionY(alreadyAdded.size() > 5 ? 145.f : 99999.f);
 	}
+
+	if (CCNode* scrollShortcuts = this->m_mainLayer->getChildByID("scroll-shortcuts-menu"_spr)) {
+		scrollShortcuts->setPositionY(alreadyAdded.size() > 5 ? 145.f : 99999.f);
+	}
 }
 
 bool SongListLayer::setup(const std::string&) {
@@ -282,6 +286,8 @@ bool SongListLayer::setup(const std::string&) {
 	scrollShortcutsMenu->setID("scroll-shortcuts-menu"_spr);
 	this->m_mainLayer->addChild(scrollShortcutsMenu);
 
+	scrollShortcutsMenu->setPositionY(scrollLayer->m_contentLayer->getChildrenCount() > 6 ? 145.f : 99999.f);
+
 	/*
 	if (songManager.getSawbladeCustomSongsFolder()) {
 		cocos2d::CCLabelBMFont* customSongsFolderBottom = cocos2d::CCLabelBMFont::create("CUSTOM SONGS FOLDER BY SAWBLADE IS LOADED!!! BUGS REPORTS WILL BE IGNORED.", "chatFont.fnt");
@@ -361,21 +367,21 @@ CCContentLayer* SongListLayer::getContentLayer() const {
 
 void SongListLayer::onScrollTopButton(CCObject*) {
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || contentLayer->getChildrenCount() < 6) return;
+	if (!contentLayer || contentLayer->getChildrenCount() < 8) return; // cmon bruh it's in plain sight lol
 	contentLayer->setPositionY((contentLayer->getContentHeight() * -1.f) + contentLayer->getParent()->getContentHeight());
 }
 
 void SongListLayer::onScrollCurButton(CCObject*) {
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || contentLayer->getChildrenCount() < 6) return;
-	const float desiredPosition = (contentLayer->getContentHeight() * -1.f * .5f) + contentLayer->getParent()->getContentHeight();
+	if (!contentLayer || contentLayer->getChildrenCount() < 8) return; // cmon bruh it's in plain sight lol
+	const float desiredPosition = ((contentLayer->getContentHeight() + contentLayer->getParent()->getContentHeight()) * -1.f * .5f) + contentLayer->getParent()->getContentHeight();
 	if (desiredPosition > 0.f) contentLayer->setPositionY(0.f);
 	else contentLayer->setPositionY(desiredPosition);
 }
 
 void SongListLayer::onScrollBtmButton(CCObject*) {
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || contentLayer->getChildrenCount() < 6) return;
+	if (!contentLayer || contentLayer->getChildrenCount() < 8) return; // cmon bruh it's in plain sight lol
 	contentLayer->setPositionY(0.f);
 }
 
