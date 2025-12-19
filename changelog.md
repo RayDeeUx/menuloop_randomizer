@@ -5,7 +5,10 @@
   - This toggle is mutually exclusive with the `Randomize Menu Loop on Level Exit` and `Randomize Menu Loop on Editor Exit` toggles.
   - If `Randomize Menu Loop on Level Exit` is enabled, it will apply first, and ignore your preference for `Continue Menu Loop on Level Exit`.
   - The same logic applies to the `Randomize Menu Loop on Editor Exit` and `Continue Menu Loop on Editor Exit` toggles.
-- Fix an incompatibility with Eclipse Menu's "Transparent Lists" implementation.
+- Added a Song List scrolling shortcut to the currently playing song. 
+  - Shortcuts for the top and bottom of the song list also included, because why not.
+  - Song list scrolling shortcuts are to the right of the scrollbar.
+- Fix an incompatibility with Eclipse Menu's "Transparent Lists" feature.
 - Attempt to reduce frame drops when viewing many songs at once in the Song List menu.
 ## v1.10.1
 - Add a scrollbar.

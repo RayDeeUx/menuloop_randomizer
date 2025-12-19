@@ -390,6 +390,7 @@ void SongListLayer::onScrollBtmButton(CCObject*) {
 }
 
 void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
+	// this is fine since searchbar swallows delete (macos)/backspace (all other platforms) key inputs first
 	if (key != cocos2d::KEY_Enter && key != cocos2d::KEY_Delete && key != cocos2d::KEY_Backspace) {
 		// code taken directly from geode::Popup keyDown impl as of dec 19 2025
 		if (key == cocos2d::enumKeyCodes::KEY_Escape) return this->onClose(nullptr);
@@ -398,7 +399,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	}
 	CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
 	if (!searchBar) return;
-	if (key != cocos2d::KEY_Enter) static_cast<geode::TextInput*>(searchBar)->setString("");
+	if (key != cocos2d::KEY_Enter) static_cast<geode::TextInput*>(searchBar)->setString(""); // clear search query before re-populating
 	SongListLayer::searchSongs(static_cast<geode::TextInput*>(searchBar)->getString());
 }
 

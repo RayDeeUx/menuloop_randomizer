@@ -713,7 +713,7 @@ platformWarning, platformWarning);
 	std::ofstream fileOutput;
 	fileOutput.open(fileForWriting, std::ios_base::app);
 	if (geode::utils::string::endsWith(toWriteToFile, " [MLR] #") && SongManager::get().getSawbladeCustomSongsFolder()) {
-		fileOutput << std::endl << geode::utils::string::replace(toWriteToFile, " [MLR] #", " (Note: This was added to this file while using a non-vanilla custom songs folder location.) [MLR] #");
+		fileOutput << std::endl << geode::utils::string::replace(toWriteToFile, " [MLR] #", " (Note: This song was added to this file while using a non-vanilla custom songs folder location.) [MLR] #");
 	} else {
 		fileOutput << std::endl << toWriteToFile;
 	}
