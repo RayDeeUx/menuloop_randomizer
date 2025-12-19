@@ -30,7 +30,7 @@ bool MLRSongCell::initEmpty(const bool isEven) {
 
 bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	if (!CCLayerColor::initWithColor(isEven ? cocos2d::ccColor4B{160, 90, 45, 254} : cocos2d::ccColor4B{195, 115, 60, 254})) return false;
-	m_songData = songData;
+	this->m_songData = songData;
 
 	this->setContentSize({356.f, 36.f});
 
@@ -90,10 +90,10 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	menu->addChild(playButton);
 	menu->updateLayout();
 
-	m_menu = menu;
-	m_songNameLabel = songNameLabel;
-	m_divider = divider;
-	m_playButton = playButton;
+	this->m_menu = menu;
+	this->m_songNameLabel = songNameLabel;
+	this->m_divider = divider;
+	this->m_playButton = playButton;
 
 	this->addChild(songNameLabel);
 	this->addChild(divider);

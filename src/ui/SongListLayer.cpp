@@ -72,7 +72,10 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 bool SongListLayer::setup(const std::string&) {
 	this->setUserObject("user95401.scrollbar_everywhere/scrollbar", cocos2d::CCBool::create(true)); // fuck off, user95401.
 	this->m_noElasticity = true;
-	this->setTitle("Menu Loop Randomizer - Your Songs");
+
+	SongManager& songManager = SongManager::get();
+	const int songCount = SongManager::get().getSongsSize();
+	this->setTitle(fmt::format("Menu Loop Randomizer - Your {} Song{}", songCount, (songCount == 1 ? "" : "s")));
 	this->m_title->setID("song-list-title"_spr);
 
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
@@ -87,12 +90,11 @@ bool SongListLayer::setup(const std::string&) {
 	geode::AxisLayout* WHOTHEFUCKMADEIGNOREINVISIBLECHILDRENAVOIDRETURNTYPE = geode::ColumnLayout::create()
 		->setAxisReverse(true)
 		->setAxisAlignment(geode::AxisAlignment::End)
-		->setAutoGrowAxis(220.f)
+		->setAutoGrowAxis(std::make_optional<float>(220.f))
 		->setGap(.0f);
 	WHOTHEFUCKMADEIGNOREINVISIBLECHILDRENAVOIDRETURNTYPE->ignoreInvisibleChildren(true);
 	scrollLayer->m_contentLayer->setLayout(WHOTHEFUCKMADEIGNOREINVISIBLECHILDRENAVOIDRETURNTYPE);
 
-	SongManager& songManager = SongManager::get();
 	SongListLayer::addSongsToScrollLayer(scrollLayer, songManager);
 
 	scrollLayer->setID("list-of-songs"_spr);
@@ -106,7 +108,7 @@ bool SongListLayer::setup(const std::string&) {
 	searchBarMenu->setID("song-list-search-menu"_spr);
 	this->m_mainLayer->addChild(searchBarMenu);
 
-	auto searchBackground = CCLayerColor::create({ 194, 114, 62, 255 }, 350.f, 35.f);
+	CCLayerColor* searchBackground = CCLayerColor::create({ 194, 114, 62, 255 }, 350.f, 35.f);
 	searchBackground->setID("song-list-search-background"_spr);
 	searchBarMenu->addChild(searchBackground);
 
@@ -115,7 +117,7 @@ bool SongListLayer::setup(const std::string&) {
 		if (!searchBar) return;
 		SongListLayer::searchSongs(static_cast<geode::TextInput*>(searchBar)->getString());
 	});
-	searchButton->setPosition({ 302.f, 17.f });
+	searchButton->setPosition({302.f, 17.f});
 	searchButton->setID("song-list-search-button"_spr);
 	searchBarMenu->addChild(searchButton);
 
@@ -325,15 +327,25 @@ void SongListLayer::onSettingsButton(CCObject*) {
 void SongListLayer::onShuffleButton(CCObject*) {
 	SongControl::shuffleSong();
 }
+
 void SongListLayer::onCopyButton(CCObject*) {
 	SongControl::copySong();
 }
+
 void SongListLayer::onPreviousButton(CCObject*) {
 	SongControl::previousSong();
 }
+
 void SongListLayer::onControlsButton(CCObject*) {
 	this->onClose(nullptr);
 	SongControlMenu::create("GJ_square05.png")->show();
+}
+
+void SongListLayer::keyDown(cocos2d::enumKeyCodes key) {
+	if (key != cocos2d::KEY_Enter) return FLAlertLayer::keyDown(key);
+	CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
+	if (!searchBar) return;
+	SongListLayer::searchSongs(static_cast<geode::TextInput*>(searchBar)->getString());
 }
 
 std::string SongListLayer::generateDisplayName(SongData &songData) {
