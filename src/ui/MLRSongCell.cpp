@@ -25,8 +25,7 @@ MLRSongCell* MLRSongCell::createEmpty(const bool isEven) {
 }
 
 bool MLRSongCell::initEmpty(const bool isEven) {
-	SongData dummySongData = SongData {"", "", "", "", SongType::Regular, false, true};
-	return MLRSongCell::init(dummySongData, isEven);
+	return MLRSongCell::init({"", "", "", "", SongType::Regular, false, true}, isEven);
 }
 
 bool MLRSongCell::init(const SongData& songData, const bool isEven) {
@@ -37,9 +36,10 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 
 	if (songData.isEmpty) {
 		this->setOpacity(0);
+		this->setTag(11152025);
+		this->setColor({0, 0, 0});
 		this->setID("this-cell-intentionally-blank"_spr);
 		this->setUserObject("this-cell-intentionally-blank"_spr, cocos2d::CCBool::create(true));
-		this->setTag(11152025);
 		return true;
 	}
 
@@ -49,7 +49,8 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	songNameLabel->setPosition({15, getContentHeight() / 2.f + 1.f});
 
 	if (songData.type == SongType::Favorited) songNameLabel->setFntFile("goldFont.fnt");
-	else if (songData.type == SongType::Blacklisted) songNameLabel->setColor({128, 128, 128});
+	else if (songData.type == SongType::Blacklisted) songNameLabel->setOpacity(128); // opacity is more apparopriate
+	// else if (songData.type == SongType::Regular) songNameLabel->setColor({255, 255, 255}); // filler code lol!
 
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	const int songID = geode::utils::numFromString<int>(desiredFileName).unwrapOr(-1);
@@ -105,19 +106,20 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	this->setOpacity(255);
 	this->setColor(isEven ? cocos2d::ccColor3B{161, 88, 44} : cocos2d::ccColor3B{194, 114, 62});
 
-	this->scheduleUpdate();
+	this->schedule(schedule_selector(MLRSongCell::update), .125f); // schedule this function less often
 
 	return true;
 }
 
-void MLRSongCell::onPlaySong(CCObject*) {
+void MLRSongCell::onPlaySong(CCObject* sender) {
+	if (this->m_songData.type == SongType::Blacklisted) return;
 	SongManager& songManager = SongManager::get();
 	const std::string& currentSong = songManager.getCurrentSong();
-	if (this->m_songData.actualFilePath == currentSong) return;
-	FMODAudioEngine* fmod = FMODAudioEngine::get();
+	const std::string& futureSong = this->m_songData.actualFilePath;
+	if (futureSong == currentSong) return;
 	songManager.setPreviousSong(currentSong);
-	songManager.setCurrentSong(m_songData.actualFilePath);
-	fmod->m_backgroundMusicChannel->stop();
+	songManager.setCurrentSong(futureSong);
+	FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 	GameManager::sharedState()->playMenuMusic();
 	Utils::newCardAndDisplayNameFromCurrentSong();
 }
