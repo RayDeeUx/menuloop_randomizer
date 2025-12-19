@@ -63,7 +63,6 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	}
 	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);
 	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.displayName));
-	MLRSongCell::checkIfCurrentSong();
 
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127});
 	divider->setContentSize({356.f, 0.5f});
@@ -107,6 +106,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	this->setOpacity(255);
 	this->setColor(isEven ? cocos2d::ccColor3B{161, 88, 44} : cocos2d::ccColor3B{194, 114, 62});
 
+	MLRSongCell::checkIfCurrentSong(); // call immediately
 	this->schedule(schedule_selector(MLRSongCell::update), .125f); // schedule this function less often
 
 	return true;
