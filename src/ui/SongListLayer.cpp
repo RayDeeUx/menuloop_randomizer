@@ -77,6 +77,7 @@ bool SongListLayer::setup(const std::string&) {
 	const int songCount = SongManager::get().getSongsSize();
 	this->setTitle(fmt::format("Menu Loop Randomizer - Your {} Song{}", songCount, (songCount == 1 ? "" : "s")));
 	this->m_title->setID("song-list-title"_spr);
+	this->m_title->limitLabelWidth(320.f, 1.f, .0001f);
 
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
 	cocos2d::extension::CCScale9Sprite* background = this->m_bgSprite;
@@ -269,14 +270,14 @@ bool SongListLayer::setup(const std::string&) {
 	this->m_mainLayer->addChild(abridgedControlsMenu);
 
 	cocos2d::CCMenu* scrollShortcutsMenu = cocos2d::CCMenu::create();
-	scrollShortcutsMenu->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(1.5f)->setAxisReverse(true));
-	Utils::addButton("scroll-top", menu_selector(SongListLayer::onScrollTopButton), scrollShortcutsMenu, this);
-	Utils::addButton("scroll-cur", menu_selector(SongListLayer::onScrollCurButton), scrollShortcutsMenu, this);
-	Utils::addButton("scroll-btm", menu_selector(SongListLayer::onScrollBtmButton), scrollShortcutsMenu, this);
+	scrollShortcutsMenu->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(300.f)->setAxisReverse(true));
+	Utils::addButton("scroll-top", menu_selector(SongListLayer::onScrollTopButton), scrollShortcutsMenu, this, true);
+	Utils::addButton("scroll-cur", menu_selector(SongListLayer::onScrollCurButton), scrollShortcutsMenu, this, true);
+	Utils::addButton("scroll-btm", menu_selector(SongListLayer::onScrollBtmButton), scrollShortcutsMenu, this, true);
 
-	scrollShortcutsMenu->setPosition({20.f, 145.f});
+	scrollShortcutsMenu->setPosition({405.f, 145.f});
 	scrollShortcutsMenu->ignoreAnchorPointForPosition(false);
-	scrollShortcutsMenu->setContentHeight(80.f);
+	scrollShortcutsMenu->setContentHeight(215.f);
 	scrollShortcutsMenu->updateLayout();
 	scrollShortcutsMenu->setID("scroll-shortcuts-menu"_spr);
 	this->m_mainLayer->addChild(scrollShortcutsMenu);
@@ -359,15 +360,23 @@ CCContentLayer* SongListLayer::getContentLayer() const {
 }
 
 void SongListLayer::onScrollTopButton(CCObject*) {
-	if (auto contentLayer = SongListLayer::getContentLayer()) contentLayer->setPositionY((contentLayer->getContentHeight() * -1.f) + contentLayer->getParent()->getContentHeight());
+	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
+	if (!contentLayer || contentLayer->getChildrenCount() < 6) return;
+	contentLayer->setPositionY((contentLayer->getContentHeight() * -1.f) + contentLayer->getParent()->getContentHeight());
 }
 
 void SongListLayer::onScrollCurButton(CCObject*) {
-	if (auto contentLayer = SongListLayer::getContentLayer()) contentLayer->setPositionY((contentLayer->getContentHeight() * -1.f * .5f) + contentLayer->getParent()->getContentHeight());
+	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
+	if (!contentLayer || contentLayer->getChildrenCount() < 6) return;
+	const float desiredPosition = (contentLayer->getContentHeight() * -1.f * .5f) + contentLayer->getParent()->getContentHeight();
+	if (desiredPosition > 0.f) contentLayer->setPositionY(0.f);
+	else contentLayer->setPositionY(desiredPosition);
 }
 
 void SongListLayer::onScrollBtmButton(CCObject*) {
-	if (auto contentLayer = SongListLayer::getContentLayer()) contentLayer->setPositionY(0.f);
+	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
+	if (!contentLayer || contentLayer->getChildrenCount() < 6) return;
+	contentLayer->setPositionY(0.f);
 }
 
 void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {

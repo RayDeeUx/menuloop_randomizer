@@ -618,7 +618,7 @@ void Utils::queueUpdateSCMLabel() {
 	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
 }
 
-void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target) {
+void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool setBGSpriteInvisible) {
 	if (!menu || !target || name.empty()) return;
 
 	CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(
@@ -628,6 +628,10 @@ void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler fu
 	btn->setID(fmt::format("{}-button"_spr, name));
 
 	if (cocos2d::CCSprite* cocosSprite = btn->getChildByType<geode::CircleButtonSprite>(0)->getChildByType<cocos2d::CCSprite>(0)) {
+		if (geode::CircleButtonSprite* cocosSpriteParent = static_cast<geode::CircleButtonSprite*>(cocosSprite->getParent()); setBGSpriteInvisible && cocosSpriteParent) {
+			cocosSpriteParent->setCascadeOpacityEnabled(false);
+			cocosSpriteParent->setOpacity(0);
+		}
 		if (name == "favorite" || name == "prev") cocosSprite->setScale(.5f);
 		else if (name == "controls" || name == "blacklist" || name == "settings") cocosSprite->setScale(.4f);
 		else if (name == "playlist" || name == "add") cocosSprite->setScale(.5f);
