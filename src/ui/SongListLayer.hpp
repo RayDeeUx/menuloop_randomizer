@@ -13,7 +13,10 @@ public:
 	void onCopyButton(CCObject*);
 	void onPreviousButton(CCObject*);
 	void onControlsButton(CCObject*);
-	void keyDown(cocos2d::enumKeyCodes);
+	void onScrollTopButton(CCObject*);
+	void onScrollCurButton(CCObject*);
+	void onScrollBtmButton(CCObject*);
+	void keyDown(const cocos2d::enumKeyCodes) override;
 	void searchSongs(const std::string& queryString);
 
 	static std::string generateDisplayName(SongData& songData);
