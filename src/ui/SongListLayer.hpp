@@ -13,7 +13,7 @@ public:
 	void onCopyButton(CCObject*);
 	void onPreviousButton(CCObject*);
 	void onControlsButton(CCObject*);
-	void SongListLayer::keyDown(cocos2d::enumKeyCodes);
+	void keyDown(cocos2d::enumKeyCodes);
 	void searchSongs(const std::string& queryString);
 
 	static std::string generateDisplayName(SongData& songData);
