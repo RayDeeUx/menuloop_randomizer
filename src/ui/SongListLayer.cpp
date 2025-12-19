@@ -23,7 +23,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	std::vector<std::string> alreadyAdded {};
 
 	bool isEven = false;
-	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false));
+	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false)); // intentonally blank song cell for padding to go beneath search bar
 
 	for (const std::string& song : songs) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;

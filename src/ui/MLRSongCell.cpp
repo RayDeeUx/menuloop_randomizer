@@ -63,6 +63,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	}
 	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);
 	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.displayName));
+	MLRSongCell::checkIfCurrentSong();
 
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127});
 	divider->setContentSize({356.f, 0.5f});
@@ -124,7 +125,7 @@ void MLRSongCell::onPlaySong(CCObject* sender) {
 	Utils::newCardAndDisplayNameFromCurrentSong();
 }
 
-void MLRSongCell::update(float delta) {
+void MLRSongCell::checkIfCurrentSong() const {
 	const bool isCurrentSong = this->m_songData.actualFilePath == SongManager::get().getCurrentSong();
 
 	if (isCurrentSong) {
@@ -135,4 +136,8 @@ void MLRSongCell::update(float delta) {
 
 	this->m_menu->setVisible(!isCurrentSong);
 	this->m_playButton->setEnabled(!isCurrentSong);
+}
+
+void MLRSongCell::update(float delta) {
+	MLRSongCell::checkIfCurrentSong();
 }
