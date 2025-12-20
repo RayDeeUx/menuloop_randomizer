@@ -108,19 +108,21 @@ bool SongListLayer::setup(const std::string&) {
 
 	// search code UI graciously provided by hiimjasmine00
 	cocos2d::CCMenu* searchBarMenu = cocos2d::CCMenu::create();
-	searchBarMenu->setContentSize({ 350.f, 35.f });
-	searchBarMenu->setPosition({ 35.f, 218.f });
+	searchBarMenu->setContentSize({350.f, 35.f});
+	searchBarMenu->setPosition({35.f, 218.f});
 	searchBarMenu->setID("song-list-search-menu"_spr);
 	this->m_mainLayer->addChild(searchBarMenu);
 
-	CCLayerColor* searchBackground = CCLayerColor::create({ 194, 114, 62, 255 }, 350.f, 35.f);
+	CCLayerColor* searchBackground = CCLayerColor::create({194, 114, 62, 255}, 350.f, 35.f);
 	searchBackground->setID("song-list-search-background"_spr);
 	searchBarMenu->addChild(searchBackground);
 
 	CCMenuItemSpriteExtra* searchButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("gj_findBtn_001.png", 0.7f, [this](auto) {
 		CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
 		if (!searchBar) return;
-		SongListLayer::searchSongs(static_cast<geode::TextInput*>(searchBar)->getString());
+		const std::string& queryString = static_cast<geode::TextInput*>(searchBar)->getString();
+		searchBar->setTag(queryString.empty() ? -1 : 12202025);
+		SongListLayer::searchSongs(queryString);
 	});
 	searchButton->setPosition({302.f, 17.f});
 	searchButton->setID("song-list-search-button"_spr);
@@ -130,7 +132,8 @@ bool SongListLayer::setup(const std::string&) {
 		CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
 		if (!searchBar) return;
 		static_cast<geode::TextInput*>(searchBar)->setString("", false);
-		SongListLayer::searchSongs(static_cast<geode::TextInput*>(searchBar)->getString());
+		searchBar->setTag(-1);
+		SongListLayer::searchSongs("");
 	});
 	clearButton->setPosition({ 330.f, 17.f });
 	clearButton->setID("song-list-clear-button"_spr);
@@ -331,7 +334,7 @@ bool SongListLayer::setup(const std::string&) {
 }
 
 void SongListLayer::searchSongs(const std::string& queryString) {
-	CCNode* contentLayer = this->m_mainLayer->getChildByID("list-of-songs"_spr)->getChildByID("content-layer");
+	CCNode* contentLayer = SongListLayer::getContentLayer();
 	if (!contentLayer || !contentLayer->getLayout()) return;
 	contentLayer->removeAllChildrenWithCleanup(true);
 	SongListLayer::addSongsToScrollLayer(static_cast<geode::ScrollLayer*>(contentLayer->getParent()), SongManager::get(), queryString);
@@ -398,9 +401,11 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		return FLAlertLayer::keyDown(key);
 	}
 	CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
-	if (!searchBar) return;
+	if (!searchBar || (static_cast<geode::TextInput*>(searchBar)->getString().empty() && searchBar->getTag() == -1)) return;
 	if (key != cocos2d::KEY_Enter) static_cast<geode::TextInput*>(searchBar)->setString(""); // clear search query before re-populating
-	SongListLayer::searchSongs(static_cast<geode::TextInput*>(searchBar)->getString());
+	const std::string& queryString = static_cast<geode::TextInput*>(searchBar)->getString();
+	searchBar->setTag(queryString.empty() ? -1 : 12202025);
+	SongListLayer::searchSongs(queryString);
 }
 
 std::string SongListLayer::generateDisplayName(SongData &songData) {
