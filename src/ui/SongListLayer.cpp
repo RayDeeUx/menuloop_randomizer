@@ -119,7 +119,7 @@ bool SongListLayer::setup(const std::string&) {
 
 	CCMenuItemSpriteExtra* searchButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("gj_findBtn_001.png", 0.7f, [this](auto) {
 		CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
-		if (!searchBar || searchBar->getTag() == -1 || static_cast<geode::TextInput*>(searchBar)->getString().empty()) return;
+		if (!searchBar || (searchBar->getTag() == -1 && static_cast<geode::TextInput*>(searchBar)->getString().empty())) return;
 		const std::string& queryString = static_cast<geode::TextInput*>(searchBar)->getString();
 		searchBar->setTag(queryString.empty() ? -1 : 12202025);
 		SongListLayer::searchSongs(queryString);
@@ -130,7 +130,7 @@ bool SongListLayer::setup(const std::string&) {
 
 	CCMenuItemSpriteExtra* clearButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("GJ_editHSVBtn2_001.png", 0.7f, [this](auto) {
 		CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
-		if (!searchBar || searchBar->getTag() == -1 || static_cast<geode::TextInput*>(searchBar)->getString().empty()) return;
+		if (!searchBar || (searchBar->getTag() == -1 && static_cast<geode::TextInput*>(searchBar)->getString().empty())) return;
 		static_cast<geode::TextInput*>(searchBar)->setString("", false);
 		searchBar->setTag(-1);
 		SongListLayer::searchSongs("");
@@ -277,14 +277,14 @@ bool SongListLayer::setup(const std::string&) {
 	this->m_mainLayer->addChild(abridgedControlsMenu);
 
 	cocos2d::CCMenu* scrollShortcutsMenu = cocos2d::CCMenu::create();
-	scrollShortcutsMenu->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(300.f)->setAxisReverse(true));
+	scrollShortcutsMenu->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(600.f)->setAxisReverse(true));
 	Utils::addButton("scroll-top", menu_selector(SongListLayer::onScrollTopButton), scrollShortcutsMenu, this, true);
 	Utils::addButton("scroll-cur", menu_selector(SongListLayer::onScrollCurButton), scrollShortcutsMenu, this, true);
 	Utils::addButton("scroll-btm", menu_selector(SongListLayer::onScrollBtmButton), scrollShortcutsMenu, this, true);
 
 	scrollShortcutsMenu->setPosition({405.f, 145.f});
 	scrollShortcutsMenu->ignoreAnchorPointForPosition(false);
-	scrollShortcutsMenu->setContentHeight(215.f);
+	scrollShortcutsMenu->setContentHeight(220.f);
 	scrollShortcutsMenu->updateLayout();
 	scrollShortcutsMenu->setID("scroll-shortcuts-menu"_spr);
 	this->m_mainLayer->addChild(scrollShortcutsMenu);
