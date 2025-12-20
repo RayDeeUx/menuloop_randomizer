@@ -119,7 +119,7 @@ bool SongListLayer::setup(const std::string&) {
 
 	CCMenuItemSpriteExtra* searchButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("gj_findBtn_001.png", 0.7f, [this](auto) {
 		CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
-		if (!searchBar) return;
+		if (!searchBar || searchBar->getTag() == -1 || static_cast<geode::TextInput*>(searchBar)->getString().empty()) return;
 		const std::string& queryString = static_cast<geode::TextInput*>(searchBar)->getString();
 		searchBar->setTag(queryString.empty() ? -1 : 12202025);
 		SongListLayer::searchSongs(queryString);
