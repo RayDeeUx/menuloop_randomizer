@@ -130,12 +130,12 @@ bool SongListLayer::setup(const std::string&) {
 
 	CCMenuItemSpriteExtra* clearButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("GJ_editHSVBtn2_001.png", 0.7f, [this](auto) {
 		CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
-		if (!searchBar) return;
+		if (!searchBar || searchBar->getTag() == -1 || static_cast<geode::TextInput*>(searchBar)->getString().empty()) return;
 		static_cast<geode::TextInput*>(searchBar)->setString("", false);
 		searchBar->setTag(-1);
 		SongListLayer::searchSongs("");
 	});
-	clearButton->setPosition({ 330.f, 17.f });
+	clearButton->setPosition({330.f, 17.f});
 	clearButton->setID("song-list-clear-button"_spr);
 	searchBarMenu->addChild(clearButton);
 

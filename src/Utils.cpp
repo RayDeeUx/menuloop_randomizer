@@ -622,6 +622,8 @@ void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler fu
 	if (!menu || !target || name.empty()) return;
 
 	cocos2d::CCSprite* btnSprite = cocos2d::CCSprite::create(fmt::format("{}-btn-sprite.png"_spr, name).c_str());
+	btnSprite->setID(fmt::format("{}-button-sprite"_spr, name));
+
 	CCMenuItemSpriteExtra* btn;
 
 	if (dontAddBG) btn = CCMenuItemSpriteExtra::create(btnSprite, target, function);
