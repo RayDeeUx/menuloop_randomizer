@@ -16,6 +16,10 @@ SongListLayer* SongListLayer::create(const std::string& id) {
 	return nullptr;
 }
 
+float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
+	return scrollLayer->m_contentLayer->getContentHeight() > scrollLayer->getContentHeight() ? 145.f : 99999.f;
+}
+
 void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString) {
 	const std::vector<std::string> blacklist = songManager.getBlacklist();
 	const std::vector<std::string> favorites = songManager.getFavorites();
@@ -25,6 +29,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	bool isEven = false;
 	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false)); // intentonally blank song cell for padding to go beneath search bar
 
+	float desiredContentHeight = 36.f; // always start with the blank song cell which is guaranteed to be 36.f
 	for (const std::string& song : songs) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
 
@@ -54,22 +59,23 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		if (MLRSongCell* songCell = MLRSongCell::create(songData, isEven)) {
 			scrollLayer->m_contentLayer->addChild(songCell);
 			alreadyAdded.push_back(song);
+			desiredContentHeight += songCell->getContentHeight();
 		}
 		isEven = !isEven;
 	}
 
 	scrollLayer->m_contentLayer->updateLayout();
-	scrollLayer->m_contentLayer->setContentHeight((alreadyAdded.size() * 36.f) + 36.f);
+	scrollLayer->m_contentLayer->setContentHeight(desiredContentHeight);
 	scrollLayer->m_disableMovement = alreadyAdded.size() < 6;
 	if (alreadyAdded.size() > 5) scrollLayer->scrollToTop();
 	else scrollLayer->m_contentLayer->setPositionY(0.f);
 
 	if (CCNode* scrollBar = this->m_mainLayer->getChildByID("song-list-scrollbar"_spr)) {
-		scrollBar->setPositionY(alreadyAdded.size() > 5 ? 145.f : 99999.f);
+		scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 	}
 
 	if (CCNode* scrollShortcuts = this->m_mainLayer->getChildByID("scroll-shortcuts-menu"_spr)) {
-		scrollShortcuts->setPositionY(alreadyAdded.size() > 5 ? 145.f : 99999.f);
+		scrollShortcuts->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 	}
 }
 
@@ -84,21 +90,19 @@ bool SongListLayer::setup(const std::string&) {
 	this->m_title->limitLabelWidth(320.f, 1.f, .0001f);
 
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
-	cocos2d::extension::CCScale9Sprite* background = this->m_bgSprite;
 	CCLayer* mainLayer = this->m_mainLayer;
 	mainLayer->setID("main-layer"_spr);
 
-	background->initWithFile("GJ_square02.png");
-	background->setContentSize(layerSize);
+	cocos2d::extension::CCScale9Sprite* newBG = cocos2d::extension::CCScale9Sprite::create("GJ_square02.png");
+	newBG->ignoreAnchorPointForPosition(this->m_bgSprite->isIgnoreAnchorPointForPosition());
+	newBG->setPosition(this->m_bgSprite->getPosition());
+	newBG->setContentSize(layerSize);
+	this->m_mainLayer->addChild(newBG);
+	this->m_bgSprite->removeMeAndCleanup();
+	this->m_bgSprite = newBG;
 
-	geode::ScrollLayer* scrollLayer = geode::ScrollLayer::create({356, 220});
-	geode::AxisLayout* WHOTHEFUCKMADEIGNOREINVISIBLECHILDRENAVOIDRETURNTYPE = geode::ColumnLayout::create()
-		->setAxisReverse(true)
-		->setAxisAlignment(geode::AxisAlignment::End)
-		->setAutoGrowAxis(std::make_optional<float>(220.f))
-		->setGap(.0f);
-	WHOTHEFUCKMADEIGNOREINVISIBLECHILDRENAVOIDRETURNTYPE->ignoreInvisibleChildren(true);
-	scrollLayer->m_contentLayer->setLayout(WHOTHEFUCKMADEIGNOREINVISIBLECHILDRENAVOIDRETURNTYPE);
+	geode::ScrollLayer* scrollLayer = geode::ScrollLayer::create({356.f, 220.f});
+	scrollLayer->m_contentLayer->setLayout(geode::ColumnLayout::create()->setAxisReverse(true)->setAxisAlignment(geode::AxisAlignment::End)->setAutoGrowAxis(std::make_optional<float>(220.f))->setGap(.0f));
 
 	SongListLayer::addSongsToScrollLayer(scrollLayer, songManager);
 
@@ -179,7 +183,7 @@ bool SongListLayer::setup(const std::string&) {
 	this->m_mainLayer->addChild(scrollBar);
 	scrollBar->setID("song-list-scrollbar"_spr);
 	scrollBar->setPositionX(scrollLayer->getPositionX() + (scrollLayer->getContentWidth() / 2.f) + 5.f);
-	scrollBar->setPositionY(scrollLayer->m_contentLayer->getChildrenCount() > 6 ? 145.f : 99999.f);
+	scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 
 	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
 	infoMenu->setLayout(
@@ -289,7 +293,7 @@ bool SongListLayer::setup(const std::string&) {
 	scrollShortcutsMenu->setID("scroll-shortcuts-menu"_spr);
 	this->m_mainLayer->addChild(scrollShortcutsMenu);
 
-	scrollShortcutsMenu->setPositionY(scrollLayer->m_contentLayer->getChildrenCount() > 6 ? 145.f : 99999.f);
+	scrollShortcutsMenu->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 
 	/*
 	if (songManager.getSawbladeCustomSongsFolder()) {
@@ -323,8 +327,8 @@ bool SongListLayer::setup(const std::string&) {
 	}
 	*/
 
-	this->setID("SongListLayer"_spr);
 	this->m_bgSprite->setID("background"_spr);
+	this->setID("SongListLayer"_spr);
 	this->m_closeBtn->setID("close-button"_spr);
 	this->m_buttonMenu->setID("close-menu"_spr);
 

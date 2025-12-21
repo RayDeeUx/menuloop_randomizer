@@ -2,10 +2,10 @@
 #include "../SongManager.hpp"
 #include "../Utils.hpp"
 
-MLRSongCell* MLRSongCell::create(const SongData& SongData, const bool isEven) {
+MLRSongCell* MLRSongCell::create(const SongData& SongData, const bool isEven, const bool isCompact) {
 	auto* ret = new MLRSongCell();
 
-	if (ret->init(SongData, isEven)) {
+	if (ret->init(SongData, isEven, isCompact)) {
 		ret->autorelease();
 		return ret;
 	}
@@ -25,10 +25,10 @@ MLRSongCell* MLRSongCell::createEmpty(const bool isEven) {
 }
 
 bool MLRSongCell::initEmpty(const bool isEven) {
-	return MLRSongCell::init({"", "", "", "", SongType::Regular, false, true}, isEven);
+	return MLRSongCell::init({"", "", "", "", SongType::Regular, false, true}, isEven, false);
 }
 
-bool MLRSongCell::init(const SongData& songData, const bool isEven) {
+bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool isCompact) {
 	if (!CCLayerColor::initWithColor(isEven ? cocos2d::ccColor4B{160, 90, 45, 254} : cocos2d::ccColor4B{195, 115, 60, 254})) return false;
 	this->m_songData = songData;
 
@@ -43,10 +43,13 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 		return true;
 	}
 
+	const float compactModeFactor = isCompact ? 2.f : 1.f;
+	this->setContentHeight(this->getContentHeight() / compactModeFactor);
+
 	const std::string& desiredFileName = geode::utils::string::replace(songData.fileName, songData.fileExtension, "");
 	cocos2d::CCLabelBMFont* songNameLabel = cocos2d::CCLabelBMFont::create(songData.displayName.c_str(), "bigFont.fnt");
 	songNameLabel->setAnchorPoint({.0f, .5f});
-	songNameLabel->setPosition({15, getContentHeight() / 2.f + 1.f});
+	songNameLabel->setPosition({15, (this->getContentHeight() / 2.f) + 1.f});
 
 	if (songData.type == SongType::Favorited) songNameLabel->setFntFile("goldFont.fnt");
 	else if (songData.type == SongType::Blacklisted) songNameLabel->setOpacity(128); // opacity is more apparopriate
@@ -61,11 +64,10 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 			}
 		}
 	}
-	songNameLabel->limitLabelWidth(356.f * .8f, .75f, .001f);
+	songNameLabel->limitLabelWidth(356.f * (.8 / compactModeFactor), .75f, .001f);
 	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.displayName));
 
-	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127});
-	divider->setContentSize({356.f, 0.5f});
+	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127}, 356.f, 0.5f);
 	divider->setAnchorPoint({0.f, 0.f});
 
 	cocos2d::CCMenu* menu = cocos2d::CCMenu::create();
@@ -73,13 +75,8 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	menu->setAnchorPoint({1.f, .5f});
 	menu->setPosition({340.f, this->getContentHeight() / 2.f});
 	menu->ignoreAnchorPointForPosition(false);
-	menu->setLayout(
-		geode::RowLayout::create()
-			->setGap(10.f)
-			->setAutoScale(true)
-			->setAxisReverse(true)
-			->setDefaultScaleLimits(.0001f, .75f)
-	);
+
+	menu->setContentWidth(menu->getContentWidth() / compactModeFactor);
 
 	CCMenuItemSpriteExtra* playButton = CCMenuItemSpriteExtra::create(
 		cocos2d::CCSprite::createWithSpriteFrameName("GJ_playMusicBtn_001.png"),
@@ -87,7 +84,8 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven) {
 	);
 	playButton->setID("song-cell-play-button"_spr);
 	menu->addChild(playButton);
-	menu->updateLayout();
+
+	menu->setLayout(geode::RowLayout::create()->setGap(0.f)->setAutoScale(true)->setAxisReverse(true)->setDefaultScaleLimits(.0001f, .75f));
 
 	this->m_menu = menu;
 	this->m_songNameLabel = songNameLabel;

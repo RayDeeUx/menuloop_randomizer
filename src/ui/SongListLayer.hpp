@@ -6,6 +6,7 @@
 class SongListLayer final : public geode::Popup<const std::string&> {
 public:
 	static SongListLayer* create(const std::string&);
+	static float determineYPosition(geode::ScrollLayer* scrollLayer);
 	void addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString = "");
 	bool setup(const std::string&) override;
 	void onSettingsButton(CCObject*);
