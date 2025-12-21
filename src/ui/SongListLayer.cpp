@@ -70,13 +70,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	if (alreadyAdded.size() > 5) scrollLayer->scrollToTop();
 	else scrollLayer->m_contentLayer->setPositionY(0.f);
 
-	if (CCNode* scrollBar = this->m_mainLayer->getChildByID("song-list-scrollbar"_spr)) {
-		scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));
-	}
-
-	if (CCNode* scrollShortcuts = this->m_mainLayer->getChildByID("scroll-shortcuts-menu"_spr)) {
-		scrollShortcuts->setPositionY(SongListLayer::determineYPosition(scrollLayer));
-	}
+	if (CCNode* scrollBar = this->m_mainLayer->getChildByID("song-list-scrollbar"_spr)) scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));
+	if (CCNode* scrollShortcuts = this->m_mainLayer->getChildByID("scroll-shortcuts-menu"_spr)) scrollShortcuts->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 }
 
 bool SongListLayer::setup(const std::string&) {
@@ -179,6 +174,18 @@ bool SongListLayer::setup(const std::string&) {
 	listBorder->setID("songs-list-border"_spr);
 	this->m_mainLayer->addChildAtPosition(listBorder, geode::Anchor::Center);
 
+	cocos2d::CCMenu* scrollShortcutsMenu = cocos2d::CCMenu::create();
+	Utils::addButton("scroll-top", menu_selector(SongListLayer::onScrollTopButton), scrollShortcutsMenu, this, true);
+	Utils::addButton("scroll-cur", menu_selector(SongListLayer::onScrollCurButton), scrollShortcutsMenu, this, true);
+	Utils::addButton("scroll-btm", menu_selector(SongListLayer::onScrollBtmButton), scrollShortcutsMenu, this, true);
+	scrollShortcutsMenu->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(600.f)->setAxisReverse(true));
+
+	scrollShortcutsMenu->setPosition({405.f, SongListLayer::determineYPosition(scrollLayer)});
+	scrollShortcutsMenu->ignoreAnchorPointForPosition(false);
+	scrollShortcutsMenu->setContentHeight(220.f);
+	scrollShortcutsMenu->setID("scroll-shortcuts-menu"_spr);
+	this->m_mainLayer->addChild(scrollShortcutsMenu);
+
 	geode::Scrollbar* scrollBar = geode::Scrollbar::create(scrollLayer);
 	this->m_mainLayer->addChild(scrollBar);
 	scrollBar->setID("song-list-scrollbar"_spr);
@@ -212,12 +219,7 @@ bool SongListLayer::setup(const std::string&) {
 	this->m_mainLayer->addChild(infoMenu);
 
 	cocos2d::CCMenu* settingsMenu = cocos2d::CCMenu::create();
-	settingsMenu->setLayout(
-		geode::RowLayout::create()
-			->setAutoScale(true)
-			->setAxis(geode::Axis::Row)
-			->setGap(.0f)
-	);
+	settingsMenu->setLayout(geode::RowLayout::create()->setAutoScale(true)->setAxis(geode::Axis::Row)->setGap(.0f));
 	settingsMenu->setContentSize({24.f, 23.f});
 	settingsMenu->setID("songlayerlist-settings-menu"_spr);
 	Utils::addButton("settings", menu_selector(SongListLayer::onSettingsButton), settingsMenu, this);
@@ -278,20 +280,6 @@ bool SongListLayer::setup(const std::string&) {
 	abridgedControlsMenu->setLayout(geode::RowLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(1.5f));
 	abridgedControlsMenu->setID("abridged-controls-menu"_spr);
 	this->m_mainLayer->addChild(abridgedControlsMenu);
-
-	cocos2d::CCMenu* scrollShortcutsMenu = cocos2d::CCMenu::create();
-	Utils::addButton("scroll-top", menu_selector(SongListLayer::onScrollTopButton), scrollShortcutsMenu, this, true);
-	Utils::addButton("scroll-cur", menu_selector(SongListLayer::onScrollCurButton), scrollShortcutsMenu, this, true);
-	Utils::addButton("scroll-btm", menu_selector(SongListLayer::onScrollBtmButton), scrollShortcutsMenu, this, true);
-	scrollShortcutsMenu->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(600.f)->setAxisReverse(true));
-
-	scrollShortcutsMenu->setPosition({405.f, 145.f});
-	scrollShortcutsMenu->ignoreAnchorPointForPosition(false);
-	scrollShortcutsMenu->setContentHeight(220.f);
-	scrollShortcutsMenu->setID("scroll-shortcuts-menu"_spr);
-	this->m_mainLayer->addChild(scrollShortcutsMenu);
-
-	scrollShortcutsMenu->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 
 	/*
 	if (songManager.getSawbladeCustomSongsFolder()) {
