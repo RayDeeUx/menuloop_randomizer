@@ -66,11 +66,12 @@ void Utils::setNewSong() {
 	if (!songToBeStored.empty()) songManager.setPreviousSong(songToBeStored);
 	else geode::log::info("no current song found, probably");
 	songManager.pickRandomSong();
+	Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 	if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
 	GameManager::sharedState()->playMenuMusic();
 }
 
-void Utils::constantShuffleModeNewSong(const bool fromGJBGL) {
+void Utils::constantShuffleModeNewSong() {
 	if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 	if (!Utils::getBool("playlistMode")) return Utils::setNewSong();
 	const auto fmod = FMODAudioEngine::sharedEngine();
@@ -79,24 +80,22 @@ void Utils::constantShuffleModeNewSong(const bool fromGJBGL) {
 	if (fmod->m_musicVolume <= 0.0f || fmod->getBackgroundMusicVolume() <= 0.0f || fmodIsCBrained <= 0.0f) return geode::log::info(" --- !!! MISSION ABORT !!! ---\n\none of the following was at or below 0.0f:\nfmod->m_musicVolume: {}\nfmod->getBackgroundMusicVolume(): {}\nfmodIsCBrained: {} (with fmodResult {} as int)", fmod->m_musicVolume, fmod->getBackgroundMusicVolume(), fmodIsCBrained, static_cast<int>(fmodResult));
 	fmod->m_backgroundMusicChannel->stop();
 	SongManager& songManager = SongManager::get();
-	if (!fromGJBGL) {
-		const std::string& songToBeStored = songManager.getCurrentSong();
-		if (!songToBeStored.empty()) songManager.setPreviousSong(songToBeStored);
-		else geode::log::info("no current song found, probably");
-	}
+	const std::string& songToBeStored = songManager.getCurrentSong();
+	if (!songToBeStored.empty()) songManager.setPreviousSong(songToBeStored);
+	// else geode::log::info("no current song found, probably");
 	songManager.pickRandomSong();
+	Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 	if (SongManager::get().getAdvancedLogs()) geode::log::info("is it over?");
 	if (songManager.getCalledOnce() || !Utils::getBool("saveSongOnGameClose")) {
-		 if (SongManager::get().getAdvancedLogs()) geode::log::info("playing song as normal");
-		GameManager::sharedState()->playMenuMusic();
+		if (SongManager::get().getAdvancedLogs()) geode::log::info("playing song as normal");
 		if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
 	} else {
 		const bool override = songManager.isOverride();
 		const std::string& song = override ? songManager.getOverrideSong() : geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 		if (SongManager::get().getAdvancedLogs()) geode::log::info("playing song from {}: {}", override ? "override" : "saved value", song);
 		songManager.setCurrentSong(song);
-		GameManager::sharedState()->playMenuMusic();
 	}
+	GameManager::sharedState()->playMenuMusic();
 	songManager.setCalledOnce(true);
 }
 
@@ -230,10 +229,6 @@ std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
 	if (formatSetting == "Song Name + Artist") return fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
 	if (formatSetting == "Song Name + Song ID") return fmt::format("{} ({}){}", songInfo->m_songName, songInfo->m_songID, robtopSuffix);
 	return fmt::format("{}", songInfo->m_songName);
-}
-
-void Utils::constantShuffleModePLAndEPL() {
-	if (Utils::getBool("playlistMode") && GJBaseGameLayer::get()) return Utils::constantShuffleModeNewSong(true);
 }
 
 void Utils::copyCurrentSongName() {
@@ -603,10 +598,7 @@ std::filesystem::path Utils::toProblematicString(const std::string& path) {
 void Utils::fadeOutCardRemotely(cocos2d::CCNode* card) {
 	if (!card) return;
 	card->stopAllActions();
-	card->runAction(cocos2d::CCSequence::create(
-		cocos2d::CCEaseOut::create(cocos2d::CCMoveBy::create(.25f, {0, 24}), 1.f),
-		nullptr
-	));
+	card->runAction(cocos2d::CCSequence::create(cocos2d::CCEaseOut::create(cocos2d::CCMoveBy::create(.25f, {0, 24}), 1.f), nullptr));
 }
 
 void Utils::removeCardRemotely(cocos2d::CCNode* card) {
@@ -616,7 +608,7 @@ void Utils::removeCardRemotely(cocos2d::CCNode* card) {
 
 void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {
 	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
-	else if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer*>(0); sll) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(sll->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID))->getInputNode()); });
+	else if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); sll) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(sll->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID))->getInputNode()); });
 }
 
 void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {

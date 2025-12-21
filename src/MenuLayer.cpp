@@ -19,8 +19,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		SongManager& songManager = SongManager::get();
 		const Loader* loader = Loader::get();
 
-		if (loader->isModLoaded("omgrod.geodify"))
-			songManager.setGeodify(loader->getLoadedMod("omgrod.geodify")->getSettingValue<bool>("menu-loop"));
+		if (loader->isModLoaded("omgrod.geodify")) songManager.setGeodify(loader->getLoadedMod("omgrod.geodify")->getSettingValue<bool>("menu-loop"));
 
 		songManager.setSawbladeCustomSongsFolder(loader->isModLoaded("sawblade.custom_song_folder"));
 
