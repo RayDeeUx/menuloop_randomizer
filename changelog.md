@@ -8,6 +8,9 @@
 - Added a Song List scrolling shortcut to the currently playing song. 
   - Shortcuts for the top and bottom of the song list also included, because why not.
   - Song list scrolling shortcuts are to the right of the scrollbar.
+- Added Compact Mode to the Song List.
+  - Your preferences for Compact Mode persist between restarts.
+  - If you want even smaller song entries in the Song List, check the mod settings.
 - Fix an incompatibility with Eclipse Menu's "Transparent Lists" feature.
 - Attempt to reduce frame drops when viewing many songs at once in the Song List menu.
 ## v1.10.1

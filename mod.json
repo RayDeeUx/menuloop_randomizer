@@ -235,8 +235,8 @@
 			"enable-if": "!randomizeWhenExitingEditor"
 		},
 		"compactModeScaleFactor": {
-			"name": "Song List: Compact Mode Scaling Factor",
-			"description": "Choose how much smaller each song entry in the Song List becomes when enabling Compact Mode.",
+			"name": "Song List: Compact Mode Scale Factor",
+			"description": "Choose how much smaller each song entry in the Song List becomes when enabling Compact Mode. The higher this number, the smaller each song entry in the Song List becomes.",
 			"type": "float",
 			"default": 1.5,
 			"min": 1.5,
