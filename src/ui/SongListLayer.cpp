@@ -6,6 +6,9 @@
 #include "../SongControl.hpp"
 #include "../SongManager.hpp"
 
+#define GET_SEARCH_BAR_NODE this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr)
+#define GET_SEARCH_STRING static_cast<geode::TextInput*>(searchBar)->getString()
+
 SongListLayer* SongListLayer::create(const std::string& id) {
 	auto* ret = new SongListLayer();
 	if (ret->initAnchored(420.f, 290.f, id)) {
@@ -21,16 +24,17 @@ float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
 }
 
 void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString) {
-	const std::vector<std::string> blacklist = songManager.getBlacklist();
-	const std::vector<std::string> favorites = songManager.getFavorites();
-	const std::vector<std::string> songs = songManager.getSongs();
+	const std::vector<std::string>& blacklist = songManager.getBlacklist();
+	const std::vector<std::string>& favorites = songManager.getFavorites();
 	std::vector<std::string> alreadyAdded {};
+
+	const bool songListCompactMode = geode::Mod::get()->getSavedValue("songListCompactMode", false);
 
 	bool isEven = false;
 	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false)); // intentonally blank song cell for padding to go beneath search bar
 
-	float desiredContentHeight = 36.f; // always start with the blank song cell which is guaranteed to be 36.f
-	for (const std::string& song : songs) {
+	float desiredContentHeight = 36.f; // always start with the blank song cell, which is guaranteed to be 36.f
+	for (const std::string& song : songManager.getSongs()) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
 
 		std::filesystem::path songFilePath = Utils::toProblematicString(song);
@@ -56,7 +60,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			if (!contains) continue;
 		}
 
-		if (MLRSongCell* songCell = MLRSongCell::create(songData, isEven)) {
+		if (MLRSongCell* songCell = MLRSongCell::create(songData, isEven, songListCompactMode)) {
 			scrollLayer->m_contentLayer->addChild(songCell);
 			alreadyAdded.push_back(song);
 			desiredContentHeight += songCell->getContentHeight();
@@ -98,12 +102,11 @@ bool SongListLayer::setup(const std::string&) {
 
 	geode::ScrollLayer* scrollLayer = geode::ScrollLayer::create({356.f, 220.f});
 	scrollLayer->m_contentLayer->setLayout(geode::ColumnLayout::create()->setAxisReverse(true)->setAxisAlignment(geode::AxisAlignment::End)->setAutoGrowAxis(std::make_optional<float>(220.f))->setGap(.0f));
+	scrollLayer->ignoreAnchorPointForPosition(false);
+	scrollLayer->setID("list-of-songs"_spr);
+	this->m_mainLayer->addChildAtPosition(scrollLayer, geode::Anchor::Center);
 
 	SongListLayer::addSongsToScrollLayer(scrollLayer, songManager);
-
-	scrollLayer->setID("list-of-songs"_spr);
-	scrollLayer->ignoreAnchorPointForPosition(false);
-	this->m_mainLayer->addChildAtPosition(scrollLayer, geode::Anchor::Center);
 
 	// search code UI graciously provided by hiimjasmine00
 	cocos2d::CCMenu* searchBarMenu = cocos2d::CCMenu::create();
@@ -117,9 +120,9 @@ bool SongListLayer::setup(const std::string&) {
 	searchBarMenu->addChild(searchBackground);
 
 	CCMenuItemSpriteExtra* searchButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("gj_findBtn_001.png", 0.7f, [this](auto) {
-		CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
-		if (!searchBar || (searchBar->getTag() == -1 && static_cast<geode::TextInput*>(searchBar)->getString().empty())) return;
-		const std::string& queryString = static_cast<geode::TextInput*>(searchBar)->getString();
+		CCNode* searchBar = GET_SEARCH_BAR_NODE;
+		if (!searchBar || (searchBar->getTag() == -1 && GET_SEARCH_STRING.empty())) return;
+		const std::string& queryString = GET_SEARCH_STRING;
 		searchBar->setTag(queryString.empty() ? -1 : 12202025);
 		SongListLayer::searchSongs(queryString);
 	});
@@ -128,8 +131,8 @@ bool SongListLayer::setup(const std::string&) {
 	searchBarMenu->addChild(searchButton);
 
 	CCMenuItemSpriteExtra* clearButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("GJ_editHSVBtn2_001.png", 0.7f, [this](auto) {
-		CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
-		if (!searchBar || (searchBar->getTag() == -1 && static_cast<geode::TextInput*>(searchBar)->getString().empty())) return;
+		CCNode* searchBar = GET_SEARCH_BAR_NODE;
+		if (!searchBar || (searchBar->getTag() == -1 && GET_SEARCH_STRING.empty())) return;
 		static_cast<geode::TextInput*>(searchBar)->setString("", false);
 		searchBar->setTag(-1);
 		SongListLayer::searchSongs("");
@@ -175,30 +178,49 @@ bool SongListLayer::setup(const std::string&) {
 	this->m_mainLayer->addChildAtPosition(listBorder, geode::Anchor::Center);
 
 	cocos2d::CCMenu* scrollShortcutsMenu = cocos2d::CCMenu::create();
+	scrollShortcutsMenu->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(600.f)->setAxisReverse(true)->setAutoScale(true));
 	Utils::addButton("scroll-top", menu_selector(SongListLayer::onScrollTopButton), scrollShortcutsMenu, this, true);
 	Utils::addButton("scroll-cur", menu_selector(SongListLayer::onScrollCurButton), scrollShortcutsMenu, this, true);
 	Utils::addButton("scroll-btm", menu_selector(SongListLayer::onScrollBtmButton), scrollShortcutsMenu, this, true);
-	scrollShortcutsMenu->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(600.f)->setAxisReverse(true));
 
 	scrollShortcutsMenu->setPosition({405.f, SongListLayer::determineYPosition(scrollLayer)});
 	scrollShortcutsMenu->ignoreAnchorPointForPosition(false);
 	scrollShortcutsMenu->setContentHeight(220.f);
+	scrollShortcutsMenu->updateLayout();
 	scrollShortcutsMenu->setID("scroll-shortcuts-menu"_spr);
 	this->m_mainLayer->addChild(scrollShortcutsMenu);
 
 	geode::Scrollbar* scrollBar = geode::Scrollbar::create(scrollLayer);
-	this->m_mainLayer->addChild(scrollBar);
+	scrollBar->setPosition({scrollLayer->getPositionX() + (scrollLayer->getContentWidth() / 2.f) + 5.f, SongListLayer::determineYPosition(scrollLayer)});
 	scrollBar->setID("song-list-scrollbar"_spr);
-	scrollBar->setPositionX(scrollLayer->getPositionX() + (scrollLayer->getContentWidth() / 2.f) + 5.f);
-	scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));
+	this->m_mainLayer->addChild(scrollBar);
+
+	cocos2d::CCMenu* viewModeMenu = cocos2d::CCMenu::create();
+	const bool songListCompactMode = geode::Mod::get()->getSavedValue<bool>("songListCompactMode", false);
+	const std::string& spriteOne = songListCompactMode ? "GJ_button_02.png" : "GJ_button_01.png";
+	const std::string& spriteTwo = songListCompactMode ? "GJ_button_01.png" : "GJ_button_02.png";
+
+	cocos2d::CCSprite* smallModeIconSpriteOne = cocos2d::CCSprite::createWithSpriteFrameName("GJ_smallModeIcon_001.png");
+	cocos2d::CCSprite* smallModeIconSpriteTwo = cocos2d::CCSprite::createWithSpriteFrameName("GJ_smallModeIcon_001.png");
+	ButtonSprite* spriteOneButtonSprite = ButtonSprite::create(smallModeIconSpriteOne, 30, 30, 30.f, 1.f, false);
+	ButtonSprite* spriteTwoButtonSprite = ButtonSprite::create(smallModeIconSpriteTwo, 30, 30, 30.f, 1.f, false);
+	spriteOneButtonSprite->updateBGImage(spriteOne.c_str());
+	spriteTwoButtonSprite->updateBGImage(spriteTwo.c_str());
+	spriteOneButtonSprite->setScale(.5f);
+	spriteTwoButtonSprite->setScale(.5f);
+
+	CCMenuItemToggler* compactModeToggle = CCMenuItemToggler::create(spriteOneButtonSprite, spriteTwoButtonSprite, this, menu_selector(SongListLayer::onCompactModeToggle));
+	compactModeToggle->setID("compact-mode-button"_spr);
+
+	viewModeMenu->addChild(compactModeToggle);
+	viewModeMenu->setContentHeight(60.f);
+	viewModeMenu->ignoreAnchorPointForPosition(false);
+	viewModeMenu->setPosition({19.f, scrollLayer->getPositionY()});
+	viewModeMenu->setLayout(geode::ColumnLayout::create()->setAxisReverse(true));
+	viewModeMenu->setID("view-mode-menu"_spr);
+	this->m_mainLayer->addChild(viewModeMenu);
 
 	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
-	infoMenu->setLayout(
-		geode::RowLayout::create()
-			->setAutoScale(false)
-			->setAxis(geode::Axis::Row)
-			->setGap(.0f)
-	);
 	infoMenu->setContentSize({24.f * .75f, 23.f * .75f});
 	InfoAlertButton* infoBtn = InfoAlertButton::create(
 		"Menu Loop Randomizer - Help/FAQ",
@@ -214,6 +236,7 @@ bool SongListLayer::setup(const std::string&) {
 	);
 	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
 	infoMenu->setPosition({layerSize - 3.f});
+	infoMenu->setLayout(geode::RowLayout::create()->setAutoScale(false)->setAxis(geode::Axis::Row)->setGap(.0f));
 	infoMenu->setID("songlayerlist-info-menu"_spr);
 	infoBtn->setID("songlayerlist-info-button"_spr);
 	this->m_mainLayer->addChild(infoMenu);
@@ -331,7 +354,7 @@ void SongListLayer::searchSongs(const std::string& queryString) {
 }
 
 void SongListLayer::onSettingsButton(CCObject*) {
-	this->keyBackClicked();
+	this->onClose(nullptr);
 	geode::openSettingsPopup(geode::Mod::get());
 }
 
@@ -382,6 +405,13 @@ void SongListLayer::onScrollBtmButton(CCObject*) {
 	contentLayer->setPositionY(0.f);
 }
 
+void SongListLayer::onCompactModeToggle(CCObject*) {
+	const bool originalSavedValue = geode::Mod::get()->getSavedValue("songListCompactMode", false);
+	geode::Mod::get()->setSavedValue("songListCompactMode", !originalSavedValue);
+	CCNode* searchBar = GET_SEARCH_BAR_NODE;
+	SongListLayer::addSongsToScrollLayer(static_cast<geode::ScrollLayer*>(SongListLayer::getContentLayer()->getParent()), SongManager::get(), !searchBar ? "" : GET_SEARCH_STRING);
+}
+
 void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	// this is fine since searchbar swallows delete (macos)/backspace (all other platforms) key inputs first
 	if (key != cocos2d::KEY_Enter && key != cocos2d::KEY_Delete && key != cocos2d::KEY_Backspace) {
@@ -390,10 +420,10 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		if (key == cocos2d::enumKeyCodes::KEY_Space) return;
 		return FLAlertLayer::keyDown(key);
 	}
-	CCNode* searchBar = this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr);
-	if (!searchBar || (static_cast<geode::TextInput*>(searchBar)->getString().empty() && searchBar->getTag() == -1)) return;
+	CCNode* searchBar = GET_SEARCH_BAR_NODE;
+	if (!searchBar || (GET_SEARCH_STRING.empty() && searchBar->getTag() == -1)) return;
 	if (key != cocos2d::KEY_Enter) static_cast<geode::TextInput*>(searchBar)->setString(""); // clear search query before re-populating
-	const std::string& queryString = static_cast<geode::TextInput*>(searchBar)->getString();
+	const std::string& queryString = GET_SEARCH_STRING;
 	searchBar->setTag(queryString.empty() ? -1 : 12202025);
 	SongListLayer::searchSongs(queryString);
 }
