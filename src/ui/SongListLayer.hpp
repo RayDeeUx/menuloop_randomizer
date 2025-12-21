@@ -24,4 +24,5 @@ public:
 	static std::string generateDisplayName(SongData& songData);
 	static bool tallEnough(geode::ScrollLayer *scrollLayer);
 	static float determineYPosition(geode::ScrollLayer* scrollLayer);
+	static void displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode *inputNode);
 };

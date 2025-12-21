@@ -57,8 +57,10 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	// else if (songData.type == SongType::Regular) songNameLabel->setColor({255, 255, 255}); // filler code lol!
 	else if (geode::utils::string::contains(songData.actualFilePath, "fleym.nongd")) {
 		// dont modify songnamelabel, add gradient
-		cocos2d::CCLayerGradient* jukeboxGradient = cocos2d::CCLayerGradient::create({96, 96, 96, 255}, {0, 0, 0, 0});
-		jukeboxGradient->setContentSize({356.f, this->getContentHeight()});
+		cocos2d::CCLayerGradient* jukeboxGradient = cocos2d::CCLayerGradient::create({96, 96, 96, 128}, {0, 0, 0, 0});
+		jukeboxGradient->setContentSize({356.f, this->getContentHeight() / 4.f});
+		jukeboxGradient->ignoreAnchorPointForPosition(false);
+		jukeboxGradient->setAnchorPoint({.5f, 0.f});
 		jukeboxGradient->setID("jukebox-gradient"_spr);
 		this->addChildAtPosition(jukeboxGradient, geode::Anchor::Top);
 	}

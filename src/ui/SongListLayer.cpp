@@ -6,9 +6,11 @@
 #include "../SongControl.hpp"
 #include "../SongManager.hpp"
 
-#define GET_SEARCH_BAR_NODE this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr)
+#define SEARCH_BAR_NODE_ID "song-list-search-bar"_spr
+#define GET_SEARCH_BAR_NODE this->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID)
 #define GET_SEARCH_STRING static_cast<geode::TextInput*>(searchBar)->getString()
 #define EMPTY_SEARCH_STRG static_cast<geode::TextInput*>(searchBar)->setString("", false);
+#define LIMIT_PLACEHOLDER SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE)->getInputNode());
 
 SongListLayer* SongListLayer::create(const std::string& id) {
 	auto* ret = new SongListLayer();
@@ -28,9 +30,9 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	const bool songListCompactMode = geode::Mod::get()->getSavedValue("songListCompactMode", false);
 
 	bool isEven = false;
-	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false)); // intentonally blank song cell for padding to go beneath search bar
+	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(isEven)); // intentonally blank song cell for padding to go beneath search bar. 36.f units tall
 
-	float desiredContentHeight = 36.f; // always start with the blank song cell, which is guaranteed to be 36.f
+	float desiredContentHeight = 36.f; // always start with the height of the blank song cell, which is guaranteed to be 36.f units
 	for (const std::string& song : songManager.getSongs()) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
 
@@ -68,8 +70,10 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	scrollLayer->m_contentLayer->updateLayout();
 	scrollLayer->m_contentLayer->setContentHeight(desiredContentHeight);
 	scrollLayer->m_disableMovement = alreadyAdded.size() < 6;
-	if (alreadyAdded.size() > 5) scrollLayer->scrollToTop();
+	if (SongListLayer::tallEnough(scrollLayer)) scrollLayer->scrollToTop();
 	else scrollLayer->m_contentLayer->setPositionY(0.f);
+
+	if (GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
 
 	if (CCNode* scrollBar = this->m_mainLayer->getChildByID("song-list-scrollbar"_spr)) scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 	if (CCNode* scrollShortcuts = this->m_mainLayer->getChildByID("scroll-shortcuts-menu"_spr)) scrollShortcuts->setPositionY(SongListLayer::determineYPosition(scrollLayer));
@@ -149,17 +153,20 @@ bool SongListLayer::setup(const std::string&) {
 	coverItUpX->setID("dont-tell-people-that-im-not-actually-a-delete-button-lmao"_spr);
 	clearButton->addChildAtPosition(coverItUpX, geode::Anchor::Center);
 
-	geode::TextInput* searchBar = geode::TextInput::create(370.f, "Search Songs...");
+	geode::TextInput* searchBar = geode::TextInput::create(370.f, fmt::format("Search... (Current Song: {})", songManager.getCurrentSongDisplayName()));
+	searchBar->setCommonFilter(geode::CommonFilter::Any);
 	searchBar->setTextAlign(geode::TextInputAlign::Left);
 	searchBar->setPosition({145.f, 17.f});
 	searchBar->setScale(.75f);
-	searchBar->setID("song-list-search-bar"_spr);
+	searchBar->setID(SEARCH_BAR_NODE_ID);
 	searchBarMenu->addChild(searchBar);
 
 	CCTextInputNode* inputNode = searchBar->getInputNode();
-	inputNode->setAllowedChars("1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm,.()[]{};:'\"\\|/<>!@#$%^&* `~");
 	inputNode->setLabelPlaceholderScale(.5f);
 	inputNode->setMaxLabelScale(.5f);
+	inputNode->setID("song-list-search-bar-input-node"_spr);
+
+	SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(inputNode);
 
 	CCLayerColor* searchBarDivider = CCLayerColor::create({0, 0, 0, 127});
 	searchBarDivider->setContentSize({350.f, .5f});
@@ -343,6 +350,7 @@ void SongListLayer::onSettingsButton(CCObject*) {
 
 void SongListLayer::onShuffleButton(CCObject*) {
 	SongControl::shuffleSong();
+	if (GET_SEARCH_BAR_NODE) LIMIT_PLACEHOLDER
 }
 
 void SongListLayer::onCopyButton(CCObject*) {
@@ -430,4 +438,10 @@ bool SongListLayer::tallEnough(geode::ScrollLayer* scrollLayer) {
 
 float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
 	return SongListLayer::tallEnough(scrollLayer) ? 145.f : 99999.f;
+}
+
+void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode* inputNode) {
+	if (!inputNode || inputNode->m_textLabel || inputNode->m_textLabel->getColor() != cocos2d::ccColor3B{150, 150, 150}) return;
+	if (!static_cast<std::string>(inputNode->getString()).starts_with("Search")) return;
+	inputNode->m_textLabel->limitLabelWidth(350.f, 1.f, .0001f);
 }
