@@ -180,34 +180,42 @@ void SongControlMenu::onShuffleButton(CCObject*) {
 	SongControl::shuffleSong();
 	SongControlMenu::updateCurrentLabel();
 }
+
 void SongControlMenu::onRegenButton(CCObject*) {
 	SongControl::regenSong();
 	SongControlMenu::updateCurrentLabel();
 }
+
 void SongControlMenu::onCopyButton(CCObject*) {
 	SongControl::copySong();
 	SongControlMenu::updateCurrentLabel();
 }
+
 void SongControlMenu::onBlacklistButton(CCObject*) {
 	SongControl::blacklistSong();
 	SongControlMenu::updateCurrentLabel();
 }
+
 void SongControlMenu::onFavoriteButton(CCObject*) {
 	SongControl::favoriteSong();
 	SongControlMenu::updateCurrentLabel();
 }
+
 void SongControlMenu::onHoldSongButton(CCObject*) {
 	SongControl::holdSong();
 	SongControlMenu::updateCurrentLabel();
 }
+
 void SongControlMenu::onPreviousButton(CCObject*) {
 	SongControl::previousSong();
 	SongControlMenu::updateCurrentLabel();
 }
+
 void SongControlMenu::onPlaylistButton(CCObject*) {
 	SongControlMenu::onClose(nullptr);
 	SongListLayer::create("GJ_square02.png")->show();
 }
+
 void SongControlMenu::onAddToPlylstBtn(CCObject*) {
 	SongManager& songManager = SongManager::get();
 	if (Utils::getBool("loadPlaylistFile") && !songManager.getPlaylistIsEmpty()) {
@@ -220,6 +228,7 @@ void SongControlMenu::onAddToPlylstBtn(CCObject*) {
 	SongControl::addSongToPlaylist(songManager.getCurrentSong());
 	SongControlMenu::updateCurrentLabel();
 }
+
 void SongControlMenu::onSettingsButton(CCObject*) {
 	geode::openSettingsPopup(geode::Mod::get());
 	if (this->m_infoMenu) this->m_infoMenu->setScale(0.f);
@@ -229,6 +238,7 @@ void SongControlMenu::onSettingsButton(CCObject*) {
 		this->m_infoButton->m_pfnSelector = nullptr;
 	}
 }
+
 void SongControlMenu::updateCurrentLabel() {
 	SongManager& songManager = SongManager::get();
 	songManager.resetTowerRepeatCount();

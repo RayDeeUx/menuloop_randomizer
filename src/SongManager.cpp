@@ -37,10 +37,7 @@ void SongManager::pickRandomSong() {
 			if (!std::filesystem::exists(Utils::toProblematicString(m_songs[randomIndex]))) {
 				m_isMenuLoop = true;
 				m_currentSong = "menuLoop.mp3";
-				geode::Notification::create(
-					fmt::format("Unable to find song at index {}! Check logs.", randomIndex),
-					geode::NotificationIcon::Error, 10.f
-				)->show();
+				geode::Notification::create(fmt::format("Unable to find song at index {}! Check logs.", randomIndex), geode::NotificationIcon::Error, 10.f)->show();
 				return geode::log::info("unable to find song {}!", m_songs[randomIndex]);
 			}
 			while (m_songs[randomIndex] == m_currentSong && std::ranges::find(m_favorites, m_songs[randomIndex]) == m_favorites.end()) {

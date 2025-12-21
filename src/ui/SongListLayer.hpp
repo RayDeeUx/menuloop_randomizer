@@ -3,6 +3,8 @@
 #include "../SongManager.hpp"
 #include "MLRSongCell.hpp"
 
+#define SEARCH_BAR_NODE_ID "song-list-search-bar"_spr
+
 class SongListLayer final : public geode::Popup<const std::string&> {
 public:
 	static SongListLayer* create(const std::string&);

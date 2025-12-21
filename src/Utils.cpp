@@ -2,6 +2,7 @@
 #include "SongManager.hpp"
 #include "ui/PlayingCard.hpp"
 #include "ui/SongControlMenu.hpp"
+#include "ui/SongListLayer.hpp"
 #include <random>
 #include <regex>
 #include <filesystem>
@@ -157,7 +158,7 @@ void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs
 std::string Utils::composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix) {
 	SongManager& songManager = SongManager::get();
 	if (!Utils::getBool("useCustomSongs") || !songManager.getPlaylistIsEmpty()) songManager.setCurrentSongDisplayName(middle);
-	Utils::queueUpdateSCMLabel();
+	Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 	return notifString.append(middle).append(suffix);
 }
 
@@ -613,8 +614,9 @@ void Utils::removeCardRemotely(cocos2d::CCNode* card) {
 	card->removeMeAndCleanup();
 }
 
-void Utils::queueUpdateSCMLabel() {
+void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {
 	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
+	else if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer*>(0); sll) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(sll->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID))->getInputNode()); });
 }
 
 void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {

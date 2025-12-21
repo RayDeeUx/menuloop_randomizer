@@ -35,7 +35,7 @@ class Utils {
 	static std::filesystem::path toProblematicString(const std::string& path);
 	static void fadeOutCardRemotely(cocos2d::CCNode* card = Utils::findCardRemotely());
 	static void removeCardRemotely(cocos2d::CCNode* card = Utils::findCardRemotely());
-	static void queueUpdateSCMLabel();
+	static void queueUpdateFrontfacingLabelsInSCMAndSLL();
 	static void addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static void addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string& nodeID, cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static bool notFavoritesNorBlacklist(const std::filesystem::path& fileForWriting);

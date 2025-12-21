@@ -121,7 +121,7 @@ namespace SongControl {
 		else Utils::constantShuffleModeNewSong();
 
 		Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs();
-		Utils::queueUpdateSCMLabel();
+		Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 
 		if (songManager.isOriginalMenuLoop()) {
 			if (useCustomSongs && !customSong.empty()) return Utils::newNotification(fmt::format("Blacklisted {}. Have fun with the original menu loop. :)", customSong));

@@ -115,7 +115,7 @@ $on_mod(Loaded) {
 		if (songManager.isOriginalMenuLoop()) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-		Utils::queueUpdateSCMLabel();
+		Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 		if (constantShuffleMode) {
 			GameManager::sharedState()->playMenuMusic();
 			return ConstantShuffleModeWarning::create(songManager.getGeodify())->show();
@@ -136,7 +136,7 @@ $on_mod(Loaded) {
 				songManager.setCurrentSongToSavedSong();
 			} else Utils::setNewSong();
 		}
-		geode::Loader::get()->queueInMainThread([] { Utils::queueUpdateSCMLabel(); });
+		geode::Loader::get()->queueInMainThread([] { Utils::queueUpdateFrontfacingLabelsInSCMAndSLL(); });
 		GameManager::sharedState()->playMenuMusic();
 	});
 	listenForSettingChanges<bool>("dangerousBlacklisting", [](bool dangerousBlacklisting) {

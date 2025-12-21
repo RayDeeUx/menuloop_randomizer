@@ -6,7 +6,6 @@
 #include "../SongControl.hpp"
 #include "../SongManager.hpp"
 
-#define SEARCH_BAR_NODE_ID "song-list-search-bar"_spr
 #define GET_SEARCH_BAR_NODE this->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID)
 #define GET_SEARCH_STRING static_cast<geode::TextInput*>(searchBar)->getString()
 #define EMPTY_SEARCH_STRG static_cast<geode::TextInput*>(searchBar)->setString("", false);
@@ -444,5 +443,6 @@ void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInpu
 	if (!inputNode) return;
 	cocos2d::CCLabelBMFont* placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
 	if (!placeholderLabelMaybe || placeholderLabelMaybe->getColor() != cocos2d::ccColor3B{150, 150, 150}) return;
+	placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", SongManager::get().getCurrentSongDisplayName()).c_str());
 	placeholderLabelMaybe->limitLabelWidth(350.f, 1.f, .0001f);
 }
