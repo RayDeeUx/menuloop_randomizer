@@ -266,7 +266,6 @@ bool SongListLayer::setup(const std::string&) {
 	this->m_mainLayer->addChildAtPosition(platformLabel, geode::Anchor::BottomLeft, {sllWidth - offset - arbitraryPaddingValue, topRowYPos});
 
 	cocos2d::CCMenu* abridgedControlsMenu = cocos2d::CCMenu::create();
-	abridgedControlsMenu->setLayout(geode::RowLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(1.5f));
 
 	Utils::addButton("shuffle", menu_selector(SongListLayer::onShuffleButton), abridgedControlsMenu, this);
 	Utils::addButton("copy", menu_selector(SongListLayer::onCopyButton), abridgedControlsMenu, this);
@@ -276,20 +275,19 @@ bool SongListLayer::setup(const std::string&) {
 	abridgedControlsMenu->setPosition({layerSize.width / 2.f, abridgedControlsMenuYPos});
 	abridgedControlsMenu->ignoreAnchorPointForPosition(false);
 	abridgedControlsMenu->setContentSize({80.f, 24.f});
-	abridgedControlsMenu->updateLayout();
+	abridgedControlsMenu->setLayout(geode::RowLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(1.5f));
 	abridgedControlsMenu->setID("abridged-controls-menu"_spr);
 	this->m_mainLayer->addChild(abridgedControlsMenu);
 
 	cocos2d::CCMenu* scrollShortcutsMenu = cocos2d::CCMenu::create();
-	scrollShortcutsMenu->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(600.f)->setAxisReverse(true));
 	Utils::addButton("scroll-top", menu_selector(SongListLayer::onScrollTopButton), scrollShortcutsMenu, this, true);
 	Utils::addButton("scroll-cur", menu_selector(SongListLayer::onScrollCurButton), scrollShortcutsMenu, this, true);
 	Utils::addButton("scroll-btm", menu_selector(SongListLayer::onScrollBtmButton), scrollShortcutsMenu, this, true);
+	scrollShortcutsMenu->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(600.f)->setAxisReverse(true));
 
 	scrollShortcutsMenu->setPosition({405.f, 145.f});
 	scrollShortcutsMenu->ignoreAnchorPointForPosition(false);
 	scrollShortcutsMenu->setContentHeight(220.f);
-	scrollShortcutsMenu->updateLayout();
 	scrollShortcutsMenu->setID("scroll-shortcuts-menu"_spr);
 	this->m_mainLayer->addChild(scrollShortcutsMenu);
 
@@ -327,8 +325,8 @@ bool SongListLayer::setup(const std::string&) {
 	}
 	*/
 
-	this->m_bgSprite->setID("background"_spr);
 	this->setID("SongListLayer"_spr);
+	this->m_bgSprite->setID("background"_spr);
 	this->m_closeBtn->setID("close-button"_spr);
 	this->m_buttonMenu->setID("close-menu"_spr);
 

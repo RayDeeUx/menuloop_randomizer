@@ -11,7 +11,6 @@ bool SongControlMenu::setup(const std::string&) {
 	this->m_title->setScale(.45f);
 
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
-	cocos2d::extension::CCScale9Sprite* background = this->m_bgSprite;
 	const float idealWidth = layerSize.width * 0.95f;
 	const float centerStage = layerSize.width / 2.f;
 	CCLayer* mainLayer = this->m_mainLayer;
@@ -41,29 +40,14 @@ bool SongControlMenu::setup(const std::string&) {
 		Utils::addButton("add", menu_selector(SongControlMenu::onAddToPlylstBtn), REST_OF_THE_OWL);
 	}
 
-	geode::AxisLayout* layout = geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f);
-
 	this->m_songControlsMenu->setPosition({centerStage, 40.f});
 	this->m_songControlsMenu->ignoreAnchorPointForPosition(false);
 	this->m_songControlsMenu->setContentSize({idealWidth, 32.f});
-	this->m_songControlsMenu->setLayout(layout);
-
-	this->m_theTimeoutCorner = cocos2d::CCMenu::create();
-	Utils::addButton("settings", menu_selector(SongControlMenu::onSettingsButton), this->m_theTimeoutCorner, this);
-	geode::AxisLayout* layoutTimeout = geode::ColumnLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
-
-	this->m_openSongListMenu = cocos2d::CCMenu::create();
-	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), this->m_openSongListMenu, this);
-	geode::AxisLayout* layoutSongList = geode::RowLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true);
+	this->m_songControlsMenu->setLayout(geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f));
 
 	SongManager& songManager = SongManager::get();
 	this->m_infoMenu = cocos2d::CCMenu::create();
-	this->m_infoMenu->setLayout(
-		geode::RowLayout::create()
-			->setAutoScale(false)
-			->setAxis(geode::Axis::Row)
-			->setGap(.0f)
-	);
+	this->m_infoMenu->setLayout(geode::RowLayout::create()->setAutoScale(false)->setAxis(geode::Axis::Row)->setGap(.0f));
 	this->m_infoMenu->setContentSize({24.f * .75f, 23.f * .75f});
 	this->m_infoButton = InfoAlertButton::create(
 		"Menu Loop Randomizer - Debug/FAQ",
@@ -88,15 +72,19 @@ bool SongControlMenu::setup(const std::string&) {
 	this->m_infoButton->setID("control-panel-info-button"_spr);
 	this->m_mainLayer->addChild(m_infoMenu);
 
+	this->m_theTimeoutCorner = cocos2d::CCMenu::create();
+	Utils::addButton("settings", menu_selector(SongControlMenu::onSettingsButton), this->m_theTimeoutCorner, this);
 	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 2.5f});
 	this->m_theTimeoutCorner->ignoreAnchorPointForPosition(false);
 	this->m_theTimeoutCorner->setContentSize({24.f, 24.f});
-	this->m_theTimeoutCorner->setLayout(layoutTimeout);
+	this->m_theTimeoutCorner->setLayout(geode::ColumnLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true));
 
+	this->m_openSongListMenu = cocos2d::CCMenu::create();
+	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), this->m_openSongListMenu, this);
 	this->m_openSongListMenu->setPosition({280.f, this->m_title->getPositionY() - 51.5f});
 	this->m_openSongListMenu->ignoreAnchorPointForPosition(false);
 	this->m_openSongListMenu->setContentSize({27.f, 27.f});
-	this->m_openSongListMenu->setLayout(layoutSongList);
+	this->m_openSongListMenu->setLayout(geode::RowLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true));
 
 	this->m_otherLabel = cocos2d::CCLabelBMFont::create(fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform()).c_str(), "chatFont.fnt");
 	this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
