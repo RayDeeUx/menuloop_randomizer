@@ -335,14 +335,14 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 		geode::log::info("playlist file {} is empty. load songs w/o playlist.", playlistFile);
 	}
 
-	const std::filesystem::path& configDir = path.string().empty() ? geode::Mod::get()->getConfigDir() : path;
+	const std::filesystem::path& configDir = Utils::toNormalizedString(path).empty() ? geode::Mod::get()->getConfigDir() : path;
 	/*
 		if custom songs are enabled search for files in the config dir
 		if not, just use the newgrounds songs
 		--elnex
 	*/
 
-	std::vector<std::string> songManagerBlacklist = songManager.getBlacklist();
+	const std::vector<std::string>& songManagerBlacklist = songManager.getBlacklist();
 	const std::filesystem::path& blacklistPath = configDir / R"(blacklist.txt)";
 	const bool blacklistPathExists = std::filesystem::exists(blacklistPath);
 
@@ -350,7 +350,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 		textFileBlacklist = Utils::parseBlacklistFile(blacklistPath);
 	}
 
-	std::vector<std::string> songManagerFavorites = songManager.getFavorites();
+	const std::vector<std::string>& songManagerFavorites = songManager.getFavorites();
 	const std::filesystem::path& favoritePath = configDir / R"(favorites.txt)";
 	const bool favoritePathExists = std::filesystem::exists(favoritePath);
 
@@ -428,7 +428,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 				}
 			}
 
-			if (std::ranges::find(songManagerBlacklist, songPath) != songManagerBlacklist.end() || isInTextBlacklist || (qualifiedForOGMenuBlacklist && song->m_songID == 584131)) continue; // apply hardcode blacklist 584131 onto self in light of BS edge case caught by hiimjustin001: https://discord.com/channels/911701438269386882/911702535373475870/1289021323279990795
+			if (std::ranges::find(songManagerBlacklist.begin(), songManagerBlacklist.end(), songPath) != songManagerBlacklist.end() || isInTextBlacklist || (qualifiedForOGMenuBlacklist && song->m_songID == 584131)) continue; // apply hardcode blacklist 584131 onto self in light of BS edge case caught by hiimjustin001: https://discord.com/channels/911701438269386882/911702535373475870/1289021323279990795
 
 			if (SongManager::get().getAdvancedLogs()) geode::log::info("Adding Newgrounds/Music Library song: {}", songPath);
 			songManager.addSong(songPath);
@@ -441,7 +441,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 				}
 			}
 
-			if (std::ranges::find(songManagerFavorites, songPath) != songManagerFavorites.end() || isInTextFavorites) {
+			if (std::ranges::find(songManagerFavorites.begin(), songManagerFavorites.end(), songPath) != songManagerFavorites.end() || isInTextFavorites) {
 				songManager.addSong(songPath);
 				if (SongManager::get().getAdvancedLogs()) geode::log::info("Adding FAVORITE Newgrounds/Music Library song: {}", Utils::toNormalizedString(songPath));
 			}
@@ -487,8 +487,7 @@ void Utils::refreshTheVector() {
 	const bool useCustomSongs = Utils::getBool("useCustomSongs");
 	Utils::populateVector(useCustomSongs);
 	const std::filesystem::path& additionalFolder = useCustomSongs ? geode::Mod::get()->getSettingValue<std::filesystem::path>("additionalFolder") : "";
-	if (useCustomSongs && !additionalFolder.string().empty() && !geode::utils::string::contains(Utils::toNormalizedString(additionalFolder), Utils::toNormalizedString(geode::Mod::get()->getConfigDir())))
-		Utils::populateVector(useCustomSongs, additionalFolder);
+	if (useCustomSongs && !Utils::toNormalizedString(additionalFolder).empty() && !geode::utils::string::contains(Utils::toNormalizedString(additionalFolder), Utils::toNormalizedString(geode::Mod::get()->getConfigDir()))) Utils::populateVector(useCustomSongs, additionalFolder);
 }
 
 void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_view reasonUsuallySettingName) {
@@ -545,7 +544,7 @@ SongInfoObject* Utils::getSongInfoObject() {
 }
 
 std::string Utils::getSongName() {
-	const auto songInfo = Utils::getSongInfoObject();
+	const SongInfoObject* songInfo = Utils::getSongInfoObject();
 	if (!songInfo) return "";
 	std::string ret = songInfo->m_songName;
 	if (geode::utils::string::contains(ret, "nong")) {

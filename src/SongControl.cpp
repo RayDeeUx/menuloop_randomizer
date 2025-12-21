@@ -60,8 +60,8 @@ namespace SongControl {
 
 		const std::string& currentSong = songManager.getCurrentSong();
 
-		if (const auto songManagerFavorites = songManager.getFavorites(); std::ranges::find(songManagerFavorites, currentSong) != songManagerFavorites.end()) return Utils::newNotification("You've already favorited this song! :D");
-		if (const auto songManagerBlacklist = songManager.getBlacklist(); std::ranges::find(songManagerBlacklist, currentSong) != songManagerBlacklist.end()) return SongControl::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
+		if (const std::vector<std::string>& blacklist = songManager.getBlacklist(); std::ranges::find(blacklist.begin(), blacklist.end(), currentSong) != blacklist.end()) return Utils::newNotification("You've already favorited this song! :D");
+		if (const std::vector<std::string>& favorites = songManager.getFavorites(); std::ranges::find(favorites.begin(), favorites.end(), currentSong) != favorites.end()) return SongControl::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
 
 		geode::log::info("favoriting: {}", currentSong);
 
@@ -90,8 +90,8 @@ namespace SongControl {
 
 		const std::string& songBeingBlacklisted = songManager.getCurrentSong();
 
-		if (const auto songManagerBlacklist = songManager.getBlacklist(); std::ranges::find(songManagerBlacklist, songBeingBlacklisted) != songManagerBlacklist.end()) return SongControl::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
-		if (const auto songManagerFavorites = songManager.getFavorites(); std::ranges::find(songManagerFavorites, songBeingBlacklisted) != songManagerFavorites.end()) return SongControl::woahThereBuddy("You've already favorited this song! Double-check your <cl>favorites.txt</c> again.");
+		if (const std::vector<std::string>& blacklist = songManager.getBlacklist(); std::ranges::find(blacklist.begin(), blacklist.end(), songBeingBlacklisted) != blacklist.end()) return SongControl::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
+		if (const std::vector<std::string>& favorites = songManager.getFavorites(); std::ranges::find(favorites.begin(), favorites.end(), songBeingBlacklisted) != favorites.end()) return SongControl::woahThereBuddy("You've already favorited this song! Double-check your <cl>favorites.txt</c> again.");
 
 		geode::log::info("blacklisting: {}", songBeingBlacklisted);
 

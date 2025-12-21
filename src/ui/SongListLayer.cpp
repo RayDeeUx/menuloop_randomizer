@@ -34,7 +34,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	for (const std::string& song : songManager.getSongs()) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
 
-		std::filesystem::path songFilePath = Utils::toProblematicString(song);
+		const std::filesystem::path& songFilePath = Utils::toProblematicString(song);
 		SongData songData = {
 			Utils::toNormalizedString(songFilePath),
 			Utils::toNormalizedString(songFilePath.extension()),
@@ -80,7 +80,7 @@ bool SongListLayer::setup(const std::string&) {
 	this->m_noElasticity = true;
 
 	SongManager& songManager = SongManager::get();
-	const int songCount = SongManager::get().getSongsSize();
+	const int songCount = songManager.getSongsSize();
 	this->setTitle(fmt::format("Menu Loop Randomizer - Your {} Song{}", songCount, (songCount == 1 ? "" : "s")));
 	this->m_title->setID("song-list-title"_spr);
 	this->m_title->limitLabelWidth(320.f, 1.f, .0001f);
