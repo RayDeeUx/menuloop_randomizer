@@ -234,6 +234,23 @@
 			"default": false,
 			"enable-if": "!randomizeWhenExitingEditor"
 		},
+		"compactModeScaleFactor": {
+			"name": "Song List: Compact Mode Scaling Factor",
+			"description": "Choose how much smaller each song entry in the Song List becomes when enabling Compact Mode.",
+			"type": "float",
+			"default": 1.5,
+			"min": 1.5,
+			"max": 2.0,
+			"control": {
+				"input": true,
+				"slider": true,
+				"arrows": false,
+				"big-arrows": false,
+				"arrow-step": 0,
+				"big-arrow-step": 0,
+				"slider-step": 0.01
+			}
+		},
 		"specificSongOverride": {
 			"name": "Specific Menu Loop File Override",
 			"description": "In case you *hate* the randomizer elements from this mod.\n\n<cy>Leave this as blank to disable this option.</c>",

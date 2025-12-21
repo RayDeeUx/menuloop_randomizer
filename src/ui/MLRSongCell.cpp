@@ -43,7 +43,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		return true;
 	}
 
-	const float compactModeFactor = isCompact ? 2.f : 1.f;
+	const float compactModeFactor = isCompact ? static_cast<float>(std::clamp<double>(geode::Mod::get()->getSettingValue<double>("compactModeScaleFactor"), 1.5, 2.0)) : 1.f;
 	this->setContentHeight(this->getContentHeight() / compactModeFactor);
 
 	const std::string& desiredFileName = geode::utils::string::replace(songData.fileName, songData.fileExtension, "");
