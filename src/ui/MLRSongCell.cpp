@@ -60,7 +60,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		cocos2d::CCLayerGradient* jukeboxGradient = cocos2d::CCLayerGradient::create({96, 96, 96, 128}, {0, 0, 0, 0});
 		jukeboxGradient->setContentSize({356.f, this->getContentHeight() / 4.f});
 		jukeboxGradient->ignoreAnchorPointForPosition(false);
-		jukeboxGradient->setAnchorPoint({.5f, 0.f});
+		jukeboxGradient->setAnchorPoint({.5f, 1.f});
 		jukeboxGradient->setID("jukebox-gradient"_spr);
 		this->addChildAtPosition(jukeboxGradient, geode::Anchor::Top);
 	}
