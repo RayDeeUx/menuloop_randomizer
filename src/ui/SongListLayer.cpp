@@ -8,6 +8,7 @@
 
 #define GET_SEARCH_BAR_NODE this->m_mainLayer->getChildByIDRecursive("song-list-search-bar"_spr)
 #define GET_SEARCH_STRING static_cast<geode::TextInput*>(searchBar)->getString()
+#define EMPTY_SEARCH_STRG static_cast<geode::TextInput*>(searchBar)->setString("", false);
 
 SongListLayer* SongListLayer::create(const std::string& id) {
 	auto* ret = new SongListLayer();
@@ -133,7 +134,7 @@ bool SongListLayer::setup(const std::string&) {
 	CCMenuItemSpriteExtra* clearButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("GJ_editHSVBtn2_001.png", 0.7f, [this](auto) {
 		CCNode* searchBar = GET_SEARCH_BAR_NODE;
 		if (!searchBar || (searchBar->getTag() == -1 && GET_SEARCH_STRING.empty())) return;
-		static_cast<geode::TextInput*>(searchBar)->setString("", false);
+		EMPTY_SEARCH_STRG
 		searchBar->setTag(-1);
 		SongListLayer::searchSongs("");
 	});
@@ -422,7 +423,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	}
 	CCNode* searchBar = GET_SEARCH_BAR_NODE;
 	if (!searchBar || (GET_SEARCH_STRING.empty() && searchBar->getTag() == -1)) return;
-	if (key != cocos2d::KEY_Enter) static_cast<geode::TextInput*>(searchBar)->setString(""); // clear search query before re-populating
+	if (key != cocos2d::KEY_Enter) EMPTY_SEARCH_STRG // clear search query before re-populating
 	const std::string& queryString = GET_SEARCH_STRING;
 	searchBar->setTag(queryString.empty() ? -1 : 12202025);
 	SongListLayer::searchSongs(queryString);
