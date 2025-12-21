@@ -114,8 +114,9 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 }
 
 void MLRSongCell::onPlaySong(CCObject* sender) {
-	if (this->m_songData.type == SongType::Blacklisted) return;
+	if (this->m_songData.type == SongType::Blacklisted || this->getTag() == 12192025) return;
 	SongManager& songManager = SongManager::get();
+	if (songManager.isOverride()) return;
 	const std::string& currentSong = songManager.getCurrentSong();
 	const std::string& futureSong = this->m_songData.actualFilePath;
 	if (futureSong == currentSong) return;
