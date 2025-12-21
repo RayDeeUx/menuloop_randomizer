@@ -366,13 +366,13 @@ CCContentLayer* SongListLayer::getContentLayer() const {
 
 void SongListLayer::onScrollTopButton(CCObject*) {
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || contentLayer->getChildrenCount() < 8) return; // cmon bruh it's in plain sight lol
+	if (!contentLayer || !SongListLayer::tallEnough(static_cast<geode::ScrollLayer*>(contentLayer->getParent()))) return; // cmon bruh it's in plain sight lol
 	contentLayer->setPositionY((contentLayer->getContentHeight() * -1.f) + contentLayer->getParent()->getContentHeight());
 }
 
 void SongListLayer::onScrollCurButton(CCObject*) {
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || contentLayer->getChildrenCount() < 8) return; // cmon bruh it's in plain sight lol
+	if (!contentLayer || !SongListLayer::tallEnough(static_cast<geode::ScrollLayer*>(contentLayer->getParent()))) return; // cmon bruh it's in plain sight lol
 	CCNode* currentCell = contentLayer->getChildByTag(12192025);
 	const float theAbsolluteTop = contentLayer->getContentHeight() * -1.f + contentLayer->getParent()->getContentHeight();
 	const float centerOrCurrent = (cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() || !currentCell) ? ((contentLayer->getContentHeight() + contentLayer->getParent()->getContentHeight()) * -1.f * .5f) : ((currentCell->getPositionY() * -1.f) - (contentLayer->getParent()->getContentHeight() / 2.f) + 20.f);
@@ -384,7 +384,7 @@ void SongListLayer::onScrollCurButton(CCObject*) {
 
 void SongListLayer::onScrollBtmButton(CCObject*) {
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || contentLayer->getChildrenCount() < 8) return; // cmon bruh it's in plain sight lol
+	if (!contentLayer || !SongListLayer::tallEnough(static_cast<geode::ScrollLayer*>(contentLayer->getParent()))) return; // cmon bruh it's in plain sight lol
 	contentLayer->setPositionY(0.f);
 }
 
@@ -392,7 +392,7 @@ void SongListLayer::onCompactModeToggle(CCObject*) {
 	const bool originalSavedValue = geode::Mod::get()->getSavedValue("songListCompactMode", false);
 	geode::Mod::get()->setSavedValue("songListCompactMode", !originalSavedValue);
 	CCNode* searchBar = GET_SEARCH_BAR_NODE;
-	SongListLayer::addSongsToScrollLayer(static_cast<geode::ScrollLayer*>(SongListLayer::getContentLayer()->getParent()), SongManager::get(), !searchBar ? "" : GET_SEARCH_STRING);
+	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
 }
 
 void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
@@ -424,6 +424,10 @@ std::string SongListLayer::generateDisplayName(SongData &songData) {
 	return displayName;
 }
 
+bool SongListLayer::tallEnough(geode::ScrollLayer* scrollLayer) {
+	return scrollLayer->m_contentLayer->getContentHeight() > scrollLayer->getContentHeight();
+}
+
 float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
-	return scrollLayer->m_contentLayer->getContentHeight() > scrollLayer->getContentHeight() ? 145.f : 99999.f;
+	return SongListLayer::tallEnough(scrollLayer) ? 145.f : 99999.f;
 }

@@ -21,6 +21,7 @@ public:
 	void keyDown(const cocos2d::enumKeyCodes) override;
 	void searchSongs(const std::string& queryString);
 
-	static float determineYPosition(geode::ScrollLayer* scrollLayer);
 	static std::string generateDisplayName(SongData& songData);
+	static bool tallEnough(geode::ScrollLayer *scrollLayer);
+	static float determineYPosition(geode::ScrollLayer* scrollLayer);
 };
