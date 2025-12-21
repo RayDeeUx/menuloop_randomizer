@@ -20,10 +20,6 @@ SongListLayer* SongListLayer::create(const std::string& id) {
 	return nullptr;
 }
 
-float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
-	return scrollLayer->m_contentLayer->getContentHeight() > scrollLayer->getContentHeight() ? 145.f : 99999.f;
-}
-
 void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString) {
 	const std::vector<std::string>& blacklist = songManager.getBlacklist();
 	const std::vector<std::string>& favorites = songManager.getFavorites();
@@ -197,23 +193,9 @@ bool SongListLayer::setup(const std::string&) {
 	this->m_mainLayer->addChild(scrollBar);
 
 	cocos2d::CCMenu* viewModeMenu = cocos2d::CCMenu::create();
-	const bool songListCompactMode = geode::Mod::get()->getSavedValue<bool>("songListCompactMode", false);
-	const std::string& spriteOne = songListCompactMode ? "GJ_button_02.png" : "GJ_button_01.png";
-	const std::string& spriteTwo = songListCompactMode ? "GJ_button_01.png" : "GJ_button_02.png";
 
-	cocos2d::CCSprite* smallModeIconSpriteOne = cocos2d::CCSprite::createWithSpriteFrameName("GJ_smallModeIcon_001.png");
-	cocos2d::CCSprite* smallModeIconSpriteTwo = cocos2d::CCSprite::createWithSpriteFrameName("GJ_smallModeIcon_001.png");
-	ButtonSprite* spriteOneButtonSprite = ButtonSprite::create(smallModeIconSpriteOne, 30, 30, 30.f, 1.f, false);
-	ButtonSprite* spriteTwoButtonSprite = ButtonSprite::create(smallModeIconSpriteTwo, 30, 30, 30.f, 1.f, false);
-	spriteOneButtonSprite->updateBGImage(spriteOne.c_str());
-	spriteTwoButtonSprite->updateBGImage(spriteTwo.c_str());
-	spriteOneButtonSprite->setScale(.5f);
-	spriteTwoButtonSprite->setScale(.5f);
+	Utils::addViewModeToggle(geode::Mod::get()->getSavedValue<bool>("songListCompactMode", false), "GJ_smallModeIcon_001.png", "compact-mode", menu_selector(SongListLayer::onCompactModeToggle), viewModeMenu, this);
 
-	CCMenuItemToggler* compactModeToggle = CCMenuItemToggler::create(spriteOneButtonSprite, spriteTwoButtonSprite, this, menu_selector(SongListLayer::onCompactModeToggle));
-	compactModeToggle->setID("compact-mode-button"_spr);
-
-	viewModeMenu->addChild(compactModeToggle);
 	viewModeMenu->setContentHeight(60.f);
 	viewModeMenu->ignoreAnchorPointForPosition(false);
 	viewModeMenu->setPosition({19.f, scrollLayer->getPositionY()});
@@ -440,4 +422,8 @@ std::string SongListLayer::generateDisplayName(SongData &songData) {
 	}
 
 	return displayName;
+}
+
+float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
+	return scrollLayer->m_contentLayer->getContentHeight() > scrollLayer->getContentHeight() ? 145.f : 99999.f;
 }

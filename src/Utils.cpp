@@ -639,6 +639,33 @@ void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler fu
 	if (menu->getLayout()) menu->updateLayout();
 }
 
+void Utils::addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string &nodeID, cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
+	const std::string& spriteOne = relevantBoolean ? "GJ_button_02.png" : "GJ_button_01.png";
+	const std::string& spriteTwo = relevantBoolean ? "GJ_button_01.png" : "GJ_button_02.png";
+
+	cocos2d::CCSprite* smallModeIconSpriteOne = cocos2d::CCSprite::createWithSpriteFrameName(toggleIcon.c_str());
+	cocos2d::CCSprite* smallModeIconSpriteTwo = cocos2d::CCSprite::createWithSpriteFrameName(toggleIcon.c_str());
+	ButtonSprite* spriteOneButtonSprite = ButtonSprite::create(smallModeIconSpriteOne, 30, 30, 30.f, 1.f, false);
+	ButtonSprite* spriteTwoButtonSprite = ButtonSprite::create(smallModeIconSpriteTwo, 30, 30, 30.f, 1.f, false);
+	spriteOneButtonSprite->updateBGImage(spriteOne.c_str());
+	spriteTwoButtonSprite->updateBGImage(spriteTwo.c_str());
+	spriteOneButtonSprite->setScale(.5f);
+	spriteTwoButtonSprite->setScale(.5f);
+
+	if (dontAddBG) {
+		spriteOneButtonSprite->setCascadeOpacityEnabled(false);
+		spriteTwoButtonSprite->setCascadeOpacityEnabled(false);
+		spriteOneButtonSprite->setOpacity(0);
+		spriteTwoButtonSprite->setOpacity(0);
+	}
+
+	CCMenuItemToggler* toggle = CCMenuItemToggler::create(spriteOneButtonSprite, spriteTwoButtonSprite, target, function);
+	toggle->setID(fmt::format("{}-button"_spr, nodeID));
+
+	menu->addChild(toggle);
+	if (menu->getLayout()) menu->updateLayout();
+}
+
 bool Utils::notFavoritesNorBlacklist(const std::filesystem::path& filePath) {
 	const std::string& fileString = Utils::toNormalizedString(filePath);
 	return !geode::utils::string::endsWith(fileString, "favorites.txt") && !geode::utils::string::endsWith(fileString, "blacklist.txt");
