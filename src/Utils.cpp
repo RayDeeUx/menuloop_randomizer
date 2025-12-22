@@ -27,7 +27,7 @@ bool Utils::isSupportedFile(const std::string& path) {
 }
 
 bool Utils::goodExtension(const std::string& path) {
-	const std::string& extension = Utils::toProblematicString(path).extension();
+	const std::string& extension = Utils::toNormalizedString(Utils::toProblematicString(path).extension());
 
 	static const std::array<std::string, 5> absolutelyConfirmed = {".mp3", ".wav", ".ogg", ".oga", ".flac"};
 	if (std::ranges::find(absolutelyConfirmed.begin(), absolutelyConfirmed.end(), extension) != absolutelyConfirmed.end()) return true;
