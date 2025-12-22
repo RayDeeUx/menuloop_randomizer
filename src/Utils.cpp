@@ -594,15 +594,13 @@ std::string Utils::currentCustomSong() {
 }
 
 std::string Utils::toNormalizedString(const std::filesystem::path& path) {
-	#ifdef GEODE_IS_WINDOWS
-	return geode::utils::string::wideToUtf8(path.wstring());
-	#else
-	return path.string();
-	#endif
+	return geode::utils::string::pathToString(path);
 }
 
 std::filesystem::path Utils::toProblematicString(const std::string& path) {
 	#ifdef GEODE_IS_WINDOWS
+	/* TODO FOR GEODE V5: SWAP COMMENTED LINES */
+	// return std::filesystem::path(geode::utils::string::utf8ToWide(path).unwrapOr(""));
 	return std::filesystem::path(geode::utils::string::utf8ToWide(path));
 	#else
 	return std::filesystem::path(path);
