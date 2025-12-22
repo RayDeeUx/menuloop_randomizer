@@ -147,6 +147,34 @@ $on_mod(Loaded) {
 		alert->m_noElasticity = true;
 		alert->show();
 	});
+	listenForSettingChanges<bool>("randomizeWhenExitingLevel", [](const bool randomizeWhenExitingLevel) {
+		if (!Mod::get()->getSettingValue<bool>("restoreWhenExitingLevel")) return;
+		const std::string& mdPopupBody = randomizeWhenExitingLevel ? "# <c-ff0000>Menu loops will always be randomized when leaving a level.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Level Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving a level.</c>\n<cy>*If you don't want this behavior, enable the \"Randomize Menu Loop on Level Exit\" setting.*";
+		MDPopup* alert = MDPopup::create("Menu Loop Randomizer", mdPopupBody, "I Understand");
+		alert->m_noElasticity = true;
+		alert->show();
+	});
+	listenForSettingChanges<bool>("randomizeWhenExitingEditor", [](const bool randomizeWhenExitingEditor) {
+		if (!Mod::get()->getSettingValue<bool>("restoreWhenExitingEditor")) return;
+		const std::string& mdPopupBody = randomizeWhenExitingEditor ? "# <c-ff0000>Menu loops will always be randomized when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Editor Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving the level editor.</c>\n<cy>*If you don't want this behavior, enable the \"Randomize Menu Loop on Editor Exit\" setting.*";
+		MDPopup* alert = MDPopup::create("Menu Loop Randomizer", mdPopupBody, "I Understand");
+		alert->m_noElasticity = true;
+		alert->show();
+	});
+	listenForSettingChanges<bool>("restoreWhenExitingLevel", [](const bool restoreWhenExitingLevel) {
+		if (!Mod::get()->getSettingValue<bool>("randomizeWhenExitingLevel")) return;
+		const std::string& mdPopupBody = restoreWhenExitingLevel ? "# <c-ff0000>Menu loops will still be randomized when leaving a level.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Level Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving a level.</c>\n<cy>*If you don't want this behavior, disable the \"Continue Menu Loop on Level Exit\" setting.*";
+		MDPopup* alert = MDPopup::create("Menu Loop Randomizer", mdPopupBody, "I Understand");
+		alert->m_noElasticity = true;
+		alert->show();
+	});
+	listenForSettingChanges<bool>("restoreWhenExitingEditor", [](const bool restoreWhenExitingEditor) {
+		if (!Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor")) return;
+		const std::string& mdPopupBody = restoreWhenExitingEditor ? "# <c-ff0000>Menu loops will still be randomized when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Editor Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Continue Menu Loop on Editor Exit\" setting.*";
+		MDPopup* alert = MDPopup::create("Menu Loop Randomizer", mdPopupBody, "I Understand");
+		alert->m_noElasticity = true;
+		alert->show();
+	});
 	listenForSettingChanges<bool>("advancedLogs", [](bool newAdvancedLogs) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
 	});
