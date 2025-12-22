@@ -41,7 +41,7 @@ std::string Utils::getString(const std::string& setting) {
 }
 
 cocos2d::CCNode* Utils::findCard() {
-	return cocos2d::CCDirector::get()->getRunningScene()->getChildByIDRecursive("now-playing"_spr);
+	return cocos2d::CCScene::get()->getChildByIDRecursive("now-playing"_spr);
 }
 
 cocos2d::CCNode* Utils::findCardRemotely() {
