@@ -659,6 +659,14 @@ void Utils::addViewModeToggle(const bool relevantBoolean, const std::string& tog
 	if (menu->getLayout()) menu->updateLayout();
 }
 
+void Utils::showMDPopup(const std::string& title, const std::string& bodyText, const int tag, const std::string& nodeID) {
+	geode::MDPopup* popup = geode::MDPopup::create(fmt::format("MLR {}: A Warning", title), bodyText, "I Understand");
+	popup->setID(fmt::format("{}-warning"_spr, nodeID));
+	popup->setTag(tag);
+	popup->m_noElasticity = true;
+	popup->show();
+}
+
 bool Utils::notFavoritesNorBlacklist(const std::filesystem::path& filePath) {
 	const std::string& fileString = Utils::toNormalizedString(filePath);
 	return !geode::utils::string::endsWith(fileString, "favorites.txt") && !geode::utils::string::endsWith(fileString, "blacklist.txt");

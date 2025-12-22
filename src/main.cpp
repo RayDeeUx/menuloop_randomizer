@@ -94,20 +94,12 @@ $on_mod(Loaded) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("loadPlaylistFile");
 		if (!loadPlaylistFile) return;
 		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
-		MDPopup* popup = MDPopup::create("MLR Playlist Files: A Warning", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", "I Understand");
-		popup->setTag(7302025);
-		popup->setID("playlist-files-warning"_spr);
-		popup->m_noElasticity = true;
-		popup->show();
+		Utils::showMDPopup("Playlist Files", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", 7302025, "playlist-files");
 	});
 	listenForSettingChanges<std::filesystem::path>("playlistFile", [](std::filesystem::path playlistFile) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("playlistFile");
 		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
-		MDPopup* popup = MDPopup::create("MLR Playlist Files: A Warning", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", "I Understand");
-		popup->setTag(7302025);
-		popup->setID("playlist-files-warning"_spr);
-		popup->m_noElasticity = true;
-		popup->show();
+		Utils::showMDPopup("Playlist Files", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", 7302025, "playlist-files");
 	});
 	listenForSettingChanges<bool>("playlistMode", [](bool constantShuffleMode) {
 		SongManager& songManager = SongManager::get();
@@ -143,37 +135,27 @@ $on_mod(Loaded) {
 		if (!dangerousBlacklisting) return;
 		log::info("=============== WARNING: USER HAS ENABLED `dangerousBlacklisting` SETTING ===============");
 		if (GameManager::get()->m_playerUserID.value() == 925143 || GameManager::get()->m_playerUserID.value() == 7247326) return log::info("never mind, it's just aktimoose the beta tester. don't show the alert");
-		FLAlertLayer* alert = FLAlertLayer::create("Menu Loop Randomizer", "<c_>This is an experimental setting. You agree to hold yourself responsible for any issues that happen when this setting is enabled.</c>", "I Understand");
-		alert->m_noElasticity = true;
-		alert->show();
+		Utils::showMDPopup("Blacklisting", "<c-ff0000>This is an experimental setting. You agree to hold yourself responsible for any issues that happen when this setting is enabled.</c>", 7302025, "dangerous-blacklisting");
 	});
 	listenForSettingChanges<bool>("randomizeWhenExitingLevel", [](const bool randomizeWhenExitingLevel) {
 		if (!Mod::get()->getSettingValue<bool>("restoreWhenExitingLevel")) return;
 		const std::string& mdPopupBody = randomizeWhenExitingLevel ? "# <c-ff0000>Menu loops will always be randomized when leaving a level.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Level Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving a level.</c>\n<cy>*If you don't want this behavior, enable the \"Randomize Menu Loop on Level Exit\" setting.*";
-		MDPopup* alert = MDPopup::create("Menu Loop Randomizer", mdPopupBody, "I Understand");
-		alert->m_noElasticity = true;
-		alert->show();
+		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
 	listenForSettingChanges<bool>("randomizeWhenExitingEditor", [](const bool randomizeWhenExitingEditor) {
 		if (!Mod::get()->getSettingValue<bool>("restoreWhenExitingEditor")) return;
 		const std::string& mdPopupBody = randomizeWhenExitingEditor ? "# <c-ff0000>Menu loops will always be randomized when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Editor Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving the level editor.</c>\n<cy>*If you don't want this behavior, enable the \"Randomize Menu Loop on Editor Exit\" setting.*";
-		MDPopup* alert = MDPopup::create("Menu Loop Randomizer", mdPopupBody, "I Understand");
-		alert->m_noElasticity = true;
-		alert->show();
+		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
 	listenForSettingChanges<bool>("restoreWhenExitingLevel", [](const bool restoreWhenExitingLevel) {
 		if (!Mod::get()->getSettingValue<bool>("randomizeWhenExitingLevel")) return;
 		const std::string& mdPopupBody = restoreWhenExitingLevel ? "# <c-ff0000>Menu loops will still be randomized when leaving a level.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Level Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving a level.</c>\n<cy>*If you don't want this behavior, disable the \"Continue Menu Loop on Level Exit\" setting.*";
-		MDPopup* alert = MDPopup::create("Menu Loop Randomizer", mdPopupBody, "I Understand");
-		alert->m_noElasticity = true;
-		alert->show();
+		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
 	listenForSettingChanges<bool>("restoreWhenExitingEditor", [](const bool restoreWhenExitingEditor) {
 		if (!Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor")) return;
 		const std::string& mdPopupBody = restoreWhenExitingEditor ? "# <c-ff0000>Menu loops will still be randomized when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Editor Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Continue Menu Loop on Editor Exit\" setting.*";
-		MDPopup* alert = MDPopup::create("Menu Loop Randomizer", mdPopupBody, "I Understand");
-		alert->m_noElasticity = true;
-		alert->show();
+		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
 	listenForSettingChanges<bool>("advancedLogs", [](bool newAdvancedLogs) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
