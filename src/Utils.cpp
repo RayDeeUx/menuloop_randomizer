@@ -19,17 +19,31 @@ int Utils::randomIndex(int size) {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> dist(0, size - 1);
-	int randomIndex = dist(gen);
-
-	return randomIndex;
+	return dist(gen);
 }
 
-bool Utils::isSupportedFile(const std::string_view path) {
+bool Utils::isSupportedFile(const std::string& path) {
 	return !path.empty() && Utils::goodExtension(path);
 }
 
-bool Utils::goodExtension(const std::string_view path) {
-	return path.ends_with(".mp3") || path.ends_with(".wav") || path.ends_with(".ogg") || path.ends_with(".oga") || path.ends_with(".flac");
+bool Utils::goodExtension(const std::string& path) {
+	const std::string& extension = Utils::toProblematicString(path).extension();
+
+	static const std::array<std::string, 5> absolutelyConfirmed = {".mp3", ".wav", ".ogg", ".oga", ".flac"};
+	if (std::ranges::find(absolutelyConfirmed.begin(), absolutelyConfirmed.end(), extension) != absolutelyConfirmed.end()) return true;
+
+	// list of extensions adapted from undefined's editor music mod.
+	static const std::array<std::string, 16> extensions = {
+		".aiff", ".aif", ".aifc",
+		".midi", ".mid",
+		".m3u", ".m3u8",
+		".wma", ".wmv",
+		".asf", ".asx",
+		".mod", ".it",
+		".mp2", ".pls", ".s3m"
+	};
+
+	return std::ranges::find(extensions.begin(), extensions.end(), extension) != extensions.end();
 }
 
 bool Utils::getBool(const std::string& setting) {

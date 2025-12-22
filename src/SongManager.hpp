@@ -35,7 +35,7 @@ class SongManager {
 	bool getLavaChicken() const;
 	void setPlaylistIsEmpty(const bool);
 	bool getPlaylistIsEmpty() const;
-	void setHeldSong(const std::string_view value);
+	void setHeldSong(const std::string& value);
 	void resetHeldSong();
 	std::string getHeldSong();
 	void addToBlacklist(const std::string&);
@@ -44,11 +44,11 @@ class SongManager {
 	void addToFavorites(const std::string& song);
 	void addToFavorites();
 	std::vector<std::string> getFavorites();
-	void setOverride(const std::string_view);
+	void setOverride(const std::string&);
 	std::string getOverrideSong();
 	bool isOverride() const;
 	void setCurrentSongToOverride();
-	void setPreviousSong(const std::string_view value);
+	void setPreviousSong(const std::string& song);
 	void resetPreviousSong();
 	std::string getPreviousSong();
 	bool isPreviousSong() const;
@@ -78,8 +78,8 @@ class SongManager {
 	std::string m_overrideSong = "";
 	std::string m_displayName = "";
 	std::string m_playlistName = "";
-	bool m_isMenuLoop;
-	bool m_constantShuffleMode;
+	bool m_isMenuLoop {};
+	bool m_constantShuffleMode {};
 	bool m_calledOnce = false;
 	bool m_geodify = false;
 	bool m_isOverride = false;
@@ -91,5 +91,5 @@ class SongManager {
 	int m_lastPosition = 0;
 	std::vector<std::string> m_blacklist;
 	std::vector<std::string> m_favorites;
-	int m_towerRepeatCount;
+	int m_towerRepeatCount = 0;
 };

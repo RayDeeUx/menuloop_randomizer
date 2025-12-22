@@ -3,8 +3,8 @@
 class Utils {
   public:
 	static int randomIndex(int);
-	static bool isSupportedFile(const std::string_view);
-	static bool goodExtension(std::string_view path);
+	static bool isSupportedFile(const std::string&);
+	static bool goodExtension(const std::string&);
 	static bool getBool(const std::string& setting);
 	static std::string getString(const std::string& setting);
 	static void removeCard();
