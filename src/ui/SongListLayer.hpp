@@ -23,6 +23,7 @@ public:
 	void onFavoritesOnlyToggle(CCObject*);
 	void onSortReverseToggle(CCObject*);
 	void onSortABCToggle(CCObject*);
+	void onSortLengthToggle(CCObject*);
 	void onSortSizeToggle(CCObject*);
 	void disableAllSortFiltersThenToggleThenSearch(std::string_view savedValueKey);
 	void toggleSavedValueAndSearch(std::string_view savedValueKey);
@@ -30,11 +31,11 @@ public:
 	void searchSongs(const std::string& queryString);
 
 	static std::string generateDisplayName(SongData& songData);
-	static std::string displayNameForLosers(const std::string &songName);
 	static bool tallEnough(geode::ScrollLayer *scrollLayer);
 	static float determineYPosition(geode::ScrollLayer* scrollLayer);
 	static void displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode *inputNode);
 
 	static bool caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool fileSize(MLRSongCell* a, MLRSongCell* b, bool reverse);
+	static bool songLength(MLRSongCell *a, MLRSongCell *b, bool reverse);
 };

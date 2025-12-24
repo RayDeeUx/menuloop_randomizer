@@ -88,9 +88,14 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		[reverse](MLRSongCell* a, MLRSongCell* b) {
 			return SongListLayer::fileSize(a, b, reverse);
 		});
-	} else if (reverse) {
-		std::reverse(cellsToAdd.begin(), cellsToAdd.end());
+	} else if (SAVED("songListSortSongLength")) {
+		std::sort(cellsToAdd.begin(), cellsToAdd.end(),
+		[reverse](MLRSongCell* a, MLRSongCell* b) {
+			return SongListLayer::songLength(a, b, reverse);
+		});
 	}
+
+	if (reverse) std::reverse(cellsToAdd.begin(), cellsToAdd.end());
 
 	isEven = false;
 	for (MLRSongCell* cell : cellsToAdd) {
@@ -239,9 +244,10 @@ bool SongListLayer::setup(const std::string&) {
 	Utils::addViewModeToggle(SAVED("songListFavoritesOnlyMode"), "favorites.png"_spr, "favorites-only", menu_selector(SongListLayer::onFavoritesOnlyToggle), viewModeMenu, this);
 	Utils::addViewModeToggle(SAVED("songListReverseSort"), "reverse.png"_spr, "reverse-list", menu_selector(SongListLayer::onSortReverseToggle), viewModeMenu, this);
 	Utils::addViewModeToggle(SAVED("songListSortAlphabetically"), "abc.png"_spr, "alphabetical", menu_selector(SongListLayer::onSortABCToggle), viewModeMenu, this);
+	Utils::addViewModeToggle(SAVED("songListSortSongLength"), "length.png"_spr, "song-length", menu_selector(SongListLayer::onSortLengthToggle), viewModeMenu, this);
 	Utils::addViewModeToggle(SAVED("songListSortFileSize"), "size.png"_spr, "song-size", menu_selector(SongListLayer::onSortSizeToggle), viewModeMenu, this);
 
-	viewModeMenu->setContentHeight(120.f);
+	viewModeMenu->setContentHeight(150.f);
 	viewModeMenu->ignoreAnchorPointForPosition(false);
 	viewModeMenu->setPosition({19.f, scrollLayer->getPositionY()});
 	viewModeMenu->setLayout(geode::ColumnLayout::create()->setAxisReverse(true));
@@ -450,6 +456,10 @@ void SongListLayer::onSortABCToggle(CCObject*) {
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortAlphabetically");
 }
 
+void SongListLayer::onSortLengthToggle(CCObject*) {
+	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortSongLength");
+}
+
 void SongListLayer::onSortSizeToggle(CCObject*) {
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileSize");
 }
@@ -457,10 +467,15 @@ void SongListLayer::onSortSizeToggle(CCObject*) {
 void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_view savedValueKey) {
 	const bool originalSavedValue = SAVED(savedValueKey);
 	geode::Mod::get()->setSavedValue<bool>("songListSortAlphabetically", false);
+	geode::Mod::get()->setSavedValue<bool>("songListSortSongLength", false);
 	geode::Mod::get()->setSavedValue<bool>("songListSortFileSize", false);
 	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByIDRecursive("alphabetical-button"_spr)); toggler) {
 		toggler->toggle(false);
 		if (savedValueKey == "songListSortAlphabetically") toggler->toggle(originalSavedValue);
+	}
+	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByIDRecursive("song-length-button"_spr)); toggler) {
+		toggler->toggle(false);
+		if (savedValueKey == "songListSortSongLength") toggler->toggle(originalSavedValue);
 	}
 	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByIDRecursive("song-size-button"_spr)); toggler) {
 		toggler->toggle(false);
@@ -500,20 +515,6 @@ std::string SongListLayer::generateDisplayName(SongData& songData) {
 	const std::string& displayName = geode::utils::string::replace(songData.fileName, songData.fileExtension, "");
 	const int songID = geode::utils::numFromString<int>(displayName).unwrapOr(-1);
 	if (songID > 0 && !songData.isFromConfigOrAltDir) {
-		MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
-		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) return Utils::getFormattedNGMLSongName(songInfoObject);
-		return fmt::format("{} - No song info found :(", songID);
-	}
-
-	return displayName;
-}
-
-std::string SongListLayer::displayNameForLosers(const std::string& songName) {
-	const std::filesystem::path& songPath = Utils::toProblematicString(songName);
-	const std::string& displayName = geode::utils::string::replace(Utils::toNormalizedString(songPath.filename()), Utils::toNormalizedString(songPath.extension()), "");
-
-	const int songID = geode::utils::numFromString<int>(displayName).unwrapOr(-1);
-	if (songID > 0 && !Utils::isFromConfigOrAlternateDir(songPath.parent_path())) {
 		MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) return Utils::getFormattedNGMLSongName(songInfoObject);
 		return fmt::format("{} - No song info found :(", songID);
@@ -563,5 +564,21 @@ bool SongListLayer::fileSize(MLRSongCell* a, MLRSongCell* b, const bool reverse 
 	fileSizeB = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSizeB;
 	if (fileSizeA < fileSizeB) return !reverse;
 	if (fileSizeA > fileSizeB) return reverse;
-	return a < b;
+	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
+}
+
+bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
+	unsigned int lengthA = 0;
+	unsigned int lengthB = 0;
+	FMOD::Sound* soundA;
+	FMOD::Sound* soundB;
+	FMOD_RESULT resultSoundA = FMODAudioEngine::get()->m_system->createSound(Utils::toProblematicString(a->m_songData.actualFilePath), FMOD_OPENONLY, nullptr, &soundA);
+	FMOD_RESULT resultSoundB = FMODAudioEngine::get()->m_system->createSound(Utils::toProblematicString(b->m_songData.actualFilePath), FMOD_OPENONLY, nullptr, &soundB);
+	FMOD_RESULT resultLengthA = soundA->getLength(&lengthA, FMOD_TIMEUNIT_MS);
+	FMOD_RESULT resultLengthB = soundB->getLength(&lengthB, FMOD_TIMEUNIT_MS);
+	if (resultSoundA != FMOD_OK || resultLengthA != FMOD_OK) lengthA = std::numeric_limits<unsigned int>::max();
+	if (resultSoundB != FMOD_OK || resultLengthB != FMOD_OK) lengthB = std::numeric_limits<unsigned int>::max();
+	if (lengthA < lengthB) return !reverse;
+	if (lengthA > lengthB) return reverse;
+	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
 }

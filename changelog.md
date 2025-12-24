@@ -11,6 +11,12 @@
 - Added Compact Mode to the Song List.
   - Your preferences for Compact Mode persist between restarts.
   - If you want even smaller song entries in the Song List, check the mod settings.
+- Added a few filtering and sorting options to the Song List.
+  - Favorites Only - show only favorited songs.
+  - Reverse - reverses the Song List's entries.
+  - Alphabetical - sorts the Song List's entries alphabetically.
+  - Song Length - sorts the Song List's entries by their length.
+  - Song Size - sorts the Song List's entries by file size.
 - Changed the placeholder text in the search bar in the Song List to include the name of the currently playing song.
 - Fix an incompatibility with Eclipse Menu's "Transparent Lists" feature.
 - Attempt to reduce frame drops when viewing many songs at once in the Song List menu.
