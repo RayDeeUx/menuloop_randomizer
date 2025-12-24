@@ -30,10 +30,11 @@ public:
 	void searchSongs(const std::string& queryString);
 
 	static std::string generateDisplayName(SongData& songData);
+	static std::string displayNameForLosers(const std::string &songName);
 	static bool tallEnough(geode::ScrollLayer *scrollLayer);
 	static float determineYPosition(geode::ScrollLayer* scrollLayer);
 	static void displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode *inputNode);
 
-	static bool caseInsensitiveAlphabetical(const std::string &a, const std::string &b, bool reverse);
+	static bool caseInsensitiveAlphabetical(const std::string &cleanedUpA, const std::string &cleanedUpB, bool reverse);
 	static bool fileSize(const std::string &a, const std::string &b, bool reverse);
 };

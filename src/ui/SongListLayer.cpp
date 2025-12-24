@@ -40,7 +40,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	if (SAVED("songListSortAlphabetically")) {
 		std::sort(songsVector.begin(), songsVector.end(),
 		[reverse](const std::string& a, const std::string& b) {
-			return SongListLayer::caseInsensitiveAlphabetical(Utils::toNormalizedString(Utils::toProblematicString(a).filename()), Utils::toNormalizedString(Utils::toProblematicString(b).filename()), reverse);
+			return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
 		});
 	} else if (SAVED("songListSortFileSize")) {
 		std::sort(songsVector.begin(), songsVector.end(),
@@ -493,6 +493,20 @@ std::string SongListLayer::generateDisplayName(SongData& songData) {
 	return displayName;
 }
 
+std::string SongListLayer::displayNameForLosers(const std::string& songName) {
+	const std::filesystem::path& songPath = Utils::toProblematicString(songName);
+	const std::string& displayName = geode::utils::string::replace(Utils::toNormalizedString(songPath.filename()), Utils::toNormalizedString(songPath.extension()), "");
+
+	const int songID = geode::utils::numFromString<int>(displayName).unwrapOr(-1);
+	if (songID > 0 && !Utils::isFromConfigOrAlternateDir(songPath.parent_path())) {
+		MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
+		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) return Utils::getFormattedNGMLSongName(songInfoObject);
+		return fmt::format("{} - No song info found :(", songID);
+	}
+
+	return displayName;
+}
+
 bool SongListLayer::tallEnough(geode::ScrollLayer* scrollLayer) {
 	return scrollLayer->m_contentLayer->getContentHeight() > scrollLayer->getContentHeight();
 }
@@ -510,8 +524,10 @@ void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInpu
 }
 
 bool SongListLayer::caseInsensitiveAlphabetical(const std::string& a, const std::string& b, const bool reverse = false) {
-	auto it1 = a.begin(), it2 = b.begin();
-	while (it1 != a.end() && it2 != b.end()) {
+	auto cleanedUpA = SongListLayer::displayNameForLosers(a);
+	auto cleanedUpB = SongListLayer::displayNameForLosers(b);
+	auto it1 = cleanedUpA.begin(), it2 = cleanedUpB.begin();
+	while (it1 != cleanedUpA.end() && it2 != cleanedUpB.end()) {
 		unsigned char c1 = static_cast<unsigned char>(*it1++);
 		unsigned char c2 = static_cast<unsigned char>(*it2++);
 		char lc1 = static_cast<char>(std::tolower(c1));
@@ -519,8 +535,8 @@ bool SongListLayer::caseInsensitiveAlphabetical(const std::string& a, const std:
 		if (lc1 < lc2) return !reverse;
 		if (lc1 > lc2) return reverse;
 	}
-	if (a.size() < b.size()) return !reverse;
-	if (a.size() > b.size()) return reverse;
+	if (cleanedUpA.size() < cleanedUpB.size()) return !reverse;
+	if (cleanedUpA.size() > cleanedUpB.size()) return reverse;
 	return false;
 }
 
