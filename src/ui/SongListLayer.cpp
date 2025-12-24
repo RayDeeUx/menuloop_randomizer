@@ -67,8 +67,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			scrollLayer->m_contentLayer->addChild(songCell);
 			alreadyAdded.push_back(song);
 			desiredContentHeight += songCell->getContentHeight();
+			isEven = !isEven;
 		}
-		isEven = !isEven;
 	}
 
 	scrollLayer->m_contentLayer->updateLayout();
