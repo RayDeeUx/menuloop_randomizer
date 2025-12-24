@@ -7,12 +7,12 @@ enum class SongType {
 };
 
 struct SongData {
-	std::string actualFilePath;
-	std::string fileExtension;
-	std::string fileName;
-	std::string displayName;
-	SongType type;
-	bool isFromConfigOrAltDir;
+	std::string actualFilePath = "";
+	std::string fileExtension = "";
+	std::string fileName = "";
+	std::string displayName = "";
+	SongType type = SongType::Regular;
+	bool isFromConfigOrAltDir = false;
 	bool isEmpty = false;
 };
 

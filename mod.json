@@ -301,7 +301,14 @@
 	"resources": {
 		"sprites": [
 			"resources/*.png"
-		]
+		],
+		"spritesheets": {
+			"sortOptionsSheet": [
+				"resources/abc.png",
+				"resources/size.png",
+				"resources/reverse.png"
+			]
+		}
 	},
 	"links": {
 		"community": "https://discord.gg/WqZBYdBWZW",

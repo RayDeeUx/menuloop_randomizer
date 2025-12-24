@@ -25,7 +25,7 @@ MLRSongCell* MLRSongCell::createEmpty(const bool isEven) {
 }
 
 bool MLRSongCell::initEmpty(const bool isEven) {
-	return MLRSongCell::init({"", "", "", "", SongType::Regular, false, true}, isEven, false);
+	return MLRSongCell::init({}, isEven, false);
 }
 
 bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool isCompact) {

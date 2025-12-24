@@ -21,6 +21,11 @@ public:
 	void onScrollBtmButton(CCObject*);
 	void onCompactModeToggle(CCObject*);
 	void onFavoritesOnlyToggle(CCObject*);
+	void onSortReverseToggle(CCObject*);
+	void onSortABCToggle(CCObject*);
+	void onSortSizeToggle(CCObject*);
+	void disableAllSortFiltersThenToggleThenSearch(std::string_view savedValueKey);
+	void toggleSavedValueAndSearch(std::string_view savedValueKey);
 	void keyDown(const cocos2d::enumKeyCodes) override;
 	void searchSongs(const std::string& queryString);
 
@@ -28,4 +33,7 @@ public:
 	static bool tallEnough(geode::ScrollLayer *scrollLayer);
 	static float determineYPosition(geode::ScrollLayer* scrollLayer);
 	static void displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode *inputNode);
+
+	static bool caseInsensitiveAlphabetical(const std::string &a, const std::string &b, bool reverse);
+	static bool fileSize(const std::string &a, const std::string &b, bool reverse);
 };

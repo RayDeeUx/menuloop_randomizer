@@ -6,6 +6,8 @@
 #include "../SongControl.hpp"
 #include "../SongManager.hpp"
 
+#define SAVED(key) geode::Mod::get()->getSavedValue<bool>(key, false)
+
 #define GET_SEARCH_BAR_NODE this->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID)
 #define GET_SEARCH_STRING static_cast<geode::TextInput*>(searchBar)->getString()
 #define EMPTY_SEARCH_STRG static_cast<geode::TextInput*>(searchBar)->setString("", false);
@@ -26,14 +28,31 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	const std::vector<std::string>& favorites = songManager.getFavorites();
 	std::vector<std::string> alreadyAdded {};
 
-	const bool songListCompactMode = geode::Mod::get()->getSavedValue("songListCompactMode", false);
-	const bool songListFavoritesOnlyMode = geode::Mod::get()->getSavedValue("songListFavoritesOnlyMode", false);
+	const bool songListCompactMode = SAVED("songListCompactMode");
+	const bool songListFavoritesOnlyMode = SAVED("songListFavoritesOnlyMode");
 
 	bool isEven = false;
 	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(isEven)); // intentonally blank song cell for padding to go beneath search bar. 36.f units tall
 
+	std::vector<std::string> songsVector = songManager.getSongs();
+
+	const bool reverse = SAVED("songListReverseSort");
+	if (SAVED("songListSortAlphabetically")) {
+		std::sort(songsVector.begin(), songsVector.end(),
+		[reverse](const std::string& a, const std::string& b) {
+			return SongListLayer::caseInsensitiveAlphabetical(Utils::toNormalizedString(Utils::toProblematicString(a).filename()), Utils::toNormalizedString(Utils::toProblematicString(b).filename()), reverse);
+		});
+	} else if (SAVED("songListSortFileSize")) {
+		std::sort(songsVector.begin(), songsVector.end(),
+		[reverse](const std::string& a, const std::string& b) {
+			return SongListLayer::fileSize(a, b, reverse);
+		});
+	} else if (reverse) {
+		std::reverse(songsVector.begin(), songsVector.end());
+	}
+
 	float desiredContentHeight = 36.f; // always start with the height of the blank song cell, which is guaranteed to be 36.f units
-	for (const std::string& song : songManager.getSongs()) {
+	for (const std::string& song : songsVector) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
 
 		SongType songType = SongType::Regular;
@@ -44,10 +63,12 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 		const std::filesystem::path& songFilePath = Utils::toProblematicString(song);
 		SongData songData = {
-			Utils::toNormalizedString(songFilePath),
-			Utils::toNormalizedString(songFilePath.extension()),
-			Utils::toNormalizedString(songFilePath.filename()), "", songType,
-			Utils::isFromConfigOrAlternateDir(songFilePath.parent_path()), false
+			.actualFilePath = Utils::toNormalizedString(songFilePath),
+			.fileExtension = Utils::toNormalizedString(songFilePath.extension()),
+			.fileName = Utils::toNormalizedString(songFilePath.filename()),
+			.type = songType,
+			.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(songFilePath.parent_path()),
+			.isEmpty = false
 		};
 
 		songData.displayName = SongListLayer::generateDisplayName(songData);
@@ -207,10 +228,13 @@ bool SongListLayer::setup(const std::string&) {
 
 	cocos2d::CCMenu* viewModeMenu = cocos2d::CCMenu::create();
 
-	Utils::addViewModeToggle(geode::Mod::get()->getSavedValue<bool>("songListCompactMode", false), "GJ_smallModeIcon_001.png", "compact-mode", menu_selector(SongListLayer::onCompactModeToggle), viewModeMenu, this);
-	Utils::addViewModeToggle(geode::Mod::get()->getSavedValue<bool>("songListFavoritesOnlyMode", false), "GJ_sStarsIcon_001.png", "favorites-only", menu_selector(SongListLayer::onFavoritesOnlyToggle), viewModeMenu, this);
+	Utils::addViewModeToggle(SAVED("songListCompactMode"), "GJ_smallModeIcon_001.png", "compact-mode", menu_selector(SongListLayer::onCompactModeToggle), viewModeMenu, this);
+	Utils::addViewModeToggle(SAVED("songListFavoritesOnlyMode"), "GJ_sStarsIcon_001.png", "favorites-only", menu_selector(SongListLayer::onFavoritesOnlyToggle), viewModeMenu, this);
+	Utils::addViewModeToggle(SAVED("songListReverseSort"), "reverse.png"_spr, "reverse-list", menu_selector(SongListLayer::onSortReverseToggle), viewModeMenu, this);
+	Utils::addViewModeToggle(SAVED("songListSortAlphabetically"), "abc.png"_spr, "alphabetical", menu_selector(SongListLayer::onSortABCToggle), viewModeMenu, this);
+	Utils::addViewModeToggle(SAVED("songListSortFileSize"), "size.png"_spr, "song-size", menu_selector(SongListLayer::onSortSizeToggle), viewModeMenu, this);
 
-	viewModeMenu->setContentHeight(60.f);
+	viewModeMenu->setContentHeight(120.f);
 	viewModeMenu->ignoreAnchorPointForPosition(false);
 	viewModeMenu->setPosition({19.f, scrollLayer->getPositionY()});
 	viewModeMenu->setLayout(geode::ColumnLayout::create()->setAxisReverse(true));
@@ -404,15 +428,37 @@ void SongListLayer::onScrollBtmButton(CCObject*) {
 }
 
 void SongListLayer::onCompactModeToggle(CCObject*) {
-	const bool originalSavedValue = geode::Mod::get()->getSavedValue("songListCompactMode", false);
-	geode::Mod::get()->setSavedValue("songListCompactMode", !originalSavedValue);
+	SongListLayer::toggleSavedValueAndSearch("songListCompactMode");
+}
+
+void SongListLayer::onFavoritesOnlyToggle(CCObject*) {
+	SongListLayer::toggleSavedValueAndSearch("songListFavoritesOnlyMode");
+}
+
+void SongListLayer::onSortReverseToggle(CCObject*) {
+	SongListLayer::toggleSavedValueAndSearch("songListReverseSort");
+}
+
+void SongListLayer::onSortABCToggle(CCObject*) {
+	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortAlphabetically");
+}
+
+void SongListLayer::onSortSizeToggle(CCObject*) {
+	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileSize");
+}
+
+void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_view savedValueKey) {
+	const bool originalSavedValue = SAVED(savedValueKey);
+	geode::Mod::get()->setSavedValue<bool>("songListSortAlphabetically", false);
+	geode::Mod::get()->setSavedValue<bool>("songListSortFileSize", false);
+	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
 	CCNode* searchBar = GET_SEARCH_BAR_NODE;
 	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
 }
 
-void SongListLayer::onFavoritesOnlyToggle(CCObject*) {
-	const bool originalSavedValue = geode::Mod::get()->getSavedValue("songListFavoritesOnlyMode", false);
-	geode::Mod::get()->setSavedValue("songListFavoritesOnlyMode", !originalSavedValue);
+void SongListLayer::toggleSavedValueAndSearch(const std::string_view savedValueKey) {
+	const bool originalSavedValue = SAVED(savedValueKey);
+	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
 	CCNode* searchBar = GET_SEARCH_BAR_NODE;
 	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
 }
@@ -433,14 +479,15 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	SongListLayer::searchSongs(queryString);
 }
 
-std::string SongListLayer::generateDisplayName(SongData &songData) {
-	std::string displayName = geode::utils::string::replace(songData.fileName, songData.fileExtension, "");
+std::string SongListLayer::generateDisplayName(SongData& songData) {
+	if (!songData.displayName.empty()) return songData.displayName;
 
-	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
+	const std::string& displayName = geode::utils::string::replace(songData.fileName, songData.fileExtension, "");
 	const int songID = geode::utils::numFromString<int>(displayName).unwrapOr(-1);
 	if (songID > 0 && !songData.isFromConfigOrAltDir) {
-		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) displayName = Utils::getFormattedNGMLSongName(songInfoObject);
-		else displayName = fmt::format("{} - No song info found :(", songID);
+		MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
+		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) return Utils::getFormattedNGMLSongName(songInfoObject);
+		return fmt::format("{} - No song info found :(", songID);
 	}
 
 	return displayName;
@@ -460,4 +507,30 @@ void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInpu
 	if (!placeholderLabelMaybe || placeholderLabelMaybe->getColor() != cocos2d::ccColor3B{150, 150, 150}) return;
 	placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", SongManager::get().getCurrentSongDisplayName()).c_str());
 	placeholderLabelMaybe->limitLabelWidth(350.f, 1.f, .0001f);
+}
+
+bool SongListLayer::caseInsensitiveAlphabetical(const std::string& a, const std::string& b, const bool reverse = false) {
+	auto it1 = a.begin(), it2 = b.begin();
+	while (it1 != a.end() && it2 != b.end()) {
+		unsigned char c1 = static_cast<unsigned char>(*it1++);
+		unsigned char c2 = static_cast<unsigned char>(*it2++);
+		char lc1 = static_cast<char>(std::tolower(c1));
+		char lc2 = static_cast<char>(std::tolower(c2));
+		if (lc1 < lc2) return !reverse;
+		if (lc1 > lc2) return reverse;
+	}
+	if (a.size() < b.size()) return !reverse;
+	if (a.size() > b.size()) return reverse;
+	return false;
+}
+
+bool SongListLayer::fileSize(const std::string& a, const std::string& b, const bool reverse = false) {
+	std::error_code ec;
+	std::uintmax_t fileSizeA = std::filesystem::file_size(Utils::toProblematicString(a), ec);
+	fileSizeA = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSizeA;
+	std::uintmax_t fileSizeB = std::filesystem::file_size(Utils::toProblematicString(b), ec);
+	fileSizeB = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSizeB;
+	if (fileSizeA < fileSizeB) return !reverse;
+	if (fileSizeA > fileSizeB) return reverse;
+	return a < b;
 }
