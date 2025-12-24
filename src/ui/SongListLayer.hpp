@@ -20,6 +20,7 @@ public:
 	void onScrollCurButton(CCObject*);
 	void onScrollBtmButton(CCObject*);
 	void onCompactModeToggle(CCObject*);
+	void onFavoritesOnlyToggle(CCObject*);
 	void keyDown(const cocos2d::enumKeyCodes) override;
 	void searchSongs(const std::string& queryString);
 

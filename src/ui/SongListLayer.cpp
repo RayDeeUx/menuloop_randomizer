@@ -27,6 +27,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	std::vector<std::string> alreadyAdded {};
 
 	const bool songListCompactMode = geode::Mod::get()->getSavedValue("songListCompactMode", false);
+	const bool songListFavoritesOnlyMode = geode::Mod::get()->getSavedValue("songListFavoritesOnlyMode", false);
 
 	bool isEven = false;
 	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(isEven)); // intentonally blank song cell for padding to go beneath search bar. 36.f units tall
@@ -46,6 +47,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songData.type = SongType::Favorited;
 
 		songData.displayName = SongListLayer::generateDisplayName(songData);
+
+		if (songListFavoritesOnlyMode && songData.type != SongType::Favorited) continue;
 
 		if (!queryString.empty()) {
 			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.displayName), geode::utils::string::toLower(queryString));
@@ -203,6 +206,7 @@ bool SongListLayer::setup(const std::string&) {
 	cocos2d::CCMenu* viewModeMenu = cocos2d::CCMenu::create();
 
 	Utils::addViewModeToggle(geode::Mod::get()->getSavedValue<bool>("songListCompactMode", false), "GJ_smallModeIcon_001.png", "compact-mode", menu_selector(SongListLayer::onCompactModeToggle), viewModeMenu, this);
+	Utils::addViewModeToggle(geode::Mod::get()->getSavedValue<bool>("songListFavoritesOnlyMode", false), "GJ_sStarsIcon_001.png", "favorites-only", menu_selector(SongListLayer::onFavoritesOnlyToggle), viewModeMenu, this);
 
 	viewModeMenu->setContentHeight(60.f);
 	viewModeMenu->ignoreAnchorPointForPosition(false);
@@ -400,6 +404,13 @@ void SongListLayer::onScrollBtmButton(CCObject*) {
 void SongListLayer::onCompactModeToggle(CCObject*) {
 	const bool originalSavedValue = geode::Mod::get()->getSavedValue("songListCompactMode", false);
 	geode::Mod::get()->setSavedValue("songListCompactMode", !originalSavedValue);
+	CCNode* searchBar = GET_SEARCH_BAR_NODE;
+	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
+}
+
+void SongListLayer::onFavoritesOnlyToggle(CCObject*) {
+	const bool originalSavedValue = geode::Mod::get()->getSavedValue("songListFavoritesOnlyMode", false);
+	geode::Mod::get()->setSavedValue("songListFavoritesOnlyMode", !originalSavedValue);
 	CCNode* searchBar = GET_SEARCH_BAR_NODE;
 	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
 }
