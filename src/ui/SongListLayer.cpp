@@ -377,6 +377,8 @@ bool SongListLayer::setup(const std::string&) {
 
 	songManager.resetTowerRepeatCount();
 
+	this->scheduleUpdate();
+
 	return true;
 }
 
@@ -465,21 +467,36 @@ void SongListLayer::onSortSizeToggle(CCObject*) {
 }
 
 void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_view savedValueKey) {
+	cocos2d::CCNode* viewModeMenu = this->m_mainLayer->getChildByID("view-mode-menu"_spr);
+	if (!viewModeMenu) return;
 	const bool originalSavedValue = SAVED(savedValueKey);
+	geode::log::info("savedValueKey: {}", savedValueKey);
 	geode::Mod::get()->setSavedValue<bool>("songListSortAlphabetically", false);
 	geode::Mod::get()->setSavedValue<bool>("songListSortSongLength", false);
 	geode::Mod::get()->setSavedValue<bool>("songListSortFileSize", false);
-	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByID("view-mode-menu"_spr)->getChildByID("alphabetical-button"_spr)); toggler) {
+	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID("alphabetical-button"_spr)); toggler) {
+		geode::log::info("alphabetical-button set to false");
 		toggler->toggle(false);
-		if (savedValueKey == "songListSortAlphabetically") toggler->toggle(originalSavedValue);
+		if (savedValueKey == "songListSortAlphabetically") {
+			toggler->toggle(originalSavedValue);
+			geode::log::info("alphabetical-button set to true");
+		}
 	}
-	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByID("view-mode-menu"_spr)->getChildByID("song-length-button"_spr)); toggler) {
+	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID("song-length-button"_spr)); toggler) {
+		geode::log::info("song-length-button set to false");
 		toggler->toggle(false);
-		if (savedValueKey == "songListSortSongLength") toggler->toggle(originalSavedValue);
+		if (savedValueKey == "songListSortSongLength") {
+			toggler->toggle(originalSavedValue);
+			geode::log::info("song-length-button set to true");
+		}
 	}
-	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByID("view-mode-menu"_spr)->getChildByID("song-size-button"_spr)); toggler) {
+	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID("song-size-button"_spr)); toggler) {
+		geode::log::info("song-size-button set to false");
 		toggler->toggle(false);
-		if (savedValueKey == "songListSortFileSize") toggler->toggle(originalSavedValue);
+		if (savedValueKey == "songListSortFileSize") {
+			toggler->toggle(originalSavedValue);
+			geode::log::info("song-size-button set to true");
+		}
 	}
 	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
 	CCNode* searchBar = GET_SEARCH_BAR_NODE;
@@ -531,12 +548,14 @@ float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
 	return SongListLayer::tallEnough(scrollLayer) ? 145.f : 99999.f;
 }
 
-void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode* inputNode) {
+void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode* inputNode, const bool updateString) {
 	if (!inputNode) return;
-	cocos2d::CCLabelBMFont* placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
+	cocos2d::CCLabelBMFont* placeholderLabelMaybe = static_cast<cocos2d::CCLabelBMFont*>(inputNode->getChildByTag(12242025));
+	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
 	if (!placeholderLabelMaybe || placeholderLabelMaybe->getColor() != cocos2d::ccColor3B{150, 150, 150}) return;
-	placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", SongManager::get().getCurrentSongDisplayName()).c_str());
+	if (updateString) placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", SongManager::get().getCurrentSongDisplayName()).c_str());
 	placeholderLabelMaybe->limitLabelWidth(350.f, 1.f, .0001f);
+	placeholderLabelMaybe->setTag(12242025);
 }
 
 bool SongListLayer::caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
@@ -581,4 +600,8 @@ bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool revers
 	if (lengthA < lengthB) return !reverse;
 	if (lengthA > lengthB) return reverse;
 	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
+}
+
+void SongListLayer::update(float) {
+	SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE)->getInputNode());
 }

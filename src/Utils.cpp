@@ -620,7 +620,7 @@ void Utils::removeCardRemotely(cocos2d::CCNode* card) {
 
 void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {
 	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
-	else if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); sll) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(sll->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID))->getInputNode()); });
+	else if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); sll) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(sll->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID))->getInputNode(), false); });
 }
 
 void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
@@ -645,8 +645,8 @@ void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler fu
 }
 
 void Utils::addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string &nodeID, cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
-	const std::string& spriteOne = relevantBoolean ? "GJ_button_02.png" : "GJ_button_01.png";
-	const std::string& spriteTwo = relevantBoolean ? "GJ_button_01.png" : "GJ_button_02.png";
+	const std::string& spriteOne = "GJ_button_01.png";
+	const std::string& spriteTwo = "GJ_button_02.png";
 
 	cocos2d::CCSprite* smallModeIconSpriteOne = cocos2d::CCSprite::createWithSpriteFrameName(toggleIcon.c_str());
 	cocos2d::CCSprite* smallModeIconSpriteTwo = cocos2d::CCSprite::createWithSpriteFrameName(toggleIcon.c_str());
@@ -665,6 +665,7 @@ void Utils::addViewModeToggle(const bool relevantBoolean, const std::string& tog
 	}
 
 	CCMenuItemToggler* toggle = CCMenuItemToggler::create(spriteOneButtonSprite, spriteTwoButtonSprite, target, function);
+	toggle->toggle(relevantBoolean);
 	toggle->setID(fmt::format("{}-button"_spr, nodeID));
 
 	menu->addChild(toggle);

@@ -33,9 +33,11 @@ public:
 	static std::string generateDisplayName(SongData& songData);
 	static bool tallEnough(geode::ScrollLayer *scrollLayer);
 	static float determineYPosition(geode::ScrollLayer* scrollLayer);
-	static void displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode *inputNode);
+	static void displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode *inputNode, const bool updateString = true);
 
 	static bool caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool fileSize(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool songLength(MLRSongCell *a, MLRSongCell *b, bool reverse);
+
+	void update(float) override;
 };
