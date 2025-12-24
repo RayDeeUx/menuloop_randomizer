@@ -251,6 +251,12 @@
 				"slider-step": 0.01
 			}
 		},
+		"showSortSongLength": {
+			"name": "Song List: Show Song Length Sorting Option (READ!)",
+			"description": "<c_>***__THIS SETTING CAN FREEZE YOUR GAME.__***</c>\n\nChoose if you want the option to sort songs by their length in the Song List menu.",
+			"type": "bool",
+			"default": false
+		},
 		"specificSongOverride": {
 			"name": "Specific Menu Loop File Override",
 			"description": "In case you *hate* the randomizer elements from this mod.\n\n<cy>Leave this as blank to disable this option.</c>",

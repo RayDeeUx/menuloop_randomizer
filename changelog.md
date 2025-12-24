@@ -1,31 +1,33 @@
 # Menu Loop Randomizer Changelog
 ## v1.10.2
-- Add `Continue Menu Loop on Level Exit` and `Continue Menu Loop on Editor Exit` (suggested by [Myron472/GlydeR](https://github.com/Myron472) and [Abagur900](https://github.com/Abagur900)).
+- <cg>Added</c> `Continue Menu Loop on Level Exit` and `Continue Menu Loop on Editor Exit` (suggested by [Myron472/GlydeR](https://github.com/Myron472) and [Abagur900](https://github.com/Abagur900)).
   - <c-ff0000>***__READ:__*** **__These two toggles will__** ***__ONLY__*** **__work if you disable [Colon's Menu Loop Start Time mod](mod:colon.menu_loop_start_time)!!!__** [You can either disable it through its mod settings or through Geode's buttons, either is fine.]</c>
   - This toggle is mutually exclusive with the `Randomize Menu Loop on Level Exit` and `Randomize Menu Loop on Editor Exit` toggles.
   - If `Randomize Menu Loop on Level Exit` is enabled, it will apply first, and ignore your preference for `Continue Menu Loop on Level Exit`.
   - The same logic applies to the `Randomize Menu Loop on Editor Exit` and `Continue Menu Loop on Editor Exit` toggles.
-- Added a Song List scrolling shortcut to the currently playing song. 
+- <cg>Added</c> a Song List scrolling shortcut to the currently playing song. 
   - Shortcuts for the top and bottom of the song list also included, because why not.
   - Song list scrolling shortcuts are to the right of the scrollbar.
-- Added Compact Mode to the Song List.
-  - Your preferences for Compact Mode persist between restarts.
+- <cg>Added</c> Compact Mode to the Song List.
+  - Your preferences for Compact Mode are saved between restarts.
   - If you want even smaller song entries in the Song List, check the mod settings.
-- Added a few filtering and sorting options to the Song List.
-  - Favorites Only - show only favorited songs.
-  - Reverse - reverses the Song List's entries.
-  - Alphabetical - sorts the Song List's entries alphabetically.
-  - Song Length - sorts the Song List's entries by their length.
-  - Song Size - sorts the Song List's entries by file size.
-- Changed the placeholder text in the search bar in the Song List to include the name of the currently playing song.
-- Fix an incompatibility with Eclipse Menu's "Transparent Lists" feature.
-- Attempt to reduce frame drops when viewing many songs at once in the Song List menu.
-- Various (attempts at) micro-optimizations.
+- <cg>Added</c> a few <cl>filtering</c> and <cj>sorting</c> options to the Song List.
+  - <cl>Favorites Only</c> - show only favorited songs.
+  - <cl>Reverse</c> - reverses the Song List's entries.
+  - <cj>Alphabetical</c> - sorts the Song List's entries alphabetically.
+  - <cj>Song Length</c> - sorts the Song List's entries by their length. <c-ff0000>[Hidden by default--this one takes an awfully long amount of time!]</c>
+  - <cj>Song Size</c> - sorts the Song List's entries by file size.
+  - Your preferences for these <cl>filtering</c> and <cj>sorting</c> options are saved between restarts.
+  - All of the <cj>sorting</c> options are mutually exclusive from each other.
+- <co>Changed</c> the placeholder text in the search bar in the Song List to include the name of the currently playing song.
+- <co>Fix</c> an incompatibility with Eclipse Menu's "Transparent Lists" feature.
+- <co>Attempt to reduce</c> frame drops when viewing many songs at once in the Song List menu.
+- Various (<co>attempts</c> at) micro-optimizations.
 ## v1.10.1
 - Add a scrollbar.
 - Move binary releases to Codeberg.
 ## v1.10.0
-- Rewrite `Constant Shuffle Mode`.
+- <co>Rewrite</c> `Constant Shuffle Mode`.
   - It should shuffle songs more consistently than before.
   - It should also not override/break menu loops from other screens in Geometry Dash anymore, or menu loops from other Geode mods.
 - Add JIT-less iOS support. (Begrudgingly.)
