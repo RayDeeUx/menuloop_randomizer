@@ -93,9 +93,9 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		[reverse](MLRSongCell* a, MLRSongCell* b) {
 			return SongListLayer::songLength(a, b, reverse);
 		});
+	} else if (reverse) {
+		std::reverse(cellsToAdd.begin(), cellsToAdd.end());
 	}
-
-	if (reverse) std::reverse(cellsToAdd.begin(), cellsToAdd.end());
 
 	isEven = false;
 	for (MLRSongCell* cell : cellsToAdd) {
