@@ -458,9 +458,6 @@ void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_
 	const bool originalSavedValue = SAVED(savedValueKey);
 	geode::Mod::get()->setSavedValue<bool>("songListSortAlphabetically", false);
 	geode::Mod::get()->setSavedValue<bool>("songListSortFileSize", false);
-	/*
-	toggle(true) for the selected one (false for others)
-	*/
 	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByIDRecursive("alphabetical-button"_spr)); toggler) {
 		toggler->toggle(false);
 		if (savedValueKey == "songListSortAlphabetically") toggler->toggle(originalSavedValue);
