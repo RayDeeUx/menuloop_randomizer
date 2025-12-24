@@ -36,19 +36,21 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	for (const std::string& song : songManager.getSongs()) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
 
+		SongType songType = SongType::Regular;
+		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
+		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
+
+		if (songListFavoritesOnlyMode && songType != SongType::Favorited) continue;
+
 		const std::filesystem::path& songFilePath = Utils::toProblematicString(song);
 		SongData songData = {
 			Utils::toNormalizedString(songFilePath),
 			Utils::toNormalizedString(songFilePath.extension()),
-			Utils::toNormalizedString(songFilePath.filename()), "", SongType::Regular,
+			Utils::toNormalizedString(songFilePath.filename()), "", songType,
 			Utils::isFromConfigOrAlternateDir(songFilePath.parent_path()), false
 		};
-		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songData.type = SongType::Blacklisted;
-		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songData.type = SongType::Favorited;
 
 		songData.displayName = SongListLayer::generateDisplayName(songData);
-
-		if (songListFavoritesOnlyMode && songData.type != SongType::Favorited) continue;
 
 		if (!queryString.empty()) {
 			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.displayName), geode::utils::string::toLower(queryString));
