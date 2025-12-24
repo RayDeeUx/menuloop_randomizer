@@ -27,6 +27,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	const std::vector<std::string>& blacklist = songManager.getBlacklist();
 	const std::vector<std::string>& favorites = songManager.getFavorites();
 	std::vector<std::string> alreadyAdded {};
+	std::vector<MLRSongCell*> cellsToAdd {};
 
 	const bool songListCompactMode = SAVED("songListCompactMode");
 	const bool songListFavoritesOnlyMode = SAVED("songListFavoritesOnlyMode");
@@ -34,23 +35,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	bool isEven = false;
 	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(isEven)); // intentonally blank song cell for padding to go beneath search bar. 36.f units tall
 
-	std::vector<std::string> songsVector = songManager.getSongs();
-
-	const bool reverse = SAVED("songListReverseSort");
-	if (SAVED("songListSortAlphabetically")) {
-		std::sort(songsVector.begin(), songsVector.end(),
-		[reverse](const std::string& a, const std::string& b) {
-			return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
-		});
-	} else if (SAVED("songListSortFileSize")) {
-		std::sort(songsVector.begin(), songsVector.end(),
-		[reverse](const std::string& a, const std::string& b) {
-			return SongListLayer::fileSize(a, b, reverse);
-		});
-	} else if (reverse) {
-		std::reverse(songsVector.begin(), songsVector.end());
-	}
-
+	const std::vector<std::string>& songsVector = songManager.getSongs();
 	float desiredContentHeight = 36.f; // always start with the height of the blank song cell, which is guaranteed to be 36.f units
 	for (const std::string& song : songsVector) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
@@ -85,11 +70,33 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		}
 
 		if (MLRSongCell* songCell = MLRSongCell::create(songData, isEven, songListCompactMode)) {
-			scrollLayer->m_contentLayer->addChild(songCell);
+			cellsToAdd.push_back(songCell);
 			alreadyAdded.push_back(song);
 			desiredContentHeight += songCell->getContentHeight();
 			isEven = !isEven;
 		}
+	}
+
+	const bool reverse = SAVED("songListReverseSort");
+	if (SAVED("songListSortAlphabetically")) {
+		std::sort(cellsToAdd.begin(), cellsToAdd.end(),
+		[reverse](MLRSongCell* a, MLRSongCell* b) {
+			return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
+		});
+	} else if (SAVED("songListSortFileSize")) {
+		std::sort(cellsToAdd.begin(), cellsToAdd.end(),
+		[reverse](MLRSongCell* a, MLRSongCell* b) {
+			return SongListLayer::fileSize(a, b, reverse);
+		});
+	} else if (reverse) {
+		std::reverse(cellsToAdd.begin(), cellsToAdd.end());
+	}
+
+	isEven = false;
+	for (MLRSongCell* cell : cellsToAdd) {
+		cell->toggleEven(isEven);
+		scrollLayer->m_contentLayer->addChild(cell);
+		isEven = !isEven;
 	}
 
 	scrollLayer->m_contentLayer->updateLayout();
@@ -229,7 +236,7 @@ bool SongListLayer::setup(const std::string&) {
 	cocos2d::CCMenu* viewModeMenu = cocos2d::CCMenu::create();
 
 	Utils::addViewModeToggle(SAVED("songListCompactMode"), "GJ_smallModeIcon_001.png", "compact-mode", menu_selector(SongListLayer::onCompactModeToggle), viewModeMenu, this);
-	Utils::addViewModeToggle(SAVED("songListFavoritesOnlyMode"), "GJ_sStarsIcon_001.png", "favorites-only", menu_selector(SongListLayer::onFavoritesOnlyToggle), viewModeMenu, this);
+	Utils::addViewModeToggle(SAVED("songListFavoritesOnlyMode"), "favorites.png"_spr, "favorites-only", menu_selector(SongListLayer::onFavoritesOnlyToggle), viewModeMenu, this);
 	Utils::addViewModeToggle(SAVED("songListReverseSort"), "reverse.png"_spr, "reverse-list", menu_selector(SongListLayer::onSortReverseToggle), viewModeMenu, this);
 	Utils::addViewModeToggle(SAVED("songListSortAlphabetically"), "abc.png"_spr, "alphabetical", menu_selector(SongListLayer::onSortABCToggle), viewModeMenu, this);
 	Utils::addViewModeToggle(SAVED("songListSortFileSize"), "size.png"_spr, "song-size", menu_selector(SongListLayer::onSortSizeToggle), viewModeMenu, this);
@@ -451,6 +458,17 @@ void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_
 	const bool originalSavedValue = SAVED(savedValueKey);
 	geode::Mod::get()->setSavedValue<bool>("songListSortAlphabetically", false);
 	geode::Mod::get()->setSavedValue<bool>("songListSortFileSize", false);
+	/*
+	toggle(true) for the selected one (false for others)
+	*/
+	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByIDRecursive("alphabetical-button"_spr)); toggler) {
+		toggler->toggle(false);
+		if (savedValueKey == "songListSortAlphabetically") toggler->toggle(originalSavedValue);
+	}
+	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByIDRecursive("song-size-button"_spr)); toggler) {
+		toggler->toggle(false);
+		if (savedValueKey == "songListSortFileSize") toggler->toggle(originalSavedValue);
+	}
 	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
 	CCNode* searchBar = GET_SEARCH_BAR_NODE;
 	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
@@ -523,9 +541,9 @@ void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInpu
 	placeholderLabelMaybe->limitLabelWidth(350.f, 1.f, .0001f);
 }
 
-bool SongListLayer::caseInsensitiveAlphabetical(const std::string& a, const std::string& b, const bool reverse = false) {
-	auto cleanedUpA = SongListLayer::displayNameForLosers(a);
-	auto cleanedUpB = SongListLayer::displayNameForLosers(b);
+bool SongListLayer::caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
+	const std::string& cleanedUpA = SongListLayer::generateDisplayName(a->m_songData);
+	const std::string& cleanedUpB = SongListLayer::generateDisplayName(b->m_songData);
 	auto it1 = cleanedUpA.begin(), it2 = cleanedUpB.begin();
 	while (it1 != cleanedUpA.end() && it2 != cleanedUpB.end()) {
 		unsigned char c1 = static_cast<unsigned char>(*it1++);
@@ -540,11 +558,11 @@ bool SongListLayer::caseInsensitiveAlphabetical(const std::string& a, const std:
 	return false;
 }
 
-bool SongListLayer::fileSize(const std::string& a, const std::string& b, const bool reverse = false) {
+bool SongListLayer::fileSize(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
 	std::error_code ec;
-	std::uintmax_t fileSizeA = std::filesystem::file_size(Utils::toProblematicString(a), ec);
+	std::uintmax_t fileSizeA = std::filesystem::file_size(Utils::toProblematicString(a->m_songData.actualFilePath), ec);
 	fileSizeA = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSizeA;
-	std::uintmax_t fileSizeB = std::filesystem::file_size(Utils::toProblematicString(b), ec);
+	std::uintmax_t fileSizeB = std::filesystem::file_size(Utils::toProblematicString(b->m_songData.actualFilePath), ec);
 	fileSizeB = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSizeB;
 	if (fileSizeA < fileSizeB) return !reverse;
 	if (fileSizeA > fileSizeB) return reverse;

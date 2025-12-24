@@ -143,6 +143,11 @@ void MLRSongCell::checkIfCurrentSong() const {
 	this->m_playButton->setEnabled(!isCurrentSong);
 }
 
+void MLRSongCell::toggleEven(const bool isEven) {
+	this->setColor(isEven ? cocos2d::ccColor3B{161, 88, 44} : cocos2d::ccColor3B{194, 114, 62});
+}
+
+
 void MLRSongCell::update(float delta) {
 	MLRSongCell::checkIfCurrentSong();
 }

@@ -35,6 +35,6 @@ public:
 	static float determineYPosition(geode::ScrollLayer* scrollLayer);
 	static void displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode *inputNode);
 
-	static bool caseInsensitiveAlphabetical(const std::string &cleanedUpA, const std::string &cleanedUpB, bool reverse);
-	static bool fileSize(const std::string &a, const std::string &b, bool reverse);
+	static bool caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, bool reverse);
+	static bool fileSize(MLRSongCell* a, MLRSongCell* b, bool reverse);
 };

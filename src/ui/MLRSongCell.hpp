@@ -24,6 +24,7 @@ public:
 	bool initEmpty(const bool isEven);
 	void onPlaySong(CCObject*);
 	void checkIfCurrentSong() const;
+	void toggleEven(const bool);
 	void update(float delta);
 	SongData m_songData;
 	cocos2d::CCLabelBMFont* m_songNameLabel;

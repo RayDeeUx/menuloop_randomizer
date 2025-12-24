@@ -306,7 +306,8 @@
 			"sortOptionsSheet": [
 				"resources/abc.png",
 				"resources/size.png",
-				"resources/reverse.png"
+				"resources/reverse.png",
+				"resources/favorites.png"
 			]
 		}
 	},
