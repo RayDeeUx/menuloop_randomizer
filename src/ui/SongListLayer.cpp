@@ -469,15 +469,15 @@ void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_
 	geode::Mod::get()->setSavedValue<bool>("songListSortAlphabetically", false);
 	geode::Mod::get()->setSavedValue<bool>("songListSortSongLength", false);
 	geode::Mod::get()->setSavedValue<bool>("songListSortFileSize", false);
-	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByIDRecursive("alphabetical-button"_spr)); toggler) {
+	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByID("view-mode-menu"_spr)->getChildByID("alphabetical-button"_spr)); toggler) {
 		toggler->toggle(false);
 		if (savedValueKey == "songListSortAlphabetically") toggler->toggle(originalSavedValue);
 	}
-	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByIDRecursive("song-length-button"_spr)); toggler) {
+	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByID("view-mode-menu"_spr)->getChildByID("song-length-button"_spr)); toggler) {
 		toggler->toggle(false);
 		if (savedValueKey == "songListSortSongLength") toggler->toggle(originalSavedValue);
 	}
-	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByIDRecursive("song-size-button"_spr)); toggler) {
+	if (const auto toggler = static_cast<CCMenuItemToggler*>(this->m_mainLayer->getChildByID("view-mode-menu"_spr)->getChildByID("song-size-button"_spr)); toggler) {
 		toggler->toggle(false);
 		if (savedValueKey == "songListSortFileSize") toggler->toggle(originalSavedValue);
 	}
