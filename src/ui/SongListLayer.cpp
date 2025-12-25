@@ -32,8 +32,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	const bool songListCompactMode = SAVED("songListCompactMode");
 	const bool songListFavoritesOnlyMode = SAVED("songListFavoritesOnlyMode");
 
-	bool isEven = false;
-	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(isEven)); // intentonally blank song cell for padding to go beneath search bar. 36.f units tall
+	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false)); // intentonally blank song cell for padding to go beneath search bar. 36.f units tall
 
 	const std::vector<std::string>& songsVector = songManager.getSongs();
 	float desiredContentHeight = 36.f; // always start with the height of the blank song cell, which is guaranteed to be 36.f units
@@ -69,11 +68,10 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			if (!contains) continue;
 		}
 
-		if (MLRSongCell* songCell = MLRSongCell::create(songData, isEven, songListCompactMode)) {
+		if (MLRSongCell* songCell = MLRSongCell::create(songData, false, songListCompactMode)) {
 			cellsToAdd.push_back(songCell);
 			alreadyAdded.push_back(song);
 			desiredContentHeight += songCell->getContentHeight();
-			isEven = !isEven;
 		}
 	}
 
@@ -97,7 +95,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		std::reverse(cellsToAdd.begin(), cellsToAdd.end());
 	}
 
-	isEven = false;
+	bool isEven = true;
 	for (MLRSongCell* cell : cellsToAdd) {
 		cell->toggleEven(isEven);
 		scrollLayer->m_contentLayer->addChild(cell);

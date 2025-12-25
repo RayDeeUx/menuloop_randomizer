@@ -101,11 +101,10 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 
 	menu->setID("song-cell-menu"_spr);
 	songNameLabel->setID("song-cell-label"_spr);
-	divider->setID(fmt::format("song-cell-divider-{}"_spr, isEven));
-	this->setID(fmt::format("song-cell-{}"_spr, isEven));
+	divider->setID(fmt::format("song-cell-divider"_spr));
 
 	this->setOpacity(255);
-	this->setColor(isEven ? cocos2d::ccColor3B{161, 88, 44} : cocos2d::ccColor3B{194, 114, 62});
+	this->setColor(cocos2d::ccColor3B{0, 0, 0});
 
 	MLRSongCell::checkIfCurrentSong(); // call immediately
 	this->schedule(schedule_selector(MLRSongCell::update), .125f); // schedule this function less often
@@ -145,6 +144,7 @@ void MLRSongCell::checkIfCurrentSong() const {
 
 void MLRSongCell::toggleEven(const bool isEven) {
 	this->setColor(isEven ? cocos2d::ccColor3B{161, 88, 44} : cocos2d::ccColor3B{194, 114, 62});
+	this->setID(fmt::format("song-cell-{}"_spr, isEven));
 }
 
 
