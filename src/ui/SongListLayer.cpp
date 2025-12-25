@@ -87,18 +87,15 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 	const bool reverse = SAVED("songListReverseSort");
 	if (SAVED("songListSortAlphabetically")) {
-		std::sort(cellsToAdd.begin(), cellsToAdd.end(),
-		[reverse](MLRSongCell* a, MLRSongCell* b) {
+		std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
 			return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
 		});
 	} else if (SAVED("songListSortFileSize")) {
-		std::sort(cellsToAdd.begin(), cellsToAdd.end(),
-		[reverse](MLRSongCell* a, MLRSongCell* b) {
+		std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
 			return SongListLayer::fileSize(a, b, reverse);
 		});
 	} else if (SAVED("songListSortSongLength")) {
-		std::sort(cellsToAdd.begin(), cellsToAdd.end(),
-		[reverse](MLRSongCell* a, MLRSongCell* b) {
+		std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
 			return SongListLayer::songLength(a, b, reverse);
 		});
 	} else if (reverse) {
