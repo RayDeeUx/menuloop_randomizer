@@ -12,6 +12,7 @@ struct SongData {
 	std::string fileName = "";
 	std::string displayName = "";
 	SongType type = SongType::Regular;
+	unsigned int songLength = std::numeric_limits<std::uintmax_t>::max();
 	bool isFromConfigOrAltDir = false;
 	bool isEmpty = false;
 };

@@ -34,6 +34,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false)); // intentonally blank song cell for padding to go beneath search bar. 36.f units tall
 
+	FMOD::System* sys = FMODAudioEngine::get()->m_system;
 	const std::vector<std::string>& songsVector = songManager.getSongs();
 	float desiredContentHeight = 36.f; // always start with the height of the blank song cell, which is guaranteed to be 36.f units
 	for (const std::string& song : songsVector) {
@@ -56,6 +57,15 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		};
 
 		songData.displayName = SongListLayer::generateDisplayName(songData);
+
+		if (SAVED("songListSortFileSize")) {
+			FMOD::Sound* sound;
+			FMOD_RESULT resultSoundA = sys->createSound(songData.actualFilePath.c_str(), FMOD_OPENONLY | FMOD_2D, nullptr, &sound);
+			if (sound && resultSoundA == FMOD_OK) {
+				sound->getLength(&songData.songLength, FMOD_TIMEUNIT_MS);
+				sound->release();
+			}
+		}
 
 		if (!queryString.empty()) {
 			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.displayName), geode::utils::string::toLower(queryString));
@@ -585,20 +595,8 @@ bool SongListLayer::fileSize(MLRSongCell* a, MLRSongCell* b, const bool reverse 
 }
 
 bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
-	unsigned int lengthA = 0;
-	unsigned int lengthB = 0;
-	FMOD::Sound* soundA;
-	FMOD::Sound* soundB;
-	FMOD_RESULT resultSoundA = FMODAudioEngine::get()->m_system->createSound(a->m_songData.actualFilePath.c_str(), FMOD_OPENONLY | FMOD_2D, nullptr, &soundA);
-	FMOD_RESULT resultSoundB = FMODAudioEngine::get()->m_system->createSound(b->m_songData.actualFilePath.c_str(), FMOD_OPENONLY | FMOD_2D, nullptr, &soundB);
-	FMOD_RESULT resultLengthA = soundA->getLength(&lengthA, FMOD_TIMEUNIT_MS);
-	FMOD_RESULT resultLengthB = soundB->getLength(&lengthB, FMOD_TIMEUNIT_MS);
-	if (resultSoundA != FMOD_OK || resultLengthA != FMOD_OK) lengthA = std::numeric_limits<unsigned int>::max();
-	if (resultSoundB != FMOD_OK || resultLengthB != FMOD_OK) lengthB = std::numeric_limits<unsigned int>::max();
-	soundA->release();
-	soundB->release();
-	if (lengthA < lengthB) return !reverse;
-	if (lengthA > lengthB) return reverse;
+	if (a->m_songData.songLength < b->m_songData.songLength) return !reverse;
+	if (a->m_songData.songLength > b->m_songData.songLength) return reverse;
 	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
 }
 
