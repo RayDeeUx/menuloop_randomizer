@@ -589,12 +589,14 @@ bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool revers
 	unsigned int lengthB = 0;
 	FMOD::Sound* soundA;
 	FMOD::Sound* soundB;
-	FMOD_RESULT resultSoundA = FMODAudioEngine::get()->m_system->createSound(a->m_songData.actualFilePath.c_str(), FMOD_OPENONLY, nullptr, &soundA);
-	FMOD_RESULT resultSoundB = FMODAudioEngine::get()->m_system->createSound(b->m_songData.actualFilePath.c_str(), FMOD_OPENONLY, nullptr, &soundB);
+	FMOD_RESULT resultSoundA = FMODAudioEngine::get()->m_system->createSound(a->m_songData.actualFilePath.c_str(), FMOD_OPENONLY | FMOD_2D, nullptr, &soundA);
+	FMOD_RESULT resultSoundB = FMODAudioEngine::get()->m_system->createSound(b->m_songData.actualFilePath.c_str(), FMOD_OPENONLY | FMOD_2D, nullptr, &soundB);
 	FMOD_RESULT resultLengthA = soundA->getLength(&lengthA, FMOD_TIMEUNIT_MS);
 	FMOD_RESULT resultLengthB = soundB->getLength(&lengthB, FMOD_TIMEUNIT_MS);
 	if (resultSoundA != FMOD_OK || resultLengthA != FMOD_OK) lengthA = std::numeric_limits<unsigned int>::max();
 	if (resultSoundB != FMOD_OK || resultLengthB != FMOD_OK) lengthB = std::numeric_limits<unsigned int>::max();
+	soundA->release();
+	soundB->release();
 	if (lengthA < lengthB) return !reverse;
 	if (lengthA > lengthB) return reverse;
 	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
