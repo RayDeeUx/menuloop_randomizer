@@ -58,7 +58,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 		songData.displayName = SongListLayer::generateDisplayName(songData);
 
-		if (SAVED("songListSortFileSize")) {
+		if (SAVED("songListSortSongLength")) {
 			FMOD::Sound* sound;
 			FMOD_RESULT resultSoundA = sys->createSound(songData.actualFilePath.c_str(), FMOD_OPENONLY | FMOD_2D, nullptr, &sound);
 			if (sound && resultSoundA == FMOD_OK) {
