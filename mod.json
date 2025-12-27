@@ -312,6 +312,7 @@
 			"sortOptionsSheet": [
 				"resources/abc.png",
 				"resources/size.png",
+				"resources/dates.png",
 				"resources/length.png",
 				"resources/reverse.png",
 				"resources/favorites.png"

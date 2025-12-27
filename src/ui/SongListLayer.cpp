@@ -94,6 +94,10 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
 			return SongListLayer::fileSize(a, b, reverse);
 		});
+	} else if (SAVED("songListSortDateAdded")) {
+		std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
+			return SongListLayer::dateAdded(a, b, reverse);
+		});
 	} else if (SAVED("songListSortSongLength")) {
 		std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
 			return SongListLayer::songLength(a, b, reverse);
@@ -249,6 +253,7 @@ bool SongListLayer::setup(const std::string&) {
 	Utils::addViewModeToggle(SAVED("songListFavoritesOnlyMode"), "favorites.png"_spr, "favorites-only", menu_selector(SongListLayer::onFavoritesOnlyToggle), viewModeMenu, this);
 	Utils::addViewModeToggle(SAVED("songListReverseSort"), "reverse.png"_spr, "reverse-list", menu_selector(SongListLayer::onSortReverseToggle), viewModeMenu, this);
 	Utils::addViewModeToggle(SAVED("songListSortAlphabetically"), "abc.png"_spr, "alphabetical", menu_selector(SongListLayer::onSortABCToggle), viewModeMenu, this);
+	Utils::addViewModeToggle(SAVED("songListSortDateAdded"), "dates.png"_spr, "date-added", menu_selector(SongListLayer::onSortDateToggle), viewModeMenu, this);
 	if (Utils::getBool("showSortSongLength")) Utils::addViewModeToggle(SAVED("songListSortSongLength"), "length.png"_spr, "song-length", menu_selector(SongListLayer::onSortLengthToggle), viewModeMenu, this);
 	Utils::addViewModeToggle(SAVED("songListSortFileSize"), "size.png"_spr, "song-size", menu_selector(SongListLayer::onSortSizeToggle), viewModeMenu, this);
 
@@ -463,6 +468,10 @@ void SongListLayer::onSortABCToggle(CCObject*) {
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortAlphabetically");
 }
 
+void SongListLayer::onSortDateToggle(CCObject*) {
+	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortDateAdded");
+}
+
 void SongListLayer::onSortLengthToggle(CCObject*) {
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortSongLength");
 }
@@ -475,33 +484,25 @@ void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_
 	cocos2d::CCNode* viewModeMenu = this->m_mainLayer->getChildByID("view-mode-menu"_spr);
 	if (!viewModeMenu) return;
 	const bool originalSavedValue = SAVED(savedValueKey);
-	geode::log::info("savedValueKey: {}", savedValueKey);
 	geode::Mod::get()->setSavedValue<bool>("songListSortAlphabetically", false);
 	geode::Mod::get()->setSavedValue<bool>("songListSortSongLength", false);
+	geode::Mod::get()->setSavedValue<bool>("songListSortDateAdded", false);
 	geode::Mod::get()->setSavedValue<bool>("songListSortFileSize", false);
 	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID("alphabetical-button"_spr)); toggler) {
-		geode::log::info("alphabetical-button set to false");
 		toggler->toggle(false);
-		if (savedValueKey == "songListSortAlphabetically") {
-			toggler->toggle(originalSavedValue);
-			geode::log::info("alphabetical-button set to true");
-		}
+		if (savedValueKey == "songListSortAlphabetically") toggler->toggle(originalSavedValue);
+	}
+	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID("date-added-button"_spr)); toggler) {
+		toggler->toggle(false);
+		if (savedValueKey == "songListSortDateAdded") toggler->toggle(originalSavedValue);
 	}
 	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID("song-length-button"_spr)); toggler) {
-		geode::log::info("song-length-button set to false");
 		toggler->toggle(false);
-		if (savedValueKey == "songListSortSongLength") {
-			toggler->toggle(originalSavedValue);
-			geode::log::info("song-length-button set to true");
-		}
+		if (savedValueKey == "songListSortSongLength") toggler->toggle(originalSavedValue);
 	}
 	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID("song-size-button"_spr)); toggler) {
-		geode::log::info("song-size-button set to false");
 		toggler->toggle(false);
-		if (savedValueKey == "songListSortFileSize") {
-			toggler->toggle(originalSavedValue);
-			geode::log::info("song-size-button set to true");
-		}
+		if (savedValueKey == "songListSortFileSize") toggler->toggle(originalSavedValue);
 	}
 	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
 	CCNode* searchBar = GET_SEARCH_BAR_NODE;
@@ -589,6 +590,19 @@ bool SongListLayer::fileSize(MLRSongCell* a, MLRSongCell* b, const bool reverse 
 	if (fileSizeA < fileSizeB) return !reverse;
 	if (fileSizeA > fileSizeB) return reverse;
 	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
+}
+
+bool SongListLayer::dateAdded(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
+	std::error_code ea, eb;
+	auto ta = std::filesystem::last_write_time(Utils::toProblematicString(a->m_songData.actualFilePath), ea);
+	auto tb = std::filesystem::last_write_time(Utils::toProblematicString(b->m_songData.actualFilePath), eb);
+	if (ea || eb) {
+		if (ea && eb) return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
+		if (ea) return true;
+		if (eb) return false;
+	}
+	if (reverse) return tb < ta;
+	return ta < tb;
 }
 
 bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {

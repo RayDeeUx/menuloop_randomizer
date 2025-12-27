@@ -1,5 +1,6 @@
 # Menu Loop Randomizer Changelog
 ## v1.10.2
+***__This is a really lengthy changelog; be sure to read everything!__***
 - <cg>Added</c> `Continue Menu Loop on Level Exit` and `Continue Menu Loop on Editor Exit` (suggested by [Myron472/GlydeR](https://github.com/Myron472) and [Abagur900](https://github.com/Abagur900)).
   - <c-ff0000>***__READ:__*** **__These two toggles will__** ***__ONLY__*** **__work if you disable [Colon's Menu Loop Start Time mod](mod:colon.menu_loop_start_time)!!!__** [You can either disable it through its mod settings or through Geode's buttons, either is fine.]</c>
   - This toggle is mutually exclusive with the `Randomize Menu Loop on Level Exit` and `Randomize Menu Loop on Editor Exit` toggles.
@@ -15,7 +16,8 @@
   - <cl>Favorites Only</c> - show only favorited songs.
   - <cl>Reverse</c> - reverses the Song List's entries.
   - <cj>Alphabetical</c> - sorts the Song List's entries alphabetically.
-  - <cj>Song Length</c> - sorts the Song List's entries by their length. <c-ff0000>[Hidden by default--this one takes an awfully long amount of time!]</c>
+  - <cj>Date Created</c> - sorts the Song List's entries by the date they were added to your device.
+  - <cj>Song Length</c> - sorts the Song List's entries by their length. <c-ff0000>[Hidden by default--this one can freeze your game and take an awfully long amount of time!]</c>
   - <cj>Song Size</c> - sorts the Song List's entries by file size.
   - Your preferences for these <cl>filtering</c> and <cj>sorting</c> options are saved between restarts.
   - All of the <cj>sorting</c> options are mutually exclusive from each other.

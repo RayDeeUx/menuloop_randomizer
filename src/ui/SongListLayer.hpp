@@ -23,6 +23,7 @@ public:
 	void onFavoritesOnlyToggle(CCObject*);
 	void onSortReverseToggle(CCObject*);
 	void onSortABCToggle(CCObject*);
+	void onSortDateToggle(CCObject*);
 	void onSortLengthToggle(CCObject*);
 	void onSortSizeToggle(CCObject*);
 	void disableAllSortFiltersThenToggleThenSearch(std::string_view savedValueKey);
@@ -37,6 +38,7 @@ public:
 
 	static bool caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool fileSize(MLRSongCell* a, MLRSongCell* b, bool reverse);
+	static bool dateAdded(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool songLength(MLRSongCell* a, MLRSongCell* b, bool reverse);
 
 	void update(float) override;
