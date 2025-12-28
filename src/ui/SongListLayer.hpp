@@ -41,5 +41,7 @@ public:
 	static bool dateAdded(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool songLength(MLRSongCell* a, MLRSongCell* b, bool reverse);
 
+	static unsigned int getLength(const std::filesystem::path &path, const bool reverse);
+
 	void update(float) override;
 };

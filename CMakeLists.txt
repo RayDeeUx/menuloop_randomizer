@@ -27,4 +27,7 @@ endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
+CPMAddPackage("gh:mackron/miniaudio#f40cf03")
+target_link_libraries(${PROJECT_NAME} miniaudio)
+
 setup_geode_mod(${PROJECT_NAME})

@@ -5,6 +5,7 @@
 #include "../Utils.hpp"
 #include "../SongControl.hpp"
 #include "../SongManager.hpp"
+#include <miniaudio.h>
 
 #define SAVED(key) geode::Mod::get()->getSavedValue<bool>(key, false)
 
@@ -31,6 +32,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 	const bool songListCompactMode = SAVED("songListCompactMode");
 	const bool songListFavoritesOnlyMode = SAVED("songListFavoritesOnlyMode");
+	const bool reverse = SAVED("songListReverseSort");
 
 	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false)); // intentonally blank song cell for padding to go beneath search bar. 36.f units tall
 
@@ -58,14 +60,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 		songData.displayName = SongListLayer::generateDisplayName(songData);
 
-		if (SAVED("songListSortSongLength")) {
-			FMOD::Sound* sound;
-			FMOD_RESULT resultSoundA = sys->createSound(songData.actualFilePath.c_str(), FMOD_OPENONLY | FMOD_2D, nullptr, &sound);
-			if (sound && resultSoundA == FMOD_OK) {
-				sound->getLength(&songData.songLength, FMOD_TIMEUNIT_MS);
-				sound->release();
-			}
-		}
+		if (SAVED("songListSortSongLength")) songData.songLength = SongListLayer::getLength(songFilePath, reverse);
 
 		if (!queryString.empty()) {
 			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.displayName), geode::utils::string::toLower(queryString));
@@ -85,7 +80,6 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		}
 	}
 
-	const bool reverse = SAVED("songListReverseSort");
 	if (SAVED("songListSortAlphabetically")) {
 		std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
 			return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
@@ -609,6 +603,26 @@ bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool revers
 	if (a->m_songData.songLength < b->m_songData.songLength) return !reverse;
 	if (a->m_songData.songLength > b->m_songData.songLength) return reverse;
 	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
+}
+
+unsigned int SongListLayer::getLength(const std::filesystem::path &path, const bool reverse) {
+	const double extreme = reverse ? std::numeric_limits<double>::min() : std::numeric_limits<double>::max();
+	ma_decoder decoder;
+	if (ma_decoder_init_file(path.string().c_str(), nullptr, &decoder) != MA_SUCCESS) {
+		return extreme;
+	}
+
+	ma_uint64 frames = 0;
+	if (ma_decoder_get_length_in_pcm_frames(&decoder, &frames) != MA_SUCCESS) {
+		ma_decoder_uninit(&decoder);
+		return extreme;
+	}
+
+	ma_uint32 sampleRate = decoder.outputSampleRate;
+	ma_decoder_uninit(&decoder);
+
+	if (sampleRate == 0) return extreme;
+	return static_cast<unsigned int>(static_cast<double>(frames) / static_cast<double>(sampleRate));
 }
 
 void SongListLayer::update(float) {
