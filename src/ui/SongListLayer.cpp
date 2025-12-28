@@ -36,7 +36,6 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false)); // intentonally blank song cell for padding to go beneath search bar. 36.f units tall
 
-	FMOD::System* sys = FMODAudioEngine::get()->m_system;
 	const std::vector<std::string>& songsVector = songManager.getSongs();
 	float desiredContentHeight = 36.f; // always start with the height of the blank song cell, which is guaranteed to be 36.f units
 	for (const std::string& song : songsVector) {
