@@ -5,7 +5,9 @@
 #include "../Utils.hpp"
 #include "../SongControl.hpp"
 #include "../SongManager.hpp"
+#ifndef GEODE_IS_IOS
 #include <miniaudio.h>
+#endif
 
 #define SAVED(key) geode::Mod::get()->getSavedValue<bool>(key, false)
 
@@ -605,7 +607,8 @@ bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool revers
 }
 
 unsigned int SongListLayer::getLength(const std::string& path, const bool reverse) {
-	const double extreme = reverse ? std::numeric_limits<double>::min() : std::numeric_limits<double>::max();
+	const unsigned int extreme = reverse ? std::numeric_limits<unsigned int>::min() : std::numeric_limits<unsigned int>::max();
+	#ifndef GEODE_IS_IOS
 	ma_decoder decoder;
 	if (ma_decoder_init_file(path.c_str(), nullptr, &decoder) != MA_SUCCESS) return extreme;
 
@@ -620,6 +623,19 @@ unsigned int SongListLayer::getLength(const std::string& path, const bool revers
 
 	if (sampleRate == 0) return extreme;
 	return static_cast<unsigned int>(static_cast<double>(frames) / static_cast<double>(sampleRate));
+	#else
+	FMOD::System* system = FMODAudioEngine::get()->m_system;
+	if (!system) return extreme;
+	unsigned int temp = extreme;
+	FMOD::Sound* sound;
+	FMOD_RESULT resultSoundA = sys->createSound(path.c_str(), FMOD_OPENONLY | FMOD_2D, nullptr, &sound);
+	if (sound && resultSoundA == FMOD_OK) {
+		sound->getLength(&temp, FMOD_TIMEUNIT_MS);
+		sound->release();
+		return temp;
+	}
+	return extreme;
+	#endif
 }
 
 void SongListLayer::update(float) {
