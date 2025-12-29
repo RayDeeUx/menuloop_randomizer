@@ -40,9 +40,10 @@ target_link_libraries(${PROJECT_NAME} miniaudio)
 if ("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" OR IOS)
     configure_file(
         ${miniaudio_SOURCE_DIR}/miniaudio.c
-        ${CMAKE_CURRENT_BINARY_DIR}/miniaudio.m
+        ${CMAKE_CURRENT_BINARY_DIR}/miniaudio.mm
         COPYONLY
     )
+    target_sources(miniaudio ${CMAKE_CURRENT_BINARY_DIR}/miniaudio.m,)
     target_link_libraries(miniaudio PUBLIC
         "-framework AudioToolbox"
         "-framework CoreAudio"
