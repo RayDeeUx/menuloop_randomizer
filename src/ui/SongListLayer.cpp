@@ -5,7 +5,7 @@
 #include "../Utils.hpp"
 #include "../SongControl.hpp"
 #include "../SongManager.hpp"
-#include "../miniaudio/miniaudio.h"
+#include <miniaudio.h>
 
 #define SAVED(key) geode::Mod::get()->getSavedValue<bool>(key, false)
 
