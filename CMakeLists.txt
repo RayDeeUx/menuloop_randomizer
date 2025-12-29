@@ -37,7 +37,7 @@ CPMAddPackage("gh:mackron/miniaudio#f40cf03")
 # Compiling through the command line requires linking to -lpthread and -lm.
 
 if ("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" OR IOS)
-    add_library(miniaudio_objcxx INTERFACE)
+    # add_library(miniaudio_objcxx INTERFACE)
     target_compile_options(miniaudio_objcxx INTERFACE
         $<$<PLATFORM_ID:Darwin>:-x objective-c++>
     )
