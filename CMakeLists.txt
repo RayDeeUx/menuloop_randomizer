@@ -38,8 +38,6 @@ target_link_libraries(${PROJECT_NAME} miniaudio)
 # Compiling through the command line requires linking to -lpthread and -lm.
 
 if ("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" OR IOS)
-    add_library(miniaudio STATIC ${miniaudio_SOURCE_DIR}/miniaudio.c)
-    target_include_directories(miniaudio PUBLIC ${miniaudio_SOURCE_DIR})
     set_source_files_properties(${miniaudio_SOURCE_DIR}/miniaudio.c PROPERTIES LANGUAGE OBJC)
     target_link_libraries(miniaudio PUBLIC
         "-framework AudioToolbox"
