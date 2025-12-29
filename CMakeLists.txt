@@ -27,13 +27,6 @@ endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
-# https://miniaud.io/docs/manual/index.html
-# The macOS build should compile cleanly without the need to download any dependencies
-# nor link to any libraries or frameworks.
-# The iOS build needs to be compiled as Objective-C and will need to link the relevant frameworks
-# but should compile cleanly out of the box with Xcode.
-# Compiling through the command line requires linking to -lpthread and -lm.
-
 if ("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" OR IOS)
     message(STATUS "Fuck iOS.")
 else()
