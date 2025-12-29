@@ -59,7 +59,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 		songData.displayName = SongListLayer::generateDisplayName(songData);
 
-		if (SAVED("songListSortSongLength")) songData.songLength = SongListLayer::getLength(songFilePath, reverse);
+		if (SAVED("songListSortSongLength")) songData.songLength = SongListLayer::getLength(songData.actualFilePath, reverse);
 
 		if (!queryString.empty()) {
 			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.displayName), geode::utils::string::toLower(queryString));
@@ -604,12 +604,10 @@ bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool revers
 	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
 }
 
-unsigned int SongListLayer::getLength(const std::filesystem::path &path, const bool reverse) {
+unsigned int SongListLayer::getLength(const std::string& path, const bool reverse) {
 	const double extreme = reverse ? std::numeric_limits<double>::min() : std::numeric_limits<double>::max();
 	ma_decoder decoder;
-	if (ma_decoder_init_file(path.string().c_str(), nullptr, &decoder) != MA_SUCCESS) {
-		return extreme;
-	}
+	if (ma_decoder_init_file(path.c_str(), nullptr, &decoder) != MA_SUCCESS) return extreme;
 
 	ma_uint64 frames = 0;
 	if (ma_decoder_get_length_in_pcm_frames(&decoder, &frames) != MA_SUCCESS) {
@@ -617,7 +615,7 @@ unsigned int SongListLayer::getLength(const std::filesystem::path &path, const b
 		return extreme;
 	}
 
-	ma_uint32 sampleRate = decoder.outputSampleRate;
+	const ma_uint32 sampleRate = decoder.outputSampleRate;
 	ma_decoder_uninit(&decoder);
 
 	if (sampleRate == 0) return extreme;
