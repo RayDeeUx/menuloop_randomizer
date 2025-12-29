@@ -625,7 +625,7 @@ unsigned int SongListLayer::getLength(const std::string& path, const bool revers
 	return static_cast<unsigned int>(static_cast<double>(frames) / static_cast<double>(sampleRate));
 	#else
 	FMOD::System* sys = FMODAudioEngine::get()->m_system;
-	if (!system) return extreme;
+	if (!sys) return extreme;
 	unsigned int temp = extreme;
 	FMOD::Sound* sound;
 	FMOD_RESULT resultSoundA = sys->createSound(path.c_str(), FMOD_OPENONLY | FMOD_2D, nullptr, &sound);
