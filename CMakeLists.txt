@@ -41,16 +41,8 @@ if ("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" OR IOS)
     set_source_files_properties(${miniaudio_SOURCE_DIR}/miniaudio.c PROPERTIES LANGUAGE OBJC)
     target_link_libraries(miniaudio PUBLIC
         "-framework AudioToolbox"
-        "-framework AVFoundation"
         "-framework CoreAudio"
         "-framework CoreFoundation"
-        "-framework CoreGraphics"
-        "-framework CoreMedia"
-        "-framework Foundation"
-        "-framework MediaPlayer"
-        "-framework OpenGLES"
-        "-framework QuartzCore"
-        "-framework UIKit"
         pthread
         m
     )
