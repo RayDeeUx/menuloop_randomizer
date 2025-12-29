@@ -29,6 +29,7 @@ add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
 CPMAddPackage("gh:mackron/miniaudio#f40cf03")
 target_link_libraries(${PROJECT_NAME} miniaudio)
+add_compile_definitions(MINIAUDIO_IMPLEMENTATION)
 
 # https://miniaud.io/docs/manual/index.html
 # The macOS build should compile cleanly without the need to download any dependencies
