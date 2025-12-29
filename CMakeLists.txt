@@ -15,6 +15,7 @@ file(GLOB SOURCES
     src/*.hpp
     src/ui/*.cpp
     src/ui/*.hpp
+    src/miniaudio/miniaudio.h
 )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
@@ -26,31 +27,5 @@ else()
 endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
-
-CPMAddPackage("gh:mackron/miniaudio#f40cf03")
-target_link_libraries(${PROJECT_NAME} miniaudio)
-
-# https://miniaud.io/docs/manual/index.html
-# The macOS build should compile cleanly without the need to download any dependencies
-# nor link to any libraries or frameworks.
-# The iOS build needs to be compiled as Objective-C and will need to link the relevant frameworks
-# but should compile cleanly out of the box with Xcode.
-# Compiling through the command line requires linking to -lpthread and -lm.
-
-if ("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" OR IOS)
-    configure_file(
-        ${miniaudio_SOURCE_DIR}/miniaudio.c
-        ${CMAKE_CURRENT_BINARY_DIR}/miniaudio.mm
-        COPYONLY
-    )
-    target_sources(miniaudio ${CMAKE_CURRENT_BINARY_DIR}/miniaudio.m,)
-    target_link_libraries(miniaudio PUBLIC
-        "-framework AudioToolbox"
-        "-framework CoreAudio"
-        "-framework CoreFoundation"
-        pthread
-        m
-    )
-endif()
 
 setup_geode_mod(${PROJECT_NAME})
