@@ -28,7 +28,6 @@ endif()
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
 CPMAddPackage("gh:mackron/miniaudio#f40cf03")
-target_link_libraries(${PROJECT_NAME} miniaudio)
 
 # https://miniaud.io/docs/manual/index.html
 # The macOS build should compile cleanly without the need to download any dependencies
@@ -38,8 +37,11 @@ target_link_libraries(${PROJECT_NAME} miniaudio)
 # Compiling through the command line requires linking to -lpthread and -lm.
 
 if ("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" OR IOS)
-    get_target_property(miniaudio_sources miniaudio SOURCES)
-    set_source_files_properties(${miniaudio_sources} PROPERTIES LANGUAGE OBJCXX)
+    add_library(miniaudio_objcxx INTERFACE)
+    target_compile_options(miniaudio_objcxx INTERFACE
+        $<$<PLATFORM_ID:Darwin>:-x objective-c++>
+    )
+    target_link_libraries(${PROJECT_NAME} miniaudio_objcxx)
     target_link_libraries(miniaudio PUBLIC
         "-framework AudioToolbox"
         "-framework CoreAudio"
@@ -47,6 +49,8 @@ if ("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" OR IOS)
         pthread
         m
     )
+else()
+    target_link_libraries(${PROJECT_NAME} miniaudio)
 endif()
 
 setup_geode_mod(${PROJECT_NAME})
