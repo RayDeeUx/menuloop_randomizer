@@ -43,7 +43,7 @@ if ("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" OR IOS)
         ${CMAKE_CURRENT_BINARY_DIR}/miniaudio.mm
         COPYONLY
     )
-    target_sources(miniaudio ${CMAKE_CURRENT_BINARY_DIR}/miniaudio.m,)
+    target_sources(miniaudio ${CMAKE_CURRENT_BINARY_DIR}/miniaudio.mm)
     target_link_libraries(miniaudio PUBLIC
         "-framework AudioToolbox"
         "-framework CoreAudio"
