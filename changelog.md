@@ -1,17 +1,21 @@
 # Menu Loop Randomizer Changelog
 ## v1.10.2
 ***__This is a really lengthy changelog; be sure to read everything!__***
+*(Changelog items/subitems containing <cl>blue</c> or <cj>cyan</c> text indicates that [Better Touch Prio](mod:alk.better-touch-prio) is required to use that feature. These decisions will not be reverted anytime soon.)*
 - <cg>Added</c> `Continue Menu Loop on Level Exit` and `Continue Menu Loop on Editor Exit` (suggested by [Myron472/GlydeR](https://github.com/Myron472) and [Abagur900](https://github.com/Abagur900)).
   - <c-ff0000>***__READ:__*** **__These two toggles will__** ***__ONLY__*** **__work if you disable [Colon's Menu Loop Start Time mod](mod:colon.menu_loop_start_time)!!!__** [You can either disable it through its mod settings or through Geode's buttons, either is fine.]</c>
-  - This toggle is mutually exclusive with the `Randomize Menu Loop on Level Exit` and `Randomize Menu Loop on Editor Exit` toggles.
-  - If `Randomize Menu Loop on Level Exit` is enabled, it will apply first, and ignore your preference for `Continue Menu Loop on Level Exit`.
+  - These toggles are mutually exclusive with their corresponding `Randomize Menu Loop on Level Exit` and `Randomize Menu Loop on Editor Exit` toggles.
+  - Example: if `Randomize Menu Loop on Level Exit` is enabled, it will apply first, and ignore your preference for `Continue Menu Loop on Level Exit`.
   - The same logic applies to the `Randomize Menu Loop on Editor Exit` and `Continue Menu Loop on Editor Exit` toggles.
 - <cg>Added</c> a Song List scrolling shortcut to the currently playing song. 
   - Shortcuts for the top and bottom of the song list also included, because why not.
   - Song list scrolling shortcuts are to the right of the scrollbar.
-- <cg>Added</c> Compact Mode to the Song List.
+  - You can toggle it off in mod settings.
+- <cg>Added</c> <cl>Compact Mode</c> to the Song List.
   - Your preferences for Compact Mode are saved between restarts.
   - If you want even smaller song entries in the Song List, check the mod settings.
+  - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> to use this feature.
+  - You can toggle it off in mod settings.
 - <cg>Added</c> a few <cl>filtering</c> and <cj>sorting</c> options to the Song List.
   - <cl>Favorites Only</c> - show only favorited songs.
   - <cl>Reverse</c> - reverses the Song List's entries.
@@ -21,7 +25,11 @@
   - <cj>Song Size</c> - sorts the Song List's entries by file size.
   - Your preferences for these <cl>filtering</c> and <cj>sorting</c> options are saved between restarts.
   - All of the <cj>sorting</c> options are mutually exclusive from each other.
-- <co>Changed</c> the placeholder text in the search bar in the Song List to include the name of the currently playing song.
+  - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> to use this feature.
+  - You can toggle it off in mod settings.
+- <co>Changed</c> the Search Bar a bit so it <cl>requ</c><cj>ires</c> [Better Touch Prio](mod:alk.better-touch-prio) to be used.
+- <co>Changed</c> the Search Bar a bit so it can be toggled off in mod settings.
+- <co>Changed</c> the placeholder text in the Search Bar in the Song List to include the name of the currently playing song.
 - <co>Fix</c> an incompatibility with Eclipse Menu's "Transparent Lists" feature.
 - <co>Attempt to reduce</c> frame drops when viewing many songs at once in the Song List menu.
 - Various (<co>attempts</c> at) micro-optimizations.

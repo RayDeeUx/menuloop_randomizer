@@ -277,15 +277,14 @@ bool SongListLayer::setup(const std::string&) {
 	infoMenu->setContentSize({24.f * .75f, 23.f * .75f});
 	InfoAlertButton* infoBtn = InfoAlertButton::create(
 		"Menu Loop Randomizer - Help/FAQ",
-		"Yellow = <cy>favorited</c> song. Green = <cg>current</c> song.\n"
-		"Italicized = NG/ML song from elsewhere. Gradient = Jukebox/NONG.\n"
-		"You can <cl>shuffle songs</c>, <cl>copy the current song's name</c>,\n"
-		"<cl>go back one song</c>, and <cl>reopen the control panel</c>.\n"
+		"Gold = <cy>favorited</c>. Green = <cg>current</c>.\n"
+		"Italics = NG/ML song stored elsewhere. Small dark gradient = Jukebox/NONG.\n"
+		"Controls: <cl>shuffle</c>, <cl>copy name</c>, <cl>previous song</c>, <cl>control panel</c>.\n"
 		"<cy>Q: I'm seeing numbers for most of my songs?!</c>\n"
-		"A: Someone probably goofed up, which is out of my reach.\n"
+		"A: Check if it has a gradient.\n\n"
 		"<cy>Q: Make this mod act more closely to Spotify!</c>\n"
-		"A: <c_>No. Never. Spotify's UI/UX sets BAD precedents.</c>\n"
-		"<cy>Q: Where is the search bar and song sorting options?\n"
+		"A: <c_>No. Never. Spotify's UI/UX sets BAD precedents.</c>\n\n"
+		"<cy>Q: Where is the search bar/song sorting menu?</c>\n"
 		"A: <cg>Install \"Better Touch Prio\" by alk1m123; check your settings.</c>",
 		.75f
 	);
