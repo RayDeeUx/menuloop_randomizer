@@ -278,7 +278,7 @@ bool SongListLayer::setup(const std::string&) {
 	InfoAlertButton* infoBtn = InfoAlertButton::create(
 		"Menu Loop Randomizer - Help/FAQ",
 		"Yellow = <cy>favorited</c> song. Green = <cg>current</c> song.\n"
-		"Italicized = NG/ML song from unexpected path. Gradient = Jukebox (NONG).\n"
+		"Italicized = NG/ML song from elsewhere. Gradient = Jukebox/NONG.\n"
 		"You can <cl>shuffle songs</c>, <cl>copy the current song's name</c>,\n"
 		"<cl>go back one song</c>, and <cl>reopen the control panel</c>.\n"
 		"<cy>Q: I'm seeing numbers for most of my songs?!</c>\n"
