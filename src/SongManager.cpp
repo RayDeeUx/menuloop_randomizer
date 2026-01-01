@@ -288,7 +288,7 @@ bool SongManager::getUndefined0Alk1m123TouchPrio() const {
 	return m_isUndefined0Alk1m123TouchPrio;
 }
 
-void SongManager::setColonMenuLoopStartTime(const geode::Mod* value) {
+void SongManager::setColonMenuLoopStartTime(geode::Mod* value) {
 	m_colonMenuLoopStartTime = value;
 }
 

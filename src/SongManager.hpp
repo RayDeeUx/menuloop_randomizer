@@ -69,7 +69,7 @@ class SongManager {
 	bool getShouldRestoreMenuLoopPoint() const;
 	void setUndefined0Alk1m123TouchPrio(const bool value);
 	bool getUndefined0Alk1m123TouchPrio() const;
-	void setColonMenuLoopStartTime(const geode::Mod* value);
+	void setColonMenuLoopStartTime(geode::Mod* value);
 	geode::Mod* getColonMenuLoopStartTime() const;
 
   private:
