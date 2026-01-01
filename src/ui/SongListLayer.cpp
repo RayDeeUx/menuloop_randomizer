@@ -278,10 +278,9 @@ bool SongListLayer::setup(const std::string&) {
 	InfoAlertButton* infoBtn = InfoAlertButton::create(
 		"Menu Loop Randomizer - Help/FAQ",
 		"Gold = <cy>favorited</c>. Green = <cg>current</c>.\n"
-		"Italics = NG/ML song stored elsewhere. Small dark gradient = Jukebox/NONG.\n"
-		"Controls: <cl>shuffle</c>, <cl>copy name</c>, <cl>previous song</c>, <cl>control panel</c>.\n"
-		"<cy>Q: I'm seeing numbers for most of my songs?!</c>\n"
-		"A: Check if it has a gradient.\n\n"
+		"Italics = NG/ML song stored in an unexpected place.\n"
+		"Dark gradient and/or random letters + numbers = Jukebox/NONG.\n"
+		"Controls: <cl>shuffle</c>, <cl>copy name</c>, <cl>previous song</c>, <cl>control panel</c>.\n\n"
 		"<cy>Q: Make this mod act more closely to Spotify!</c>\n"
 		"A: <c_>No. Never. Spotify's UI/UX sets BAD precedents.</c>\n\n"
 		"<cy>Q: Where is the search bar/song sorting menu?</c>\n"
