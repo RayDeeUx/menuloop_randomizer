@@ -409,7 +409,7 @@ void SongListLayer::onSettingsButton(CCObject*) {
 
 void SongListLayer::onShuffleButton(CCObject*) {
 	SongControl::shuffleSong();
-	if (GET_SEARCH_BAR_NODE) LIMIT_PLACEHOLDER
+	if (const SongManager& songManager = SongManager::get(); SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE) LIMIT_PLACEHOLDER
 }
 
 void SongListLayer::onCopyButton(CCObject*) {
@@ -570,8 +570,7 @@ float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
 }
 
 void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode* inputNode, const bool updateString) {
-	if (SEARCH_BAR_DISABLED) return;
-	if (!inputNode) return;
+	if (SEARCH_BAR_DISABLED || !inputNode) return;
 	cocos2d::CCLabelBMFont* placeholderLabelMaybe = static_cast<cocos2d::CCLabelBMFont*>(inputNode->getChildByTag(12242025));
 	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
 	if (!placeholderLabelMaybe || placeholderLabelMaybe->getColor() != cocos2d::ccColor3B{150, 150, 150}) return;
