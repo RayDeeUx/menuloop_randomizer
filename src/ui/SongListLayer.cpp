@@ -16,6 +16,11 @@
 #define EMPTY_SEARCH_STRG static_cast<geode::TextInput*>(searchBar)->setString("", false);
 #define LIMIT_PLACEHOLDER SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE)->getInputNode());
 
+#define SONG_SORTING_DISABLED !SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")
+#define SEARCH_BAR_DISABLED !SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSearchBar")
+#define SEARCH_BAR_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSearchBar")
+#define SONG_SORTING_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSortSongOptions")
+
 SongListLayer* SongListLayer::create(const std::string& id) {
 	auto* ret = new SongListLayer();
 	if (ret->initAnchored(420.f, 290.f, id)) {
@@ -32,14 +37,15 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	std::vector<std::string> alreadyAdded {};
 	std::vector<MLRSongCell*> cellsToAdd {};
 
-	const bool songListCompactMode = SAVED("songListCompactMode");
-	const bool songListFavoritesOnlyMode = SAVED("songListFavoritesOnlyMode");
-	const bool reverse = SAVED("songListReverseSort");
+	const bool songListCompactMode = SONG_SORTING_DISABLED ? false : SAVED("songListCompactMode");
+	const bool songListFavoritesOnlyMode = SONG_SORTING_DISABLED ? false : SAVED("songListFavoritesOnlyMode");
+	const bool reverse = SONG_SORTING_DISABLED ? false : SAVED("songListReverseSort");
 
-	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false)); // intentonally blank song cell for padding to go beneath search bar. 36.f units tall
+	if (SEARCH_BAR_ENABLED) scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false)); // intentonally blank song cell for padding to go beneath search bar. 36.f units tall
 
 	const std::vector<std::string>& songsVector = songManager.getSongs();
-	float desiredContentHeight = 36.f; // always start with the height of the blank song cell, which is guaranteed to be 36.f units
+	float desiredContentHeight = SEARCH_BAR_ENABLED ? 36.f : 0.f; // always start with the height of the blank song cell, which is guaranteed to be 36.f units
+
 	for (const std::string& song : songsVector) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
 
@@ -61,9 +67,9 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 		songData.displayName = SongListLayer::generateDisplayName(songData);
 
-		if (SAVED("songListSortSongLength")) songData.songLength = SongListLayer::getLength(songData.actualFilePath, reverse);
+		if (SONG_SORTING_ENABLED && SAVED("songListSortSongLength")) songData.songLength = SongListLayer::getLength(songData.actualFilePath, reverse);
 
-		if (!queryString.empty()) {
+		if (SEARCH_BAR_ENABLED && !queryString.empty()) {
 			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.displayName), geode::utils::string::toLower(queryString));
 			if (SongManager::get().getAdvancedLogs()) {
 				geode::log::info("songData.displayName: {}", songData.displayName);
@@ -81,24 +87,26 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		}
 	}
 
-	if (SAVED("songListSortAlphabetically")) {
-		std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
-			return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
-		});
-	} else if (SAVED("songListSortFileSize")) {
-		std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
-			return SongListLayer::fileSize(a, b, reverse);
-		});
-	} else if (SAVED("songListSortDateAdded")) {
-		std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
-			return SongListLayer::dateAdded(a, b, reverse);
-		});
-	} else if (SAVED("songListSortSongLength")) {
-		std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
-			return SongListLayer::songLength(a, b, reverse);
-		});
-	} else if (reverse) {
-		std::reverse(cellsToAdd.begin(), cellsToAdd.end());
+	if (SONG_SORTING_ENABLED) {
+		if (SAVED("songListSortAlphabetically")) {
+			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
+				return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
+			});
+		} else if (SAVED("songListSortFileSize")) {
+			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
+				return SongListLayer::fileSize(a, b, reverse);
+			});
+		} else if (SAVED("songListSortDateAdded")) {
+			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
+				return SongListLayer::dateAdded(a, b, reverse);
+			});
+		} else if (SAVED("songListSortSongLength")) {
+			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
+				return SongListLayer::songLength(a, b, reverse);
+			});
+		} else if (reverse) {
+			std::reverse(cellsToAdd.begin(), cellsToAdd.end());
+		}
 	}
 
 	bool isEven = true;
@@ -116,7 +124,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	if (tallEnough) scrollLayer->scrollToTop();
 	else scrollLayer->m_contentLayer->setPositionY(0.f);
 
-	if (GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
+	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
 
 	if (CCNode* scrollBar = this->m_mainLayer->getChildByID("song-list-scrollbar"_spr)) scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 	if (CCNode* scrollShortcuts = this->m_mainLayer->getChildByID("scroll-shortcuts-menu"_spr)) scrollShortcuts->setPositionY(SongListLayer::determineYPosition(scrollLayer));
@@ -152,7 +160,7 @@ bool SongListLayer::setup(const std::string&) {
 
 	SongListLayer::addSongsToScrollLayer(scrollLayer, songManager);
 
-	if (songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSearchBar")) {
+	if (SEARCH_BAR_ENABLED) {
 		// search code UI graciously provided by hiimjasmine00
 		cocos2d::CCMenu* searchBarMenu = cocos2d::CCMenu::create();
 		searchBarMenu->setContentSize({350.f, 35.f});
@@ -246,7 +254,7 @@ bool SongListLayer::setup(const std::string&) {
 	scrollBar->setID("song-list-scrollbar"_spr);
 	this->m_mainLayer->addChild(scrollBar);
 
-	if (songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSortSongOptions")) {
+	if (SONG_SORTING_ENABLED) {
 		cocos2d::CCMenu* viewModeMenu = cocos2d::CCMenu::create();
 
 		Utils::addViewModeToggle(SAVED("songListCompactMode"), "GJ_smallModeIcon_001.png", "compact-mode", menu_selector(SongListLayer::onCompactModeToggle), viewModeMenu, this);
@@ -457,42 +465,42 @@ void SongListLayer::onScrollBtmButton(CCObject*) {
 }
 
 void SongListLayer::onCompactModeToggle(CCObject*) {
-	if (!SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")) return;
+	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::toggleSavedValueAndSearch("songListCompactMode");
 }
 
 void SongListLayer::onFavoritesOnlyToggle(CCObject*) {
-	if (!SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")) return;
+	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::toggleSavedValueAndSearch("songListFavoritesOnlyMode");
 }
 
 void SongListLayer::onSortReverseToggle(CCObject*) {
-	if (!SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")) return;
+	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::toggleSavedValueAndSearch("songListReverseSort");
 }
 
 void SongListLayer::onSortABCToggle(CCObject*) {
-	if (!SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")) return;
+	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortAlphabetically");
 }
 
 void SongListLayer::onSortDateToggle(CCObject*) {
-	if (!SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")) return;
+	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortDateAdded");
 }
 
 void SongListLayer::onSortLengthToggle(CCObject*) {
-	if (!SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")) return;
+	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortSongLength");
 }
 
 void SongListLayer::onSortSizeToggle(CCObject*) {
-	if (!SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")) return;
+	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileSize");
 }
 
 void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_view savedValueKey) {
-	if (!SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")) return;
+	if (SONG_SORTING_DISABLED) return;
 	cocos2d::CCNode* viewModeMenu = this->m_mainLayer->getChildByID("view-mode-menu"_spr);
 	if (!viewModeMenu) return;
 	const bool originalSavedValue = SAVED(savedValueKey);
@@ -522,7 +530,7 @@ void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_
 }
 
 void SongListLayer::toggleSavedValueAndSearch(const std::string_view savedValueKey) {
-	if (!SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")) return;
+	if (SONG_SORTING_DISABLED) return;
 	const bool originalSavedValue = SAVED(savedValueKey);
 	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
 	CCNode* searchBar = GET_SEARCH_BAR_NODE;
@@ -531,7 +539,7 @@ void SongListLayer::toggleSavedValueAndSearch(const std::string_view savedValueK
 
 void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	// this is fine since searchbar swallows delete (macos)/backspace (all other platforms) key inputs first
-	if (!SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSearchBar") || (key != cocos2d::KEY_Enter && key != cocos2d::KEY_Delete && key != cocos2d::KEY_Backspace)) {
+	if (SEARCH_BAR_DISABLED || (key != cocos2d::KEY_Enter && key != cocos2d::KEY_Delete && key != cocos2d::KEY_Backspace)) {
 		// code taken directly from geode::Popup keyDown impl as of dec 19 2025
 		if (key == cocos2d::enumKeyCodes::KEY_Escape) return this->onClose(nullptr);
 		if (key == cocos2d::enumKeyCodes::KEY_Space) return;
@@ -568,6 +576,7 @@ float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
 }
 
 void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode* inputNode, const bool updateString) {
+	if (SONG_SORTING_DISABLED) return;
 	if (!inputNode) return;
 	cocos2d::CCLabelBMFont* placeholderLabelMaybe = static_cast<cocos2d::CCLabelBMFont*>(inputNode->getChildByTag(12242025));
 	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
@@ -578,6 +587,7 @@ void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInpu
 }
 
 bool SongListLayer::caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
+	if (SONG_SORTING_DISABLED) return false;
 	const std::string& cleanedUpA = SongListLayer::generateDisplayName(a->m_songData);
 	const std::string& cleanedUpB = SongListLayer::generateDisplayName(b->m_songData);
 	auto it1 = cleanedUpA.begin(), it2 = cleanedUpB.begin();
@@ -595,6 +605,7 @@ bool SongListLayer::caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, 
 }
 
 bool SongListLayer::fileSize(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
+	if (SONG_SORTING_DISABLED) return false;
 	std::error_code ec;
 	std::uintmax_t fileSizeA = std::filesystem::file_size(Utils::toProblematicString(a->m_songData.actualFilePath), ec);
 	fileSizeA = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSizeA;
@@ -606,6 +617,7 @@ bool SongListLayer::fileSize(MLRSongCell* a, MLRSongCell* b, const bool reverse 
 }
 
 bool SongListLayer::dateAdded(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
+	if (SONG_SORTING_DISABLED) return false;
 	std::error_code ea, eb;
 	auto ta = std::filesystem::last_write_time(Utils::toProblematicString(a->m_songData.actualFilePath), ea);
 	auto tb = std::filesystem::last_write_time(Utils::toProblematicString(b->m_songData.actualFilePath), eb);
@@ -619,6 +631,7 @@ bool SongListLayer::dateAdded(MLRSongCell* a, MLRSongCell* b, const bool reverse
 }
 
 bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
+	if (SONG_SORTING_DISABLED) return false;
 	if (a->m_songData.songLength < b->m_songData.songLength) return !reverse;
 	if (a->m_songData.songLength > b->m_songData.songLength) return reverse;
 	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
@@ -626,6 +639,7 @@ bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool revers
 
 unsigned int SongListLayer::getLength(const std::string& path, const bool reverse) {
 	const unsigned int extreme = reverse ? std::numeric_limits<unsigned int>::min() : std::numeric_limits<unsigned int>::max();
+	if (SONG_SORTING_DISABLED) return extreme;
 	#ifndef GEODE_IS_IOS
 	ma_decoder decoder;
 	if (ma_decoder_init_file(path.c_str(), nullptr, &decoder) != MA_SUCCESS) return extreme;
@@ -657,5 +671,6 @@ unsigned int SongListLayer::getLength(const std::string& path, const bool revers
 }
 
 void SongListLayer::update(float) {
+	if (SEARCH_BAR_DISABLED) return;
 	SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE)->getInputNode());
 }
