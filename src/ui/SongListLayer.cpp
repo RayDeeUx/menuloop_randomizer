@@ -185,7 +185,7 @@ bool SongListLayer::setup(const std::string&) {
 
 		cocos2d::CCSprite* fakeDeleteIcon = geode::EditorButtonSprite::createWithSpriteFrameName("GJ_deleteIcon_001.png", .7f, geode::EditorBaseColor::DarkGray, geode::EditorBaseSize::Normal);
 		fakeDeleteIcon->setScale(.7f);
-		fakeDeleteIcon->setID("fake-selete-sprite"_spr);
+		fakeDeleteIcon->setID("fake-delete-sprite"_spr);
 
 		CCMenuItemSpriteExtra* clearButton = geode::cocos::CCMenuItemExt::createSpriteExtra(fakeDeleteIcon, [this](auto) {
 			CCNode* searchBar = GET_SEARCH_BAR_NODE;
