@@ -530,9 +530,8 @@ void SongListLayer::toggleSavedValueAndSearch(const std::string_view savedValueK
 }
 
 void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
-	if (!SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSearchBar")) return;
 	// this is fine since searchbar swallows delete (macos)/backspace (all other platforms) key inputs first
-	if (key != cocos2d::KEY_Enter && key != cocos2d::KEY_Delete && key != cocos2d::KEY_Backspace) {
+	if (!SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSearchBar") || (key != cocos2d::KEY_Enter && key != cocos2d::KEY_Delete && key != cocos2d::KEY_Backspace)) {
 		// code taken directly from geode::Popup keyDown impl as of dec 19 2025
 		if (key == cocos2d::enumKeyCodes::KEY_Escape) return this->onClose(nullptr);
 		if (key == cocos2d::enumKeyCodes::KEY_Space) return;
