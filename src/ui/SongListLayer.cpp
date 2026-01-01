@@ -109,7 +109,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		}
 	}
 
-	bool isEven = true;
+	bool isEven = SEARCH_BAR_ENABLED ? true : false;
 	for (MLRSongCell* cell : cellsToAdd) {
 		cell->toggleEven(isEven);
 		scrollLayer->m_contentLayer->addChild(cell);
