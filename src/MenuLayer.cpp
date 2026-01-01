@@ -22,6 +22,8 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (loader->isModLoaded("omgrod.geodify")) songManager.setGeodify(loader->getLoadedMod("omgrod.geodify")->getSettingValue<bool>("menu-loop"));
 
 		songManager.setSawbladeCustomSongsFolder(loader->isModLoaded("sawblade.custom_song_folder"));
+		songManager.setUndefined0Alk1m123TouchPrio(loader->isModLoaded("alk.better-touch-prio"));
+		if (loader->isModLoaded("colon.menu_loop_start_time")) songManager.setColonMenuLoopStartTime(loader->getLoadedMod("colon.menu_loop_start_time"));
 
 		const std::string& buttonMode = Utils::getString("buttonMode");
 

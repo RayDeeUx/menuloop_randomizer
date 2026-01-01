@@ -264,11 +264,12 @@ int SongManager::getLastMenuLoopPosition() const {
 
 void SongManager::restoreLastMenuLoopPosition() {
 	// insurance policy for compat with colon
-	geode::Mod* colon = geode::Loader::get()->getLoadedMod("colon.menu_loop_start_time");
+	SongManager& songManager = SongManager::get();
+	const geode::Mod* colon = songManager.getColonMenuLoopStartTime();
 	if (colon && colon->getSettingValue<bool>("enable")) return;
-	if (!SongManager::get().getShouldRestoreMenuLoopPoint()) return;
-	FMODAudioEngine::get()->setMusicTimeMS(SongManager::get().getLastMenuLoopPosition(), false, 0);
-	SongManager::get().setShouldRestoreMenuLoopPoint(false);
+	if (!songManager.getShouldRestoreMenuLoopPoint()) return;
+	FMODAudioEngine::get()->setMusicTimeMS(songManager.getLastMenuLoopPosition(), false, 0);
+	songManager.setShouldRestoreMenuLoopPoint(false);
 }
 
 void SongManager::setShouldRestoreMenuLoopPoint(const bool value) {
@@ -277,4 +278,20 @@ void SongManager::setShouldRestoreMenuLoopPoint(const bool value) {
 
 bool SongManager::getShouldRestoreMenuLoopPoint() const {
 	return m_shouldRestoreMenuLoopPoint;
+}
+
+void SongManager::setUndefined0Alk1m123TouchPrio(const bool value) {
+	m_isUndefined0Alk1m123TouchPrio = value;
+}
+
+bool SongManager::getUndefined0Alk1m123TouchPrio() const {
+	return m_isUndefined0Alk1m123TouchPrio;
+}
+
+void SongManager::setColonMenuLoopStartTime(const geode::Mod* value) {
+	m_colonMenuLoopStartTime = value;
+}
+
+geode::Mod* SongManager::getColonMenuLoopStartTime() const {
+	return m_colonMenuLoopStartTime;
 }

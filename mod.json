@@ -222,21 +222,34 @@
 		},
 		"restoreWhenExitingLevel": {
 			"name": "Continue Menu Loop on Level Exit",
-			"description": "<cp>***__THIS SETTING IS IGNORED IF COLON'S MENU LOOP START TIME MOD IS LOADED AND ENABLED.__***</c>\n<c-aaaaaa>Naggingly suggested by Myron472/GlydeR and Abagur900.</c>\n\nContinue the song from where you left off when you exit a level.\n\n<cy>This setting is ignored when \"Randomize Menu Loop on Level Exit\" is enabled. If that other setting is enabled, menu loops will ALWAYS be randomized when leaving a level.</c>\n\n<c-ff0000>This does ***__NOT__*** continue menu loops from where you started off between game restarts.</c>",
+			"description": "<cp>***__THIS SETTING IS IGNORED IF COLON'S \"MENU LOOP START TIME\" MOD IS LOADED AND ENABLED.__***</c>\n<c-aaaaaa>Naggingly suggested by Myron472/GlydeR and Abagur900.</c>\n\nContinue the song from where you left off when you exit a level.\n\n<cy>This setting is ignored when \"Randomize Menu Loop on Level Exit\" is enabled. If that other setting is enabled, menu loops will ALWAYS be randomized when leaving a level.</c>\n\n<c-ff0000>This does ***__NOT__*** continue menu loops from where you started off between game restarts.</c>",
 			"type": "bool",
 			"default": false,
 			"enable-if": "!randomizeWhenExitingLevel"
 		},
 		"restoreWhenExitingEditor": {
 			"name": "Continue Menu Loop on Editor Exit",
-			"description": "<cp>***__THIS SETTING IS IGNORED IF COLON'S MENU LOOP START TIME MOD IS LOADED AND ENABLED.__***</c>\n<c-aaaaaa>Naggingly suggested by Myron472/GlydeR and Abagur900.</c>\n\nContinue the song from where you left off when you exit the editor.\n\n<cy>This setting is ignored when \"Randomize Menu Loop on Editor Exit\" is enabled. If that other setting is enabled, menu loops will ALWAYS be randomized when leaving the editor.</c>\n\n<c-ff0000>This does ***__NOT__*** continue menu loops from where you started off between game restarts.</c>",
+			"description": "<cp>***__THIS SETTING IS IGNORED IF COLON'S \"MENU LOOP START TIME\" MOD IS LOADED AND ENABLED.__***</c>\n<c-aaaaaa>Naggingly suggested by Myron472/GlydeR and Abagur900.</c>\n\nContinue the song from where you left off when you exit the editor.\n\n<cy>This setting is ignored when \"Randomize Menu Loop on Editor Exit\" is enabled. If that other setting is enabled, menu loops will ALWAYS be randomized when leaving the editor.</c>\n\n<c-ff0000>This does ***__NOT__*** continue menu loops from where you started off between game restarts.</c>",
 			"type": "bool",
 			"default": false,
 			"enable-if": "!randomizeWhenExitingEditor"
 		},
+		"showScrollingShortcuts": {
+			"name": "Song List: Show Scrolling Shortcuts",
+			"description": "Choose if you want scrolling shortcuts in the Song List menu.",
+			"type": "bool",
+			"default": true
+		},
+		"showSearchBar": {
+			"name": "Song List: Show Search Bar",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SEARCH BAR WILL APPEAR.__***</c>\n\nChoose if you want to show the search bar in the Song List menu.",
+			"type": "bool",
+			"default": true,
+			"enable-if": "loaded:alk.better-touch-prio"
+		},
 		"compactModeScaleFactor": {
 			"name": "Song List: Compact Mode Scale Factor",
-			"description": "Choose how much smaller each song entry in the Song List becomes when enabling Compact Mode. The higher this number, the smaller each song entry in the Song List becomes.",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, COMPACT MODE CANNOT BE ENABLED.__***</c>\n\nChoose how much smaller each song entry in the Song List becomes when enabling Compact Mode. The higher this number, the smaller each song entry in the Song List becomes.",
 			"type": "float",
 			"default": 1.5,
 			"min": 1.5,
@@ -249,13 +262,22 @@
 				"arrow-step": 0,
 				"big-arrow-step": 0,
 				"slider-step": 0.01
-			}
+			},
+			"enable-if": "loaded:alk.better-touch-prio"
+		},
+		"showSortSongOptions": {
+			"name": "Song List: Show Sorting Options",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SONG SORTING OPTIONS WILL APPEAR.__***</c>\n\nChoose if you want to show song sorting options in the Song List menu.",
+			"type": "bool",
+			"default": true,
+			"enable-if": "loaded:alk.better-touch-prio"
 		},
 		"showSortSongLength": {
 			"name": "Song List: Show Song Length Sorting Option (READ!)",
-			"description": "<c_>***__THIS SETTING CAN FREEZE YOUR GAME.__***</c>\n\nChoose if you want the option to sort songs by their length in the Song List menu.",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SONG SORTING OPTIONS WILL APPEAR.__***</c>\n\n<c-ff0000>***__THIS SETTING CAN FREEZE YOUR GAME.__***</c>\n\nChoose if you want the option to sort songs by their length in the Song List menu.\n\n<cy>Requires \"Song List: Show Sorting Options\" to be enabled.</c>",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "loaded:alk.better-touch-prio && showSortSongOptions"
 		},
 		"specificSongOverride": {
 			"name": "Specific Menu Loop File Override",

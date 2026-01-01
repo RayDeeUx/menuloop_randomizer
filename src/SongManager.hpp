@@ -67,6 +67,10 @@ class SongManager {
 	static void restoreLastMenuLoopPosition();
 	void setShouldRestoreMenuLoopPoint(const bool value);
 	bool getShouldRestoreMenuLoopPoint() const;
+	void setUndefined0Alk1m123TouchPrio(const bool value);
+	bool getUndefined0Alk1m123TouchPrio() const;
+	void setColonMenuLoopStartTime(const geode::Mod* value);
+	geode::Mod* getColonMenuLoopStartTime() const;
 
   private:
 	SongManager();
@@ -81,6 +85,7 @@ class SongManager {
 	bool m_isMenuLoop {};
 	bool m_constantShuffleMode {};
 	bool m_calledOnce = false;
+	bool m_isUndefined0Alk1m123TouchPrio = false;
 	bool m_geodify = false;
 	bool m_isOverride = false;
 	bool m_isLavaChicken = false;
@@ -92,4 +97,5 @@ class SongManager {
 	std::vector<std::string> m_blacklist;
 	std::vector<std::string> m_favorites;
 	int m_towerRepeatCount = 0;
+	geode::Mod* m_colonMenuLoopStartTime {};
 };
