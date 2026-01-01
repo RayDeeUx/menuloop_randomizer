@@ -279,7 +279,7 @@ bool SongListLayer::setup(const std::string&) {
 		"Menu Loop Randomizer - Help/FAQ",
 		"Gold = <cy>favorited</c>. Green = <cg>current</c>.\n"
 		"Italics = NG/ML song stored in an unexpected place.\n"
-		"Dark gradient and/or random letters + numbers = Jukebox/NONG.\n"
+		"Dark gradients OR random letters/numbers = Jukebox/NONG, <c_>OR</c> someone else goofed up.\n"
 		"Controls: <cl>shuffle</c>, <cl>copy name</c>, <cl>previous song</c>, <cl>control panel</c>.\n\n"
 		"<cy>Q: Make this mod act more closely to Spotify!</c>\n"
 		"A: <c_>No. Never. Spotify's UI/UX sets BAD precedents.</c>\n\n"
