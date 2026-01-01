@@ -284,9 +284,9 @@ bool SongListLayer::setup(const std::string&) {
 		"<cy>Q: I'm seeing numbers for most of my songs?!</c>\n"
 		"A: Someone probably goofed up, which is out of my reach.\n"
 		"<cy>Q: Make this mod act more closely to Spotify!</c>\n"
-		"A: Someone probably goofed up, which is out of my reach.\n"
+		"A: <c_>No. Never. Spotify's UI/UX sets BAD precedents.</c>\n"
 		"<cy>Q: Where is the search bar and song sorting options?\n"
-		"A: <c_>Please install \"Better Touch Prio\" by alk1m123 and undefined0.</c>",
+		"A: <cg>Install \"Better Touch Prio\" by alk1m123; check your settings.</c>",
 		.75f
 	);
 	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
