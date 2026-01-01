@@ -157,6 +157,22 @@ $on_mod(Loaded) {
 		const std::string& mdPopupBody = restoreWhenExitingEditor ? "# <c-ff0000>Menu loops will still be randomized when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Editor Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Continue Menu Loop on Editor Exit\" setting.*";
 		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
+	listenForSettingChanges<bool>("showSearchBar", [](const bool showSearchBar) {
+		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSearchBar) return;
+		Utils::showMDPopup("Search Bar/Filtering Options", "# <c-ff0000>***__Please install \"Better Touch Prio\" to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but nothing more will happen unless if you install the \"Better Touch Prio\" mod.</c>", 12312025, "search-bar-song-sorting");
+	});
+	listenForSettingChanges<double>("compactModeScaleFactor", [](const double _) {
+		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) return;
+		Utils::showMDPopup("Compact Mode Scale Factor", "# <c-ff0000>***__Please install \"Better Touch Prio\" to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but nothing more will happen unless if you install the \"Better Touch Prio\" mod.</c>", 12312025, "compact-mode-scale-factor");
+	});
+	listenForSettingChanges<bool>("showSortSongOptions", [](const bool showSortSongOptions) {
+		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSortSongOptions) return;
+		Utils::showMDPopup("Search Bar/Filtering Options", "# <c-ff0000>***__Please install \"Better Touch Prio\" to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but nothing more will happen unless if you install the \"Better Touch Prio\" mod.</c>", 12312025, "search-bar-song-sorting");
+	});
+	listenForSettingChanges<bool>("showSortSongLength", [](const bool showSortSongLength) {
+		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSortSongLength) return;
+		Utils::showMDPopup("Search Bar/Filtering Options", "# <c-ff0000>***__Please install \"Better Touch Prio\" to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but nothing more will happen unless if you install the \"Better Touch Prio\" mod.</c>", 12312025, "search-bar-song-sorting");
+	});
 	listenForSettingChanges<bool>("advancedLogs", [](bool newAdvancedLogs) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
 	});
