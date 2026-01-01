@@ -576,7 +576,7 @@ float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
 }
 
 void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode* inputNode, const bool updateString) {
-	if (SONG_SORTING_DISABLED) return;
+	if (SEARCH_BAR_DISABLED) return;
 	if (!inputNode) return;
 	cocos2d::CCLabelBMFont* placeholderLabelMaybe = static_cast<cocos2d::CCLabelBMFont*>(inputNode->getChildByTag(12242025));
 	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
