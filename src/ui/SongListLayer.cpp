@@ -396,12 +396,13 @@ bool SongListLayer::setup(const std::string&) {
 
 	songManager.resetTowerRepeatCount();
 
-	this->scheduleUpdate();
+	if (SEARCH_BAR_ENABLED) this->scheduleUpdate();
 
 	return true;
 }
 
 void SongListLayer::searchSongs(const std::string& queryString) {
+	if (SONG_SORTING_DISABLED && SEARCH_BAR_DISABLED) return;
 	CCNode* contentLayer = SongListLayer::getContentLayer();
 	if (!contentLayer || !contentLayer->getLayout()) return;
 	contentLayer->removeAllChildrenWithCleanup(true);
