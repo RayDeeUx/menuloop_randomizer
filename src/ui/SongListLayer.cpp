@@ -183,7 +183,7 @@ bool SongListLayer::setup(const std::string&) {
 		searchButton->setID("song-list-search-button"_spr);
 		searchBarMenu->addChild(searchButton);
 
-		CCMenuItemSpriteExtra* clearButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("GJ_editHSVBtn2_001.png", 0.7f, [this](auto) {
+		CCMenuItemSpriteExtra* clearButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("gj_findBtnOff_001.png", 0.7f, [this](auto) {
 			CCNode* searchBar = GET_SEARCH_BAR_NODE;
 			if (!searchBar || (searchBar->getTag() == -1 && GET_SEARCH_STRING.empty())) return;
 			EMPTY_SEARCH_STRG
@@ -193,17 +193,6 @@ bool SongListLayer::setup(const std::string&) {
 		clearButton->setPosition({330.f, 17.f});
 		clearButton->setID("song-list-clear-button"_spr);
 		searchBarMenu->addChild(clearButton);
-
-		cocos2d::CCSprite* coverItUpSquare = cocos2d::CCSprite::createWithSpriteFrameName("pixelart_base_001.png");
-		coverItUpSquare->setColor({155, 154, 155});
-		coverItUpSquare->setScale(16.f);
-		coverItUpSquare->setID("dont-tell-people-that-my-parent-is-an-edit-hsv-button-lmao"_spr);
-		clearButton->addChildAtPosition(coverItUpSquare, geode::Anchor::Center);
-
-		cocos2d::CCSprite* coverItUpX = cocos2d::CCSprite::createWithSpriteFrameName("GJ_deleteIcon_001.png");
-		coverItUpX->setScale(.6f);
-		coverItUpX->setID("dont-tell-people-that-im-not-actually-a-delete-button-lmao"_spr);
-		clearButton->addChildAtPosition(coverItUpX, geode::Anchor::Center);
 
 		geode::TextInput* searchBar = geode::TextInput::create(370.f, fmt::format("Search... (Current Song: {})", songManager.getCurrentSongDisplayName()));
 		searchBar->setCommonFilter(geode::CommonFilter::Any);
