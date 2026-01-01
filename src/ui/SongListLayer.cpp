@@ -183,7 +183,11 @@ bool SongListLayer::setup(const std::string&) {
 		searchButton->setID("song-list-search-button"_spr);
 		searchBarMenu->addChild(searchButton);
 
-		CCMenuItemSpriteExtra* clearButton = geode::cocos::CCMenuItemExt::createSpriteExtra(geode::EditorButtonSprite::createWithSpriteFrameName("GJ_deleteIcon_001.png", .6f), [this](auto) {
+		cocos2d::CCSprite* fakeDeleteIcon = geode::EditorButtonSprite::createWithSpriteFrameName("GJ_deleteIcon_001.png", .7f, geode::EditorBaseColor::DarkGray, geode::EditorBaseSize::Normal);
+		fakeDeleteIcon->setScale(.7f);
+		fakeDeleteIcon->setID("fake-selete-sprite"_spr);
+
+		CCMenuItemSpriteExtra* clearButton = geode::cocos::CCMenuItemExt::createSpriteExtra(fakeDeleteIcon, [this](auto) {
 			CCNode* searchBar = GET_SEARCH_BAR_NODE;
 			if (!searchBar || (searchBar->getTag() == -1 && GET_SEARCH_STRING.empty())) return;
 			EMPTY_SEARCH_STRG
