@@ -295,3 +295,11 @@ void SongManager::setColonMenuLoopStartTime(geode::Mod* value) {
 geode::Mod* SongManager::getColonMenuLoopStartTime() const {
 	return m_colonMenuLoopStartTime;
 }
+
+void SongManager::setVibecodedVentilla(const bool value) {
+	m_vibecodedVentilla = value;
+}
+
+bool SongManager::getVibecodedVentilla() const {
+	return m_vibecodedVentilla;
+}

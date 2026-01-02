@@ -10,12 +10,15 @@ SongManager &songManager = SongManager::get();
 std::filesystem::path configDir = Mod::get()->getConfigDir();
 bool originalOverrideWasEmpty = false;
 
+#define VIBECODED_RADIO Loader::get()->getInstalledMod("joseii.ventilla")
+
 $on_mod(Loaded) {
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 	songManager.setConstantShuffleMode();
 	songManager.setLastMenuLoopPosition(0);
 	songManager.setShouldRestoreMenuLoopPoint(true);
 	songManager.setAdvancedLogs(Mod::get()->getSettingValue<bool>("advancedLogs"));
+	songManager.setVibecodedVentilla(VIBECODED_RADIO && (VIBECODED_RADIO->isEnabled() || VIBECODED_RADIO->shouldLoad()));
 	if (!std::filesystem::exists(configDir / "playlistOne.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistOne.txt");
 	if (!std::filesystem::exists(configDir / "playlistTwo.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistTwo.txt");
 	if (!std::filesystem::exists(configDir / "playlistThree.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistThree.txt");

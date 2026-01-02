@@ -71,6 +71,8 @@ class SongManager {
 	bool getUndefined0Alk1m123TouchPrio() const;
 	void setColonMenuLoopStartTime(geode::Mod* value);
 	geode::Mod* getColonMenuLoopStartTime() const;
+	void setVibecodedVentilla(const bool value);
+	bool getVibecodedVentilla() const;
 
   private:
 	SongManager();
@@ -93,6 +95,7 @@ class SongManager {
 	bool m_sawbladeCustomSongsFolder = false;
 	bool m_advancedLogs = false;
 	bool m_shouldRestoreMenuLoopPoint = false;
+	bool m_vibecodedVentilla = false;
 	int m_lastPosition = 0;
 	std::vector<std::string> m_blacklist;
 	std::vector<std::string> m_favorites;

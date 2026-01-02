@@ -1,16 +1,26 @@
 #include "ui/SongControlMenu.hpp"
+#include "ui/SongListLayer.hpp"
 #include "SongControl.hpp"
 #include "SongManager.hpp"
 #include "Utils.hpp"
 #include <Geode/modify/MenuLayer.hpp>
 
-#include "ui/SongListLayer.hpp"
-
 #define REST_OF_THE_OWL static_cast<cocos2d::CCMenu*>(this->getChildByID("right-side-menu")), this
 
 using namespace geode::prelude;
 
+bool shownVibecodedWarning = false;
+
 class $modify(MenuLayerMLHook, MenuLayer) {
+	static cocos2d::CCScene* scene(bool p0) {
+		CCScene* scene = MenuLayer::scene(p0);
+		if (SongManager::get().getVibecodedVentilla() && !shownVibecodedWarning) {
+			FLAlertLayer* alert = FLAlertLayer::create("Uh oh!", "<c_>Another mod overriding the menu loop is active!</c>\n<cy>The specific menu music mod you have active does not respect menu loops created from other mods, and overrides all mods that change the behavior of the in-game menu loop.</c> <co>Additionally, this specific menu music mod relies on an Internet connection, and does not work with Cloudflare WARP.</c> <cy>If you want to use Menu Loop Randomizer, please check your loaded mods.</c>\n\n<cg>You will only see this warning once.</c>", "I Understand");
+			scene->addChild(alert);
+			shownVibecodedWarning = true;
+		}
+		return scene;
+	}
 	bool init() {
 		if (!MenuLayer::init()) return false;
 
