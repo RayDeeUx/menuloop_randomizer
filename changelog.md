@@ -1,4 +1,6 @@
 # Menu Loop Randomizer Changelog
+## v1.11.1
+- Hotfix.
 ## v1.11.0
 ***__This is a really lengthy changelog; be sure to read everything!__***
 *(Changelog items/subitems containing <cl>blue</c> or <cj>cyan</c> text indicates that [Better Touch Prio](mod:alk.better-touch-prio) is required to use that feature. These decisions will not be reverted anytime soon.)*

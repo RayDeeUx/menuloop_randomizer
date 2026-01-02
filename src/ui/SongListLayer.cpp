@@ -211,8 +211,6 @@ bool SongListLayer::setup(const std::string&) {
 		inputNode->setMaxLabelScale(.5f);
 		inputNode->setID("song-list-search-bar-input-node"_spr);
 
-		SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(inputNode);
-
 		CCLayerColor* searchBarDivider = CCLayerColor::create({0, 0, 0, 127});
 		searchBarDivider->setContentSize({350.f, .5f});
 		searchBarDivider->setAnchorPoint({0.f, 0.f});
@@ -409,7 +407,6 @@ void SongListLayer::onSettingsButton(CCObject*) {
 
 void SongListLayer::onShuffleButton(CCObject*) {
 	SongControl::shuffleSong();
-	if (const SongManager& songManager = SongManager::get(); SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE) LIMIT_PLACEHOLDER
 }
 
 void SongListLayer::onCopyButton(CCObject*) {
@@ -664,6 +661,6 @@ unsigned int SongListLayer::getLength(const std::string& path, const bool revers
 }
 
 void SongListLayer::update(float) {
-	if (SEARCH_BAR_DISABLED) return;
+	if (SEARCH_BAR_DISABLED || !GET_SEARCH_BAR_NODE) return;
 	SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE)->getInputNode());
 }
