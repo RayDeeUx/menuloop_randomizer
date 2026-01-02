@@ -1,5 +1,5 @@
 # Menu Loop Randomizer Changelog
-## v1.10.2
+## v1.11.0
 ***__This is a really lengthy changelog; be sure to read everything!__***
 *(Changelog items/subitems containing <cl>blue</c> or <cj>cyan</c> text indicates that [Better Touch Prio](mod:alk.better-touch-prio) is required to use that feature. These decisions will not be reverted anytime soon.)*
 - <cg>Added</c> `Continue Menu Loop on Level Exit` and `Continue Menu Loop on Editor Exit` (suggested by [Myron472/GlydeR](https://github.com/Myron472) and [Abagur900](https://github.com/Abagur900)).
