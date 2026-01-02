@@ -14,8 +14,8 @@ bool shownVibecodedWarning = false;
 class $modify(MenuLayerMLHook, MenuLayer) {
 	static cocos2d::CCScene* scene(bool p0) {
 		CCScene* scene = MenuLayer::scene(p0);
-		if (SongManager::get().getVibecodedVentilla() && !shownVibecodedWarning) {
-			FLAlertLayer* alert = FLAlertLayer::create("Uh oh!", "<c_>Another mod overriding the menu loop is active!</c>\n<cy>The specific menu music mod you have active does not respect menu loops created from other mods, and overrides all mods that change the behavior of the in-game menu loop.</c> <co>Additionally, this specific menu music mod relies on an Internet connection, and does not work with Cloudflare WARP.</c> <cy>If you want to use Menu Loop Randomizer, please check your loaded mods.</c>\n\n<cg>You will only see this warning once.</c>", "I Understand");
+		if (SongManager::get().getVibecodedVentilla() && !shownVibecodedWarning && scene->getChildByType<MenuLayer>(0)) {
+			FLAlertLayer* alert = FLAlertLayer::create(scene->getChildByType<MenuLayer>(0), "Uh oh!", "<c_>Another mod overriding the menu loop is active!</c>\n<cy>The specific menu music mod you have active does not respect menu loops created from other mods, and overrides all mods that change the behavior of the in-game menu loop.</c> <co>Additionally, this specific menu music mod relies on an Internet connection, and does not work with Cloudflare WARP.</c> <cy>If you want to use Menu Loop Randomizer, please check your loaded mods.</c>\n\n<cg>You will only see this warning once.</c>", "I Understand", nullptr, 420.f);
 			scene->addChild(alert);
 			shownVibecodedWarning = true;
 		}
