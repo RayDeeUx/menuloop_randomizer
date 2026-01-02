@@ -620,7 +620,7 @@ void Utils::removeCardRemotely(cocos2d::CCNode* card) {
 
 void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {
 	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
-	else if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); sll) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(sll->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID))->getInputNode(), false); });
+	else if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); SongManager::get().getUndefined0Alk1m123TouchPrio() && sll && sll->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID)) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(sll->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID))->getInputNode(), false); });
 }
 
 void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
