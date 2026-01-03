@@ -154,9 +154,9 @@ bool SongControlMenu::setup(const std::string&) {
 	return true;
 }
 
-SongControlMenu* SongControlMenu::create(const std::string& id) {
+SongControlMenu* SongControlMenu::create(const std::string&) {
 	auto ret = new SongControlMenu();
-	if (ret->initAnchored(300.f, 150.f, id)) {
+	if (ret->initAnchored(300.f, 150.f, "GJ_square05.png")) {
 		ret->autorelease();
 		return ret;
 	}

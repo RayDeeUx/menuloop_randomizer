@@ -21,9 +21,9 @@
 #define SEARCH_BAR_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSearchBar")
 #define SONG_SORTING_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSortSongOptions")
 
-SongListLayer* SongListLayer::create(const std::string& id) {
+SongListLayer* SongListLayer::create(const std::string&) {
 	auto* ret = new SongListLayer();
-	if (ret->initAnchored(420.f, 290.f, id)) {
+	if (ret->initAnchored(420.f, 290.f, "GJ_square02.png")) {
 		ret->autorelease();
 		return ret;
 	}
