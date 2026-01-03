@@ -13,9 +13,9 @@ class SongManager {
 		return instance;
 	}
 
-	std::vector<std::string> getSongs();
+	std::vector<std::string>& getSongs();
 	void addSong(const std::string&);
-	void removeSong(const std::string& path);
+	void removeSong(const std::string_view);
 	int getSongsSize() const;
 	void clearSongs();
 	void pickRandomSong();
@@ -35,43 +35,43 @@ class SongManager {
 	bool getLavaChicken() const;
 	void setPlaylistIsEmpty(const bool);
 	bool getPlaylistIsEmpty() const;
-	void setHeldSong(const std::string& value);
+	void setHeldSong(const std::string&);
 	void resetHeldSong();
 	std::string getHeldSong();
 	void addToBlacklist(const std::string&);
 	void addToBlacklist();
-	std::vector<std::string> getBlacklist();
-	void addToFavorites(const std::string& song);
+	std::vector<std::string>& getBlacklist();
+	void addToFavorites(const std::string&);
 	void addToFavorites();
-	std::vector<std::string> getFavorites();
+	std::vector<std::string>& getFavorites();
 	void setOverride(const std::string&);
 	std::string getOverrideSong();
 	bool isOverride() const;
 	void setCurrentSongToOverride();
-	void setPreviousSong(const std::string& song);
+	void setPreviousSong(const std::string&);
 	void resetPreviousSong();
 	std::string getPreviousSong();
 	bool isPreviousSong() const;
 	bool songSizeIsBad() const;
-	void setCurrentSongDisplayName(const std::string& displayName);
+	void setCurrentSongDisplayName(const std::string&);
 	std::string getCurrentSongDisplayName();
 	void incrementTowerRepeatCount();
 	void resetTowerRepeatCount();
 	int getTowerRepeatCount() const;
-	void setSawbladeCustomSongsFolder(const bool value);
+	void setSawbladeCustomSongsFolder(const bool);
 	bool getSawbladeCustomSongsFolder() const;
-	void setAdvancedLogs(const bool value);
+	void setAdvancedLogs(const bool);
 	bool getAdvancedLogs() const;
-	void setLastMenuLoopPosition(const int millisecond);
+	void setLastMenuLoopPosition(const int);
 	int getLastMenuLoopPosition() const;
 	static void restoreLastMenuLoopPosition();
-	void setShouldRestoreMenuLoopPoint(const bool value);
+	void setShouldRestoreMenuLoopPoint(const bool);
 	bool getShouldRestoreMenuLoopPoint() const;
-	void setUndefined0Alk1m123TouchPrio(const bool value);
+	void setUndefined0Alk1m123TouchPrio(const bool);
 	bool getUndefined0Alk1m123TouchPrio() const;
-	void setColonMenuLoopStartTime(geode::Mod* value);
+	void setColonMenuLoopStartTime(geode::Mod*);
 	geode::Mod* getColonMenuLoopStartTime() const;
-	void setVibecodedVentilla(const bool value);
+	void setVibecodedVentilla(const bool);
 	bool getVibecodedVentilla() const;
 
   private:

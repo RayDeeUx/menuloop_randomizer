@@ -3,7 +3,7 @@
 
 SongManager::SongManager() {}
 
-std::vector<std::string> SongManager::getSongs() {
+std::vector<std::string>& SongManager::getSongs() {
 	return m_songs;
 }
 
@@ -11,7 +11,7 @@ void SongManager::addSong(const std::string& path) {
 	m_songs.push_back(path);
 }
 
-void SongManager::removeSong(const std::string& path) {
+void SongManager::removeSong(const std::string_view path) {
 	m_songs.erase(std::remove(m_songs.begin(), m_songs.end(), path));
 }
 
@@ -148,7 +148,7 @@ void SongManager::addToBlacklist() {
 	m_blacklist.push_back(m_currentSong);
 }
 
-std::vector<std::string> SongManager::getBlacklist() {
+std::vector<std::string>& SongManager::getBlacklist() {
 	return m_blacklist;
 }
 
@@ -164,7 +164,7 @@ void SongManager::addToFavorites() {
 	m_favorites.push_back(m_currentSong);
 }
 
-std::vector<std::string> SongManager::getFavorites() {
+std::vector<std::string>& SongManager::getFavorites() {
 	return m_favorites;
 }
 
