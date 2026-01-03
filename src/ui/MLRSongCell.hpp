@@ -20,13 +20,13 @@ struct SongData {
 class MLRSongCell : public cocos2d::CCLayerColor {
 public:
 	static MLRSongCell* create(const SongData& songData, const bool isEven, const bool isCompact = true);
-	static MLRSongCell* createEmpty(const bool isEven);
+	static MLRSongCell* createEmpty(const bool);
 	bool init(const SongData& songData, const bool isEven, const bool isCompact = true);
-	bool initEmpty(const bool isEven);
+	bool initEmpty(const bool);
 	void onPlaySong(CCObject*);
 	void checkIfCurrentSong() const;
 	void toggleEven(const bool);
-	void update(float delta);
+	void update(float) override;
 	SongData m_songData;
 	cocos2d::CCLabelBMFont* m_songNameLabel;
 	cocos2d::CCLayerColor* m_divider;

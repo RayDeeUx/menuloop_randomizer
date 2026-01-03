@@ -25,7 +25,7 @@ MLRSongCell* MLRSongCell::createEmpty(const bool isEven) {
 }
 
 bool MLRSongCell::initEmpty(const bool isEven) {
-	return MLRSongCell::init({}, isEven, false);
+	return MLRSongCell::init({.isEmpty = true}, isEven, false);
 }
 
 bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool isCompact) {
@@ -112,7 +112,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	return true;
 }
 
-void MLRSongCell::onPlaySong(CCObject* sender) {
+void MLRSongCell::onPlaySong(CCObject*) {
 	if (this->m_songData.type == SongType::Blacklisted || this->getTag() == 12192025) return;
 	SongManager& songManager = SongManager::get();
 	if (songManager.isOverride()) return;
@@ -127,6 +127,7 @@ void MLRSongCell::onPlaySong(CCObject* sender) {
 }
 
 void MLRSongCell::checkIfCurrentSong() const {
+	if (this->m_songData.isEmpty || !this->m_songNameLabel || !this->m_songNameLabel->getParent()) return;
 	const bool isCurrentSong = this->m_songData.actualFilePath == SongManager::get().getCurrentSong();
 
 	if (isCurrentSong) {
@@ -138,8 +139,8 @@ void MLRSongCell::checkIfCurrentSong() const {
 		this->m_songNameLabel->setColor({255, 255, 255});
 	}
 
-	this->m_menu->setVisible(!isCurrentSong);
-	this->m_playButton->setEnabled(!isCurrentSong);
+	if (this->m_menu) this->m_menu->setVisible(!isCurrentSong);
+	if (this->m_playButton) this->m_playButton->setEnabled(!isCurrentSong);
 }
 
 void MLRSongCell::toggleEven(const bool isEven) {
