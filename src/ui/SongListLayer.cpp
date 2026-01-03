@@ -379,7 +379,7 @@ bool SongListLayer::setup() {
 
 	songManager.resetTowerRepeatCount();
 
-	if (SEARCH_BAR_ENABLED) this->scheduleUpdate();
+	if (SEARCH_BAR_ENABLED) this->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), .125f);
 
 	return true;
 }
@@ -652,7 +652,7 @@ unsigned int SongListLayer::getLength(const std::string& path, const bool revers
 	#endif
 }
 
-void SongListLayer::update(float) {
+void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float) const {
 	if (SEARCH_BAR_DISABLED || !GET_SEARCH_BAR_NODE) return;
 	SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE)->getInputNode());
 }

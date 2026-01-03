@@ -26,15 +26,15 @@ public:
 	void onSortDateToggle(CCObject*);
 	void onSortLengthToggle(CCObject*);
 	void onSortSizeToggle(CCObject*);
-	void disableAllSortFiltersThenToggleThenSearch(std::string_view savedValueKey);
-	void toggleSavedValueAndSearch(std::string_view savedValueKey);
+	void disableAllSortFiltersThenToggleThenSearch(const std::string_view);
+	void toggleSavedValueAndSearch(const std::string_view);
 	void keyDown(const cocos2d::enumKeyCodes) override;
-	void searchSongs(const std::string& queryString);
+	void searchSongs(const std::string&);
 
-	static std::string generateDisplayName(SongData& songData);
-	static bool tallEnough(geode::ScrollLayer* scrollLayer);
-	static float determineYPosition(geode::ScrollLayer* scrollLayer);
-	static void displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode *inputNode, const bool updateString = true);
+	static std::string generateDisplayName(SongData&);
+	static bool tallEnough(geode::ScrollLayer*);
+	static float determineYPosition(geode::ScrollLayer*);
+	static void displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode* inputNode, const bool updateString = true);
 
 	static bool caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool fileSize(MLRSongCell* a, MLRSongCell* b, bool reverse);
@@ -43,5 +43,5 @@ public:
 
 	static unsigned int getLength(const std::string& path, const bool reverse);
 
-	void update(float) override;
+	void displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float) const;
 };
