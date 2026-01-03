@@ -1,6 +1,6 @@
 #pragma once
 
-class SongControlMenu final : public geode::Popup<const std::string&> {
+class SongControlMenu final : public geode::Popup<> {
 protected:
 	cocos2d::CCLabelBMFont* m_smallLabel{};
 	cocos2d::CCLabelBMFont* m_otherLabel{};
@@ -11,7 +11,7 @@ protected:
 	cocos2d::CCMenu* m_infoMenu         {};
 	InfoAlertButton* m_infoButton       {};
 	cocos2d::extension::CCScale9Sprite*b{};
-	bool setup(std::string const& id) override;
+	bool setup() override;
 	void onShuffleButton(CCObject*);
 	void onCopyButton(CCObject*);
 	void onBlacklistButton(CCObject*);
@@ -22,7 +22,7 @@ protected:
 	void onAddToPlylstBtn(CCObject*);
 	void onSettingsButton(CCObject*);
 public:
-	static SongControlMenu* create(const std::string&);
+	static SongControlMenu* create();
 	void onRegenButton(CCObject*);
 	void updateCurrentLabel();
 	void onExit() override;

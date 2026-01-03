@@ -5,11 +5,11 @@
 
 #define SEARCH_BAR_NODE_ID "song-list-search-bar"_spr
 
-class SongListLayer final : public geode::Popup<const std::string&> {
+class SongListLayer final : public geode::Popup<> {
 public:
-	static SongListLayer* create(const std::string&);
+	static SongListLayer* create();
 	void addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString = "");
-	bool setup(const std::string&) override;
+	bool setup() override;
 	void onSettingsButton(CCObject*);
 	void onShuffleButton(CCObject*);
 	void onCopyButton(CCObject*);

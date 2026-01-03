@@ -6,7 +6,7 @@
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 
-bool SongControlMenu::setup(const std::string&) {
+bool SongControlMenu::setup() {
 	this->setTitle("Menu Loop Randomizer - Control Panel");
 	this->m_title->setScale(.45f);
 
@@ -154,7 +154,7 @@ bool SongControlMenu::setup(const std::string&) {
 	return true;
 }
 
-SongControlMenu* SongControlMenu::create(const std::string&) {
+SongControlMenu* SongControlMenu::create() {
 	auto ret = new SongControlMenu();
 	if (ret->initAnchored(300.f, 150.f, "GJ_square05.png")) {
 		ret->autorelease();
@@ -205,7 +205,7 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 
 void SongControlMenu::onPlaylistButton(CCObject*) {
 	SongControlMenu::onClose(nullptr);
-	SongListLayer::create("GJ_square02.png")->show();
+	SongListLayer::create()->show();
 }
 
 void SongControlMenu::onAddToPlylstBtn(CCObject*) {

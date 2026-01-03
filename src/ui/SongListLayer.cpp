@@ -21,7 +21,7 @@
 #define SEARCH_BAR_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSearchBar")
 #define SONG_SORTING_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSortSongOptions")
 
-SongListLayer* SongListLayer::create(const std::string&) {
+SongListLayer* SongListLayer::create() {
 	auto* ret = new SongListLayer();
 	if (ret->initAnchored(420.f, 290.f, "GJ_square02.png")) {
 		ret->autorelease();
@@ -130,7 +130,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	if (CCNode* scrollShortcuts = this->m_mainLayer->getChildByID("scroll-shortcuts-menu"_spr)) scrollShortcuts->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 }
 
-bool SongListLayer::setup(const std::string&) {
+bool SongListLayer::setup() {
 	this->setUserObject("user95401.scrollbar_everywhere/scrollbar", cocos2d::CCBool::create(true)); // fuck off, user95401.
 	this->m_noElasticity = true;
 
@@ -411,7 +411,7 @@ void SongListLayer::onPreviousButton(CCObject*) {
 
 void SongListLayer::onControlsButton(CCObject*) {
 	this->onClose(nullptr);
-	SongControlMenu::create("GJ_square05.png")->show();
+	SongControlMenu::create()->show();
 }
 
 CCContentLayer* SongListLayer::getContentLayer() const {
