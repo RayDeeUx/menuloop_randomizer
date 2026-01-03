@@ -20,10 +20,10 @@ class Utils {
 	static void copyCurrentSongName();
 	static void loadFromPlaylistFile(const std::filesystem::path&);
 	static void populateVector(const bool customSongs, const std::filesystem::path& path = "", std::vector<std::string> textFileBlacklist = {}, std::vector<std::string> textFileFavorites = {});
-	static std::vector<std::string> parseBlacklistFile(const std::filesystem::path& blacklistFilePath);
-	static std::vector<std::string> parseFavoritesFile(const std::filesystem::path& favoritesFilePath);
+	static std::vector<std::string> parseBlacklistFile(const std::filesystem::path&);
+	static std::vector<std::string> parseFavoritesFile(const std::filesystem::path&);
 	static void refreshTheVector();
-	static void resetSongManagerRefreshVectorSetNewSongBecause(const std::string_view reasonUsuallySettingName);
+	static void resetSongManagerRefreshVectorSetNewSongBecause(const std::string_view);
 	static bool isFromConfigOrAlternateDir(const std::filesystem::path&);
 	static SongInfoObject* getSongInfoObject();
 	static std::string getSongName();
