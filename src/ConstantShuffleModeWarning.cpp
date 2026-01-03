@@ -3,7 +3,7 @@
 using namespace geode::prelude;
 
 ConstantShuffleModeWarning* ConstantShuffleModeWarning::create(bool isCringe) {
-	auto *ret = new ConstantShuffleModeWarning();
+	ConstantShuffleModeWarning* ret = new ConstantShuffleModeWarning();
 	if (ret && ret->init(isCringe)) {
 		ret->autorelease();
 		return ret;
