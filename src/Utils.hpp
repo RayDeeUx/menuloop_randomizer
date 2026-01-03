@@ -3,8 +3,8 @@
 class Utils {
   public:
 	static int randomIndex(int);
-	static bool isSupportedFile(const std::string&);
-	static bool goodExtension(const std::string&);
+	static bool isSupportedFile(const std::string_view);
+	static bool goodExtension(const std::string_view);
 	static bool getBool(const std::string& setting);
 	static std::string getString(const std::string& setting);
 	static void removeCard();
@@ -31,7 +31,7 @@ class Utils {
 	static int getSongID();
 	static std::string currentCustomSong();
 	static std::string toNormalizedString(const std::filesystem::path& path);
-	static std::filesystem::path toProblematicString(const std::string& path);
+	static std::filesystem::path toProblematicString(const std::string_view);
 	static void fadeOutCardRemotely(cocos2d::CCNode* card = Utils::findCardRemotely());
 	static void removeCardRemotely(cocos2d::CCNode* card = Utils::findCardRemotely());
 	static void queueUpdateFrontfacingLabelsInSCMAndSLL();

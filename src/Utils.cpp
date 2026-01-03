@@ -22,11 +22,11 @@ int Utils::randomIndex(int size) {
 	return dist(gen);
 }
 
-bool Utils::isSupportedFile(const std::string& path) {
+bool Utils::isSupportedFile(const std::string_view path) {
 	return !path.empty() && Utils::goodExtension(path);
 }
 
-bool Utils::goodExtension(const std::string& path) {
+bool Utils::goodExtension(const std::string_view path) {
 	const std::string& extension = Utils::toNormalizedString(Utils::toProblematicString(path).extension());
 
 	static const std::array<std::string, 5> absolutelyConfirmed = {".mp3", ".wav", ".ogg", ".oga", ".flac"};
@@ -597,7 +597,7 @@ std::string Utils::toNormalizedString(const std::filesystem::path& path) {
 	return geode::utils::string::pathToString(path);
 }
 
-std::filesystem::path Utils::toProblematicString(const std::string& path) {
+std::filesystem::path Utils::toProblematicString(const std::string_view path) {
 	#ifdef GEODE_IS_WINDOWS
 	/* TODO FOR GEODE V5: SWAP COMMENTED LINES */
 	// return std::filesystem::path(geode::utils::string::utf8ToWide(path).unwrapOr(""));
