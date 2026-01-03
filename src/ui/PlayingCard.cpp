@@ -7,7 +7,7 @@ using namespace geode::prelude;
 static const std::regex fileExtensionRegex = std::regex(R"(\.(?:mp3|ogg|oga|flac|wav)$)");
 static const std::regex unsupportedCharRegex = std::regex(R"([^[\]+,. !@#$%^&*()'|`~•/:;<>=?\-\w\\])");
 
-PlayingCard *PlayingCard::create(std::string output) {
+PlayingCard* PlayingCard::create(const std::string& output) {
 	PlayingCard *ret = new PlayingCard();
 	if (ret && ret->init(output)) {
 		ret->autorelease();
@@ -17,24 +17,8 @@ PlayingCard *PlayingCard::create(std::string output) {
 	return nullptr;
 }
 
-bool PlayingCard::init(std::string output) {
-	if (!CCNode::init())
-		return false;
-
-	if (output.empty())
-		output = "Unknown";
-	else if (Utils::getBool("removeSuffix"))
-		output = std::regex_replace(output, fileExtensionRegex, "");
-
-	if (Utils::getBool("replaceUnsupportedChars")) output = std::regex_replace(output, unsupportedCharRegex, "?");
-
-	auto mainNode = CCNode::create();
-
-	this->setID("now-playing-card"_spr);
-
-	auto bg = CCScale9Sprite::create("black-square.png"_spr);
-	bg->setContentSize(cardSize);
-	bg->setAnchorPoint({0.5f, 0.0f});
+bool PlayingCard::init(const std::string& output) {
+	if (!CCNode::init()) return false;
 
 	std::string fontFile = "gjFont17.fnt";
 	int font = Mod::get()->getSettingValue<int64_t>("notificationFont");
@@ -48,7 +32,21 @@ bool PlayingCard::init(std::string output) {
 		fontFile = fmt::format("gjFont{:02d}.fnt", font);
 	}
 
-	auto nowPlayingLabel = CCLabelBMFont::create(output.c_str(), fontFile.c_str());
+	CCLabelBMFont* nowPlayingLabel = nullptr;
+	if (output.empty()) nowPlayingLabel = CCLabelBMFont::create("Unknown", fontFile.c_str());
+	else if (Utils::getBool("removeSuffix")) nowPlayingLabel = CCLabelBMFont::create(std::regex_replace(output, fileExtensionRegex, "").c_str(), fontFile.c_str());
+	else nowPlayingLabel = CCLabelBMFont::create(output.c_str(), fontFile.c_str());
+
+	if (Utils::getBool("replaceUnsupportedChars")) nowPlayingLabel->setString(std::regex_replace(output, unsupportedCharRegex, "?").c_str());
+
+	CCNode* mainNode = CCNode::create();
+
+	this->setID("now-playing-card"_spr);
+
+	CCScale9Sprite* bg = CCScale9Sprite::create("black-square.png"_spr);
+	bg->setContentSize(cardSize);
+	bg->setAnchorPoint({0.5f, 0.0f});
+
 	nowPlayingLabel->limitLabelWidth(cardSize.x - 4.0f, 0.5f, 0.1f);
 	nowPlayingLabel->setPositionY(12.0f);
 

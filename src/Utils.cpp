@@ -46,11 +46,11 @@ bool Utils::goodExtension(const std::string_view path) {
 	return std::ranges::find(extensions.begin(), extensions.end(), extension) != extensions.end();
 }
 
-bool Utils::getBool(const std::string& setting) {
+bool Utils::getBool(const std::string_view setting) {
 	return geode::Mod::get()->getSettingValue<bool>(setting);
 }
 
-std::string Utils::getString(const std::string& setting) {
+std::string Utils::getString(const std::string_view setting) {
 	return geode::Mod::get()->getSettingValue<std::string>(setting);
 }
 
@@ -644,7 +644,7 @@ void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler fu
 	if (menu->getLayout()) menu->updateLayout();
 }
 
-void Utils::addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string &nodeID, cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
+void Utils::addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string_view nodeID, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
 	const std::string& spriteOne = "GJ_button_01.png";
 	const std::string& spriteTwo = "GJ_button_02.png";
 
@@ -672,7 +672,7 @@ void Utils::addViewModeToggle(const bool relevantBoolean, const std::string& tog
 	if (menu->getLayout()) menu->updateLayout();
 }
 
-void Utils::showMDPopup(const std::string& title, const std::string& bodyText, const int tag, const std::string& nodeID) {
+void Utils::showMDPopup(const std::string_view title, const std::string& bodyText, const int tag, const std::string_view nodeID) {
 	geode::MDPopup* popup = geode::MDPopup::create(fmt::format("MLR {}: A Warning", title), bodyText, "I Understand");
 	popup->setID(fmt::format("{}-warning"_spr, nodeID));
 	popup->setTag(tag);
