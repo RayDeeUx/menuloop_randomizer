@@ -72,10 +72,10 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onHoldSongButton(CCObject*) { SongControl::holdSong(); }
 	void onPreviousButton(CCObject*) { SongControl::previousSong(); }
 	void onAddToPlylstBtn(CCObject*) { SongControl::addSongToPlaylist(SongManager::get().getCurrentSong()); }
-	void onSongListButton(CCObject*) { SongListLayer::create("GJ_square05.png")->show(); }
+	void onSongListButton(CCObject*) { SongListLayer::create("GJ_square02.png")->show(); }
 	void onControlsButton(CCObject*) {
 		if (Utils::getString("buttonMode") == "Classic") return;
 		if (CCScene::get()->getChildByType<SongControlMenu>(0)) return;
-		SongControlMenu::create("GJ_square02.png")->show();
+		SongControlMenu::create("GJ_square05.png")->show();
 	}
 };

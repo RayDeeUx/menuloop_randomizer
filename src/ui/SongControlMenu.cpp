@@ -19,14 +19,6 @@ bool SongControlMenu::setup(const std::string&) {
 	this->m_title->setPositionY(this->m_title->getPositionY() + 2.f);
 	this->m_title->setPositionX(mainLayer->getContentWidth() / 2.f);
 
-	cocos2d::extension::CCScale9Sprite* newBG = cocos2d::extension::CCScale9Sprite::create("GJ_square05.png");
-	newBG->ignoreAnchorPointForPosition(this->m_bgSprite->isIgnoreAnchorPointForPosition());
-	newBG->setPosition(this->m_bgSprite->getPosition());
-	newBG->setContentSize(layerSize);
-	this->m_mainLayer->addChild(newBG);
-	this->m_bgSprite->removeMeAndCleanup();
-	this->m_bgSprite = newBG;
-
 	this->m_songControlsMenu = cocos2d::CCMenu::create();
 
 	Utils::addButton("shuffle", menu_selector(SongControlMenu::onShuffleButton), REST_OF_THE_OWL);

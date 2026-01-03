@@ -7,7 +7,7 @@ using namespace geode::prelude;
 class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void update(float dt) {
 		FMODAudioEngine::update(dt);
-		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		if (GJBaseGameLayer::get() || VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		SongManager& songManager = SongManager::get();
 		constexpr int channelNumber = 0;

@@ -144,14 +144,6 @@ bool SongListLayer::setup(const std::string&) {
 	CCLayer* mainLayer = this->m_mainLayer;
 	mainLayer->setID("main-layer"_spr);
 
-	cocos2d::extension::CCScale9Sprite* newBG = cocos2d::extension::CCScale9Sprite::create("GJ_square02.png");
-	newBG->ignoreAnchorPointForPosition(this->m_bgSprite->isIgnoreAnchorPointForPosition());
-	newBG->setPosition(this->m_bgSprite->getPosition());
-	newBG->setContentSize(layerSize);
-	this->m_mainLayer->addChild(newBG);
-	this->m_bgSprite->removeMeAndCleanup();
-	this->m_bgSprite = newBG;
-
 	geode::ScrollLayer* scrollLayer = geode::ScrollLayer::create({356.f, 220.f});
 	scrollLayer->m_contentLayer->setLayout(geode::ColumnLayout::create()->setAxisReverse(true)->setAxisAlignment(geode::AxisAlignment::End)->setAutoGrowAxis(std::make_optional<float>(220.f))->setGap(.0f));
 	scrollLayer->ignoreAnchorPointForPosition(false);
