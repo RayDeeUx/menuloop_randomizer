@@ -1,21 +1,6 @@
 #pragma once
-
-enum class SongType {
-	Regular,
-	Favorited,
-	Blacklisted
-};
-
-struct SongData {
-	std::string actualFilePath = "";
-	std::string fileExtension = "";
-	std::string fileName = "";
-	std::string displayName = "";
-	SongType type = SongType::Regular;
-	unsigned int songLength = std::numeric_limits<unsigned int>::max();
-	bool isFromConfigOrAltDir = false;
-	bool isEmpty = false;
-};
+#include "../SongManager.hpp"
+#include "../Utils.hpp"
 
 class MLRSongCell : public cocos2d::CCLayerColor {
 public:

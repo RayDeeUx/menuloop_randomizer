@@ -655,7 +655,7 @@ unsigned int SongListLayer::getLength(const std::string& path, const bool revers
 	#endif
 }
 
-void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float) const {
+void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float) {
 	if (SEARCH_BAR_DISABLED || !GET_SEARCH_BAR_NODE) return;
 	SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE)->getInputNode());
 }

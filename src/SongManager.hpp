@@ -1,5 +1,22 @@
 #pragma once
 
+enum class SongType {
+	Regular,
+	Favorited,
+	Blacklisted
+};
+
+struct SongData {
+	std::string actualFilePath = "";
+	std::string fileExtension = "";
+	std::string fileName = "";
+	std::string displayName = "";
+	SongType type = SongType::Regular;
+	unsigned int songLength = std::numeric_limits<unsigned int>::max();
+	bool isFromConfigOrAltDir = false;
+	bool isEmpty = false;
+};
+
 // shorthand because haha yes
 #define VANILLA_GD_MENU_LOOP_DISABLED GameManager::sharedState()->getGameVariable("0122")
 #define CONFIG_DIR geode::Mod::get()->getConfigDir()
