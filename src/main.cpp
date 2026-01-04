@@ -17,6 +17,7 @@ $on_mod(Loaded) {
 	songManager.setConstantShuffleMode();
 	songManager.setLastMenuLoopPosition(0);
 	songManager.setShouldRestoreMenuLoopPoint(true);
+	songManager.setFinishedCalculatingSongLengths(false);
 	songManager.setAdvancedLogs(Mod::get()->getSettingValue<bool>("advancedLogs"));
 	songManager.setVibecodedVentilla(VIBECODED_RADIO && (VIBECODED_RADIO->isEnabled() || VIBECODED_RADIO->shouldLoad()));
 	if (!std::filesystem::exists(configDir / "playlistOne.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistOne.txt");

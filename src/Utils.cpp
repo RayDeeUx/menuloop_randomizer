@@ -470,6 +470,7 @@ void Utils::popualteSongToSongDataMap() {
 
 	const std::vector<std::string>& blacklist = songManager.getBlacklist();
 	const std::vector<std::string>& favorites = songManager.getFavorites();
+	std::vector<std::filesystem::path> tempKeys = {};
 
 	for (const std::string_view song : songManager.getSongs()) {
 		SongType songType = SongType::Regular;
@@ -488,7 +489,16 @@ void Utils::popualteSongToSongDataMap() {
 		};
 
 		songToSongData.emplace(theirPath, songData);
+		tempKeys.push_back(theirPath);
 	}
+
+	songManager.setFinishedCalculatingSongLengths(false);
+	std::thread([&songToSongData, &songManager]() {
+		for (auto& [path, songData] : songToSongData) {
+			songData.songLength = SongListLayer::getLength(geode::utils::string::pathToString(path), false);
+		}
+		songManager.setFinishedCalculatingSongLengths(true);
+	}).detach();
 }
 
 std::vector<std::string> Utils::parseBlacklistFile(const std::filesystem::path& blacklistFilePath) {

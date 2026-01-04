@@ -307,3 +307,11 @@ void SongManager::setVibecodedVentilla(const bool value) {
 bool SongManager::getVibecodedVentilla() const {
 	return m_vibecodedVentilla;
 }
+
+void SongManager::setFinishedCalculatingSongLengths(const bool value) {
+	m_finishedCalculatingSongLengths = value;
+}
+
+bool SongManager::getFinishedCalculatingSongLengths() const {
+	return m_finishedCalculatingSongLengths;
+}

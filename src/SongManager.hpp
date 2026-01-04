@@ -92,6 +92,8 @@ class SongManager {
 	geode::Mod* getColonMenuLoopStartTime() const;
 	void setVibecodedVentilla(const bool);
 	bool getVibecodedVentilla() const;
+	void setFinishedCalculatingSongLengths(const bool);
+	bool getFinishedCalculatingSongLengths() const;
 
   private:
 	SongManager();
@@ -121,4 +123,5 @@ class SongManager {
 	int m_towerRepeatCount = 0;
 	geode::Mod* m_colonMenuLoopStartTime {};
 	SongToSongData m_songToSongDataMap;
+	bool m_finishedCalculatingSongLengths;
 };
