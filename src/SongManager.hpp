@@ -17,7 +17,8 @@ struct SongData {
 	bool isEmpty = false;
 };
 
-// shorthand because haha yes
+typedef std::unordered_map<std::filesystem::path, SongData> SongToSongData;
+
 #define VANILLA_GD_MENU_LOOP_DISABLED GameManager::sharedState()->getGameVariable("0122")
 #define CONFIG_DIR geode::Mod::get()->getConfigDir()
 #define BLACKLIST_FILE CONFIG_DIR / R"(blacklist.txt)"
@@ -35,6 +36,7 @@ class SongManager {
 	void removeSong(const std::string_view);
 	int getSongsSize() const;
 	void clearSongs();
+	SongToSongData& getSongToSongDataEntries();
 	void pickRandomSong();
 	bool isOriginalMenuLoop() const;
 	void setConstantShuffleMode();
@@ -118,4 +120,5 @@ class SongManager {
 	std::vector<std::string> m_favorites;
 	int m_towerRepeatCount = 0;
 	geode::Mod* m_colonMenuLoopStartTime {};
+	SongToSongData m_songToSongDataMap;
 };

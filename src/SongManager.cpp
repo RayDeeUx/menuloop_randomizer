@@ -25,6 +25,10 @@ void SongManager::clearSongs() {
 	}
 }
 
+SongToSongData& SongManager::getSongToSongDataEntries() {
+	return m_songToSongDataMap;
+}
+
 void SongManager::pickRandomSong() {
 	if (m_isOverride) {
 		m_isMenuLoop = false;
