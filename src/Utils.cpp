@@ -468,8 +468,26 @@ void Utils::popualteSongToSongDataMap() {
 	SongToSongData& songToSongData = songManager.getSongToSongDataEntries();
 	if (!songToSongData.empty()) songToSongData.clear();
 
+	const std::vector<std::string>& blacklist = songManager.getBlacklist();
+	const std::vector<std::string>& favorites = songManager.getFavorites();
+
 	for (const std::string_view song : songManager.getSongs()) {
+		SongType songType = SongType::Regular;
+		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
+		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
+
 		const std::filesystem::path& theirPath = Utils::toProblematicString(song);
+		SongData songData = {
+			.actualFilePath = std::string(song),
+			.fileExtension = theirPath.extension(),
+			.fileName = theirPath.filename(),
+			.displayName = theirPath.stem(),
+			.type = songType,
+			.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(theirPath.parent_path()),
+			.isEmpty = false
+		};
+
+		songToSongData.emplace(theirPath, songData);
 	}
 }
 
