@@ -43,5 +43,5 @@ public:
 
 	static unsigned int getLength(const std::string& path, const bool reverse);
 
-	void displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float) const;
+	void displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float);
 };
