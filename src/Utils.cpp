@@ -492,11 +492,11 @@ void Utils::popualteSongToSongDataMap() {
 	}
 
 	songManager.setFinishedCalculatingSongLengths(false);
-	std::thread([&songToSongData, &songManager]() {
-		for (auto& [unused, songData] : songToSongData) {
+	std::thread([]() {
+		for (auto& [unused, songData] : SongManager::get().getSongToSongDataEntries()) {
 			songData.songLength = SongListLayer::getLength(songData.actualFilePath, false);
 		}
-		songManager.setFinishedCalculatingSongLengths(true);
+		SongManager::get().setFinishedCalculatingSongLengths(true);
 	}).detach();
 }
 
