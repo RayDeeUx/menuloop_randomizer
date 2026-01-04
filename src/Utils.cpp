@@ -480,13 +480,13 @@ void Utils::popualteSongToSongDataMap() {
 		const std::filesystem::path& theirPath = Utils::toProblematicString(song);
 		SongData songData = {
 			.actualFilePath = std::string(song),
-			.fileExtension = theirPath.extension(),
-			.fileName = theirPath.filename(),
-			.displayName = theirPath.stem(),
+			.fileExtension = Utils::toNormalizedString(theirPath.extension()),
+			.fileName = Utils::toNormalizedString(theirPath.filename()),
 			.type = songType,
 			.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(theirPath.parent_path()),
 			.isEmpty = false
 		};
+		songData.displayName = Utils::toNormalizedString(SongListLayer::generateDisplayName(songData)),
 
 		songToSongData.emplace(theirPath, songData);
 		tempKeys.push_back(theirPath);

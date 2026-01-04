@@ -46,6 +46,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	const std::vector<std::string>& songsVector = songManager.getSongs();
 	float desiredContentHeight = SEARCH_BAR_ENABLED ? 36.f : 0.f; // always start with the height of the blank song cell, which is guaranteed to be 36.f units
 
+	const SongToSongData& songToSongData = songManager.getSongToSongDataEntries();
+
 	for (const std::string& song : songsVector) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
 
@@ -55,19 +57,27 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 		if (songListFavoritesOnlyMode && songType != SongType::Favorited) continue;
 
+		SongData songData {};
+		bool songDataFromTheMap = false;
 		const std::filesystem::path& songFilePath = Utils::toProblematicString(song);
-		SongData songData = {
-			.actualFilePath = Utils::toNormalizedString(songFilePath),
-			.fileExtension = Utils::toNormalizedString(songFilePath.extension()),
-			.fileName = Utils::toNormalizedString(songFilePath.filename()),
-			.type = songType,
-			.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(songFilePath.parent_path()),
-			.isEmpty = false
-		};
+		auto songDataIterator = songToSongData.find(songFilePath);
+		if (songDataIterator != songToSongData.end()) {
+			songData = songDataIterator->second;
+			songDataFromTheMap = true;
+		} else {
+			songData = {
+				.actualFilePath = Utils::toNormalizedString(songFilePath),
+				.fileExtension = Utils::toNormalizedString(songFilePath.extension()),
+				.fileName = Utils::toNormalizedString(songFilePath.filename()),
+				.type = songType,
+				.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(songFilePath.parent_path()),
+				.isEmpty = false
+			};
+		}
 
 		songData.displayName = SongListLayer::generateDisplayName(songData);
 
-		if (SONG_SORTING_ENABLED && SAVED("songListSortSongLength")) songData.songLength = SongListLayer::getLength(songData.actualFilePath, reverse);
+		if (SONG_SORTING_ENABLED && SAVED("songListSortSongLength") && !songDataFromTheMap) songData.songLength = SongListLayer::getLength(songData.actualFilePath, reverse);
 
 		if (SEARCH_BAR_ENABLED && !queryString.empty()) {
 			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.displayName), geode::utils::string::toLower(queryString));
