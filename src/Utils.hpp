@@ -20,6 +20,7 @@ class Utils {
 	static void copyCurrentSongName();
 	static void loadFromPlaylistFile(const std::filesystem::path&);
 	static void populateVector(const bool customSongs, const std::filesystem::path& path = "", std::vector<std::string> textFileBlacklist = {}, std::vector<std::string> textFileFavorites = {});
+	static void popualteSongToSongDataMap();
 	static std::vector<std::string> parseBlacklistFile(const std::filesystem::path&);
 	static std::vector<std::string> parseFavoritesFile(const std::filesystem::path&);
 	static void refreshTheVector();

@@ -319,6 +319,7 @@ void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
 		}
 	}
 	geode::log::info("Finished storing playlist. loaded songs size: {}", songManager.getSongsSize());
+	Utils::popualteSongToSongDataMap();
 }
 
 void Utils::populateVector(const bool customSongs, const std::filesystem::path& path, std::vector<std::string> textFileBlacklist, std::vector<std::string> textFileFavorites) {
@@ -456,6 +457,19 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 				if (SongManager::get().getAdvancedLogs()) geode::log::info("Adding FAVORITE Newgrounds/Music Library song: {}", Utils::toNormalizedString(songPath));
 			}
 		}
+	}
+
+	Utils::popualteSongToSongDataMap();
+}
+
+void Utils::popualteSongToSongDataMap() {
+	SongManager& songManager = SongManager::get();
+
+	SongToSongData& songToSongData = songManager.getSongToSongDataEntries();
+	if (!songToSongData.empty()) songToSongData.clear();
+
+	for (const std::string_view song : songManager.getSongs()) {
+		const std::filesystem::path& theirPath = Utils::toProblematicString(song);
 	}
 }
 
