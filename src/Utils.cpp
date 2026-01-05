@@ -655,8 +655,7 @@ void Utils::fadeOutCardRemotely(cocos2d::CCNode* card) {
 }
 
 void Utils::removeCardRemotely(cocos2d::CCNode* card) {
-	if (!card) return;
-	card->removeMeAndCleanup();
+	if (card) card->removeMeAndCleanup();
 }
 
 void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {

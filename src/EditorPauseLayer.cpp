@@ -12,7 +12,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		EditorPauseLayer::onExitEditor(sender);
 
-		Utils::removeCardRemotely();
+		Utils::removeCardRemotely(Utils::findCardRemotely());
 
 	}
 	#else
@@ -35,7 +35,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		EditorPauseLayer::onSaveAndExit(sender);
 
-		Utils::removeCardRemotely();
+		Utils::removeCardRemotely(Utils::findCardRemotely());
 
 	}
 	void FLAlert_Clicked(FLAlertLayer* p0, bool btnTwo) {
@@ -80,7 +80,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 
-		Utils::removeCardRemotely();
+		Utils::removeCardRemotely(Utils::findCardRemotely());
 
 	}
 	#endif

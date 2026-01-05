@@ -10,8 +10,8 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 
 		director->willSwitchToScene(scene);
 
-		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely();
-		else if (!scene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely();
+		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
+		else if (!scene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely(Utils::findCardRemotely());
 	}
 
 	bool pushScene(cocos2d::CCScene* scene) {
@@ -20,8 +20,8 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 
 		bool result = director->pushScene(scene);
 
-		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely();
-		else if (!scene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely();
+		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
+		else if (!scene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely(Utils::findCardRemotely());
 
 		return result;
 	}
@@ -32,8 +32,8 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 
 		bool result = director->replaceScene(scene);
 
-		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely();
-		else if (!scene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely();
+		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
+		else if (!scene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely(Utils::findCardRemotely());
 
 		return result;
 	}
@@ -44,7 +44,7 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 
 		director->popSceneWithTransition(p0, p1);
 
-		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely();
-		else Utils::removeCardRemotely();
+		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
+		else Utils::removeCardRemotely(Utils::findCardRemotely());
 	}
 };

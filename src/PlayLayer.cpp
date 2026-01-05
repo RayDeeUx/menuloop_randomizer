@@ -10,6 +10,6 @@ class $modify(MenuLoopPLHook, PlayLayer) {
 		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingLevel") && Utils::getBool("restoreWhenExitingLevel"));
 
 		PlayLayer::onQuit();
-		Utils::removeCardRemotely();
+		Utils::removeCardRemotely(Utils::findCardRemotely());
 	}
 };
