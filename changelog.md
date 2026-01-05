@@ -1,11 +1,19 @@
 # Menu Loop Randomizer Changelog
 ## v1.11.2
 *<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod require [Better Touch Prio](mod:alk.better-touch-prio) to be installed.</c>*
+- Added the <cj>File Extension sorting</c> option to the Song List.
+  - Sort files based on their file extension alphabetically.
+  - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> to use this <cj>sorting</c> option in the Song List menu.
 - An attempt was made to offload Song Length calculations to another thread.
   - <cj>Sorting</c> songs by <cj>Song Length</c> should not freeze your game for as long now.
   - The mod setting to disable <cj>sorting</c> by <cj>song length</c> is still available.
-- Fix some log spamming issues if you had  `Advanced Logging`  enabled.
-- Fix a bug where you could play empty song files if you tried hard enough.
+  - [Better Touch Prio](mod:alk.better-touch-prio) is still <cl>requ</c><cj>ired</c> to use the Song Length <cj>sorting</c> option in the Song List menu.
+- Added an option to show extra information about a song when Compact Mode is enabled in the Song List menu.
+  - You can toggle this option off in the mod settings.
+  - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> to use this feature, as this feature relies on Compact Mode being enabled.
+- Adjust height limits for song name labels when Compact Mode is enabled in the Song List menu.
+- Fix some log spamming issues if you had  `Advanced Logging`  enabled, and then entered the level editor.
+- Fix a bug where you could play empty song files from the Song List menu if you tried hard enough.
 - Even more various (attempts at) micro-optimizations.
 ## v1.11.1
 - Hotfix.

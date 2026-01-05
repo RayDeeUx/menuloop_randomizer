@@ -471,6 +471,7 @@ void Utils::popualteSongToSongDataMap() {
 	const std::vector<std::string>& blacklist = songManager.getBlacklist();
 	const std::vector<std::string>& favorites = songManager.getFavorites();
 	std::vector<std::string> tempKeys = {};
+	std::error_code ec;
 
 	for (const std::string_view song : songManager.getSongs()) {
 		SongType songType = SongType::Regular;
@@ -478,11 +479,12 @@ void Utils::popualteSongToSongDataMap() {
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
 
 		const std::filesystem::path& theirPath = Utils::toProblematicString(song);
+		std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
 		SongData songData = {
 			.actualFilePath = std::string(song),
 			.fileExtension = Utils::toNormalizedString(theirPath.extension()),
 			.fileName = Utils::toNormalizedString(theirPath.filename()),
-			.type = songType,
+			.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
 			.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(theirPath.parent_path()),
 			.isEmpty = false
 		};

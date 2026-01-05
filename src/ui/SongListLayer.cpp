@@ -47,6 +47,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	float desiredContentHeight = SEARCH_BAR_ENABLED ? 36.f : 0.f; // always start with the height of the blank song cell, which is guaranteed to be 36.f units
 
 	const SongToSongData& songToSongData = songManager.getSongToSongDataEntries();
+	std::error_code ec;
 
 	for (const std::string& song : songsVector) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
@@ -65,11 +66,12 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			songData = songDataIterator->second;
 			songDataFromTheMap = true;
 		} else {
+			std::uintmax_t fileSize = std::filesystem::file_size(songFilePath, ec);
 			songData = {
 				.actualFilePath = Utils::toNormalizedString(songFilePath),
 				.fileExtension = Utils::toNormalizedString(songFilePath.extension()),
 				.fileName = Utils::toNormalizedString(songFilePath.filename()),
-				.type = songType,
+				.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
 				.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(songFilePath.parent_path()),
 				.isEmpty = false
 			};
@@ -604,11 +606,8 @@ bool SongListLayer::caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, 
 
 bool SongListLayer::fileSize(MLRSongCell* a, MLRSongCell* b, const bool reverse) {
 	if (SONG_SORTING_DISABLED) return false;
-	std::error_code ec;
-	std::uintmax_t fileSizeA = std::filesystem::file_size(Utils::toProblematicString(a->m_songData.actualFilePath), ec);
-	fileSizeA = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSizeA;
-	std::uintmax_t fileSizeB = std::filesystem::file_size(Utils::toProblematicString(b->m_songData.actualFilePath), ec);
-	fileSizeB = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSizeB;
+	const std::uintmax_t fileSizeA = a->m_songData.songFileSize;
+	const std::uintmax_t fileSizeB = b->m_songData.songFileSize;
 	if (fileSizeA < fileSizeB) return !reverse;
 	if (fileSizeA > fileSizeB) return reverse;
 	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;

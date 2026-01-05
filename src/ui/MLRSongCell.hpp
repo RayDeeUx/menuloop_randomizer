@@ -14,6 +14,7 @@ public:
 	void update(float) override;
 	SongData m_songData;
 	cocos2d::CCLabelBMFont* m_songNameLabel;
+	cocos2d::CCLabelBMFont* m_extraInfoLabl;
 	cocos2d::CCLayerColor* m_divider;
 	cocos2d::CCMenu* m_menu;
 	CCMenuItemSpriteExtra* m_playButton;

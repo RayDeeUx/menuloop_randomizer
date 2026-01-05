@@ -73,6 +73,14 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	songNameLabel->limitLabelWidth(356.f * (.8 / compactModeFactor), std::clamp<float>((.75f / compactModeFactor), .3, .75), .001f);
 	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.displayName));
 
+	cocos2d::CCLabelBMFont* extraInfoLabl = nullptr;
+	if (Utils::getBool("showExtraInfoLabel")) {
+		extraInfoLabl = cocos2d::CCLabelBMFont::create("PLACEHOLDER SO NOTHING CRASHES", "chatFont.fnt");
+		extraInfoLabl->setString(fmt::format("{} | {} sec | {} MB", songData.fileExtension, songData.songLength / 1000, songData.songFileSize / 1000).c_str());
+		extraInfoLabl->setAnchorPoint({.0f, .5f});
+		extraInfoLabl->setPosition({songNameLabel->getPositionX() + songNameLabel->getContentWidth() + 2.5f, (this->getContentHeight() / 2.f) + 1.f});
+	}
+
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127}, 356.f, .5f);
 	divider->setAnchorPoint({0.f, 0.f});
 
@@ -90,15 +98,18 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 
 	this->m_menu = menu;
 	this->m_songNameLabel = songNameLabel;
+	if (extraInfoLabl) this->m_extraInfoLabl = extraInfoLabl;
 	this->m_divider = divider;
 	this->m_playButton = playButton;
 
 	this->addChild(songNameLabel);
+	if (extraInfoLabl) this->addChild(extraInfoLabl);
 	this->addChild(divider);
 	this->addChild(menu);
 
 	menu->setID("song-cell-menu"_spr);
 	songNameLabel->setID("song-cell-label"_spr);
+	if (extraInfoLabl) extraInfoLabl->setID("extra-info-label"_spr);
 	divider->setID(fmt::format("song-cell-divider"_spr));
 
 	this->setOpacity(255);

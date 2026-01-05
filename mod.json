@@ -279,6 +279,13 @@
 			"default": false,
 			"enable-if": "loaded:alk.better-touch-prio && showSortSongOptions"
 		},
+		"showExtraInfoLabel": {
+			"name": "Song List: Show Extra Song Info in Compact Mode",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO EXTRA LABELS WILL APPEAR.__***</c>\n\nChoose if you want to show extra information about a specific song when Compact Mode is enabled in the Song List menu.",
+			"type": "bool",
+			"default": true,
+			"enable-if": "loaded:alk.better-touch-prio"
+		},
 		"specificSongOverride": {
 			"name": "Specific Menu Loop File Override",
 			"description": "In case you *hate* the randomizer elements from this mod.\n\n<cy>Leave this as blank to disable this option.</c>",
