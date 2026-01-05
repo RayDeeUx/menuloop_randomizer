@@ -165,7 +165,7 @@ bool SongControlMenu::setup() {
 }
 
 SongControlMenu* SongControlMenu::create() {
-	auto ret = new SongControlMenu();
+	SongControlMenu* ret = new SongControlMenu();
 	if (ret->initAnchored(300.f, 150.f, "GJ_square05.png")) {
 		ret->autorelease();
 		return ret;
