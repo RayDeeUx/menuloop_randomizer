@@ -189,7 +189,6 @@ void SongControlMenu::checkManagerFinished(float) {
 	if (playlistButton) SongControlMenu::toggleButtonState(playlistButton, SongManager::get().getFinishedCalculatingSongLengths());
 }
 
-
 void SongControlMenu::onShuffleButton(CCObject*) {
 	SongControl::shuffleSong();
 	SongControlMenu::updateCurrentLabel();
