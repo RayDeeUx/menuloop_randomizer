@@ -81,6 +81,9 @@ bool SongControlMenu::setup() {
 	this->m_openSongListMenu->setLayout(geode::RowLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true));
 
 	geode::LoadingSpinner* loadingSpinner = geode::LoadingSpinner::create(15.f);
+	loadingSpinner->setVisible(true);
+	loadingSpinner->stopAllActions();
+	loadingSpinner->setVisible(false);
 	loadingSpinner->setID("loading-spinner-because-song-length-calculations"_spr);
 	loadingSpinner->setTag(20260104);
 	loadingSpinner->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCRotateBy::create(1.f, 360.f)));
@@ -179,7 +182,8 @@ void SongControlMenu::onExit() {
 }
 
 void SongControlMenu::toggleButtonState(cocos2d::CCNode* playlistButton, const bool isEnabled) const {
-	if (!playlistButton || geode::cast::typeinfo_cast<CCMenuItemSpriteExtra*>(playlistButton)) return;
+	if (!playlistButton || !geode::cast::typeinfo_cast<CCMenuItemSpriteExtra*>(playlistButton)) return;
+	if (isEnabled == static_cast<CCMenuItemSpriteExtra*>(playlistButton)->isEnabled()) return;
 	static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setEnabled(isEnabled);
 	static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setColor(isEnabled ? cocos2d::ccColor3B{255, 255, 255} : cocos2d::ccColor3B{128, 128, 128});
 	if (this->m_otherLabel) this->m_otherLabel->setString(isEnabled ? DEFAULT_FOOTER_TEXT.c_str() : "Hey there! Menu Loop Randomizer is finishing some things to set up the Song List. Hang tight!");
