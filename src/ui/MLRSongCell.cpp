@@ -76,9 +76,10 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	cocos2d::CCLabelBMFont* extraInfoLabl = nullptr;
 	if (Utils::getBool("showExtraInfoLabel")) {
 		extraInfoLabl = cocos2d::CCLabelBMFont::create("PLACEHOLDER SO NOTHING CRASHES", "chatFont.fnt");
-		extraInfoLabl->setString(fmt::format("{} | {} sec | {} MB", songData.fileExtension, songData.songLength / 1000, songData.songFileSize / 1000).c_str());
+		extraInfoLabl->setString(fmt::format("{} | {:.2f} sec | {:.2f} MB", songData.fileExtension, songData.songLength / 1000000.f, songData.songFileSize / 1000000.f).c_str());
 		extraInfoLabl->setAnchorPoint({.0f, .5f});
-		extraInfoLabl->setPosition({songNameLabel->getPositionX() + songNameLabel->getContentWidth() + 2.5f, (this->getContentHeight() / 2.f) + 1.f});
+		extraInfoLabl->setPosition({songNameLabel->getPositionX() + songNameLabel->getScaledContentWidth() + 2.5f, (this->getContentHeight() / 2.f) + 1.f});
+		extraInfoLabl->limitLabelWidth(356.f * (.5 / compactModeFactor), std::clamp<float>((.75f / compactModeFactor), .3, .75), .001f);
 	}
 
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127}, 356.f, .5f);
