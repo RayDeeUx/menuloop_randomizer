@@ -5,6 +5,7 @@
   - <cj>Sorting</c> songs by <cj>Song Length</c> should not freeze your game for as long now.
   - The mod setting to disable <cj>sorting</c> by <cj>song length</c> is still available.
 - Fix some log spamming issues if you had  `Advanced Logging`  enabled.
+- Fix a bug where you could play empty song files if you tried hard enough.
 - Even more various (attempts at) micro-optimizations.
 ## v1.11.1
 - Hotfix.
