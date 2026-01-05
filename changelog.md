@@ -1,4 +1,11 @@
 # Menu Loop Randomizer Changelog
+## v1.11.2
+*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod require [Better Touch Prio](mod:alk.better-touch-prio) to be installed.</c>*
+- An attempt was made to offload Song Length calculations to another thread.
+  - <cj>Sorting</c> songs by <cj>Song Length</c> should not freeze your game for as long now.
+  - The mod setting to disable <cj>sorting</c> by <cj>song length</c> is still available.
+- Fix some log spamming issues if you had  `Advanced Logging`  enabled.
+- Even more various (attempts at) micro-optimizations.
 ## v1.11.1
 - Hotfix.
 ## v1.11.0
