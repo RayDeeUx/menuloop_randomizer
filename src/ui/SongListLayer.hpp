@@ -45,6 +45,7 @@ public:
 	static bool dateAdded(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool songLength(MLRSongCell* a, MLRSongCell* b, bool reverse);
 
+	static unsigned int useFMODToGetLength(const std::string &path, unsigned int extreme);
 	static unsigned int getLength(const std::string& path, const bool reverse);
 
 	void displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float);

@@ -497,6 +497,7 @@ void Utils::popualteSongToSongDataMap() {
 	std::thread([]() {
 		for (auto& [unused, songData] : SongManager::get().getSongToSongDataEntries()) {
 			songData.songLength = SongListLayer::getLength(songData.actualFilePath, false);
+			geode::log::info("songData.songLength: {}", songData.songLength);
 		}
 		SongManager::get().setFinishedCalculatingSongLengths(true);
 	}).detach();
