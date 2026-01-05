@@ -1,5 +1,11 @@
 #pragma once
 
+#ifndef GEODE_IS_WINDOWS
+#define STRING_TYPE std::string_view
+#else
+#define STRING_TYPE std::string&
+#endif
+
 class Utils {
   public:
 	static int randomIndex(int);

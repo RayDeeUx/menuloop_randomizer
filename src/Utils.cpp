@@ -473,7 +473,7 @@ void Utils::popualteSongToSongDataMap() {
 	std::vector<std::string> tempKeys = {};
 	std::error_code ec, ed;
 
-	for (const std::string_view song : songManager.getSongs()) {
+	for (const STRING_TYPE song : songManager.getSongs()) {
 		SongType songType = SongType::Regular;
 		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
