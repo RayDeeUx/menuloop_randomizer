@@ -478,7 +478,7 @@ void Utils::popualteSongToSongDataMap() {
 		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
 
-		const std::filesystem::path& theirPath = Utils::toProblematicString(song);
+		const std::filesystem::path& theirPath = Utils::toProblematicString(std::string(song));
 		std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
 		std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(theirPath, ed);
 		SongData songData = {
@@ -645,8 +645,8 @@ std::string Utils::toNormalizedString(const std::filesystem::path& path) {
 std::filesystem::path Utils::toProblematicString(const std::string_view path) {
 	#ifdef GEODE_IS_WINDOWS
 	/* TODO FOR GEODE V5: SWAP COMMENTED LINES */
-	// return std::filesystem::path(geode::utils::string::utf8ToWide(std::string(path)).unwrapOr(""));
-	return std::filesystem::path(geode::utils::string::utf8ToWide(std::string(path)));
+	// return std::filesystem::path(geode::utils::string::utf8ToWide(path).unwrapOr(""));
+	return std::filesystem::path(geode::utils::string::utf8ToWide(path));
 	#else
 	return std::filesystem::path(path);
 	#endif
