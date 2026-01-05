@@ -495,12 +495,16 @@ void Utils::popualteSongToSongDataMap() {
 		songData.displayName = Utils::toNormalizedString(SongListLayer::generateDisplayName(songData)),
 
 		songToSongData.emplace(theirPath, songData);
+		tempKeys.push_back(songData.actualFilePath);
 	}
 
 	songManager.setFinishedCalculatingSongLengths(false);
 	std::thread([]() {
-		for (auto& [unused, songData] : SongManager::get().getSongToSongDataEntries()) {
-			songData.songLength = SongListLayer::getLength(songData.actualFilePath, false);
+		for (const std::string_view song : SongManager::get().getSongs()) {
+			const auto iterator = SongManager::get().getSongToSongDataEntries().find(Utils::toProblematicString(song));
+			if (iterator == SongManager::get().getSongToSongDataEntries().end()) continue;
+			auto& [unused, songData] = *iterator;
+			songData.songLength = SongListLayer::getLength(std::string(song), std::numeric_limits<unsigned int>::max());
 		}
 		SongManager::get().setFinishedCalculatingSongLengths(true);
 	}).detach();
@@ -550,6 +554,7 @@ void Utils::refreshTheVector() {
 void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_view reasonUsuallySettingName) {
 	// make sure m_songs is empty, we don't want to make a mess here --elnexreal
 	SongManager& songManager = SongManager::get();
+	while (!songManager.getFinishedCalculatingSongLengths()) {}
 	songManager.clearSongs();
 	songManager.resetHeldSong();
 	songManager.resetPreviousSong();
@@ -566,7 +571,7 @@ void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_vie
 	// change the song when you click apply, stoi will not like custom names. --elnexreal
 
 	Utils::setNewSong();
-	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) return geode::Loader::get()->queueInMainThread([scm] { scm->onRegenButton(nullptr); });
+	Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 	if (Utils::getBool("enableNotification")) Utils::newCardAndDisplayNameFromCurrentSong();
 }
 

@@ -665,7 +665,7 @@ unsigned int SongListLayer::useFMODToGetLength(const std::string& path, const un
 	if (!sys) return extreme;
 	unsigned int temp = extreme;
 	FMOD::Sound* sound;
-	const FMOD_RESULT resultSoundA = sys->createSound(path.c_str(), FMOD_OPENONLY | FMOD_2D, nullptr, &sound);
+	const FMOD_RESULT resultSoundA = sys->createSound(path.c_str(), FMOD_OPENONLY, nullptr, &sound);
 	if (sound && resultSoundA == FMOD_OK) {
 		sound->getLength(&temp, FMOD_TIMEUNIT_MS);
 		sound->release();
