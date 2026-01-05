@@ -627,6 +627,12 @@ bool SongListLayer::dateAdded(MLRSongCell* a, MLRSongCell* b, const bool reverse
 
 bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
 	if (SONG_SORTING_DISABLED) return false;
+	const unsigned int extreme = reverse ? std::numeric_limits<unsigned int>::min() : std::numeric_limits<unsigned int>::max();
+	if (a->m_songData.songLength == extreme || b->m_songData.songLength == extreme) {
+		if (a->m_songData.songLength == extreme && b->m_songData.songLength == extreme) return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
+		if (a->m_songData.songLength == extreme) return reverse;
+		if (b->m_songData.songLength == extreme) return !reverse;
+	}
 	if (a->m_songData.songLength < b->m_songData.songLength) return !reverse;
 	if (a->m_songData.songLength > b->m_songData.songLength) return reverse;
 	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
