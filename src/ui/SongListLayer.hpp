@@ -26,6 +26,9 @@ public:
 	void onSortDateToggle(CCObject*);
 	void onSortLengthToggle(CCObject*);
 	void onSortSizeToggle(CCObject*);
+	void onSortExtnToggle(CCObject*);
+
+	static void handleMutuallyExclusiveSortToggle(const std::string_view savedValueKeyToMatch, const std::string_view nodeID, const std::string_view savedValueKey, cocos2d::CCNode *viewModeMenu, const bool originalSavedValue);
 	void disableAllSortFiltersThenToggleThenSearch(const std::string_view);
 	void toggleSavedValueAndSearch(const std::string_view);
 	void keyDown(const cocos2d::enumKeyCodes) override;
@@ -38,6 +41,7 @@ public:
 
 	static bool caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool fileSize(MLRSongCell* a, MLRSongCell* b, bool reverse);
+	static bool fileExtn(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool dateAdded(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool songLength(MLRSongCell* a, MLRSongCell* b, bool reverse);
 

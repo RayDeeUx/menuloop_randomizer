@@ -106,6 +106,10 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
 				return SongListLayer::fileSize(a, b, reverse);
 			});
+		} else if (SAVED("songListSortFileExtension")) {
+			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
+				return SongListLayer::fileExtn(a, b, reverse);
+			});
 		} else if (SAVED("songListSortDateAdded")) {
 			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
 				return SongListLayer::dateAdded(a, b, reverse);
@@ -257,6 +261,7 @@ bool SongListLayer::setup() {
 		Utils::addViewModeToggle(SAVED("songListSortDateAdded"), "dates.png"_spr, "date-added", menu_selector(SongListLayer::onSortDateToggle), viewModeMenu, this);
 		if (Utils::getBool("showSortSongLength")) Utils::addViewModeToggle(SAVED("songListSortSongLength"), "length.png"_spr, "song-length", menu_selector(SongListLayer::onSortLengthToggle), viewModeMenu, this);
 		Utils::addViewModeToggle(SAVED("songListSortFileSize"), "size.png"_spr, "song-size", menu_selector(SongListLayer::onSortSizeToggle), viewModeMenu, this);
+		Utils::addViewModeToggle(SAVED("songListSortFileExtn"), "xtension.png"_spr, "file-extension", menu_selector(SongListLayer::onSortExtnToggle), viewModeMenu, this);
 
 		viewModeMenu->setContentHeight(viewModeMenu->getChildrenCount() * 30.f);
 		viewModeMenu->ignoreAnchorPointForPosition(false);
@@ -495,31 +500,29 @@ void SongListLayer::onSortSizeToggle(CCObject*) {
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileSize");
 }
 
+void SongListLayer::onSortExtnToggle(CCObject *) {
+	if (SONG_SORTING_DISABLED) return;
+	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileExtn");
+}
+
+void SongListLayer::handleMutuallyExclusiveSortToggle(const std::string_view savedValueKeyToMatch, const std::string_view nodeID, const std::string_view savedValueKey, cocos2d::CCNode *viewModeMenu, const bool originalSavedValue) {
+	geode::Mod::get()->setSavedValue<bool>(savedValueKeyToMatch, false);
+	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID(nodeID)); toggler) {
+		toggler->toggle(false);
+		if (savedValueKey == savedValueKeyToMatch) toggler->toggle(originalSavedValue);
+	}
+}
+
 void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_view savedValueKey) {
 	if (SONG_SORTING_DISABLED) return;
 	cocos2d::CCNode* viewModeMenu = this->m_mainLayer->getChildByID("view-mode-menu"_spr);
 	if (!viewModeMenu) return;
 	const bool originalSavedValue = SAVED(savedValueKey);
-	geode::Mod::get()->setSavedValue<bool>("songListSortAlphabetically", false);
-	geode::Mod::get()->setSavedValue<bool>("songListSortSongLength", false);
-	geode::Mod::get()->setSavedValue<bool>("songListSortDateAdded", false);
-	geode::Mod::get()->setSavedValue<bool>("songListSortFileSize", false);
-	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID("alphabetical-button"_spr)); toggler) {
-		toggler->toggle(false);
-		if (savedValueKey == "songListSortAlphabetically") toggler->toggle(originalSavedValue);
-	}
-	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID("date-added-button"_spr)); toggler) {
-		toggler->toggle(false);
-		if (savedValueKey == "songListSortDateAdded") toggler->toggle(originalSavedValue);
-	}
-	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID("song-length-button"_spr)); toggler) {
-		toggler->toggle(false);
-		if (savedValueKey == "songListSortSongLength") toggler->toggle(originalSavedValue);
-	}
-	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID("song-size-button"_spr)); toggler) {
-		toggler->toggle(false);
-		if (savedValueKey == "songListSortFileSize") toggler->toggle(originalSavedValue);
-	}
+	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortAlphabetically", "alphabetical-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
+	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortDateAdded", "date-added-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
+	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortSongLength", "song-length-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
+	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortFileSize", "song-size-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
+	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortFileExtn", "file-extension-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
 	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
 	CCNode* searchBar = GET_SEARCH_BAR_NODE;
 	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
@@ -581,7 +584,7 @@ void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInpu
 	placeholderLabelMaybe->setTag(12242025);
 }
 
-bool SongListLayer::caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
+bool SongListLayer::caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, const bool reverse) {
 	if (SONG_SORTING_DISABLED) return false;
 	const std::string& cleanedUpA = SongListLayer::generateDisplayName(a->m_songData);
 	const std::string& cleanedUpB = SongListLayer::generateDisplayName(b->m_songData);
@@ -599,7 +602,7 @@ bool SongListLayer::caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, 
 	return false;
 }
 
-bool SongListLayer::fileSize(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
+bool SongListLayer::fileSize(MLRSongCell* a, MLRSongCell* b, const bool reverse) {
 	if (SONG_SORTING_DISABLED) return false;
 	std::error_code ec;
 	std::uintmax_t fileSizeA = std::filesystem::file_size(Utils::toProblematicString(a->m_songData.actualFilePath), ec);
@@ -611,7 +614,25 @@ bool SongListLayer::fileSize(MLRSongCell* a, MLRSongCell* b, const bool reverse 
 	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
 }
 
-bool SongListLayer::dateAdded(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
+bool SongListLayer::fileExtn(MLRSongCell* a, MLRSongCell* b, const bool reverse) {
+	if (SONG_SORTING_DISABLED) return false;
+	const std::string& cleanedUpA = a->m_songData.fileExtension;
+	const std::string& cleanedUpB = b->m_songData.fileExtension;
+	auto it1 = cleanedUpA.begin(), it2 = cleanedUpB.begin();
+	while (it1 != cleanedUpA.end() && it2 != cleanedUpB.end()) {
+		unsigned char c1 = static_cast<unsigned char>(*it1++);
+		unsigned char c2 = static_cast<unsigned char>(*it2++);
+		char lc1 = static_cast<char>(std::tolower(c1));
+		char lc2 = static_cast<char>(std::tolower(c2));
+		if (lc1 < lc2) return !reverse;
+		if (lc1 > lc2) return reverse;
+	}
+	if (cleanedUpA.size() < cleanedUpB.size()) return !reverse;
+	if (cleanedUpA.size() > cleanedUpB.size()) return reverse;
+	return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
+}
+
+bool SongListLayer::dateAdded(MLRSongCell* a, MLRSongCell* b, const bool reverse) {
 	if (SONG_SORTING_DISABLED) return false;
 	std::error_code ea, eb;
 	auto ta = std::filesystem::last_write_time(Utils::toProblematicString(a->m_songData.actualFilePath), ea);
@@ -625,7 +646,7 @@ bool SongListLayer::dateAdded(MLRSongCell* a, MLRSongCell* b, const bool reverse
 	return ta < tb;
 }
 
-bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool reverse = false) {
+bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool reverse) {
 	if (SONG_SORTING_DISABLED) return false;
 	const unsigned int extreme = reverse ? std::numeric_limits<unsigned int>::min() : std::numeric_limits<unsigned int>::max();
 	if (a->m_songData.songLength == extreme || b->m_songData.songLength == extreme) {
