@@ -478,9 +478,15 @@ void Utils::popualteSongToSongDataMap() {
 		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
 
+		#ifndef GEODE_IS_WINDOWS
+		const std::filesystem::path& theirPath = Utils::toProblematicString(song);
+		#else
 		const std::filesystem::path& theirPath = Utils::toProblematicString(std::string(song));
+		#endif
+
 		std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
 		std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(theirPath, ed);
+
 		SongData songData = {
 			.actualFilePath = std::string(song),
 			.fileExtension = Utils::toNormalizedString(theirPath.extension()),
