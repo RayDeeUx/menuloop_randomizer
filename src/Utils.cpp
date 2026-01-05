@@ -481,7 +481,7 @@ void Utils::popualteSongToSongDataMap() {
 		#ifndef GEODE_IS_WINDOWS
 		const std::filesystem::path& theirPath = Utils::toProblematicString(song);
 		#else
-		const std::filesystem::path& theirPath = Utils::toProblematicString(std::string(song));
+		const std::filesystem::path& theirPath = std::filesystem::path{};
 		#endif
 
 		std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
