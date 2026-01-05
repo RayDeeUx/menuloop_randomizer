@@ -14,6 +14,7 @@ struct SongData {
 	SongType type = SongType::Regular;
 	unsigned int songLength = std::numeric_limits<unsigned int>::max();
 	std::uintmax_t songFileSize = std::numeric_limits<std::uintmax_t>::max();
+	std::filesystem::file_time_type songWriteTime {};
 	bool isFromConfigOrAltDir = false;
 	bool isEmpty = false;
 };

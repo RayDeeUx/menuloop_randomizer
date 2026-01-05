@@ -47,7 +47,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	float desiredContentHeight = SEARCH_BAR_ENABLED ? 36.f : 0.f; // always start with the height of the blank song cell, which is guaranteed to be 36.f units
 
 	const SongToSongData& songToSongData = songManager.getSongToSongDataEntries();
-	std::error_code ec;
+	std::error_code ec, ed;
 
 	for (const std::string& song : songsVector) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
@@ -67,11 +67,13 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			songDataFromTheMap = true;
 		} else {
 			std::uintmax_t fileSize = std::filesystem::file_size(songFilePath, ec);
+			std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(songFilePath, ed);
 			songData = {
 				.actualFilePath = Utils::toNormalizedString(songFilePath),
 				.fileExtension = Utils::toNormalizedString(songFilePath.extension()),
 				.fileName = Utils::toNormalizedString(songFilePath.filename()),
 				.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
+				.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
 				.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(songFilePath.parent_path()),
 				.isEmpty = false
 			};

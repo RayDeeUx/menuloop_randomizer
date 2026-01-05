@@ -76,7 +76,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	cocos2d::CCLabelBMFont* extraInfoLabl = nullptr;
 	if (isCompact && Utils::getBool("showExtraInfoLabel")) {
 		extraInfoLabl = cocos2d::CCLabelBMFont::create("PLACEHOLDER SO NOTHING CRASHES", "chatFont.fnt");
-		extraInfoLabl->setString(fmt::format("{} | {:.2f} sec | {:.2f} MB", songData.fileExtension, songData.songLength / 1000.f, songData.songFileSize / 1000000.f).c_str());
+		extraInfoLabl->setString(fmt::format("{} | {:.2f} sec | {:.2f} MB | Date: {:%F %T}", songData.fileExtension, songData.songLength / 1000.f, songData.songFileSize / 1000000.f, std::chrono::system_clock::time_point(std::chrono::duration_cast<std::chrono::system_clock::duration>(songData.songWriteTime.time_since_epoch()))).c_str());
 		extraInfoLabl->setAnchorPoint({.0f, .5f});
 		extraInfoLabl->setPosition({songNameLabel->getPositionX() + songNameLabel->getScaledContentWidth() + 5.f, this->getContentHeight() / 2.f});
 		extraInfoLabl->limitLabelWidth(356.f * (.5 / compactModeFactor), std::clamp<float>((.75f / compactModeFactor), .3, .75), .001f);
