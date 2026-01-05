@@ -80,6 +80,10 @@ bool SongControlMenu::setup() {
 	this->m_openSongListMenu->setContentSize({27.f, 27.f});
 	this->m_openSongListMenu->setLayout(geode::RowLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true));
 
+	geode::LoadingSpinner* loadingSpinner = geode::LoadingSpinner::create(15.f);
+	loadingSpinner->setTag(20260104);
+	this->m_openSongListMenu->addChildAtPosition(loadingSpinner, geode::Anchor::Center);
+
 	this->m_otherLabel = cocos2d::CCLabelBMFont::create(DEFAULT_FOOTER_TEXT.c_str(), "chatFont.fnt");
 	this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
@@ -97,16 +101,7 @@ bool SongControlMenu::setup() {
 	this->b->setColor({0, 0, 0});
 	this->b->setOpacity(128);
 
-	if (CCNode* playlistButton = this->m_openSongListMenu->getChildByTag(20260105); playlistButton && !songManager.getFinishedCalculatingSongLengths()) {
-		static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setEnabled(false);
-		static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setColor({128, 128, 128});
-		geode::LoadingSpinner* loadingSpinner = geode::LoadingSpinner::create(10.f);
-		loadingSpinner->setTag(20260104);
-		this->m_openSongListMenu->addChildAtPosition(loadingSpinner, geode::Anchor::Center);
-		this->schedule(schedule_selector(SongControlMenu::checkManagerFinished));
-		this->m_otherLabel->setString("Hey there! Menu Loop Randomizer is finishing some things to set up the Song List. Hang tight!");
-		this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
-	}
+	this->schedule(schedule_selector(SongControlMenu::checkManagerFinished));
 
 	SongControlMenu::updateCurrentLabel();
 
@@ -181,25 +176,17 @@ void SongControlMenu::onExit() {
 	Popup::onExit();
 }
 
+void SongControlMenu::toggleButtonState(cocos2d::CCNode* playlistButton, const bool isEnabled) const {
+	static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setEnabled(isEnabled);
+	static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setColor(isEnabled ? cocos2d::ccColor3B{255, 255, 255} : cocos2d::ccColor3B{128, 128, 128});
+	this->m_otherLabel->setString(isEnabled ? DEFAULT_FOOTER_TEXT.c_str() : "Hey there! Menu Loop Randomizer is finishing some things to set up the Song List. Hang tight!");
+	this->m_otherLabel->limitLabelWidth(this->m_mainLayer->getContentWidth() * .95f * .95f, 1.0f, .0001f);
+	if (CCNode* spinner = this->m_openSongListMenu->getChildByTag(20260104); spinner) static_cast<geode::LoadingSpinner*>(spinner)->setVisible(!isEnabled);
+}
+
 void SongControlMenu::checkManagerFinished(float) {
 	CCNode* playlistButton = this->m_openSongListMenu->getChildByTag(20260105);
-	if (!playlistButton) return;
-	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
-		static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setEnabled(false);
-		static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setColor({128, 128, 128});
-		geode::LoadingSpinner* loadingSpinner = geode::LoadingSpinner::create(10.f);
-		loadingSpinner->setTag(20260104);
-		this->m_openSongListMenu->addChildAtPosition(loadingSpinner, geode::Anchor::Center);
-		this->schedule(schedule_selector(SongControlMenu::checkManagerFinished));
-		this->m_otherLabel->setString("Hey there! Menu Loop Randomizer is finishing some things to set up the Song List. Hang tight!");
-		this->m_otherLabel->limitLabelWidth(this->m_mainLayer->getContentWidth() * .95f * .95f, 1.0f, .0001f);
-		return;
-	}
-	static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setEnabled(true);
-	static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setColor({255, 255, 255});
-	if (CCNode* spinner = this->m_openSongListMenu->getChildByTag(20260104); spinner) spinner->removeMeAndCleanup();
-	this->m_otherLabel->setString(DEFAULT_FOOTER_TEXT.c_str());
-	this->m_otherLabel->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.0f, .0001f);
+	if (playlistButton) SongControlMenu::toggleButtonState(playlistButton, SongManager::get().getFinishedCalculatingSongLengths());
 }
 
 
