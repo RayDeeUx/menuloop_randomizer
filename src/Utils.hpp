@@ -32,7 +32,7 @@ class Utils {
 	static int getSongID();
 	static std::string currentCustomSong();
 	static std::string toNormalizedString(const std::filesystem::path& path);
-	static std::filesystem::path toProblematicString(const std::string_view);
+	static std::filesystem::path toProblematicString(const std::string&);
 	static void fadeOutCardRemotely(cocos2d::CCNode* card = Utils::findCardRemotely());
 	static void removeCardRemotely(cocos2d::CCNode* card = Utils::findCardRemotely());
 	static void queueUpdateFrontfacingLabelsInSCMAndSLL();
