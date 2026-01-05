@@ -579,12 +579,12 @@ float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
 }
 
 void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode* inputNode, const bool updateString) {
-	if (SEARCH_BAR_DISABLED || !inputNode) return;
+	if (SEARCH_BAR_DISABLED || !inputNode || inputNode->m_selected) return;
 	cocos2d::CCLabelBMFont* placeholderLabelMaybe = static_cast<cocos2d::CCLabelBMFont*>(inputNode->getChildByTag(12242025));
 	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
 	if (!placeholderLabelMaybe || placeholderLabelMaybe->getColor() != cocos2d::ccColor3B{150, 150, 150}) return;
 	if (updateString) placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", SongManager::get().getCurrentSongDisplayName()).c_str());
-	placeholderLabelMaybe->limitLabelWidth(350.f, 1.f, .0001f);
+	placeholderLabelMaybe->limitLabelWidth(350.f, .5f, .0001f);
 	placeholderLabelMaybe->setTag(12242025);
 }
 
