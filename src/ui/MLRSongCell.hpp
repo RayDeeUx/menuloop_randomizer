@@ -3,6 +3,11 @@
 #include "../Utils.hpp"
 
 class MLRSongCell : public cocos2d::CCLayerColor {
+protected:
+	static constexpr std::array<std::string_view, 12> months = {
+		"Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.",
+		"Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."
+	};
 public:
 	static MLRSongCell* create(const SongData& songData, const bool isEven, const bool isCompact = true);
 	static MLRSongCell* createEmpty(const bool);
