@@ -5,13 +5,14 @@
 #include "../SongControl.hpp"
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
+#define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
 
 bool SongControlMenu::setup() {
 	this->setTitle("Menu Loop Randomizer - Control Panel");
 	this->m_title->setScale(.45f);
 
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
-	const float idealWidth = layerSize.width * 0.95f;
+	const float idealWidth = layerSize.width * .95f;
 	const float centerStage = layerSize.width / 2.f;
 	CCLayer* mainLayer = this->m_mainLayer;
 	mainLayer->setID("main-layer"_spr);
@@ -73,12 +74,13 @@ bool SongControlMenu::setup() {
 
 	this->m_openSongListMenu = cocos2d::CCMenu::create();
 	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), this->m_openSongListMenu, this);
+	this->m_openSongListMenu->getChildren()->objectAtIndex(0)->setTag(20260105);
 	this->m_openSongListMenu->setPosition({280.f, this->m_title->getPositionY() - 51.5f});
 	this->m_openSongListMenu->ignoreAnchorPointForPosition(false);
 	this->m_openSongListMenu->setContentSize({27.f, 27.f});
 	this->m_openSongListMenu->setLayout(geode::RowLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true));
 
-	this->m_otherLabel = cocos2d::CCLabelBMFont::create(fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform()).c_str(), "chatFont.fnt");
+	this->m_otherLabel = cocos2d::CCLabelBMFont::create(DEFAULT_FOOTER_TEXT.c_str(), "chatFont.fnt");
 	this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
 	this->m_otherLabel->setPosition({centerStage, 12.5f});
@@ -94,6 +96,17 @@ bool SongControlMenu::setup() {
 	this->b->setPosition({12.5f, 80.f});
 	this->b->setColor({0, 0, 0});
 	this->b->setOpacity(128);
+
+	if (CCNode* playlistButton = this->m_openSongListMenu->getChildByTag(20260105); playlistButton && !songManager.getFinishedCalculatingSongLengths()) {
+		static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setEnabled(false);
+		static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setColor({128, 128, 128});
+		geode::LoadingSpinner* loadingSpinner = geode::LoadingSpinner::create(10.f);
+		loadingSpinner->setTag(20260104);
+		this->m_openSongListMenu->addChildAtPosition(loadingSpinner, geode::Anchor::Center);
+		this->schedule(schedule_selector(SongControlMenu::checkManagerFinished));
+		this->m_otherLabel->setString("Hey! Menu Loop Randomizer is just finishing some things up for the Song List. Hang tight!");
+		this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
+	}
 
 	SongControlMenu::updateCurrentLabel();
 
@@ -167,6 +180,17 @@ SongControlMenu* SongControlMenu::create() {
 void SongControlMenu::onExit() {
 	Popup::onExit();
 }
+
+void SongControlMenu::checkManagerFinished(float) {
+	CCNode* playlistButton = this->m_openSongListMenu->getChildByTag(20260105);
+	if (!playlistButton || !SongManager::get().getFinishedCalculatingSongLengths()) return;
+	static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setEnabled(true);
+	static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setColor({255, 255, 255});
+	if (CCNode* spinner = this->m_openSongListMenu->getChildByTag(20260104); spinner) spinner->removeMeAndCleanup();
+	this->m_otherLabel->setString(DEFAULT_FOOTER_TEXT.c_str());
+	this->m_otherLabel->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.0f, .0001f);
+}
+
 
 void SongControlMenu::onShuffleButton(CCObject*) {
 	SongControl::shuffleSong();

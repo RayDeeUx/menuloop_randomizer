@@ -21,6 +21,7 @@ protected:
 	void onPlaylistButton(CCObject*);
 	void onAddToPlylstBtn(CCObject*);
 	void onSettingsButton(CCObject*);
+	void checkManagerFinished(float);
 public:
 	static SongControlMenu* create();
 	void onRegenButton(CCObject*);
