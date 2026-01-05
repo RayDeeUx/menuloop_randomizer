@@ -232,7 +232,7 @@ void SongControlMenu::onPreviousButton(CCObject*) {
 
 void SongControlMenu::onPlaylistButton(CCObject*) {
 	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
-		FLAlertLayer* alert = FLAlertLayer::create("Hold on a sec!", "Menu Loop Randomizer is still calculating a few things. Hang tight, and try again later.", "I Understand");
+		FLAlertLayer* alert = FLAlertLayer::create("Hold on a sec!", "Menu Loop Randomizer is still calculating song lengths to set up the Song List menu. Hang tight, and try again later.", "I Understand");
 		alert->m_noElasticity = true;
 		alert->show();
 		return;
