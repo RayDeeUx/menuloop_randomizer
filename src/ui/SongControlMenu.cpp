@@ -104,7 +104,7 @@ bool SongControlMenu::setup() {
 		loadingSpinner->setTag(20260104);
 		this->m_openSongListMenu->addChildAtPosition(loadingSpinner, geode::Anchor::Center);
 		this->schedule(schedule_selector(SongControlMenu::checkManagerFinished));
-		this->m_otherLabel->setString("Hey! Menu Loop Randomizer is just finishing some things up for the Song List. Hang tight!");
+		this->m_otherLabel->setString("Hey there! Menu Loop Randomizer is finishing some things to set up the Song List. Hang tight!");
 		this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
 	}
 
@@ -183,7 +183,18 @@ void SongControlMenu::onExit() {
 
 void SongControlMenu::checkManagerFinished(float) {
 	CCNode* playlistButton = this->m_openSongListMenu->getChildByTag(20260105);
-	if (!playlistButton || !SongManager::get().getFinishedCalculatingSongLengths()) return;
+	if (!playlistButton) return;
+	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
+		static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setEnabled(false);
+		static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setColor({128, 128, 128});
+		geode::LoadingSpinner* loadingSpinner = geode::LoadingSpinner::create(10.f);
+		loadingSpinner->setTag(20260104);
+		this->m_openSongListMenu->addChildAtPosition(loadingSpinner, geode::Anchor::Center);
+		this->schedule(schedule_selector(SongControlMenu::checkManagerFinished));
+		this->m_otherLabel->setString("Hey there! Menu Loop Randomizer is finishing some things to set up the Song List. Hang tight!");
+		this->m_otherLabel->limitLabelWidth(this->m_mainLayer->getContentWidth() * .95f * .95f, 1.0f, .0001f);
+		return;
+	}
 	static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setEnabled(true);
 	static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setColor({255, 255, 255});
 	if (CCNode* spinner = this->m_openSongListMenu->getChildByTag(20260104); spinner) spinner->removeMeAndCleanup();
