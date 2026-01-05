@@ -179,13 +179,12 @@ void SongControlMenu::onExit() {
 }
 
 void SongControlMenu::toggleButtonState(cocos2d::CCNode* playlistButton, const bool isEnabled) const {
-	if (this->m_openSongListMenu) if (CCNode* spinner = this->m_openSongListMenu->getChildByTag(20260104); spinner) static_cast<geode::LoadingSpinner*>(spinner)->setVisible(!isEnabled);
 	if (!playlistButton || geode::cast::typeinfo_cast<CCMenuItemSpriteExtra*>(playlistButton)) return;
-	if (isEnabled == static_cast<CCMenuItemSpriteExtra*>(playlistButton)->isEnabled()) return;
 	static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setEnabled(isEnabled);
 	static_cast<CCMenuItemSpriteExtra*>(playlistButton)->setColor(isEnabled ? cocos2d::ccColor3B{255, 255, 255} : cocos2d::ccColor3B{128, 128, 128});
 	if (this->m_otherLabel) this->m_otherLabel->setString(isEnabled ? DEFAULT_FOOTER_TEXT.c_str() : "Hey there! Menu Loop Randomizer is finishing some things to set up the Song List. Hang tight!");
 	if (this->m_otherLabel) this->m_otherLabel->limitLabelWidth(this->m_mainLayer->getContentWidth() * .95f * .95f, 1.0f, .0001f);
+	if (this->m_openSongListMenu) if (CCNode* spinner = this->m_openSongListMenu->getChildByTag(20260104); spinner) static_cast<geode::LoadingSpinner*>(spinner)->setVisible(!isEnabled);
 }
 
 void SongControlMenu::checkManagerFinished(float) {
