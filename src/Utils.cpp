@@ -473,7 +473,7 @@ void Utils::popualteSongToSongDataMap() {
 	std::vector<std::string> tempKeys = {};
 	std::error_code ec, ed;
 
-	for (const STRING_TYPE song : songManager.getSongs()) {
+	for (const std::string_view song : songManager.getSongs()) {
 		SongType songType = SongType::Regular;
 		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
@@ -645,8 +645,8 @@ std::string Utils::toNormalizedString(const std::filesystem::path& path) {
 std::filesystem::path Utils::toProblematicString(const std::string_view path) {
 	#ifdef GEODE_IS_WINDOWS
 	/* TODO FOR GEODE V5: SWAP COMMENTED LINES */
-	// return std::filesystem::path(geode::utils::string::utf8ToWide(path).unwrapOr(""));
-	return std::filesystem::path(geode::utils::string::utf8ToWide(path));
+	// return std::filesystem::path(geode::utils::string::utf8ToWide(std::string(path)).unwrapOr(""));
+	return std::filesystem::path(geode::utils::string::utf8ToWide(std::string(path)));
 	#else
 	return std::filesystem::path(path);
 	#endif
