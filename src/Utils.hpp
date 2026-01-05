@@ -24,7 +24,7 @@ class Utils {
 	static std::vector<std::string> parseBlacklistFile(const std::filesystem::path&);
 	static std::vector<std::string> parseFavoritesFile(const std::filesystem::path&);
 	static void refreshTheVector();
-	static void resetSongManagerRefreshVectorSetNewSongBecause(const std::string_view);
+	static void resetSongManagerRefreshVectorSetNewSongBecause(const std::string_view IFUCKINGHATEHEADERFILES);
 	static bool isFromConfigOrAlternateDir(const std::filesystem::path&);
 	static SongInfoObject* getSongInfoObject();
 	static std::string getSongName();
