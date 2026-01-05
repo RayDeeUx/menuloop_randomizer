@@ -645,13 +645,7 @@ std::string Utils::toNormalizedString(const std::filesystem::path& path) {
 }
 
 std::filesystem::path Utils::toProblematicString(const std::string_view path) {
-	#ifdef GEODE_IS_WINDOWS
-	/* TODO FOR GEODE V5: SWAP COMMENTED LINES */
-	// return std::filesystem::path(geode::utils::string::utf8ToWide(std::string(path)).unwrapOr(""));
-	return std::filesystem::path(geode::utils::string::utf8ToWide(std::string(path)));
-	#else
 	return std::filesystem::path(path);
-	#endif
 }
 
 void Utils::fadeOutCardRemotely(cocos2d::CCNode* card) {
