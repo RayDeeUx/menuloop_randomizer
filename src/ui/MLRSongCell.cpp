@@ -74,7 +74,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.displayName));
 
 	cocos2d::CCLabelBMFont* extraInfoLabl = nullptr;
-	if (Utils::getBool("showExtraInfoLabel")) {
+	if (isCompact && Utils::getBool("showExtraInfoLabel")) {
 		extraInfoLabl = cocos2d::CCLabelBMFont::create("PLACEHOLDER SO NOTHING CRASHES", "chatFont.fnt");
 		extraInfoLabl->setString(fmt::format("{} | {:.2f} sec | {:.2f} MB", songData.fileExtension, songData.songLength / 1000.f, songData.songFileSize / 1000000.f).c_str());
 		extraInfoLabl->setAnchorPoint({.0f, .5f});
