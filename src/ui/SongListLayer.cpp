@@ -660,7 +660,7 @@ bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool revers
 	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
 }
 
-unsigned int SongListLayer::useFMODToGetLength(const std::string &path, const unsigned int extreme) {
+unsigned int SongListLayer::useFMODToGetLength(const std::string& path, const unsigned int extreme) {
 	FMOD::System* sys = FMODAudioEngine::get()->m_system;
 	if (!sys) return extreme;
 	unsigned int temp = extreme;
