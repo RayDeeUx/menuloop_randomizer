@@ -478,11 +478,7 @@ void Utils::popualteSongToSongDataMap() {
 		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
 
-		#ifndef GEODE_IS_WINDOWS
 		const std::filesystem::path& theirPath = Utils::toProblematicString(song);
-		#else
-		const std::filesystem::path& theirPath = std::filesystem::path{};
-		#endif
 
 		std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
 		std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(theirPath, ed);
@@ -648,7 +644,7 @@ std::string Utils::toNormalizedString(const std::filesystem::path& path) {
 	return geode::utils::string::pathToString(path);
 }
 
-std::filesystem::path Utils::toProblematicString(const std::string_view path) {
+std::filesystem::path Utils::toProblematicString(const std::string& path) {
 	#ifdef GEODE_IS_WINDOWS
 	/* TODO FOR GEODE V5: SWAP COMMENTED LINES */
 	// return std::filesystem::path(geode::utils::string::utf8ToWide(path).unwrapOr(""));
