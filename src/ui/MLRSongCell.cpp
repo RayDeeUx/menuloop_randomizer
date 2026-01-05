@@ -70,7 +70,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 			songNameLabel->setSkewX(10.f);
 		}
 	}
-	songNameLabel->limitLabelWidth(356.f * (.8 / compactModeFactor), .75f, .001f);
+	songNameLabel->limitLabelWidth(356.f * (.8 / compactModeFactor), std::clamp<float>((.75f / compactModeFactor), .3, .75), .001f);
 	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.displayName));
 
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127}, 356.f, .5f);

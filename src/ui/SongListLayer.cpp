@@ -106,7 +106,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
 				return SongListLayer::fileSize(a, b, reverse);
 			});
-		} else if (SAVED("songListSortFileExtension")) {
+		} else if (SAVED("songListSortFileExtn")) {
 			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
 				return SongListLayer::fileExtn(a, b, reverse);
 			});
