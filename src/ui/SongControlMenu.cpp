@@ -82,6 +82,7 @@ bool SongControlMenu::setup() {
 
 	geode::LoadingSpinner* loadingSpinner = geode::LoadingSpinner::create(15.f);
 	loadingSpinner->setTag(20260104);
+	loadingSpinner->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCRotateBy::create(1.f, 360.f)));
 	this->m_openSongListMenu->addChildAtPosition(loadingSpinner, geode::Anchor::Center);
 
 	this->m_otherLabel = cocos2d::CCLabelBMFont::create(DEFAULT_FOOTER_TEXT.c_str(), "chatFont.fnt");
