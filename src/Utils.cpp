@@ -473,7 +473,7 @@ void Utils::popualteSongToSongDataMap() {
 	std::vector<std::string> tempKeys = {};
 	std::error_code ec, ed;
 
-	for (const std::string& song : songManager.getSongs()) {
+	for (const std::string_view song : songManager.getSongs()) {
 		SongType songType = SongType::Regular;
 		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
@@ -484,7 +484,7 @@ void Utils::popualteSongToSongDataMap() {
 		std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(theirPath, ed);
 
 		SongData songData = {
-			.actualFilePath = song,
+			.actualFilePath = std::string(song),
 			.fileExtension = Utils::toNormalizedString(theirPath.extension()),
 			.fileName = Utils::toNormalizedString(theirPath.filename()),
 			.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
@@ -644,11 +644,11 @@ std::string Utils::toNormalizedString(const std::filesystem::path& path) {
 	return geode::utils::string::pathToString(path);
 }
 
-std::filesystem::path Utils::toProblematicString(const std::string& path) {
+std::filesystem::path Utils::toProblematicString(const std::string_view path) {
 	#ifdef GEODE_IS_WINDOWS
 	/* TODO FOR GEODE V5: SWAP COMMENTED LINES */
-	// return std::filesystem::path(geode::utils::string::utf8ToWide(path).unwrapOr(""));
-	return std::filesystem::path(geode::utils::string::utf8ToWide(path));
+	// return std::filesystem::path(geode::utils::string::utf8ToWide(std::string(path)).unwrapOr(""));
+	return std::filesystem::path(geode::utils::string::utf8ToWide(std::string(path)));
 	#else
 	return std::filesystem::path(path);
 	#endif
