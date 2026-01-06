@@ -77,9 +77,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 				.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(songFilePath.parent_path()),
 				.isEmpty = false
 			};
+			songData.displayName = SongListLayer::generateDisplayName(songData);
 		}
-
-		songData.displayName = SongListLayer::generateDisplayName(songData);
 
 		if (SONG_SORTING_ENABLED && SAVED("songListSortSongLength") && !songDataFromTheMap) songData.songLength = SongListLayer::getLength(songData.actualFilePath, reverse);
 
@@ -677,6 +676,8 @@ unsigned int SongListLayer::useFMODToGetLength(const std::string& path, const un
 unsigned int SongListLayer::getLength(const std::string& path, const bool reverse) {
 	const unsigned int extreme = reverse ? std::numeric_limits<unsigned int>::min() : std::numeric_limits<unsigned int>::max();
 	#ifndef GEODE_IS_IOS
+	if (!Utils::getBool("useMiniaudioForLength")) return SongListLayer::useFMODToGetLength(path, extreme);
+
 	ma_decoder decoder;
 	if (ma_decoder_init_file(path.c_str(), nullptr, &decoder) != MA_SUCCESS) return SongListLayer::useFMODToGetLength(path, extreme);
 

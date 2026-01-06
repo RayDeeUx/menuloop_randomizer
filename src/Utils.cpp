@@ -499,15 +499,17 @@ void Utils::popualteSongToSongDataMap() {
 	}
 
 	songManager.setFinishedCalculatingSongLengths(false);
-	std::thread([]() {
-		for (const std::string_view song : SongManager::get().getSongs()) {
-			const auto iterator = SongManager::get().getSongToSongDataEntries().find(Utils::toProblematicString(song));
-			if (iterator == SongManager::get().getSongToSongDataEntries().end()) continue;
-			auto& [unused, songData] = *iterator;
-			songData.songLength = SongListLayer::getLength(std::string(song), std::numeric_limits<unsigned int>::max());
-		}
-		SongManager::get().setFinishedCalculatingSongLengths(true);
-	}).detach();
+	if (songManager.getUndefined0Alk1m123TouchPrio()) {
+		std::thread([]() {
+		   for (const std::string_view song : SongManager::get().getSongs()) {
+			   const auto iterator = SongManager::get().getSongToSongDataEntries().find(Utils::toProblematicString(song));
+			   if (iterator == SongManager::get().getSongToSongDataEntries().end()) continue;
+			   auto& [unused, songData] = *iterator;
+			   songData.songLength = SongListLayer::getLength(std::string(song), std::numeric_limits<unsigned int>::max());
+		   }
+		   SongManager::get().setFinishedCalculatingSongLengths(true);
+	   }).detach();
+	} else songManager.setFinishedCalculatingSongLengths(true);
 }
 
 std::vector<std::string> Utils::parseBlacklistFile(const std::filesystem::path& blacklistFilePath) {
