@@ -556,7 +556,7 @@ void Utils::refreshTheVector() {
 void Utils::showFreezeWarning() {
 	if (!cocos2d::CCScene::get()) return;
 	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
-		FLAlertLayer* alert = FLAlertLayer::create("Sorry About That!", "Menu Loop Randomizer still needed to finish song length calculations from your previous set of songs before you changed your settings.\n\n<cy>Don't panic--the freezing was intended, and it's over now.</c>\n\n<cl>(You might see muliple of this message depending on how many settings you changed.)</c>", "I Understand");
+		FLAlertLayer* alert = FLAlertLayer::create("Sorry About That!", "Menu Loop Randomizer still needed to finish song length calculations from your previous set of songs before you changed your settings.\n\n<cy>Don't panic--the freezing was intended, and it's over now.</c>\n\n<cl>(You might see muliple copies of this message depending on how many settings you changed.)</c>", "I Understand");
 		alert->setTag(20260106);
 		alert->setUserObject("the-freezing-is-part-of-the-mod"_spr, cocos2d::CCBool::create(true));
 		alert->m_noElasticity = true;
