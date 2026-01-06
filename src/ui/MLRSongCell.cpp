@@ -168,6 +168,6 @@ void MLRSongCell::toggleEven(const bool isEven) {
 	this->setID(fmt::format("song-cell-{}"_spr, isEven));
 }
 
-void MLRSongCell::checkIfCurrentSongScheduler(float delta) {
+void MLRSongCell::checkIfCurrentSongScheduler(float) WINDOWS_IS_A_PIECE_OF_SHIT {
 	MLRSongCell::checkIfCurrentSong();
 }

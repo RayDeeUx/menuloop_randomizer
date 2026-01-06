@@ -26,6 +26,12 @@ typedef std::unordered_map<std::filesystem::path, SongData> SongToSongData;
 #define BLACKLIST_FILE CONFIG_DIR / R"(blacklist.txt)"
 #define FAVORITES_FILE CONFIG_DIR / R"(favorites.txt)"
 
+#ifdef GEODE_IS_WINDOWS
+#define WINDOWS_IS_A_PIECE_OF_SHIT /**/
+#else
+#define WINDOWS_IS_A_PIECE_OF_SHIT const
+#endif
+
 class SongManager {
   public:
 	static SongManager& get() {
