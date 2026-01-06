@@ -31,11 +31,11 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	this->m_songData = songData;
 
 	this->setContentWidth(356.f);
+	this->setColor({0, 0, 0});
 
 	if (songData.isEmpty) {
 		this->setOpacity(0);
 		this->setTag(11152025);
-		this->setColor({0, 0, 0});
 		this->setContentHeight(36.f);
 		this->setID("this-cell-intentionally-blank"_spr);
 		this->setUserObject("this-cell-intentionally-blank"_spr, cocos2d::CCBool::create(true));
@@ -123,7 +123,6 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	divider->setID(fmt::format("song-cell-divider"_spr));
 
 	this->setOpacity(255);
-	this->setColor(cocos2d::ccColor3B{0, 0, 0});
 
 	MLRSongCell::checkIfCurrentSong(); // call immediately
 	this->schedule(schedule_selector(MLRSongCell::update), .125f); // schedule this function less often
