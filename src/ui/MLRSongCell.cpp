@@ -1,4 +1,5 @@
 #include "MLRSongCell.hpp"
+#include "../Utils.hpp"
 
 MLRSongCell* MLRSongCell::create(const SongData& SongData, const bool isEven, const bool isCompact) {
 	auto* ret = new MLRSongCell();
