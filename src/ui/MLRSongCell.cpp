@@ -79,7 +79,11 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		auto datepoint = floor<std::chrono::days>(floor<std::chrono::seconds>(timepoint));
 		const std::chrono::year_month_day yearMonthDate{std::chrono::sys_days{datepoint}};
 		extraInfoLabl = cocos2d::CCLabelBMFont::create("PLACEHOLDER SO NOTHING CRASHES", "chatFont.fnt");
-		extraInfoLabl->setString(fmt::format("{} | {:.2f} sec | {:.2f} MB | {} {:02}, {:04}", songData.fileExtension, songData.songLength / 1000.f, songData.songFileSize / 1000000.f, months[static_cast<unsigned>(yearMonthDate.month()) - 1], static_cast<unsigned>(yearMonthDate.day()), static_cast<int>(yearMonthDate.year())).c_str());
+		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) {
+			extraInfoLabl->setString(fmt::format("{} | {:.2f} sec | {:.2f} MB | {} {:02}, {:04}", songData.fileExtension, songData.songLength / 1000.f, songData.songFileSize / 1000000.f, months[static_cast<unsigned>(yearMonthDate.month()) - 1], static_cast<unsigned>(yearMonthDate.day()), static_cast<int>(yearMonthDate.year())).c_str());
+		} else {
+			extraInfoLabl->setString(fmt::format("{} | {:.2f} MB | {} {:02}, {:04}", songData.fileExtension, songData.songFileSize / 1000000.f, months[static_cast<unsigned>(yearMonthDate.month()) - 1], static_cast<unsigned>(yearMonthDate.day()), static_cast<int>(yearMonthDate.year())).c_str());
+		}
 		extraInfoLabl->setAnchorPoint({.0f, .5f});
 		extraInfoLabl->setPosition({songNameLabel->getPositionX() + songNameLabel->getScaledContentWidth() + 5.f, this->getContentHeight() / 2.f});
 		extraInfoLabl->limitLabelWidth(356.f * (.7f / compactModeFactor), std::clamp<float>((.5f / compactModeFactor), .3, .75), .001f);
@@ -98,8 +102,8 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 
 	CCMenuItemSpriteExtra* playButton = CCMenuItemSpriteExtra::create(cocos2d::CCSprite::createWithSpriteFrameName("GJ_playMusicBtn_001.png"), this, menu_selector(MLRSongCell::onPlaySong));
 	playButton->setID("song-cell-play-button"_spr);
-	menu->addChild(playButton);
 
+	menu->addChild(playButton);
 	menu->setLayout(geode::RowLayout::create()->setGap(0.f)->setAutoScale(true)->setAxisReverse(true)->setDefaultScaleLimits(.0001f, .75f));
 
 	this->m_menu = menu;
