@@ -1,7 +1,7 @@
 #pragma once
 #include "../SongManager.hpp"
 
-class MLRSongCell : public cocos2d::CCLayerColor {
+class MLRSongCell final : public cocos2d::CCLayerColor {
 protected:
 	static constexpr std::array<std::string_view, 12> months = {
 		"Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.",
