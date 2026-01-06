@@ -99,7 +99,7 @@ class SongManager {
 
   private:
 	SongManager();
-	SongManager(const SongManager &) = delete;
+	SongManager(const SongManager&) = delete;
 	std::vector<std::string> m_songs;
 	std::string m_currentSong = "";
 	std::string m_heldSong = "";

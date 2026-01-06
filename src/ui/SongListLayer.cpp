@@ -503,7 +503,7 @@ void SongListLayer::onSortSizeToggle(CCObject*) {
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileSize");
 }
 
-void SongListLayer::onSortExtnToggle(CCObject *) {
+void SongListLayer::onSortExtnToggle(CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileExtn");
 }

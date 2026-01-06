@@ -6,7 +6,7 @@ using namespace geode::prelude;
 
 class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 	#ifndef __APPLE__
-	void onExitEditor(CCObject *sender) {
+	void onExitEditor(CCObject* sender) {
 		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
 		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
 
@@ -29,7 +29,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 		let that sink in for a moment.]
 	-- raydeeux
 	*/
-	void onSaveAndExit(CCObject *sender) {
+	void onSaveAndExit(CCObject* sender) {
 		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
 		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
 
