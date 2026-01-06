@@ -1,18 +1,26 @@
 # Menu Loop Randomizer Changelog
 ## v1.11.2
-*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod require [Better Touch Prio](mod:alk.better-touch-prio) to be installed.</c>*
-- Added the <cj>File Extension sorting</c> option to the Song List.
+*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
+- Added the <cj>File Extension sorting option</c> to the Song List.
   - Sort files based on their file extension alphabetically.
   - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> to use this <cj>sorting</c> option in the Song List menu.
-- An attempt was made to offload Song Length calculations to another thread.
-  - <cj>Sorting</c> songs by <cj>Song Length</c> should not freeze your game for as long now.
-  - The mod setting to disable <cj>sorting</c> by <cj>song length</c> is still available.
+- Attempted to offload Song Length calculations to another thread.
+  - <cj>Sorting</c> songs by <cj>Song Length</c> should not freeze your game for as long now. <c-aaaaaa>*(Unless if you change your settings too frequently, but **__why__** would you want to do that?)*</c>
+  - The mod setting to disable <cj>sorting</c> by <cj>song length</c> is still available. However, this is now a purely cosmetic setting, since song length calculations happen for everyone unless if [Better Touch Prio](mod:alk.better-touch-prio) is not loaded.
   - [Better Touch Prio](mod:alk.better-touch-prio) is still <cl>requ</c><cj>ired</c> to use the Song Length <cj>sorting</c> option in the Song List menu.
 - Added an option to show extra information about a song when Compact Mode is enabled in the Song List menu.
   - You can toggle this option off in the mod settings.
   - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> to use this feature, as this feature relies on Compact Mode being enabled.
+- Added a setting to use Miniaudio instead of FMOD to perform (most) song length calculations.
+  - This setting is only available for non-iOS users.
+  - This setting is enabled by default to preserve past behavior.
+  - If this setting is disabled, FMOD will perform song length calculations for all of your songs instead.
+  - This option is available for the minority of non-iOS users who prefer using FMOD to calculate song file lengths.
+  - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> to use this feature, as calculating song file lengths without [Better Touch Prio](mod:alk.better-touch-prio) loaded would only waste resources.
+- Fix a bug where some song length calculations would be inaccurate if Miniaudio failed to calculate the length.
+  - Most calculations that used to fail in v1.11.0 or v1.11.1 will use FMOD instead.
 - Adjust height limits for song name labels when Compact Mode is enabled in the Song List menu.
-- Fix some log spamming issues if you had  `Advanced Logging`  enabled, and then entered the level editor.
+- Fix log spamming that would happen if  `Advanced Logging`  was enabled while inside the level editor.
 - Fix a bug where you could play empty song files from the Song List menu if you tried hard enough.
 - Even more various (attempts at) micro-optimizations.
 ## v1.11.1

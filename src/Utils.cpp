@@ -501,13 +501,13 @@ void Utils::popualteSongToSongDataMap() {
 	songManager.setFinishedCalculatingSongLengths(false);
 	if (songManager.getUndefined0Alk1m123TouchPrio()) {
 		std::thread([]() {
-		   for (const std::string_view song : SongManager::get().getSongs()) {
-			   const auto iterator = SongManager::get().getSongToSongDataEntries().find(Utils::toProblematicString(song));
-			   if (iterator == SongManager::get().getSongToSongDataEntries().end()) continue;
-			   auto& [unused, songData] = *iterator;
-			   songData.songLength = SongListLayer::getLength(std::string(song), std::numeric_limits<unsigned int>::max());
-		   }
-		   SongManager::get().setFinishedCalculatingSongLengths(true);
+			for (const std::string_view song : SongManager::get().getSongs()) {
+				const auto iterator = SongManager::get().getSongToSongDataEntries().find(Utils::toProblematicString(song));
+				if (iterator == SongManager::get().getSongToSongDataEntries().end()) continue;
+				auto& [unused, songData] = *iterator;
+				songData.songLength = SongListLayer::getLength(std::string(song), std::numeric_limits<unsigned int>::max());
+			}
+			SongManager::get().setFinishedCalculatingSongLengths(true);
 	   }).detach();
 	} else songManager.setFinishedCalculatingSongLengths(true);
 }
@@ -553,10 +553,22 @@ void Utils::refreshTheVector() {
 	if (useCustomSongs && !Utils::toNormalizedString(additionalFolder).empty() && !geode::utils::string::contains(Utils::toNormalizedString(additionalFolder), Utils::toNormalizedString(geode::Mod::get()->getConfigDir()))) Utils::populateVector(useCustomSongs, additionalFolder);
 }
 
+void Utils::showFreezeWarning() {
+	if (!cocos2d::CCScene::get()) return;
+	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
+		FLAlertLayer* alert = FLAlertLayer::create("Sorry About That!", "Menu Loop Randomizer still needed to finish song length calculations from your previous set of songs before you changed your settings.\n\n<cy>Don't panic--the freezing was intended, and it's over now.</c>\n\n<cl>(You might see muliple of this message depending on how many settings you changed.)</c>", "I Understand");
+		alert->setTag(20260106);
+		alert->setUserObject("the-freezing-is-part-of-the-mod"_spr, cocos2d::CCBool::create(true));
+		alert->m_noElasticity = true;
+		alert->show();
+	}
+}
+
 void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_view reasonUsuallySettingName) {
 	// make sure m_songs is empty, we don't want to make a mess here --elnexreal
 	SongManager& songManager = SongManager::get();
-	while (!songManager.getFinishedCalculatingSongLengths()) {}
+	if (!songManager.getFinishedCalculatingSongLengths()) Utils::showFreezeWarning();
+	while (!songManager.getFinishedCalculatingSongLengths()) {} // look i'm out of ideas ok i cant "undo" someone's settings value change and i sure as hell don't want to terminate a detached thread
 	songManager.clearSongs();
 	songManager.resetHeldSong();
 	songManager.resetPreviousSong();
