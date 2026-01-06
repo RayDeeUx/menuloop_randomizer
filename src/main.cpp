@@ -11,6 +11,7 @@ std::filesystem::path configDir = Mod::get()->getConfigDir();
 bool originalOverrideWasEmpty = false;
 
 #define VIBECODED_RADIO Loader::get()->getInstalledMod("joseii.ventilla")
+#define USE_BETTER_TOUCH_PRIO_DAMMIT "# <c-ff0000>***__Please install \"Better Touch Prio\" to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but nothing more will happen unless if you install the \"Better Touch Prio\" mod.</c>"
 
 $on_mod(Loaded) {
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
@@ -163,19 +164,32 @@ $on_mod(Loaded) {
 	});
 	listenForSettingChanges<bool>("showSearchBar", [](const bool showSearchBar) {
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSearchBar) return;
-		Utils::showMDPopup("Search Bar/Filtering Options", "# <c-ff0000>***__Please install \"Better Touch Prio\" to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but nothing more will happen unless if you install the \"Better Touch Prio\" mod.</c>", 12312025, "search-bar-song-sorting");
+		Utils::showMDPopup("Search Bar/Filtering Options", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "search-bar-song-sorting");
 	});
 	listenForSettingChanges<double>("compactModeScaleFactor", [](const double _) {
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) return;
-		Utils::showMDPopup("Compact Mode Scale Factor", "# <c-ff0000>***__Please install \"Better Touch Prio\" to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but nothing more will happen unless if you install the \"Better Touch Prio\" mod.</c>", 12312025, "compact-mode-scale-factor");
+		Utils::showMDPopup("Compact Mode Scale Factor", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "compact-mode-scale-factor");
 	});
 	listenForSettingChanges<bool>("showSortSongOptions", [](const bool showSortSongOptions) {
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSortSongOptions) return;
-		Utils::showMDPopup("Search Bar/Filtering Options", "# <c-ff0000>***__Please install \"Better Touch Prio\" to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but nothing more will happen unless if you install the \"Better Touch Prio\" mod.</c>", 12312025, "search-bar-song-sorting");
+		Utils::showMDPopup("Search Bar/Filtering Options", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "search-bar-song-sorting");
 	});
 	listenForSettingChanges<bool>("showSortSongLength", [](const bool showSortSongLength) {
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSortSongLength) return;
-		Utils::showMDPopup("Search Bar/Filtering Options", "# <c-ff0000>***__Please install \"Better Touch Prio\" to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but nothing more will happen unless if you install the \"Better Touch Prio\" mod.</c>", 12312025, "search-bar-song-sorting");
+		Utils::showMDPopup("Search Bar/Filtering Options", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "search-bar-song-sorting");
+	});
+	#ifndef GEODE_IS_IOS
+	listenForSettingChanges<bool>("useMiniaudioForLength", [](const bool useMiniaudioForLength) {
+		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) {
+			if (useMiniaudioForLength) Utils::showMDPopup("+ Miniaudio Song Lengths", "You are now using Miniaudio to calculate song lengths. <c-ffff00>***__Changes only apply the next time Menu Loop Randomizer reloads its songs.__***</c>\n\nIf you prefer using FMOD for somewhat more precise long lengths at the cost of wait time, disable this option.", 20260105, "miniaudio-song-lengths-using-miniaudio");
+			else Utils::showMDPopup("+ Miniaudio Song Lengths", "You are now using FMOD to calculate song lengths. <c-ffff00>***__Changes only apply the next time Menu Loop Randomizer reloads its songs.__***</c>\n\nIf you prefer using Miniaudio for somewhat less precise long lengths, enable this option.\n<c-aaaaaa>*(Note that FMOD may still be used if Miniaudio fails to find a length.)*</c>", 20260105, "miniaudio-song-lengths-using-fmod");
+		}
+		else Utils::showMDPopup("+ Miniaudio Song Lengths", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "miniaudio-song-lengths-btp-missing");
+	});
+	#endif
+	listenForSettingChanges<bool>("showExtraInfoLabel", [](const bool showExtraInfoLabel) {
+		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showExtraInfoLabel) return;
+		Utils::showMDPopup("Song List Extra Info Label", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "search-bar-song-sorting");
 	});
 	listenForSettingChanges<bool>("advancedLogs", [](bool newAdvancedLogs) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
