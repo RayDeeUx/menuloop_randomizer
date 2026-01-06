@@ -84,7 +84,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		extraInfoLabl->setPosition({songNameLabel->getPositionX() + songNameLabel->getScaledContentWidth() + 5.f, this->getContentHeight() / 2.f});
 		extraInfoLabl->limitLabelWidth(356.f * (.7f / compactModeFactor), std::clamp<float>((.5f / compactModeFactor), .3, .75), .001f);
 		extraInfoLabl->setColor({0, 0, 0});
-		extraInfoLabl->setOpacity(110);
+		extraInfoLabl->setOpacity(150);
 	}
 
 	CCLayerColor* divider = CCLayerColor::create({0, 0, 0, 127}, 356.f, .5f);
