@@ -126,7 +126,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	this->setOpacity(255);
 
 	MLRSongCell::checkIfCurrentSong(); // call immediately
-	this->schedule(schedule_selector(MLRSongCell::update), .125f); // schedule this function less often
+	this->schedule(schedule_selector(MLRSongCell::checkIfCurrentSongScheduler), .125f); // schedule this function less often
 
 	return true;
 }
@@ -168,7 +168,6 @@ void MLRSongCell::toggleEven(const bool isEven) {
 	this->setID(fmt::format("song-cell-{}"_spr, isEven));
 }
 
-
-void MLRSongCell::update(float delta) {
+void MLRSongCell::checkIfCurrentSongScheduler(float delta) {
 	MLRSongCell::checkIfCurrentSong();
 }

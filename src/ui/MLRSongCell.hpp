@@ -15,7 +15,7 @@ public:
 	void onPlaySong(CCObject*);
 	void checkIfCurrentSong() const;
 	void toggleEven(const bool);
-	void update(float) override;
+	void checkIfCurrentSongScheduler(float);
 	SongData m_songData;
 	cocos2d::CCLabelBMFont* m_songNameLabel;
 	cocos2d::CCLabelBMFont* m_extraInfoLabl;
