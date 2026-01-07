@@ -22,7 +22,7 @@
 #define SONG_SORTING_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSortSongOptions")
 
 SongListLayer* SongListLayer::create() {
-	auto* ret = new SongListLayer();
+	SongListLayer* ret = new SongListLayer();
 	if (ret->initAnchored(420.f, 290.f, "GJ_square02.png")) {
 		ret->autorelease();
 		return ret;
