@@ -88,27 +88,27 @@ $on_mod(Loaded) {
 	if (!std::filesystem::exists(configDir / R"(store_your_disabled_menuloops_here)")) {
 		std::filesystem::create_directory(configDir / R"(store_your_disabled_menuloops_here)");
 	}
-	listenForSettingChanges<bool>("useCustomSongs", [](bool useCustomSongs) {
+	listenForSettingChanges<bool>("useCustomSongs", [](const bool) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("useCustomSongs");
 	});
-	listenForSettingChanges<bool>("searchDeeper", [](bool searchDeeper) {
+	listenForSettingChanges<bool>("searchDeeper", [](const bool) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("searchDeeper");
 	});
-	listenForSettingChanges<std::filesystem::path>("additionalFolder", [](std::filesystem::path additionalFolder) {
+	listenForSettingChanges<std::filesystem::path>("additionalFolder", [](const std::filesystem::path&) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("additionalFolder");
 	});
-	listenForSettingChanges<bool>("loadPlaylistFile", [](bool loadPlaylistFile) {
+	listenForSettingChanges<bool>("loadPlaylistFile", [](const bool loadPlaylistFile) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("loadPlaylistFile");
 		if (!loadPlaylistFile) return;
 		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
 		Utils::showMDPopup("Playlist Files", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", 7302025, "playlist-files");
 	});
-	listenForSettingChanges<std::filesystem::path>("playlistFile", [](std::filesystem::path playlistFile) {
+	listenForSettingChanges<std::filesystem::path>("playlistFile", [](const std::filesystem::path&) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("playlistFile");
 		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
 		Utils::showMDPopup("Playlist Files", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", 7302025, "playlist-files");
 	});
-	listenForSettingChanges<bool>("playlistMode", [](bool constantShuffleMode) {
+	listenForSettingChanges<bool>("playlistMode", [](const bool constantShuffleMode) {
 		SongManager& songManager = SongManager::get();
 		songManager.setConstantShuffleMode();
 		if (songManager.isOriginalMenuLoop()) return;
@@ -121,7 +121,7 @@ $on_mod(Loaded) {
 		}
 		GameManager::sharedState()->playMenuMusic();
 	});
-	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](std::filesystem::path specificSongOverride) {
+	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](const std::filesystem::path& specificSongOverride) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		const std::string& overrideString = Utils::toNormalizedString(specificSongOverride);
@@ -138,7 +138,7 @@ $on_mod(Loaded) {
 		geode::Loader::get()->queueInMainThread([] { Utils::queueUpdateFrontfacingLabelsInSCMAndSLL(); });
 		GameManager::sharedState()->playMenuMusic();
 	});
-	listenForSettingChanges<bool>("dangerousBlacklisting", [](bool dangerousBlacklisting) {
+	listenForSettingChanges<bool>("dangerousBlacklisting", [](const bool dangerousBlacklisting) {
 		if (!dangerousBlacklisting) return;
 		log::info("=============== WARNING: USER HAS ENABLED `dangerousBlacklisting` SETTING ===============");
 		if (GameManager::get()->m_playerUserID.value() == 925143 || GameManager::get()->m_playerUserID.value() == 7247326) return log::info("never mind, it's just aktimoose the beta tester. don't show the alert");
@@ -168,7 +168,7 @@ $on_mod(Loaded) {
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSearchBar) return;
 		Utils::showMDPopup("Search Bar/Filtering Options", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "search-bar-song-sorting");
 	});
-	listenForSettingChanges<double>("compactModeScaleFactor", [](const double _) {
+	listenForSettingChanges<double>("compactModeScaleFactor", [](const double) {
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) return;
 		Utils::showMDPopup("Compact Mode Scale Factor", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "compact-mode-scale-factor");
 	});
