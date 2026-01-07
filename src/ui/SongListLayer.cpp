@@ -32,9 +32,7 @@ SongListLayer* SongListLayer::create() {
 }
 
 void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString) {
-	const std::vector<std::string>& blacklist = songManager.getBlacklist();
-	const std::vector<std::string>& favorites = songManager.getFavorites();
-	std::vector<std::string> alreadyAdded {};
+	std::vector<std::string_view> alreadyAdded {};
 	std::vector<MLRSongCell*> cellsToAdd {};
 
 	const bool songListCompactMode = SONG_SORTING_DISABLED ? false : SAVED("songListCompactMode");
@@ -49,14 +47,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	const SongToSongData& songToSongData = songManager.getSongToSongDataEntries();
 	std::error_code ec, ed;
 
-	for (const std::string& song : songsVector) {
+	for (const std::string_view song : songsVector) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
-
-		SongType songType = SongType::Regular;
-		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
-		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
-
-		if (songListFavoritesOnlyMode && songType != SongType::Favorited) continue;
 
 		SongData songData {};
 		bool songDataFromTheMap = false;
@@ -66,8 +58,16 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			songData = songDataIterator->second;
 			songDataFromTheMap = true;
 		} else {
+			const std::vector<std::string>& blacklist = songManager.getBlacklist();
+			const std::vector<std::string>& favorites = songManager.getFavorites();
+
+			SongType songType = SongType::Regular;
+			if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
+			else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
+
 			std::uintmax_t fileSize = std::filesystem::file_size(songFilePath, ec);
 			std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(songFilePath, ed);
+
 			songData = {
 				.actualFilePath = Utils::toNormalizedString(songFilePath),
 				.fileExtension = Utils::toNormalizedString(songFilePath.extension()),
@@ -79,6 +79,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			};
 			songData.displayName = SongListLayer::generateDisplayName(songData);
 		}
+
+		if (songListFavoritesOnlyMode && songData.type != SongType::Favorited) continue;
 
 		if (SONG_SORTING_ENABLED && SAVED("songListSortSongLength") && !songDataFromTheMap) songData.songLength = SongListLayer::getLength(songData.actualFilePath, reverse);
 
