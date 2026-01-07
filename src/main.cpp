@@ -6,8 +6,8 @@
 
 using namespace geode::prelude;
 
-SongManager &songManager = SongManager::get();
-std::filesystem::path configDir = Mod::get()->getConfigDir();
+SongManager& songManager = SongManager::get();
+const std::filesystem::path& configDir = Mod::get()->getConfigDir();
 bool originalOverrideWasEmpty = false;
 
 #define VIBECODED_RADIO Loader::get()->getInstalledMod("joseii.ventilla")
