@@ -44,7 +44,7 @@ class SongManager {
 	void setConstantShuffleMode();
 	bool getConstantShuffleMode() const;
 	void setPlaylistFileName();
-	std::string getPlaylistFileName();
+	std::string& getPlaylistFileName();
 	std::string getCurrentSong();
 	void setCurrentSong(const std::string&);
 	void setCurrentSongToSavedSong();
@@ -58,7 +58,7 @@ class SongManager {
 	bool getPlaylistIsEmpty() const;
 	void setHeldSong(const std::string&);
 	void resetHeldSong();
-	std::string getHeldSong();
+	std::string& getHeldSong();
 	void addToBlacklist(const std::string&);
 	void addToBlacklist();
 	std::vector<std::string>& getBlacklist();
@@ -71,11 +71,11 @@ class SongManager {
 	void setCurrentSongToOverride();
 	void setPreviousSong(const std::string&);
 	void resetPreviousSong();
-	std::string getPreviousSong();
+	std::string& getPreviousSong();
 	bool isPreviousSong() const;
 	bool songSizeIsBad() const;
 	void setCurrentSongDisplayName(const std::string&);
-	std::string getCurrentSongDisplayName();
+	std::string& getCurrentSongDisplayName();
 	void incrementTowerRepeatCount();
 	void resetTowerRepeatCount();
 	int getTowerRepeatCount() const;

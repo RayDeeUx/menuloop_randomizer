@@ -29,7 +29,7 @@ $on_mod(Loaded) {
 
 	auto blacklistTxt = configDir / R"(blacklist.txt)";
 	if (!std::filesystem::exists(blacklistTxt)) {
-		std::string blacklistFileIntro = R"(# Welcome to the Menu Loop Randomizer song blacklist!
+		const std::string& blacklistFileIntro = R"(# Welcome to the Menu Loop Randomizer song blacklist!
 # Each line that doesn't start with a "#" will be treated as a blacklisted song file.
 # All lines that start with a "#" are ignored. This means you can un-blacklist a song by adding "#" next to it.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
@@ -46,7 +46,7 @@ $on_mod(Loaded) {
 
 	auto favoriteTxt = configDir / R"(favorites.txt)";
 	if (!std::filesystem::exists(favoriteTxt)) {
-		std::string favoritesFileIntro = R"(# Welcome to the Menu Loop Randomizer favorites list!
+		const std::string& favoritesFileIntro = R"(# Welcome to the Menu Loop Randomizer favorites list!
 # Each line that doesn't start with a "#" will be treated as a favorited song file.
 # All lines that start with a "#" are ignored. This means you can un-favorite a song by adding "#" next to it.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
