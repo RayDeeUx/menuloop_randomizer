@@ -91,7 +91,7 @@ void SongManager::setPlaylistFileName() {
 	m_playlistName = geode::utils::string::replace(Utils::toNormalizedString(geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile").filename()), ".txt", "");
 }
 
-std::string& SongManager::getPlaylistFileName() {
+std::string SongManager::getPlaylistFileName() {
 	return m_playlistName;
 }
 
@@ -136,7 +136,7 @@ void SongManager::resetHeldSong() {
 	m_heldSong = "";
 }
 
-std::string& SongManager::getHeldSong() {
+std::string SongManager::getHeldSong() {
 	return m_heldSong;
 }
 
@@ -209,7 +209,7 @@ void SongManager::resetPreviousSong() {
 	m_previousSong = "";
 }
 
-std::string& SongManager::getPreviousSong() {
+std::string SongManager::getPreviousSong() {
 	return m_previousSong;
 }
 
@@ -226,7 +226,7 @@ void SongManager::setCurrentSongDisplayName(const std::string& displayName) {
 	m_displayName = displayName;
 }
 
-std::string& SongManager::getCurrentSongDisplayName() {
+std::string SongManager::getCurrentSongDisplayName() {
 	return m_displayName;
 }
 
