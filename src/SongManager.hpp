@@ -120,10 +120,10 @@ class SongManager {
 	bool m_shouldRestoreMenuLoopPoint = false;
 	bool m_vibecodedVentilla = false;
 	int m_lastPosition = 0;
-	std::vector<std::string> m_blacklist;
-	std::vector<std::string> m_favorites;
+	std::vector<std::string> m_blacklist {};
+	std::vector<std::string> m_favorites {};
 	int m_towerRepeatCount = 0;
 	geode::Mod* m_colonMenuLoopStartTime {};
-	SongToSongData m_songToSongDataMap;
-	bool m_finishedCalculatingSongLengths;
+	SongToSongData m_songToSongDataMap {};
+	bool m_finishedCalculatingSongLengths = false;
 };
