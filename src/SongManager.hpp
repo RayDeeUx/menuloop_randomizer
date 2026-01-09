@@ -100,15 +100,15 @@ class SongManager {
   private:
 	SongManager();
 	SongManager(const SongManager&) = delete;
-	std::vector<std::string> m_songs;
+	std::vector<std::string> m_songs {};
 	std::string m_currentSong = "";
 	std::string m_heldSong = "";
 	std::string m_previousSong = "";
 	std::string m_overrideSong = "";
 	std::string m_displayName = "";
 	std::string m_playlistName = "";
-	bool m_isMenuLoop {};
-	bool m_constantShuffleMode {};
+	bool m_isMenuLoop = false;
+	bool m_constantShuffleMode = false;
 	bool m_calledOnce = false;
 	bool m_isUndefined0Alk1m123TouchPrio = false;
 	bool m_geodify = false;
