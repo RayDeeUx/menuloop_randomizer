@@ -2,7 +2,7 @@
 
 using namespace geode::prelude;
 
-ConstantShuffleModeWarning* ConstantShuffleModeWarning::create(bool isCringe) {
+ConstantShuffleModeWarning* ConstantShuffleModeWarning::create(const bool isCringe) {
 	ConstantShuffleModeWarning* ret = new ConstantShuffleModeWarning();
 	if (ret && ret->init(isCringe)) {
 		ret->autorelease();
@@ -12,7 +12,7 @@ ConstantShuffleModeWarning* ConstantShuffleModeWarning::create(bool isCringe) {
 	return nullptr;
 }
 
-bool ConstantShuffleModeWarning::init(bool isCringe) {
+bool ConstantShuffleModeWarning::init(const bool isCringe) {
 	if (!FLAlertLayer::init(nullptr, "Constant Shuffle Mode Warning",
 		fmt::format(
 			"{}<cr>Constant Shuffle Mode is ***__semi-unstable__***. It's best if you restart your game after toggling this setting.</c>\n\n"
