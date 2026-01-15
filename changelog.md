@@ -1,6 +1,6 @@
 # Menu Loop Randomizer Changelog
 ## v1.11.4
-- Fix massive oversight..
+- Fix massive oversight.
 ## v1.11.3
 - Reduce log spam when Advanced Logs are enabled.
 - Fix a visual error when trying to favorite a song twice.
