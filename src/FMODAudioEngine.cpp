@@ -15,7 +15,9 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 			if (stupidAccmulatorTooLazyToPutElsewhere != 0) stupidAccmulatorTooLazyToPutElsewhere = 0;
 			return;
 		}
-		stupidAccmulatorTooLazyToPutElsewhere += dt;
+
+		if (SongManager::get().getAdvancedLogs()) stupidAccmulatorTooLazyToPutElsewhere += dt;
+		else if (stupidAccmulatorTooLazyToPutElsewhere != 0) stupidAccmulatorTooLazyToPutElsewhere = 0;
 
 		SongManager& songManager = SongManager::get();
 		constexpr int channelNumber = 0;
@@ -25,11 +27,11 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		const auto songManagerSong = songManager.getCurrentSong();
 		const bool isSongManagerSong = activeSong == songManagerSong;
 		if (!isSongManagerSong) {
-			if (SongManager::get().getAdvancedLogs() && stupidAccmulatorTooLazyToPutElsewhere > SECS_BETWEEN_LOGS) {
-				log::info("activeSong: {}", activeSong);
-				log::info("songManagerSong: {}", songManagerSong);
-				stupidAccmulatorTooLazyToPutElsewhere = 0;
-			}
+			if (!SongManager::get().getAdvancedLogs()) return;
+			if (stupidAccmulatorTooLazyToPutElsewhere < SECS_BETWEEN_LOGS) return;
+			log::info("activeSong: {}", activeSong);
+			log::info("songManagerSong: {}", songManagerSong);
+			stupidAccmulatorTooLazyToPutElsewhere = 0;
 			return;
 		}
 
