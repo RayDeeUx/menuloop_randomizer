@@ -4,10 +4,18 @@
 
 using namespace geode::prelude;
 
+// i dont trust the geode userbase enough but i also dont want to spam their logs so
+#define SECS_BETWEEN_LOGS 15
+float stupidAccmulatorTooLazyToPutElsewhere = 0;
+
 class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void update(float dt) {
 		FMODAudioEngine::update(dt);
-		if (GJBaseGameLayer::get() || VANILLA_GD_MENU_LOOP_DISABLED) return;
+		if (GJBaseGameLayer::get() || VANILLA_GD_MENU_LOOP_DISABLED) {
+			if (stupidAccmulatorTooLazyToPutElsewhere != 0) stupidAccmulatorTooLazyToPutElsewhere = 0;
+			return;
+		}
+		stupidAccmulatorTooLazyToPutElsewhere += dt;
 
 		SongManager& songManager = SongManager::get();
 		constexpr int channelNumber = 0;
@@ -17,9 +25,10 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		const auto songManagerSong = songManager.getCurrentSong();
 		const bool isSongManagerSong = activeSong == songManagerSong;
 		if (!isSongManagerSong) {
-			if (SongManager::get().getAdvancedLogs()) {
+			if (SongManager::get().getAdvancedLogs() && stupidAccmulatorTooLazyToPutElsewhere > SECS_BETWEEN_LOGS) {
 				log::info("activeSong: {}", activeSong);
 				log::info("songManagerSong: {}", songManagerSong);
+				stupidAccmulatorTooLazyToPutElsewhere = 0;
 			}
 			return;
 		}
