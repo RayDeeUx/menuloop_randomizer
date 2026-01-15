@@ -1,5 +1,6 @@
 # Menu Loop Randomizer Changelog
 ## v1.11.3
+- Reduce log spam when Advanced Logs are enabled.
 - Fix a visual error when trying to favorite a song twice.
 - Fix changes not being reflected in the Song List menu when favoriting/blacklisting a song.
 ## v1.11.2
