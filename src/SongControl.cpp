@@ -78,6 +78,11 @@ namespace SongControl {
 		songManager.addToFavorites();
 		songManager.addSong(currentSong);
 
+		if (songManager.getSongToSongDataEntries().contains(currentSong)) {
+			auto& songDataToEdit = songManager.getSongToSongDataEntries().find(currentSong)->second;
+			songDataToEdit.type = SongType::Favorited;
+		}
+
 		if (!Utils::getBool("enableNotification")) return;
 		if (!useCustomSongs) return Utils::newNotification(fmt::format("Favorited {} by {} ({})!", songName, songArtist, songID));
 		if (!customSong.empty()) return Utils::newNotification(fmt::format("Favorited {}!", customSong));
@@ -115,6 +120,11 @@ namespace SongControl {
 			geode::log::info("original size: {}", songManager.getSongsSize());
 			songManager.removeSong(songBeingBlacklisted);
 			geode::log::info("updated size: {}", songManager.getSongsSize());
+		}
+
+		if (songManager.getSongToSongDataEntries().contains(Utils::toProblematicString(songBeingBlacklisted))) {
+			auto& songDataToEdit = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songBeingBlacklisted))->second;
+			songDataToEdit.type = SongType::Blacklisted;
 		}
 
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();

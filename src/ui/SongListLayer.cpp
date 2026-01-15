@@ -80,6 +80,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			songData.displayName = SongListLayer::generateDisplayName(songData);
 		}
 
+		if (songData.type == SongType::Blacklisted) continue;
 		if (songListFavoritesOnlyMode && songData.type != SongType::Favorited) continue;
 
 		if (SONG_SORTING_ENABLED && SAVED("songListSortSongLength") && !songDataFromTheMap) songData.songLength = SongListLayer::getLength(songData.actualFilePath, reverse);

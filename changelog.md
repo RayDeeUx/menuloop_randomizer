@@ -1,4 +1,7 @@
 # Menu Loop Randomizer Changelog
+## v1.11.3
+- Fix a visual error when trying to favorite a song twice.
+- Fix changes not being reflected in the Song List menu when favoriting/blacklisting a song.
 ## v1.11.2
 *<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - Added the <cj>File Extension sorting option</c> to the Song List.
