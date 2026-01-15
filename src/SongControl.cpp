@@ -60,8 +60,8 @@ namespace SongControl {
 
 		const std::string& currentSong = songManager.getCurrentSong();
 
-		if (const std::vector<std::string>& blacklist = songManager.getBlacklist(); std::ranges::find(blacklist.begin(), blacklist.end(), currentSong) != blacklist.end()) return Utils::newNotification("You've already favorited this song! :D");
-		if (const std::vector<std::string>& favorites = songManager.getFavorites(); std::ranges::find(favorites.begin(), favorites.end(), currentSong) != favorites.end()) return SongControl::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
+		if (const std::vector<std::string>& favorites = songManager.getFavorites(); std::ranges::find(favorites.begin(), favorites.end(), currentSong) != favorites.end()) return Utils::newNotification("You've already favorited this song! :D");
+		if (const std::vector<std::string>& blacklist = songManager.getBlacklist(); std::ranges::find(blacklist.begin(), blacklist.end(), currentSong) != blacklist.end()) return SongControl::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
 
 		geode::log::info("favoriting: {}", currentSong);
 
