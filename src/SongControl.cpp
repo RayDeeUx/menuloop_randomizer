@@ -78,8 +78,8 @@ namespace SongControl {
 		songManager.addToFavorites();
 		songManager.addSong(currentSong);
 
-		if (songManager.getSongToSongDataEntries().contains(currentSong)) {
-			auto& songDataToEdit = songManager.getSongToSongDataEntries().find(currentSong)->second;
+		if (songManager.getSongToSongDataEntries().contains(Utils::toProblematicString(currentSong))) {
+			auto& songDataToEdit = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(currentSong))->second;
 			songDataToEdit.type = SongType::Favorited;
 		}
 
