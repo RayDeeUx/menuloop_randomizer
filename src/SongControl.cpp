@@ -15,17 +15,23 @@ namespace SongControl {
 	}
 	void previousSong(SongManager& songManager) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
+		
 		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're currently playing a menu loop <cy>override</c>. Double-check your settings again.");
 		if (songManager.songSizeIsBad()) return SongControl::woahThereBuddy("You don't have enough songs available to do this. Visit the config directory through the mod settings and try again.");
+		
 		if (songManager.isPreviousSong()) {
 			if (Utils::getBool("enableNotification")) return Utils::newNotification("You're already playing the previous song! :)");
 			return FLAlertLayer::create("Menu Loop Randomizer", "You're already playing the previous song! <cl>:)</c>", "Close")->show();
 		}
+		
 		const std::string& previousSong = songManager.getPreviousSong();
+		
 		if (previousSong.empty()) {
 			if (Utils::getBool("enableNotification")) return Utils::newNotification("There's no previous song to go back to! :(");
 			return FLAlertLayer::create("Menu Loop Randomizer", "There's no previous song to go back to! <cl>:(</c>", "Close")->show();
 		}
+		
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		songManager.setCurrentSong(previousSong);
 		GameManager::sharedState()->playMenuMusic();
@@ -33,27 +39,36 @@ namespace SongControl {
 	}
 	void holdSong(SongManager& songManager) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
+		
 		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're currently playing a menu loop <cy>override</c>. Double-check your settings again.");
 		if (songManager.songSizeIsBad()) return SongControl::woahThereBuddy("You don't have enough songs available to do this. Visit the config directory through the mod settings and try again.");
+		
 		const std::string& formerHeldSong = songManager.getHeldSong();
 		const std::string& currentSong = songManager.getCurrentSong();
+		
 		if (currentSong == formerHeldSong) {
 			if (Utils::getBool("enableNotification")) return Utils::newNotification("You're already holding that song! :D");
 			return FLAlertLayer::create("Menu Loop Randomizer", "You're already holding that song! <cl>:D</c>", "Close")->show();
 		}
+		
 		songManager.setHeldSong(currentSong);
+		
 		if (!formerHeldSong.empty()) {
 			FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 			songManager.setCurrentSong(formerHeldSong);
 			GameManager::sharedState()->playMenuMusic();
 			return Utils::newCardAndDisplayNameFromCurrentSong();
 		}
+		
 		if (!Utils::getBool("playlistMode")) Utils::setNewSong();
 		else Utils::constantShuffleModeNewSong();
+		
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 	void favoriteSong(SongManager& songManager) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
 
 		if (songManager.isOriginalMenuLoop()) return SongControl::woahThereBuddy("There's nothing to favorite! Double-check your config folder again.");
 		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're trying to favorite your own <cy>override</c>. Double-check your settings again.");
@@ -89,6 +104,7 @@ namespace SongControl {
 	}
 	void blacklistSong(SongManager& songManager) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
 
 		if (songManager.isOriginalMenuLoop()) return SongControl::woahThereBuddy("There's nothing to blacklist! Open Menu Loop Randomizer's config directory and edit its <cj>blacklist.txt</c> file to bring back some songs.");
 		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
