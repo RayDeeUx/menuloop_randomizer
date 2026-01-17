@@ -110,6 +110,7 @@ namespace SongControl {
 		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're trying to blacklist your own <cy>override</c>. Double-check your settings again.");
 
 		const std::string& songBeingBlacklisted = songManager.getCurrentSong();
+		const std::filesystem::path& songBeingBlacklistedPath = Utils::toProblematicString(songBeingBlacklisted);
 
 		if (const std::vector<std::string>& blacklist = songManager.getBlacklist(); std::ranges::find(blacklist.begin(), blacklist.end(), songBeingBlacklisted) != blacklist.end()) return SongControl::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
 		if (const std::vector<std::string>& favorites = songManager.getFavorites(); std::ranges::find(favorites.begin(), favorites.end(), songBeingBlacklisted) != favorites.end()) return SongControl::woahThereBuddy("You've already favorited this song! Double-check your <cl>favorites.txt</c> again.");
@@ -138,8 +139,8 @@ namespace SongControl {
 			geode::log::info("updated size: {}", songManager.getSongsSize());
 		}
 
-		if (songManager.getSongToSongDataEntries().contains(Utils::toProblematicString(songBeingBlacklisted))) {
-			auto& songDataToEdit = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songBeingBlacklisted))->second;
+		if (songManager.getSongToSongDataEntries().contains(songBeingBlacklistedPath)) {
+			auto& songDataToEdit = songManager.getSongToSongDataEntries().find(songBeingBlacklistedPath)->second;
 			songDataToEdit.type = SongType::Blacklisted;
 		}
 
@@ -156,7 +157,7 @@ namespace SongControl {
 
 		if (!useCustomSongs) {
 			if (songID != -1) return Utils::newNotification(fmt::format("Blacklisted {} by {} ({}), now playing {}.", songName, songArtist, songID, Utils::getSongName()));
-			return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", Utils::toNormalizedString(std::filesystem::path(songBeingBlacklisted).filename()), Utils::getSongName()));
+			return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", Utils::toNormalizedString(songBeingBlacklistedPath.filename()), Utils::getSongName()));
 		}
 		if (!customSong.empty()) return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", customSong, Utils::currentCustomSong()));
 	}

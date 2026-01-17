@@ -72,7 +72,10 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onHoldSongButton(CCObject*) { SongControl::holdSong(); }
 	void onPreviousButton(CCObject*) { SongControl::previousSong(); }
 	void onAddToPlylstBtn(CCObject*) { SongControl::addSongToPlaylist(SongManager::get().getCurrentSong()); }
-	void onSongListButton(CCObject*) { SongListLayer::create()->show(); }
+	void onSongListButton(CCObject*) {
+		if (!SongManager::get().getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy! Please wait.");
+		SongListLayer::create()->show();
+	}
 	void onControlsButton(CCObject*) {
 		if (Utils::getString("buttonMode") == "Classic") return;
 		if (CCScene::get()->getChildByType<SongControlMenu>(0)) return;
