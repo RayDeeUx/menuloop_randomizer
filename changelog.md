@@ -1,5 +1,6 @@
 # Menu Loop Randomizer Changelog
 ## v1.11.3, v1.11.4, and v1.11.5
+*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - Fix massive oversights.
 - Reduce log spam when Advanced Logs are enabled.
 - Fix a visual error when trying to favorite a song twice.
