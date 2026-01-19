@@ -111,14 +111,6 @@ bool SongManager::getGeodify() const {
 	return m_geodify;
 }
 
-void SongManager::setLavaChicken(const bool value) {
-	m_isLavaChicken = value;
-}
-
-bool SongManager::getLavaChicken() const {
-	return m_isLavaChicken;
-}
-
 void SongManager::setPlaylistIsEmpty(const bool value) {
 	m_playlistIsEmpty = value;
 }

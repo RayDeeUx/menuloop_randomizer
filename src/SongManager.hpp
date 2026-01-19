@@ -52,8 +52,6 @@ class SongManager {
 	void setCalledOnce(const bool);
 	bool getGeodify() const;
 	void setGeodify(const bool);
-	void setLavaChicken(const bool);
-	bool getLavaChicken() const;
 	void setPlaylistIsEmpty(const bool);
 	bool getPlaylistIsEmpty() const;
 	void setHeldSong(const std::string&);
