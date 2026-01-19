@@ -288,7 +288,7 @@ bool SongListLayer::setup() {
 		"<cy>Q: Make this mod act more closely to Spotify!</c>\n"
 		"A: <c_>No. Never. Spotify's UI/UX sets BAD precedents.</c>\n\n"
 		"<cy>Q: Where is the search bar/song sorting menu?</c>\n"
-		"A: <cg>Install \"Better Touch Prio\" by alk1m123; check your settings.</c>",
+		"A: <cg>Install \"Better Touch Prio\" by alk1m123 and check your settings.</c>",
 		.75f
 	);
 	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
