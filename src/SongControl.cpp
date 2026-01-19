@@ -94,7 +94,7 @@ namespace SongControl {
 		songManager.addSong(currentSong);
 
 		if (songManager.getSongToSongDataEntries().contains(Utils::toProblematicString(currentSong))) {
-			auto& songDataToEdit = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(currentSong))->second;
+			SongData& songDataToEdit = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(currentSong))->second;
 			songDataToEdit.type = SongType::Favorited;
 		}
 
@@ -140,7 +140,7 @@ namespace SongControl {
 		}
 
 		if (songManager.getSongToSongDataEntries().contains(songBeingBlacklistedPath)) {
-			auto& songDataToEdit = songManager.getSongToSongDataEntries().find(songBeingBlacklistedPath)->second;
+			SongData& songDataToEdit = songManager.getSongToSongDataEntries().find(songBeingBlacklistedPath)->second;
 			songDataToEdit.type = SongType::Blacklisted;
 		}
 
