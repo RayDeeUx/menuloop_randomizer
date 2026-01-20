@@ -247,20 +247,20 @@ void SongControlMenu::checkDaSongPositions(float) {
 	}
 
 	SongManager& songManager = SongManager::get();
-	const bool finished = songManager.getFinishedCalculatingSongLengths() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED;
+	const bool canShowPlaybackProgress = songManager.getFinishedCalculatingSongLengths() && songManager.getUndefined0Alk1m123TouchPrio() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED;
 
-	if (this->m_currTimeLb) this->m_currTimeLb->setVisible(finished);
-	if (this->m_totlTimeLb) this->m_totlTimeLb->setVisible(finished);
-	if (this->m_currProgBar) this->m_currProgBar->setVisible(finished);
-	if (this->m_darkProgBar) this->m_darkProgBar->setVisible(finished);
-	if (this->m_increDecreMenu) this->m_increDecreMenu->setVisible(finished);
-	if (this->m_clipNode) this->m_clipNode->setVisible(finished);
+	if (this->m_currTimeLb) this->m_currTimeLb->setVisible(canShowPlaybackProgress);
+	if (this->m_totlTimeLb) this->m_totlTimeLb->setVisible(canShowPlaybackProgress);
+	if (this->m_currProgBar) this->m_currProgBar->setVisible(canShowPlaybackProgress);
+	if (this->m_darkProgBar) this->m_darkProgBar->setVisible(canShowPlaybackProgress);
+	if (this->m_increDecreMenu) this->m_increDecreMenu->setVisible(canShowPlaybackProgress);
+	if (this->m_clipNode) this->m_clipNode->setVisible(canShowPlaybackProgress);
 	if (this->m_smallLabel) {
-		this->m_smallLabel->setPositionY(finished ? 18.5f : 15.f);
-		if (this->b) this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * (finished ? .85f : 1.f), (finished ? .85f : 1.f), .0001f);
+		this->m_smallLabel->setPositionY(canShowPlaybackProgress ? 18.5f : 15.f);
+		if (this->b) this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * (canShowPlaybackProgress ? .85f : 1.f), (canShowPlaybackProgress ? .85f : 1.f), .0001f);
 	}
 
-	if (!finished) return;
+	if (!canShowPlaybackProgress) return;
 	if (!this->m_currTimeLb || !this->m_totlTimeLb || !this->m_currProgBar || !this->m_darkProgBar) return;
 
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
@@ -347,7 +347,7 @@ void SongControlMenu::onSettingsButton(CCObject*) {
 
 void SongControlMenu::onSkipBkwdButton(CCObject*) {
 	SongManager& songManager = SongManager::get();
-	if (!songManager.getFinishedCalculatingSongLengths()) return;
+	if (!songManager.getFinishedCalculatingSongLengths() || !songManager.getUndefined0Alk1m123TouchPrio()) return;
 
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
@@ -373,7 +373,7 @@ void SongControlMenu::onSkipBkwdButton(CCObject*) {
 
 void SongControlMenu::onSkipFwrdButton(CCObject*) {
 	SongManager& songManager = SongManager::get();
-	if (!songManager.getFinishedCalculatingSongLengths()) return;
+	if (!songManager.getFinishedCalculatingSongLengths() || !songManager.getUndefined0Alk1m123TouchPrio()) return;
 
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
