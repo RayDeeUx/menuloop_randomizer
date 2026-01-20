@@ -36,7 +36,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		}
 
 		unsigned int position = 0;
-		menuLoopChannelProbably->getPosition(&position, 1);
+		menuLoopChannelProbably->getPosition(&position, FMOD_TIMEUNIT_MS)
 		songManager.setLastMenuLoopPosition(position); // so the problem with trying to move this logic to GJBGL::init() is that by the time GJBGL::init() is called, FMOD's menu loop track has already been stopped and its position resets to 0. hence why we are here instead.
 
 		if (!songManager.getConstantShuffleMode() || songManager.isOverride()) return;
