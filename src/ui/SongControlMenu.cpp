@@ -353,6 +353,7 @@ void SongControlMenu::onSkipBkwdButton(CCObject*) {
 	const std::string& currSong = songManager.getCurrentSong();
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
 
+	songManager.setPauseSongPositionTracking(true);
 	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
 	const int lastPosition = songManager.getLastMenuLoopPosition();
 
@@ -360,11 +361,14 @@ void SongControlMenu::onSkipBkwdButton(CCObject*) {
 		if (songManager.getConstantShuffleMode()) {
 			fmod->getActiveMusicChannel(0)->setPosition(0, FMOD_TIMEUNIT_MS);
 		} else if (fullLength > 0 && fullLength < std::numeric_limits<unsigned int>::max()) {
-			fmod->getActiveMusicChannel(0)->setPosition(((((lastPosition % fullLength) + fullLength) % fullLength) - (5000 % fullLength) + fullLength) % fullLength, FMOD_TIMEUNIT_MS);
+			const int newPosition = ((((lastPosition % fullLength) + fullLength) % fullLength) - (5000 % fullLength) + fullLength) % fullLength;
+			fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
+			songManager.setLastMenuLoopPosition(newPosition);
 		}
 	} else {
 		fmod->getActiveMusicChannel(0)->setPosition(lastPosition - 5000, FMOD_TIMEUNIT_MS);
 	}
+	songManager.setPauseSongPositionTracking(false);
 }
 
 void SongControlMenu::onSkipFwrdButton(CCObject*) {
@@ -378,16 +382,20 @@ void SongControlMenu::onSkipFwrdButton(CCObject*) {
 	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
 	const int lastPosition = songManager.getLastMenuLoopPosition();
 
+	songManager.setPauseSongPositionTracking(true);
 	if ((lastPosition + 5000) > fullLength) {
 		if (songManager.getConstantShuffleMode()) {
 			SongControl::shuffleSong();
 			SongControlMenu::updateCurrentLabel();
 		} else if (fullLength > 0 && fullLength < std::numeric_limits<unsigned int>::max()) {
-			fmod->getActiveMusicChannel(0)->setPosition(((((lastPosition % fullLength) + fullLength) % fullLength) + (5000 % fullLength)) % fullLength, FMOD_TIMEUNIT_MS);
+			const int newPosition = ((((lastPosition % fullLength) + fullLength) % fullLength) + (5000 % fullLength)) % fullLength;
+			fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
+			songManager.setLastMenuLoopPosition(newPosition);
 		}
 	} else {
 		fmod->getActiveMusicChannel(0)->setPosition(lastPosition + 5000, FMOD_TIMEUNIT_MS);
 	}
+	songManager.setPauseSongPositionTracking(false);
 }
 
 void SongControlMenu::updateCurrentLabel() {

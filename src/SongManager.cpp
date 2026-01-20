@@ -266,7 +266,7 @@ void SongManager::restoreLastMenuLoopPosition() {
 	if (!songManager.getShouldRestoreMenuLoopPoint()) return;
 	FMODAudioEngine::get()->setMusicTimeMS(songManager.getLastMenuLoopPosition(), false, 0);
 	songManager.setShouldRestoreMenuLoopPoint(false);
-	songManager.setComingFromGJBGL(false);
+	songManager.setPauseSongPositionTracking(false);
 }
 
 void SongManager::setShouldRestoreMenuLoopPoint(const bool value) {
@@ -301,11 +301,11 @@ bool SongManager::getVibecodedVentilla() const {
 	return m_vibecodedVentilla;
 }
 
-void SongManager::setComingFromGJBGL(const bool value) {
+void SongManager::setPauseSongPositionTracking(const bool value) {
 	m_comingFromGJBGL = value;
 }
 
-bool SongManager::getComingFromGJBGL() const {
+bool SongManager::getPauseSongPositionTracking() const {
 	return m_comingFromGJBGL;
 }
 

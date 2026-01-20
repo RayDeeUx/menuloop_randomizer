@@ -5,14 +5,13 @@
 class $modify(MenuLoopGJBGLHook, GJBaseGameLayer) {
 	struct Fields {
 		~Fields() {
-			SongManager::get().setComingFromGJBGL(false);
+			SongManager::get().setPauseSongPositionTracking(false);
 		}
 	};
 	bool init() {
-		SongManager::get().setComingFromGJBGL(false);
 		if (!GJBaseGameLayer::init()) return false;
 		SongManager::get().setShouldRestoreMenuLoopPoint(false);
-		SongManager::get().setComingFromGJBGL(true);
+		SongManager::get().setPauseSongPositionTracking(true);
 		if (!Utils::getBool("playlistMode")) return true;
 		const auto fmod = FMODAudioEngine::get();
 		if (!fmod) return true;

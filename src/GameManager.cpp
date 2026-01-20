@@ -18,14 +18,14 @@ class $modify(MenuLoopGMHook, GameManager) {
 		const geode::Mod* colon = songManager.getColonMenuLoopStartTime();
 		if (colon && colon->getSettingValue<bool>("enable")) return;
 		if (!songManager.getShouldRestoreMenuLoopPoint()) return;
-		log::info("songManager.getComingFromGJBGL(): {}", songManager.getComingFromGJBGL());
-		log::info("songManager.getComingFromGJBGL(): {}", songManager.getComingFromGJBGL());
-		log::info("songManager.getComingFromGJBGL(): {}", songManager.getComingFromGJBGL());
-		log::info("songManager.getComingFromGJBGL(): {}", songManager.getComingFromGJBGL());
-		log::info("songManager.getComingFromGJBGL(): {}", songManager.getComingFromGJBGL());
-		log::info("songManager.getComingFromGJBGL(): {}", songManager.getComingFromGJBGL());
-		log::info("songManager.getComingFromGJBGL(): {}", songManager.getComingFromGJBGL());
-		log::info("songManager.getComingFromGJBGL(): {}", songManager.getComingFromGJBGL());
+		log::info("songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
 		log::info("oldTrack: {}", oldTrack);
 		log::info("oldTrack: {}", oldTrack);
 		log::info("oldTrack: {}", oldTrack);
@@ -57,10 +57,10 @@ class $modify(MenuLoopGMHook, GameManager) {
 		log::info("songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
 		log::info("songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
 		log::info("songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
-		if (oldTrack == fmod->getActiveMusic(0) && !songManager.getComingFromGJBGL()) return; // NOTE: THIS LINE CAN CAUSE ISSUES WHEN MENU LOOP AND LEVEL'S MOST RECENTLY PLAYED SONG ARE THE SAME
+		if (oldTrack == fmod->getActiveMusic(0) && !songManager.getPauseSongPositionTracking()) return; // NOTE: THIS LINE CAN CAUSE ISSUES WHEN MENU LOOP AND LEVEL'S MOST RECENTLY PLAYED SONG ARE THE SAME
 		songManager.restoreLastMenuLoopPosition();
 		songManager.setShouldRestoreMenuLoopPoint(false);
-		songManager.setComingFromGJBGL(false);
+		songManager.setPauseSongPositionTracking(false);
 	}
 	void encodeDataTo(DS_Dictionary* p0) {
 		SongManager& songManager = SongManager::get();

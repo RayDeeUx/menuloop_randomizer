@@ -12,7 +12,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void update(float dt) {
 		FMODAudioEngine::update(dt);
 		SongManager& songManager = SongManager::get();
-		if (songManager.getComingFromGJBGL() || GJBaseGameLayer::get() || VANILLA_GD_MENU_LOOP_DISABLED) {
+		if (songManager.getPauseSongPositionTracking() || GJBaseGameLayer::get() || VANILLA_GD_MENU_LOOP_DISABLED) {
 			if (stupidAccmulatorTooLazyToPutElsewhere != 0) stupidAccmulatorTooLazyToPutElsewhere = 0;
 			return;
 		}

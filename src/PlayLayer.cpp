@@ -6,7 +6,7 @@ using namespace geode::prelude;
 
 class $modify(MenuLoopPLHook, PlayLayer) {
 	void onQuit() {
-		SongManager::get().setComingFromGJBGL(true);
+		SongManager::get().setPauseSongPositionTracking(true);
 		if (Utils::getBool("randomizeWhenExitingLevel")) SongManager::get().pickRandomSong();
 		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingLevel") && Utils::getBool("restoreWhenExitingLevel"));
 

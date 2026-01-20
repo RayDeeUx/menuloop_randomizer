@@ -92,8 +92,8 @@ class SongManager {
 	geode::Mod* getColonMenuLoopStartTime() const;
 	void setVibecodedVentilla(const bool);
 	bool getVibecodedVentilla() const;
-	void setComingFromGJBGL(const bool);
-	bool getComingFromGJBGL() const;
+	void setPauseSongPositionTracking(const bool);
+	bool getPauseSongPositionTracking() const;
 	void setFinishedCalculatingSongLengths(const bool);
 	bool getFinishedCalculatingSongLengths() const;
 
