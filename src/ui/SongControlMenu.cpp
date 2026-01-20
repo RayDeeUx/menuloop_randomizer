@@ -292,8 +292,12 @@ void SongControlMenu::onSkipFwrdButton(CCObject*) {
 	const int lastPosition = songManager.getLastMenuLoopPosition();
 
 	if ((lastPosition + 5000) > fullLength) {
-		SongControl::shuffleSong();
-		SongControlMenu::updateCurrentLabel();
+		if (songManager.getConstantShuffleMode()) {
+			SongControl::shuffleSong();
+			SongControlMenu::updateCurrentLabel();
+		} else {
+			FMODAudioEngine::get()->getActiveMusicChannel(0)->setPosition(0, FMOD_TIMEUNIT_MS);
+		}
 	} else {
 		FMODAudioEngine::get()->getActiveMusicChannel(0)->setPosition((lastPosition + 5000), FMOD_TIMEUNIT_MS);
 	}
@@ -305,7 +309,7 @@ void SongControlMenu::updateCurrentLabel() {
 	const std::string& currentSong = songManager.getCurrentSongDisplayName();
 	if (!this->m_smallLabel || !this->m_smallLabel->getParent() || this->m_smallLabel->getParent() != this->b) {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
-		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center/*, {0.f, 2.5f}*/);
+		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center, {0.f, 2.5f});
 		this->b->addChildAtPosition(this->m_increDecreMenu, geode::Anchor::Center);
 	} else this->m_smallLabel->setString(currentSong.c_str(), "chatFont.fnt");
 	this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * .85f, 1.0f, .0001f);
