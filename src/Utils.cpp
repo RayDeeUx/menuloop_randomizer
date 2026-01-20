@@ -151,7 +151,6 @@ void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs
 	const std::string& songFileName = Utils::toNormalizedString(currentSong.filename());
 	const std::string& songFileExtension = Utils::toNormalizedString(currentSong.extension());
 	const std::string& customSongDisplayName = geode::utils::string::replace(songFileName, songFileExtension, "");
-	if (songManager.getLavaChicken()) return songManager.setCurrentSongDisplayName(fmt::format("{} (My condolences for your ears.)", songFileName));
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return songManager.setCurrentSongDisplayName(customSongDisplayName);
 	if (songManager.isOriginalMenuLoop()) return songManager.setCurrentSongDisplayName("Original Menu Loop by RobTop");
 	const size_t dotPos = songFileName.find_last_of('.');
@@ -182,16 +181,14 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 	const std::string& songFileName = Utils::toNormalizedString(currentSong.filename());
 	const std::string& songFileExtension = Utils::toNormalizedString(currentSong.extension());
 	const std::string& customSongDisplayName = geode::utils::string::replace(songFileName, songFileExtension, "");
-	if (!songManager.getLavaChicken()) songManager.setCurrentSongDisplayName(songFileName);
-	else songManager.setCurrentSongDisplayName(fmt::format("{} (My condolences for your ears.)", songFileName));
+	songManager.setCurrentSongDisplayName(songFileName);
 
 	std::string notifString = "";
 	if (const std::string& prefix = geode::Mod::get()->getSettingValue<std::string>("customPrefix"); prefix != "[Empty]")
 		notifString = fmt::format("{}: ", prefix);
 
 	std::string suffix = "";
-	if (songManager.getLavaChicken()) suffix = " (MY CONDOLENCES.)";
-	else if (songManager.isOverride()) suffix = " (CUSTOM OVERRIDE)";
+	if (songManager.isOverride()) suffix = " (CUSTOM OVERRIDE)";
 	else if (songManager.isPreviousSong()) suffix = " (PREVIOUS SONG)";
 
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty())
