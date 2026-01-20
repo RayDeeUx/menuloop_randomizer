@@ -237,8 +237,18 @@ void SongControlMenu::checkManagerFinished(float) {
 }
 
 void SongControlMenu::checkDaSongPositions(float) {
-	if (!this->m_currTimeLb || !this->m_totlTimeLb) return;
+	if (this->b) {
+		this->b->_bottomLeft->setVisible(false);
+		this->b->_bottomRight->setVisible(false);
+		this->b->_bottom->setPositionX(0.f);
+		this->b->_bottom->setScaleX(9.375f);
+	}
+
+	if (!this->m_currTimeLb || !this->m_totlTimeLb || !this->m_currProgBar || !this->m_darkProgBar) return;
+
 	SongManager& songManager = SongManager::get();
+	if (!songManager.getFinishedCalculatingSongLengths()) return;
+
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
@@ -248,6 +258,8 @@ void SongControlMenu::checkDaSongPositions(float) {
 
 	this->m_currTimeLb->setString(fmt::format("{}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60)).c_str());
 	this->m_totlTimeLb->setString(fmt::format("{}:{:02}", ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
+
+	this->m_currProgBar->setContentWidth(((1.f * lastPosition) / (1.f * fullLength)) * this->m_darkProgBar->getContentWidth());
 }
 
 void SongControlMenu::onShuffleButton(CCObject*) {
