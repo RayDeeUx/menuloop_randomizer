@@ -245,7 +245,7 @@ void SongControlMenu::checkDaSongPositions(float) {
 	}
 
 	SongManager& songManager = SongManager::get();
-	const bool finished = songManager.getFinishedCalculatingSongLengths();
+	const bool finished = songManager.getFinishedCalculatingSongLengths() && !songManager.isOverride();
 
 	if (this->m_currTimeLb) this->m_currTimeLb->setVisible(finished);
 	if (this->m_totlTimeLb) this->m_totlTimeLb->setVisible(finished);
