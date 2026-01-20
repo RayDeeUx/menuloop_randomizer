@@ -247,7 +247,17 @@ void SongControlMenu::checkDaSongPositions(float) {
 	if (!this->m_currTimeLb || !this->m_totlTimeLb || !this->m_currProgBar || !this->m_darkProgBar) return;
 
 	SongManager& songManager = SongManager::get();
-	if (!songManager.getFinishedCalculatingSongLengths()) return;
+	const bool finished = songManager.getFinishedCalculatingSongLengths();
+
+	this->m_currTimeLb->setVisible(finished);
+	this->m_totlTimeLb->setVisible(finished);
+	this->m_currProgBar->setVisible(finished);
+	this->m_darkProgBar->setVisible(finished);
+	if (this->m_increDecreMenu) this->m_increDecreMenu->setVisible(finished);
+	if (this->m_clipNode) this->m_clipNode->setVisible(finished);
+	if (this->m_smallLabel) this->m_smallLabel->setPositionY(finished ? 18.5f : 15.f);
+
+	if (!finished) return;
 
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
