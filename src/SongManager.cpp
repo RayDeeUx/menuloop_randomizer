@@ -309,6 +309,14 @@ bool SongManager::getPauseSongPositionTracking() const {
 	return m_comingFromGJBGL;
 }
 
+void SongManager::setWasPlaying(const bool value) {
+	m_wasPlaying = value;
+}
+
+bool SongManager::getWasPlaying() const {
+	return m_wasPlaying;
+}
+
 void SongManager::setFinishedCalculatingSongLengths(const bool value) {
 	m_finishedCalculatingSongLengths = value;
 }

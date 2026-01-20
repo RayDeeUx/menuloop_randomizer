@@ -9,9 +9,12 @@ class $modify(MenuLoopGJBGLHook, GJBaseGameLayer) {
 		}
 	};
 	bool init() {
-		if (!GJBaseGameLayer::init()) return false;
-		SongManager::get().setShouldRestoreMenuLoopPoint(false);
 		SongManager::get().setPauseSongPositionTracking(true);
+		if (!GJBaseGameLayer::init()) {
+			SongManager::get().setPauseSongPositionTracking(false);
+			return false;
+		}
+		SongManager::get().setShouldRestoreMenuLoopPoint(false);
 		if (!Utils::getBool("playlistMode")) return true;
 		const auto fmod = FMODAudioEngine::get();
 		if (!fmod) return true;

@@ -94,6 +94,8 @@ class SongManager {
 	bool getVibecodedVentilla() const;
 	void setPauseSongPositionTracking(const bool);
 	bool getPauseSongPositionTracking() const;
+	void setWasPlaying(const bool);
+	bool getWasPlaying() const;
 	void setFinishedCalculatingSongLengths(const bool);
 	bool getFinishedCalculatingSongLengths() const;
 
@@ -120,6 +122,7 @@ class SongManager {
 	bool m_shouldRestoreMenuLoopPoint = false;
 	bool m_vibecodedVentilla = false;
 	bool m_comingFromGJBGL = false;
+	bool m_wasPlaying = false;
 	int m_lastPosition = 0;
 	std::vector<std::string> m_blacklist {};
 	std::vector<std::string> m_favorites {};

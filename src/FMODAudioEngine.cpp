@@ -10,9 +10,19 @@ float stupidAccmulatorTooLazyToPutElsewhere = 0;
 
 class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void update(float dt) {
-		FMODAudioEngine::update(dt);
+		constexpr int channelNumber = 0;
+
+		FMOD::Channel* menuLoopChannelProbably = FMODAudioEngine::get()->getActiveMusicChannel(channelNumber);
 		SongManager& songManager = SongManager::get();
-		if (songManager.getPauseSongPositionTracking() || GJBaseGameLayer::get() || VANILLA_GD_MENU_LOOP_DISABLED) {
+
+		bool isPlaying = false;
+		menuLoopChannelProbably->isPlaying(&isPlaying);
+		songManager.setWasPlaying(isPlaying);
+
+		FMODAudioEngine::update(dt);
+
+		menuLoopChannelProbably->isPlaying(&isPlaying);
+		if ((!isPlaying && isPlaying != songManager.getWasPlaying()) || GJBaseGameLayer::get() || VANILLA_GD_MENU_LOOP_DISABLED) {
 			if (stupidAccmulatorTooLazyToPutElsewhere != 0) stupidAccmulatorTooLazyToPutElsewhere = 0;
 			return;
 		}
@@ -20,9 +30,6 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		if (SongManager::get().getAdvancedLogs()) stupidAccmulatorTooLazyToPutElsewhere += dt;
 		else if (stupidAccmulatorTooLazyToPutElsewhere != 0) stupidAccmulatorTooLazyToPutElsewhere = 0;
 
-		constexpr int channelNumber = 0;
-
-		FMOD::Channel* menuLoopChannelProbably = FMODAudioEngine::get()->getActiveMusicChannel(channelNumber);
 		const auto activeSong = FMODAudioEngine::get()->getActiveMusic(channelNumber);
 		const auto songManagerSong = songManager.getCurrentSong();
 		const bool isSongManagerSong = activeSong == songManagerSong;
@@ -37,16 +44,31 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 
 		unsigned int position = 0;
 		menuLoopChannelProbably->getPosition(&position, FMOD_TIMEUNIT_MS);
-		if (position > songManager.getLastMenuLoopPosition()) songManager.setLastMenuLoopPosition(position); // so the problem with trying to move this logic to GJBGL::init() is that by the time GJBGL::init() is called, FMOD's menu loop track has already been stopped and its position resets to 0. hence why we are here instead.
+		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
+
+		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
+		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
+		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
+		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
+		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
+		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
+		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
+		if (!songManager.getPauseSongPositionTracking()) {
+			songManager.setLastMenuLoopPosition(position); // so the problem with trying to move this logic to GJBGL::init() is that by the time GJBGL::init() is called, FMOD's menu loop track has already been stopped and its position resets to 0. hence why we are here instead.
+		}
 
 		if (!songManager.getConstantShuffleMode() || songManager.isOverride()) return;
 		if (GJBaseGameLayer::get() || songManager.isOriginalMenuLoop() || songManager.getSongsSize() < 2) return;
 
-		bool isPlaying = true;
 		FMOD::Sound* sound;
 		unsigned int length = 0;
 		menuLoopChannelProbably->getCurrentSound(&sound);
-		menuLoopChannelProbably->isPlaying(&isPlaying);
 		sound->getLength(&length, 1);
 
 		if (SongManager::get().getAdvancedLogs() && stupidAccmulatorTooLazyToPutElsewhere > SECS_BETWEEN_LOGS) {
