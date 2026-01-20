@@ -174,8 +174,11 @@ bool SongControlMenu::setup() {
 	this->m_closeBtn->setID("close-button"_spr);
 	this->m_buttonMenu->setID("close-menu"_spr);
 	this->m_otherLabel->setID("im-not-spotify"_spr);
+	this->m_totlTimeLb->setID("total-time-label"_spr);
 	this->m_smallLabel->setID("current-song-label"_spr);
+	this->m_currTimeLb->setID("current-time-label"_spr);
 	this->m_headerLabl->setID("current-song-header"_spr);
+	this->m_increDecreMenu->setID("incdec-time-menu"_spr);
 	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
 	this->m_openSongListMenu->setID("song-list-menu"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
