@@ -353,7 +353,6 @@ void SongControlMenu::onSkipBkwdButton(CCObject*) {
 	const std::string& currSong = songManager.getCurrentSong();
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
 
-	songManager.setComingFromGJBGL(true);
 	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
 	const int lastPosition = songManager.getLastMenuLoopPosition();
 
@@ -366,7 +365,6 @@ void SongControlMenu::onSkipBkwdButton(CCObject*) {
 	} else {
 		fmod->getActiveMusicChannel(0)->setPosition(lastPosition - 5000, FMOD_TIMEUNIT_MS);
 	}
-	songManager.setComingFromGJBGL(false);
 }
 
 void SongControlMenu::onSkipFwrdButton(CCObject*) {
@@ -380,7 +378,6 @@ void SongControlMenu::onSkipFwrdButton(CCObject*) {
 	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
 	const int lastPosition = songManager.getLastMenuLoopPosition();
 
-	songManager.setComingFromGJBGL(true);
 	if ((lastPosition + 5000) > fullLength) {
 		if (songManager.getConstantShuffleMode()) {
 			SongControl::shuffleSong();
@@ -391,7 +388,6 @@ void SongControlMenu::onSkipFwrdButton(CCObject*) {
 	} else {
 		fmod->getActiveMusicChannel(0)->setPosition(lastPosition + 5000, FMOD_TIMEUNIT_MS);
 	}
-	songManager.setComingFromGJBGL(false);
 }
 
 void SongControlMenu::updateCurrentLabel() {
