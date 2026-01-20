@@ -187,6 +187,7 @@ bool SongControlMenu::setup() {
 
 	this->b->setID("trans-bg"_spr);
 	this->m_title->setID("title"_spr);
+	this->m_clipNode->setID("clip-node"_spr);
 	this->m_bgSprite->setID("background"_spr);
 	this->m_closeBtn->setID("close-button"_spr);
 	this->m_buttonMenu->setID("close-menu"_spr);
@@ -202,6 +203,7 @@ bool SongControlMenu::setup() {
 	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
 	this->m_openSongListMenu->setID("song-list-menu"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
+	this->m_bgSprite->_scale9Image->setID("the-less-darned-sprite-9"_spr);
 
 	this->m_noElasticity = true;
 
@@ -345,6 +347,8 @@ void SongControlMenu::onSettingsButton(CCObject*) {
 
 void SongControlMenu::onSkipBkwdButton(CCObject*) {
 	SongManager& songManager = SongManager::get();
+	if (!songManager.getFinishedCalculatingSongLengths()) return;
+
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
@@ -365,6 +369,8 @@ void SongControlMenu::onSkipBkwdButton(CCObject*) {
 
 void SongControlMenu::onSkipFwrdButton(CCObject*) {
 	SongManager& songManager = SongManager::get();
+	if (!songManager.getFinishedCalculatingSongLengths()) return;
+
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
