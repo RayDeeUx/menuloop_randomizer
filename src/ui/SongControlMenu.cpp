@@ -108,6 +108,13 @@ bool SongControlMenu::setup() {
 
 	this->schedule(schedule_selector(SongControlMenu::checkManagerFinished));
 
+	cocos2d::CCMenu* incrementDecrementMenu = cocos2d::CCMenu::create();
+	incrementDecrementMenu->setContentWidth(240.f);
+	Utils::addButton("skip-bkwd", menu_selector(SongControlMenu::onSkipBkwdButton), incrementDecrementMenu, this, true);
+	Utils::addButton("skip-fwrd", menu_selector(SongControlMenu::onSkipFwrdButton), incrementDecrementMenu, this, true);
+	incrementDecrementMenu->setLayout(geode::RowLayout::create()->setAutoScale(true)->setGap(1000.f)->setDefaultScaleLimits(.0001f, 1.f));
+	this->m_increDecreMenu = incrementDecrementMenu;
+
 	SongControlMenu::updateCurrentLabel();
 
 	/*
@@ -264,6 +271,34 @@ void SongControlMenu::onSettingsButton(CCObject*) {
 	}
 }
 
+void SongControlMenu::onSkipBkwdButton(CCObject*) {
+	SongManager& songManager = SongManager::get();
+	if (!songManager.getSongToSongDataEntries().contains(songManager.getCurrentSong())) return;
+
+	const int lastPosition = songManager.getLastMenuLoopPosition();
+
+	if ((lastPosition - 5000) < 0) {
+		FMODAudioEngine::get()->getActiveMusicChannel(0)->setPosition(0, FMOD_TIMEUNIT_MS);
+	} else {
+		FMODAudioEngine::get()->getActiveMusicChannel(0)->setPosition((lastPosition - 5000), FMOD_TIMEUNIT_MS);
+	}
+}
+
+void SongControlMenu::onSkipFwrdButton(CCObject*) {
+	SongManager& songManager = SongManager::get();
+	if (!songManager.getSongToSongDataEntries().contains(songManager.getCurrentSong())) return;
+
+	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
+	const int lastPosition = songManager.getLastMenuLoopPosition();
+
+	if ((lastPosition + 5000) > fullLength) {
+		SongControl::shuffleSong();
+		SongControlMenu::updateCurrentLabel();
+	} else {
+		FMODAudioEngine::get()->getActiveMusicChannel(0)->setPosition((lastPosition + 5000), FMOD_TIMEUNIT_MS);
+	}
+}
+
 void SongControlMenu::updateCurrentLabel() {
 	SongManager& songManager = SongManager::get();
 	songManager.resetTowerRepeatCount();
@@ -271,6 +306,7 @@ void SongControlMenu::updateCurrentLabel() {
 	if (!this->m_smallLabel || !this->m_smallLabel->getParent() || this->m_smallLabel->getParent() != this->b) {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
 		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center/*, {0.f, 2.5f}*/);
+		this->b->addChildAtPosition(this->m_increDecreMenu, geode::Anchor::Center);
 	} else this->m_smallLabel->setString(currentSong.c_str(), "chatFont.fnt");
 	this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * .85f, 1.0f, .0001f);
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});

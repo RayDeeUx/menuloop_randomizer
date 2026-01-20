@@ -5,10 +5,13 @@ protected:
 	cocos2d::CCLabelBMFont* m_smallLabel{};
 	cocos2d::CCLabelBMFont* m_otherLabel{};
 	cocos2d::CCLabelBMFont* m_headerLabl{};
+	cocos2d::CCLabelBMFont* m_currTimeLb{};
+	cocos2d::CCLabelBMFont* m_totlTimeLb{};
 	cocos2d::CCMenu* m_songControlsMenu {};
 	cocos2d::CCMenu* m_theTimeoutCorner {};
 	cocos2d::CCMenu* m_openSongListMenu {};
 	cocos2d::CCMenu* m_infoMenu         {};
+	cocos2d::CCMenu* m_increDecreMenu   {};
 	InfoAlertButton* m_infoButton       {};
 	cocos2d::extension::CCScale9Sprite*b{};
 	bool setup() override;
@@ -21,6 +24,8 @@ protected:
 	void onPlaylistButton(CCObject*);
 	void onAddToPlylstBtn(CCObject*);
 	void onSettingsButton(CCObject*);
+	void onSkipBkwdButton(CCObject*);
+	void onSkipFwrdButton(CCObject*);
 	void checkManagerFinished(float);
 public:
 	static SongControlMenu* create();
