@@ -9,6 +9,10 @@ using namespace geode::prelude;
 float stupidAccmulatorTooLazyToPutElsewhere = 0;
 
 class $modify(MenuLoopFMODHook, FMODAudioEngine) {
+	void stopAllMusic(bool p0) {
+		if (!GJBaseGameLayer::get()) SongManager::get().setPauseSongPositionTracking(true);
+		FMODAudioEngine::stopAllMusic(p0);
+	}
 	void update(float dt) {
 		FMODAudioEngine::update(dt);
 		SongManager& songManager = SongManager::get();
@@ -37,21 +41,6 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 
 		unsigned int position = 0;
 		menuLoopChannelProbably->getPosition(&position, FMOD_TIMEUNIT_MS);
-		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
-		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
-		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
-		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
-		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
-		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
-		log::info("FMOD UPDATE songManager.getPauseSongPositionTracking(): {}", songManager.getPauseSongPositionTracking());
-
-		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
-		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
-		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
-		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
-		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
-		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
-		log::info("FMOD UPDATE songManager.getLastMenuLoopPosition(): {}", songManager.getLastMenuLoopPosition());
 		if (!songManager.getPauseSongPositionTracking()) {
 			songManager.setLastMenuLoopPosition(position); // so the problem with trying to move this logic to GJBGL::init() is that by the time GJBGL::init() is called, FMOD's menu loop track has already been stopped and its position resets to 0. hence why we are here instead.
 		}
