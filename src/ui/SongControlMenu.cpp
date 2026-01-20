@@ -270,9 +270,9 @@ void SongControlMenu::updateCurrentLabel() {
 	const std::string& currentSong = songManager.getCurrentSongDisplayName();
 	if (!this->m_smallLabel || !this->m_smallLabel->getParent() || this->m_smallLabel->getParent() != this->b) {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
-		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center);
+		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center/*, {0.f, 2.5f}*/);
 	} else this->m_smallLabel->setString(currentSong.c_str(), "chatFont.fnt");
-	this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * .95f, 1.0f, .0001f);
+	this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * .85f, 1.0f, .0001f);
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	if (!this->m_headerLabl) return;
 	if (songManager.isOverride()) this->m_headerLabl->setString("Current Song (Custom Override):");
