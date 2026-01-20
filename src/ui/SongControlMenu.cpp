@@ -361,8 +361,8 @@ void SongControlMenu::onSkipBkwdButton(CCObject*) {
 			fmod->getActiveMusicChannel(0)->setPosition(0, FMOD_TIMEUNIT_MS);
 		} else if (fullLength > 0 && fullLength < std::numeric_limits<unsigned int>::max()) {
 			const int newPosition = ((((lastPosition % fullLength) + fullLength) % fullLength) - (5000 % fullLength) + fullLength) % fullLength;
-			fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
 			songManager.setPauseSongPositionTracking(true);
+			fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
 			songManager.setLastMenuLoopPosition(newPosition);
 			songManager.setPauseSongPositionTracking(false);
 		}
@@ -388,8 +388,8 @@ void SongControlMenu::onSkipFwrdButton(CCObject*) {
 			SongControlMenu::updateCurrentLabel();
 		} else if (fullLength > 0 && fullLength < std::numeric_limits<unsigned int>::max()) {
 			const int newPosition = ((((lastPosition % fullLength) + fullLength) % fullLength) + (5000 % fullLength)) % fullLength;
-			fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
 			songManager.setPauseSongPositionTracking(true);
+			fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
 			songManager.setLastMenuLoopPosition(newPosition);
 			songManager.setPauseSongPositionTracking(false);
 		}
