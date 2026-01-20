@@ -106,6 +106,8 @@ bool SongControlMenu::setup() {
 	this->b->setColor({0, 0, 0});
 	this->b->setOpacity(128);
 
+	this->schedule(schedule_selector(SongControlMenu::checkManagerFinished));
+
 	cocos2d::CCMenu* incrementDecrementMenu = cocos2d::CCMenu::create();
 	incrementDecrementMenu->setContentWidth(240.f);
 	Utils::addButton("skip-bkwd", menu_selector(SongControlMenu::onSkipBkwdButton), incrementDecrementMenu, this, true);
@@ -141,7 +143,6 @@ bool SongControlMenu::setup() {
 	clippingNode->addChild(darkProgBar);
 	this->m_clipNode = clippingNode;
 
-	this->schedule(schedule_selector(SongControlMenu::checkManagerFinished));
 	SongControlMenu::updateCurrentLabel();
 
 	/*
@@ -232,47 +233,10 @@ void SongControlMenu::toggleButtonState(cocos2d::CCNode* playlistButton, const b
 }
 
 void SongControlMenu::checkManagerFinished(float) {
-	const bool finishedSongLengths = SongManager::get().getFinishedCalculatingSongLengths();
-	SongControlMenu::toggleButtonState(this->m_openSongListMenu->getChildByTag(20260105), finishedSongLengths);
-	if (finishedSongLengths) {
-		this->m_smallLabel->removeFromParent();
-		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center, {0.f, 3.5f});
-		this->b->addChildAtPosition(this->m_increDecreMenu, geode::Anchor::Center);
-		this->b->addChildAtPosition(this->m_currTimeLb, geode::Anchor::BottomLeft, {27.5f, 6.f});
-		this->b->addChildAtPosition(this->m_totlTimeLb, geode::Anchor::BottomRight, {-27.5f, 6.f});
-		this->b->addChildAtPosition(this->m_clipNode, geode::Anchor::BottomLeft);
-		this->m_currTimeLb->setScale(.35f);
-		this->m_totlTimeLb->setScale(.35f);
-		SongControlMenu::checkDaSongPositions(0.f);
-		this->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
-	} else {
-		this->m_smallLabel->removeFromParent();
-		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center);
-		this->m_smallLabel->removeFromParent();
-		this->m_increDecreMenu->removeFromParent();
-		this->m_currTimeLb->removeFromParent();
-		this->m_totlTimeLb->removeFromParent();
-		this->m_clipNode->removeFromParent();
-	}
+	SongControlMenu::toggleButtonState(this->m_openSongListMenu->getChildByTag(20260105), SongManager::get().getFinishedCalculatingSongLengths());
 }
 
 void SongControlMenu::checkDaSongPositions(float) {
-	SongManager& songManager = SongManager::get();
-	if (!songManager.getFinishedCalculatingSongLengths()) {
-		if (this->m_currProgBar) this->m_currProgBar->setVisible(false);
-		if (this->m_darkProgBar) this->m_darkProgBar->setVisible(false);
-		if (this->m_currTimeLb) {
-			this->m_currTimeLb->setString("0:00");
-			this->m_currTimeLb->setVisible(false);
-		}
-		if (this->m_totlTimeLb) {
-			this->m_totlTimeLb->setString("0:00");
-			this->m_totlTimeLb->setVisible(false);
-		}
-		this->unschedule(schedule_selector(SongControlMenu::checkDaSongPositions));
-		return;
-	}
-
 	if (this->b) {
 		this->b->_bottomLeft->setVisible(false);
 		this->b->_bottomRight->setVisible(false);
@@ -282,10 +246,8 @@ void SongControlMenu::checkDaSongPositions(float) {
 
 	if (!this->m_currTimeLb || !this->m_totlTimeLb || !this->m_currProgBar || !this->m_darkProgBar) return;
 
-	this->m_currProgBar->setVisible(true);
-	this->m_darkProgBar->setVisible(true);
-	this->m_currTimeLb->setVisible(true);
-	this->m_totlTimeLb->setVisible(true);
+	SongManager& songManager = SongManager::get();
+	if (!songManager.getFinishedCalculatingSongLengths()) return;
 
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
@@ -416,7 +378,15 @@ void SongControlMenu::updateCurrentLabel() {
 	const std::string& currentSong = songManager.getCurrentSongDisplayName();
 	if (!this->m_smallLabel || !this->m_smallLabel->getParent() || this->m_smallLabel->getParent() != this->b) {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
-		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center);
+		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center, {0.f, 3.5f});
+		this->b->addChildAtPosition(this->m_increDecreMenu, geode::Anchor::Center);
+		this->b->addChildAtPosition(this->m_currTimeLb, geode::Anchor::BottomLeft, {27.5f, 6.f});
+		this->b->addChildAtPosition(this->m_totlTimeLb, geode::Anchor::BottomRight, {-27.5f, 6.f});
+		this->b->addChildAtPosition(this->m_clipNode, geode::Anchor::BottomLeft);
+		this->m_currTimeLb->setScale(.35f);
+		this->m_totlTimeLb->setScale(.35f);
+		SongControlMenu::checkDaSongPositions(0.f);
+		this->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
 	} else this->m_smallLabel->setString(currentSong.c_str(), "chatFont.fnt");
 	this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * .85f, 1.0f, .0001f);
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
