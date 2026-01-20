@@ -114,6 +114,17 @@ bool SongControlMenu::setup() {
 	Utils::addButton("skip-fwrd", menu_selector(SongControlMenu::onSkipFwrdButton), incrementDecrementMenu, this, true);
 	incrementDecrementMenu->setLayout(geode::RowLayout::create()->setAutoScale(true)->setGap(1000.f)->setDefaultScaleLimits(.0001f, 1.f));
 	this->m_increDecreMenu = incrementDecrementMenu;
+	// DONT ADD this->m_increDecreMenu AS A CHILD -- SongControlMenu::updateCurrentLabel() HANDLES THAT!
+
+	cocos2d::CCLabelBMFont* currentPosition = cocos2d::CCLabelBMFont::create("PLACEHOLDER", "chatFont.fnt");
+	currentPosition->setAnchorPoint({0.f, 0.f});
+	this->m_currTimeLb = currentPosition;
+	// DONT ADD this->m_currTimeLb AS A CHILD -- SongControlMenu::updateCurrentLabel() HANDLES THAT!
+
+	cocos2d::CCLabelBMFont* totalLength = cocos2d::CCLabelBMFont::create("PLACEHOLDER", "chatFont.fnt");
+	totalLength->setAnchorPoint({1.f, 0.f});
+	this->m_totlTimeLb = totalLength;
+	// DONT ADD this->m_totlTimeLb AS A CHILD -- SongControlMenu::updateCurrentLabel() HANDLES THAT!
 
 	SongControlMenu::updateCurrentLabel();
 
@@ -200,6 +211,20 @@ void SongControlMenu::toggleButtonState(cocos2d::CCNode* playlistButton, const b
 
 void SongControlMenu::checkManagerFinished(float) {
 	SongControlMenu::toggleButtonState(this->m_openSongListMenu->getChildByTag(20260105), SongManager::get().getFinishedCalculatingSongLengths());
+}
+
+void SongControlMenu::checkDaSongPositions(float) {
+	if (!this->m_currTimeLb || !this->m_totlTimeLb) return;
+	SongManager& songManager = SongManager::get();
+	FMODAudioEngine* fmod = FMODAudioEngine::get();
+	const std::string& currSong = songManager.getCurrentSong();
+	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
+
+	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
+	const int lastPosition = songManager.getLastMenuLoopPosition();
+
+	this->m_currTimeLb->setString(fmt::format("{}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60)).c_str());
+	this->m_totlTimeLb->setString(fmt::format("{}:{:02}", ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
 }
 
 void SongControlMenu::onShuffleButton(CCObject*) {
@@ -320,9 +345,17 @@ void SongControlMenu::updateCurrentLabel() {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
 		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center, {0.f, 2.5f});
 		this->b->addChildAtPosition(this->m_increDecreMenu, geode::Anchor::Center);
+		this->b->addChildAtPosition(this->m_currTimeLb, geode::Anchor::BottomLeft, {27.5f, .5f});
+		this->b->addChildAtPosition(this->m_totlTimeLb, geode::Anchor::BottomRight, {-27.5f, .5f});
+		this->m_currTimeLb->setScale(.35f);
+		this->m_totlTimeLb->setScale(.35f);
+		SongControlMenu::checkDaSongPositions(0.f);
+		this->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
 	} else this->m_smallLabel->setString(currentSong.c_str(), "chatFont.fnt");
 	this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * .85f, 1.0f, .0001f);
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+	this->m_currTimeLb->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+	this->m_totlTimeLb->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	if (!this->m_headerLabl) return;
 	if (songManager.isOverride()) this->m_headerLabl->setString("Current Song (Custom Override):");
 	else if (songManager.getConstantShuffleMode()) this->m_headerLabl->setString("Current Song (Constant Shuffle Mode):");

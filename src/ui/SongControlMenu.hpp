@@ -27,6 +27,7 @@ protected:
 	void onSkipBkwdButton(CCObject*);
 	void onSkipFwrdButton(CCObject*);
 	void checkManagerFinished(float);
+	void checkDaSongPositions(float);
 public:
 	static SongControlMenu* create();
 	void onRegenButton(CCObject*);
