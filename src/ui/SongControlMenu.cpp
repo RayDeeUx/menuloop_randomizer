@@ -349,8 +349,8 @@ void SongControlMenu::updateCurrentLabel() {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
 		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center, {0.f, 3.5f});
 		this->b->addChildAtPosition(this->m_increDecreMenu, geode::Anchor::Center);
-		this->b->addChildAtPosition(this->m_currTimeLb, geode::Anchor::BottomLeft, {27.5f, 6.5f});
-		this->b->addChildAtPosition(this->m_totlTimeLb, geode::Anchor::BottomRight, {-27.5f, 6.5f});
+		this->b->addChildAtPosition(this->m_currTimeLb, geode::Anchor::BottomLeft, {27.5f, 6.f});
+		this->b->addChildAtPosition(this->m_totlTimeLb, geode::Anchor::BottomRight, {-27.5f, 6.f});
 		this->m_currTimeLb->setScale(.35f);
 		this->m_totlTimeLb->setScale(.35f);
 		SongControlMenu::checkDaSongPositions(0.f);
