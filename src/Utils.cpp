@@ -688,8 +688,9 @@ void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler fu
 
 	CCMenuItemSpriteExtra* btn;
 
-	if (dontAddBG) btn = CCMenuItemSpriteExtra::create(btnSprite, target, function);
-	else {
+	if (dontAddBG) {
+		btn = CCMenuItemSpriteExtra::create(btnSprite, target, function);
+	} else {
 		geode::CircleButtonSprite* circleButtonSprite = geode::CircleButtonSprite::create(btnSprite);
 		circleButtonSprite->setID(fmt::format("{}-circle-button-sprite"_spr, name));
 		btn = CCMenuItemSpriteExtra::create(circleButtonSprite, target, function);
