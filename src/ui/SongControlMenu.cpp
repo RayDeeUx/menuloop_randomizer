@@ -272,7 +272,7 @@ void SongControlMenu::updateCurrentLabel() {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
 		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center);
 	} else this->m_smallLabel->setString(currentSong.c_str(), "chatFont.fnt");
-	this->m_smallLabel->limitLabelWidth(this->b->getContentWidth() - 20.f, 1.0f, .0001f);
+	this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * .95f, 1.0f, .0001f);
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	if (!this->m_headerLabl) return;
 	if (songManager.isOverride()) this->m_headerLabl->setString("Current Song (Custom Override):");
@@ -282,5 +282,5 @@ void SongControlMenu::updateCurrentLabel() {
 		const std::string& newHeaderString = geode::utils::string::replace(this->m_headerLabl->getString(), "Song", fmt::format("Song from {}", songManager.getPlaylistFileName()));
 		this->m_headerLabl->setString(newHeaderString.c_str());
 	}
-	this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f * .95f, 1.0f, .0001f);
+	this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.0f, .0001f);
 }
