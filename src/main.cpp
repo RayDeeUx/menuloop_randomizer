@@ -125,6 +125,7 @@ $on_mod(Loaded) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		const std::string& overrideString = Utils::toNormalizedString(specificSongOverride);
+		songManager.setOverride(overrideString);
 		if (!Utils::isSupportedFile(overrideString) && overrideString.empty()) {
 			songManager.clearSongs();
 			geode::log::info("repopulating vector from removing override");
@@ -133,12 +134,10 @@ $on_mod(Loaded) {
 				if (SongManager::get().getAdvancedLogs()) log::info("setting songManager's current song to saved song from settings change");
 				songManager.setCurrentSongToSavedSong();
 			} else Utils::setNewSong();
-		} else if (!overrideString.empty()) {
-			songManager.setOverride(overrideString);
-			songManager.setCurrentSongDisplayName(Utils::toNormalizedString(specificSongOverride.stem()));
 		}
 		geode::Loader::get()->queueInMainThread([] { Utils::queueUpdateFrontfacingLabelsInSCMAndSLL(); });
 		GameManager::sharedState()->playMenuMusic();
+		Utils::newCardAndDisplayNameFromCurrentSong();
 	});
 	listenForSettingChanges<bool>("dangerousBlacklisting", [](const bool dangerousBlacklisting) {
 		if (!dangerousBlacklisting) return;
