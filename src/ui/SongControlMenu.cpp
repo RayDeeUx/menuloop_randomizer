@@ -273,20 +273,29 @@ void SongControlMenu::onSettingsButton(CCObject*) {
 
 void SongControlMenu::onSkipBkwdButton(CCObject*) {
 	SongManager& songManager = SongManager::get();
-	if (!songManager.getSongToSongDataEntries().contains(songManager.getCurrentSong())) return;
+	FMODAudioEngine* fmod = FMODAudioEngine::get();
+	const std::string& currSong = songManager.getCurrentSong();
+	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
 
+	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
 	const int lastPosition = songManager.getLastMenuLoopPosition();
 
 	if ((lastPosition - 5000) < 0) {
-		FMODAudioEngine::get()->getActiveMusicChannel(0)->setPosition(0, FMOD_TIMEUNIT_MS);
+		if (songManager.getConstantShuffleMode()) {
+			fmod->getActiveMusicChannel(0)->setPosition(0, FMOD_TIMEUNIT_MS);
+		} else if (fullLength > 0 && fullLength < std::numeric_limits<unsigned int>::max()) {
+			fmod->getActiveMusicChannel(0)->setPosition(((((lastPosition % fullLength) + fullLength) % fullLength) - (5000 % fullLength) + fullLength) % fullLength, FMOD_TIMEUNIT_MS);
+		}
 	} else {
-		FMODAudioEngine::get()->getActiveMusicChannel(0)->setPosition((lastPosition - 5000), FMOD_TIMEUNIT_MS);
+		fmod->getActiveMusicChannel(0)->setPosition(lastPosition - 5000, FMOD_TIMEUNIT_MS);
 	}
 }
 
 void SongControlMenu::onSkipFwrdButton(CCObject*) {
 	SongManager& songManager = SongManager::get();
-	if (!songManager.getSongToSongDataEntries().contains(songManager.getCurrentSong())) return;
+	FMODAudioEngine* fmod = FMODAudioEngine::get();
+	const std::string& currSong = songManager.getCurrentSong();
+	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
 
 	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
 	const int lastPosition = songManager.getLastMenuLoopPosition();
@@ -295,11 +304,11 @@ void SongControlMenu::onSkipFwrdButton(CCObject*) {
 		if (songManager.getConstantShuffleMode()) {
 			SongControl::shuffleSong();
 			SongControlMenu::updateCurrentLabel();
-		} else {
-			FMODAudioEngine::get()->getActiveMusicChannel(0)->setPosition(0, FMOD_TIMEUNIT_MS);
+		} else if (fullLength > 0 && fullLength < std::numeric_limits<unsigned int>::max()) {
+			fmod->getActiveMusicChannel(0)->setPosition(((((lastPosition % fullLength) + fullLength) % fullLength) + (5000 % fullLength)) % fullLength, FMOD_TIMEUNIT_MS);
 		}
 	} else {
-		FMODAudioEngine::get()->getActiveMusicChannel(0)->setPosition((lastPosition + 5000), FMOD_TIMEUNIT_MS);
+		fmod->getActiveMusicChannel(0)->setPosition(lastPosition + 5000, FMOD_TIMEUNIT_MS);
 	}
 }
 
