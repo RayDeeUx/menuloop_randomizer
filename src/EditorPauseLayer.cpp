@@ -5,10 +5,14 @@
 using namespace geode::prelude;
 
 class $modify(MenuLoopEPLHook, EditorPauseLayer) {
-	#ifndef __APPLE__
-	void onExitEditor(CCObject* sender) {
+	void iHateHookingMultipleThingsToGetSomethingDone() {
+		SongManager::get().setComingFromGJBGL(true);
 		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
 		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
+	}
+	#ifndef __APPLE__
+	void onExitEditor(CCObject* sender) {
+		MenuLoopEPLHook::iHateHookingMultipleThingsToGetSomethingDone();
 
 		EditorPauseLayer::onExitEditor(sender);
 
@@ -30,8 +34,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 	-- raydeeux
 	*/
 	void onSaveAndExit(CCObject* sender) {
-		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
-		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
+		MenuLoopEPLHook::iHateHookingMultipleThingsToGetSomethingDone();
 
 		EditorPauseLayer::onSaveAndExit(sender);
 
@@ -75,8 +78,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		if (!shouldClose) return EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 
-		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
-		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
+		MenuLoopEPLHook::iHateHookingMultipleThingsToGetSomethingDone();
 
 		EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 

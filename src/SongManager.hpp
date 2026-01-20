@@ -92,6 +92,8 @@ class SongManager {
 	geode::Mod* getColonMenuLoopStartTime() const;
 	void setVibecodedVentilla(const bool);
 	bool getVibecodedVentilla() const;
+	void setComingFromGJBGL(const bool);
+	bool getComingFromGJBGL() const;
 	void setFinishedCalculatingSongLengths(const bool);
 	bool getFinishedCalculatingSongLengths() const;
 
@@ -117,6 +119,7 @@ class SongManager {
 	bool m_advancedLogs = false;
 	bool m_shouldRestoreMenuLoopPoint = false;
 	bool m_vibecodedVentilla = false;
+	bool m_comingFromGJBGL = false;
 	int m_lastPosition = 0;
 	std::vector<std::string> m_blacklist {};
 	std::vector<std::string> m_favorites {};
