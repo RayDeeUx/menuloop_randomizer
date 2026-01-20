@@ -126,6 +126,23 @@ bool SongControlMenu::setup() {
 	this->m_totlTimeLb = totalLength;
 	// DONT ADD this->m_totlTimeLb AS A CHILD -- SongControlMenu::updateCurrentLabel() HANDLES THAT!
 
+	cocos2d::CCLayerColor* currProgBar = cocos2d::CCLayerColor::create({200, 200, 200, 255});
+	currProgBar->setContentSize({(this->b->getContentWidth() / 2.f) + 0.f, 2.5f});
+	currProgBar->setAnchorPoint({0.f, 0.f});
+	this->m_currProgBar = currProgBar;
+
+	cocos2d::CCLayerColor* darkProgBar = cocos2d::CCLayerColor::create({30, 30, 30, 255});
+	darkProgBar->setContentSize({this->b->getContentWidth(), 2.5f});
+	darkProgBar->setAnchorPoint({0.f, 0.f});
+	darkProgBar->addChild(currProgBar);
+	this->m_darkProgBar = darkProgBar;
+
+	cocos2d::CCClippingNode* clippingNode = cocos2d::CCClippingNode::create(darkProgBar);
+	clippingNode->setContentSize(darkProgBar->getContentSize());
+	clippingNode->setAnchorPoint({0.f, 0.f});
+	clippingNode->addChild(darkProgBar);
+	this->m_clipNode = clippingNode;
+
 	SongControlMenu::updateCurrentLabel();
 
 	/*
@@ -174,6 +191,8 @@ bool SongControlMenu::setup() {
 	this->m_closeBtn->setID("close-button"_spr);
 	this->m_buttonMenu->setID("close-menu"_spr);
 	this->m_otherLabel->setID("im-not-spotify"_spr);
+	this->m_darkProgBar->setID("dark-prog-bar"_spr);
+	this->m_currProgBar->setID("curr-prog-bar"_spr);
 	this->m_totlTimeLb->setID("total-time-label"_spr);
 	this->m_smallLabel->setID("current-song-label"_spr);
 	this->m_currTimeLb->setID("current-time-label"_spr);
@@ -351,6 +370,7 @@ void SongControlMenu::updateCurrentLabel() {
 		this->b->addChildAtPosition(this->m_increDecreMenu, geode::Anchor::Center);
 		this->b->addChildAtPosition(this->m_currTimeLb, geode::Anchor::BottomLeft, {27.5f, 6.f});
 		this->b->addChildAtPosition(this->m_totlTimeLb, geode::Anchor::BottomRight, {-27.5f, 6.f});
+		this->b->addChildAtPosition(this->m_clipNode, geode::Anchor::BottomLeft);
 		this->m_currTimeLb->setScale(.35f);
 		this->m_totlTimeLb->setScale(.35f);
 		SongControlMenu::checkDaSongPositions(0.f);

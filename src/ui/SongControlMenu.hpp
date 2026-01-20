@@ -14,6 +14,9 @@ protected:
 	cocos2d::CCMenu* m_increDecreMenu   {};
 	InfoAlertButton* m_infoButton       {};
 	cocos2d::extension::CCScale9Sprite*b{};
+	cocos2d::CCLayerColor* m_darkProgBar{};
+	cocos2d::CCLayerColor* m_currProgBar{};
+	cocos2d::CCClippingNode* m_clipNode {};
 	bool setup() override;
 	void onShuffleButton(CCObject*);
 	void onCopyButton(CCObject*);
