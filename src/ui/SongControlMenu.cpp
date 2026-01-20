@@ -253,7 +253,10 @@ void SongControlMenu::checkDaSongPositions(float) {
 	if (this->m_darkProgBar) this->m_darkProgBar->setVisible(finished);
 	if (this->m_increDecreMenu) this->m_increDecreMenu->setVisible(finished);
 	if (this->m_clipNode) this->m_clipNode->setVisible(finished);
-	if (this->m_smallLabel) this->m_smallLabel->setPositionY(finished ? 18.5f : 15.f);
+	if (this->m_smallLabel) {
+		this->m_smallLabel->setPositionY(finished ? 18.5f : 15.f);
+		if (this->b) this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * (finished ? .85f : 1.f), (finished ? .85f : 1.f), .0001f);
+	}
 
 	if (!finished) return;
 	if (!this->m_currTimeLb || !this->m_totlTimeLb || !this->m_currProgBar || !this->m_darkProgBar) return;
@@ -397,7 +400,6 @@ void SongControlMenu::updateCurrentLabel() {
 		SongControlMenu::checkDaSongPositions(0.f);
 		this->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
 	} else this->m_smallLabel->setString(currentSong.c_str(), "chatFont.fnt");
-	this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * .85f, 1.0f, .0001f);
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_currTimeLb->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_totlTimeLb->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
