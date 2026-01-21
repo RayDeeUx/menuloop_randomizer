@@ -21,6 +21,7 @@ $on_mod(Loaded) {
 	songManager.setShouldRestoreMenuLoopPoint(true);
 	songManager.setFinishedCalculatingSongLengths(false);
 	songManager.setAdvancedLogs(Mod::get()->getSettingValue<bool>("advancedLogs"));
+	songManager.setShowPlaybackProgressAndControls(Mod::get()->getSettingValue<bool>("showPlaybackProgressAndControls"));
 	songManager.setVibecodedVentilla(VIBECODED_RADIO && (VIBECODED_RADIO->isEnabled() || VIBECODED_RADIO->shouldLoad()));
 	songManager.setUndefined0Alk1m123TouchPrio(BTP && (BTP->isEnabled() || BTP->shouldLoad()) && !BTP->hasUnresolvedDependencies() && !BTP->hasUnresolvedIncompatibilities());
 	if (!std::filesystem::exists(configDir / "playlistOne.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistOne.txt");
