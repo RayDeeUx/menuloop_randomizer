@@ -324,3 +324,11 @@ void SongManager::setFinishedCalculatingSongLengths(const bool value) {
 bool SongManager::getFinishedCalculatingSongLengths() const {
 	return m_finishedCalculatingSongLengths;
 }
+
+void SongManager::setIncrementDecrementByMilliseconds(const int value) {
+	m_incrementDecrementByMilliseconds = std::clamp<int>(value, 100, 30000);
+}
+
+int SongManager::getIncrementDecrementByMilliseconds() const {
+	return m_incrementDecrementByMilliseconds;
+}

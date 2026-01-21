@@ -98,6 +98,8 @@ class SongManager {
 	bool getShowPlaybackProgressAndControls() const;
 	void setFinishedCalculatingSongLengths(const bool);
 	bool getFinishedCalculatingSongLengths() const;
+	void setIncrementDecrementByMilliseconds(const int);
+	int getIncrementDecrementByMilliseconds() const;
 
   private:
 	SongManager();
@@ -124,9 +126,10 @@ class SongManager {
 	bool m_comingFromGJBGL = false;
 	bool m_showPlaybackProgressAndControls = false;
 	int m_lastPosition = 0;
+	int m_towerRepeatCount = 0;
+	int m_incrementDecrementByMilliseconds = 0;
 	std::vector<std::string> m_blacklist {};
 	std::vector<std::string> m_favorites {};
-	int m_towerRepeatCount = 0;
 	geode::Mod* m_colonMenuLoopStartTime {};
 	SongToSongData m_songToSongDataMap {};
 	bool m_finishedCalculatingSongLengths = false;

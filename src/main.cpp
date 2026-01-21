@@ -22,6 +22,7 @@ $on_mod(Loaded) {
 	songManager.setFinishedCalculatingSongLengths(false);
 	songManager.setAdvancedLogs(Mod::get()->getSettingValue<bool>("advancedLogs"));
 	songManager.setShowPlaybackProgressAndControls(Mod::get()->getSettingValue<bool>("showPlaybackProgressAndControls"));
+	songManager.setIncrementDecrementByMilliseconds(Mod::get()->getSettingValue<int64_t>("incrementDecrementByMilliseconds"));
 	songManager.setVibecodedVentilla(VIBECODED_RADIO && (VIBECODED_RADIO->isEnabled() || VIBECODED_RADIO->shouldLoad()));
 	songManager.setUndefined0Alk1m123TouchPrio(BTP && (BTP->isEnabled() || BTP->shouldLoad()) && !BTP->hasUnresolvedDependencies() && !BTP->hasUnresolvedIncompatibilities());
 	if (!std::filesystem::exists(configDir / "playlistOne.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistOne.txt");
@@ -199,6 +200,11 @@ $on_mod(Loaded) {
 		SongManager::get().setShowPlaybackProgressAndControls(showPlaybackProgressAndControls);
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressAndControls) return;
 		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "show-playback-progress-controls");
+	});
+	listenForSettingChanges<int64_t>("incrementDecrementByMilliseconds", [](const int64_t incrementDecrementByMilliseconds) {
+		SongManager::get().setIncrementDecrementByMilliseconds(incrementDecrementByMilliseconds);
+		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) return;
+		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "playback-progress-incrdecr-amt");
 	});
 	listenForSettingChanges<bool>("advancedLogs", [](const bool newAdvancedLogs) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);

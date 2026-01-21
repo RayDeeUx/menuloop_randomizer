@@ -7,6 +7,7 @@
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 #define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
 #define CAN_USE_PLAYBACK_CONTROLS (songManager.getFinishedCalculatingSongLengths() && songManager.getUndefined0Alk1m123TouchPrio() && songManager.getShowPlaybackProgressAndControls())
+#define INCREMENT_DECREMENT_AMOUNT songManager.getIncrementDecrementByMilliseconds()
 
 bool SongControlMenu::setup() {
 	this->setTitle("Menu Loop Randomizer - Control Panel");
@@ -357,18 +358,18 @@ void SongControlMenu::onSkipBkwdButton(CCObject*) {
 	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
 	const int lastPosition = songManager.getLastMenuLoopPosition();
 
-	if ((lastPosition - 5000) < 0) {
+	if ((lastPosition - INCREMENT_DECREMENT_AMOUNT) < 0) {
 		if (songManager.getConstantShuffleMode()) {
 			fmod->getActiveMusicChannel(0)->setPosition(0, FMOD_TIMEUNIT_MS);
 		} else if (fullLength > 0 && fullLength < std::numeric_limits<unsigned int>::max()) {
-			const int newPosition = ((((lastPosition % fullLength) + fullLength) % fullLength) - (5000 % fullLength) + fullLength) % fullLength;
+			const int newPosition = ((((lastPosition % fullLength) + fullLength) % fullLength) - (INCREMENT_DECREMENT_AMOUNT % fullLength) + fullLength) % fullLength;
 			songManager.setPauseSongPositionTracking(true);
 			fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
 			songManager.setLastMenuLoopPosition(newPosition);
 			songManager.setPauseSongPositionTracking(false);
 		}
 	} else {
-		fmod->getActiveMusicChannel(0)->setPosition(lastPosition - 5000, FMOD_TIMEUNIT_MS);
+		fmod->getActiveMusicChannel(0)->setPosition(lastPosition - INCREMENT_DECREMENT_AMOUNT, FMOD_TIMEUNIT_MS);
 	}
 }
 
@@ -383,19 +384,19 @@ void SongControlMenu::onSkipFwrdButton(CCObject*) {
 	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
 	const int lastPosition = songManager.getLastMenuLoopPosition();
 
-	if ((lastPosition + 5000) > fullLength) {
+	if ((lastPosition + INCREMENT_DECREMENT_AMOUNT) > fullLength) {
 		if (songManager.getConstantShuffleMode()) {
 			SongControl::shuffleSong();
 			SongControlMenu::updateCurrentLabel();
 		} else if (fullLength > 0 && fullLength < std::numeric_limits<unsigned int>::max()) {
-			const int newPosition = ((((lastPosition % fullLength) + fullLength) % fullLength) + (5000 % fullLength)) % fullLength;
+			const int newPosition = ((((lastPosition % fullLength) + fullLength) % fullLength) + (INCREMENT_DECREMENT_AMOUNT % fullLength)) % fullLength;
 			songManager.setPauseSongPositionTracking(true);
 			fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
 			songManager.setLastMenuLoopPosition(newPosition);
 			songManager.setPauseSongPositionTracking(false);
 		}
 	} else {
-		fmod->getActiveMusicChannel(0)->setPosition(lastPosition + 5000, FMOD_TIMEUNIT_MS);
+		fmod->getActiveMusicChannel(0)->setPosition(lastPosition + INCREMENT_DECREMENT_AMOUNT, FMOD_TIMEUNIT_MS);
 	}
 }
 

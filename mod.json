@@ -301,6 +301,24 @@
 			"default": true,
 			"enable-if": "loaded:alk.better-touch-prio"
 		},
+		"incrementDecrementByMilliseconds": {
+			"name": "Control Panel: Playback Progress Controls Forward/Backward Amount (MS)",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS SETTING IS IGNORED.__***</c>\n\nChoose how many milliseconds to go forward/backward in when using the playback progress controls in the Control Panel.\n\n<cy>If</c> <cl>Constant Shuffle Mode</c> <c-aaaaaa>(formerly known as Playlist Mode)</c> <cy>is enabled, going past the end of the current song will shuffle a new song, and going backwards will be capped to the very start of the song.</c>\n\nOtherwise, going too far past the end or the beginning of the current song will wrap around from the opposite end of the song.",
+			"type": "int",
+			"default": 5000,
+			"min": 100,
+			"max": 30000,
+			"control": {
+				"input": true,
+				"slider": true,
+				"arrows": true,
+				"big-arrows": true,
+				"arrow-step": 500,
+				"big-arrow-step": 1000,
+				"slider-step": 100
+			},
+			"enable-if": "loaded:alk.better-touch-prio"
+		},
 		"specificSongOverride": {
 			"name": "Specific Menu Loop File Override",
 			"description": "In case you *hate* the randomizer elements from this mod.\n\n<cy>Leave this as blank to disable this option.</c>",
