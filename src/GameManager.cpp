@@ -16,9 +16,15 @@ class $modify(MenuLoopGMHook, GameManager) {
 		GameManager::fadeInMenuMusic();
 		// ensure compat with colon
 		const geode::Mod* colon = songManager.getColonMenuLoopStartTime();
-		if (colon && colon->getSettingValue<bool>("enable")) return;
-		if (!songManager.getShouldRestoreMenuLoopPoint()) return;
-		if (oldTrack == fmod->getActiveMusic(0) && !songManager.getPauseSongPositionTracking()) return; // NOTE: THIS LINE CAN CAUSE ISSUES WHEN MENU LOOP AND LEVEL'S MOST RECENTLY PLAYED SONG ARE THE SAME
+		if ((colon && colon->getSettingValue<bool>("enable")) || !songManager.getShouldRestoreMenuLoopPoint()) {
+			songManager.setPauseSongPositionTracking(false);
+			return;
+		}
+		// NOTE: THIS LINE CAN CAUSE ISSUES WHEN MENU LOOP AND LEVEL'S MOST RECENTLY PLAYED SONG ARE THE SAME
+		if (oldTrack == fmod->getActiveMusic(0) && !songManager.getPauseSongPositionTracking()) {
+			songManager.setPauseSongPositionTracking(false);
+			return;
+		}
 		songManager.restoreLastMenuLoopPosition();
 		songManager.setShouldRestoreMenuLoopPoint(false);
 		songManager.setPauseSongPositionTracking(false);

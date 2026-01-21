@@ -262,8 +262,10 @@ void SongManager::restoreLastMenuLoopPosition() {
 	// insurance policy for compat with colon
 	SongManager& songManager = SongManager::get();
 	const geode::Mod* colon = songManager.getColonMenuLoopStartTime();
-	if (colon && colon->getSettingValue<bool>("enable")) return;
-	if (!songManager.getShouldRestoreMenuLoopPoint()) return;
+	if ((colon && colon->getSettingValue<bool>("enable")) || !songManager.getShouldRestoreMenuLoopPoint()) {
+		songManager.setPauseSongPositionTracking(false);
+		return;
+	}
 	FMODAudioEngine::get()->setMusicTimeMS(songManager.getLastMenuLoopPosition(), false, 0);
 	songManager.setShouldRestoreMenuLoopPoint(false);
 	songManager.setPauseSongPositionTracking(false);

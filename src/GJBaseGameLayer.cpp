@@ -5,7 +5,7 @@
 class $modify(MenuLoopGJBGLHook, GJBaseGameLayer) {
 	struct Fields {
 		~Fields() {
-			SongManager::get().setPauseSongPositionTracking(false);
+			SongManager::get().setPauseSongPositionTracking(true);
 		}
 	};
 	bool init() {
