@@ -194,6 +194,11 @@ $on_mod(Loaded) {
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showExtraInfoLabel) return;
 		Utils::showMDPopup("Song List Extra Info Label", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "search-bar-song-sorting");
 	});
+	listenForSettingChanges<bool>("showPlaybackProgressAndControls", [](const bool showPlaybackProgressAndControls) {
+		SongManager::get().setShowPlaybackProgressAndControls(showPlaybackProgressAndControls);
+		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressAndControls) return;
+		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "show-playback-progress-controls");
+	});
 	listenForSettingChanges<bool>("advancedLogs", [](const bool newAdvancedLogs) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
 	});

@@ -234,6 +234,14 @@
 			"default": false,
 			"enable-if": "!randomizeWhenExitingEditor"
 		},
+		"useMiniaudioForLength": {
+			"name": "Use Miniaudio to Find Song Length",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS OPTION DOES NOTHING.__***</c>\n\nChoose if you prefer Miniaudio over FMOD for finding the length of a song. If this option is disabled, FMOD will find the lengths of all of your songs instead. This means song length calculations are more precise, but take slightly longer to complete.\n\n<c-aaaaaa>*(Note that in some cases, FMOD may still be used to find the length of a song if Miniaudio fails to do so.)*</c>",
+			"type": "bool",
+			"default": true,
+			"enable-if": "loaded:alk.better-touch-prio",
+			"platforms": ["win", "mac", "android"]
+		},
 		"showScrollingShortcuts": {
 			"name": "Song List: Show Scrolling Shortcuts",
 			"description": "Choose if you want scrolling shortcuts in the Song List menu.",
@@ -286,13 +294,12 @@
 			"default": true,
 			"enable-if": "loaded:alk.better-touch-prio"
 		},
-		"useMiniaudioForLength": {
-			"name": "Song List: Use Miniaudio to Find Song Length",
-			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS OPTION DOES NOTHING.__***</c>\n\nChoose if you prefer Miniaudio over FMOD for finding the length of a song. If this option is disabled, FMOD will find the lengths of all of your songs instead. This means song length calculations are more precise, but take slightly longer to complete.\n\n<c-aaaaaa>*(Note that in some cases, FMOD may still be used to find the length of a song if Miniaudio fails to do so.)*</c>",
+		"showPlaybackProgressAndControls": {
+			"name": "Control Panel: Show Playback Progress and Controls",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO CONTROLS OR PROGRESS BAR WILL APPEAR.__***</c>\n\nChoose if you want to show playback controls and playback progress about the currently playing song in the Control Panel menu.",
 			"type": "bool",
 			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio",
-			"platforms": ["win", "mac", "android"]
+			"enable-if": "loaded:alk.better-touch-prio"
 		},
 		"specificSongOverride": {
 			"name": "Specific Menu Loop File Override",

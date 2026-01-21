@@ -6,6 +6,7 @@
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 #define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
+#define CAN_USE_PLAYBACK_CONTROLS (songManager.getFinishedCalculatingSongLengths() && songManager.getUndefined0Alk1m123TouchPrio() && songManager.getShowPlaybackProgressAndControls())
 
 bool SongControlMenu::setup() {
 	this->setTitle("Menu Loop Randomizer - Control Panel");
@@ -247,7 +248,7 @@ void SongControlMenu::checkDaSongPositions(float) {
 	}
 
 	SongManager& songManager = SongManager::get();
-	const bool canShowPlaybackProgress = songManager.getFinishedCalculatingSongLengths() && songManager.getUndefined0Alk1m123TouchPrio() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED;
+	const bool canShowPlaybackProgress = CAN_USE_PLAYBACK_CONTROLS && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED;
 
 	if (this->m_currTimeLb) this->m_currTimeLb->setVisible(canShowPlaybackProgress);
 	if (this->m_totlTimeLb) this->m_totlTimeLb->setVisible(canShowPlaybackProgress);
@@ -347,7 +348,7 @@ void SongControlMenu::onSettingsButton(CCObject*) {
 
 void SongControlMenu::onSkipBkwdButton(CCObject*) {
 	SongManager& songManager = SongManager::get();
-	if (!songManager.getFinishedCalculatingSongLengths() || !songManager.getUndefined0Alk1m123TouchPrio()) return;
+	if (!CAN_USE_PLAYBACK_CONTROLS || VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
@@ -373,7 +374,7 @@ void SongControlMenu::onSkipBkwdButton(CCObject*) {
 
 void SongControlMenu::onSkipFwrdButton(CCObject*) {
 	SongManager& songManager = SongManager::get();
-	if (!songManager.getFinishedCalculatingSongLengths() || !songManager.getUndefined0Alk1m123TouchPrio()) return;
+	if (!CAN_USE_PLAYBACK_CONTROLS || VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
