@@ -304,11 +304,11 @@ bool SongManager::getVibecodedVentilla() const {
 }
 
 void SongManager::setPauseSongPositionTracking(const bool value) {
-	m_comingFromGJBGL = value;
+	m_pausedSongPositionTracking = value;
 }
 
 bool SongManager::getPauseSongPositionTracking() const {
-	return m_comingFromGJBGL;
+	return m_pausedSongPositionTracking;
 }
 
 void SongManager::setShowPlaybackProgressAndControls(const bool value) {
