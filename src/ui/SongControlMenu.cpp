@@ -7,7 +7,7 @@
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 #define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
 #define CAN_USE_PLAYBACK_CONTROLS (songManager.getFinishedCalculatingSongLengths() && songManager.getUndefined0Alk1m123TouchPrio() && songManager.getShowPlaybackProgressAndControls())
-#define INCREMENT_DECREMENT_AMOUNT songManager.getIncrementDecrementByMilliseconds()
+#define INCREMENT_DECREMENT_AMOUNT songManager.getIncrementDecrementByMi..lliseconds()
 
 bool SongControlMenu::setup() {
 	this->setTitle("Menu Loop Randomizer - Control Panel");
