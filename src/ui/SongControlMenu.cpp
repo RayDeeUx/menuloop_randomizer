@@ -145,6 +145,7 @@ bool SongControlMenu::setup() {
 	clippingNode->addChild(darkProgBar);
 	this->m_clipNode = clippingNode;
 
+	SongControlMenu::forceSharpCornerIllusion();
 	SongControlMenu::updateCurrentLabel();
 
 	/*
@@ -240,13 +241,17 @@ void SongControlMenu::checkManagerFinished(float) {
 	SongControlMenu::toggleButtonState(this->m_openSongListMenu->getChildByTag(20260105), SongManager::get().getFinishedCalculatingSongLengths());
 }
 
-void SongControlMenu::checkDaSongPositions(float) {
+void SongControlMenu::forceSharpCornerIllusion() {
 	if (this->b) {
-		this->b->_bottomLeft->setVisible(false);
-		this->b->_bottomRight->setVisible(false);
 		this->b->_bottom->setPositionX(0.f);
 		this->b->_bottom->setScaleX(9.375f);
+		this->b->_bottomLeft->setVisible(false);
+		this->b->_bottomRight->setVisible(false);
 	}
+}
+
+void SongControlMenu::checkDaSongPositions(float) {
+	SongControlMenu::forceSharpCornerIllusion();
 
 	SongManager& songManager = SongManager::get();
 	const bool canShowPlaybackProgress = CAN_USE_PLAYBACK_CONTROLS && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED;

@@ -31,6 +31,7 @@ protected:
 	void onSkipFwrdButton(CCObject*);
 	void checkManagerFinished(float);
 	void checkDaSongPositions(float);
+	void forceSharpCornerIllusion();
 public:
 	static SongControlMenu* create();
 	void onRegenButton(CCObject*);
