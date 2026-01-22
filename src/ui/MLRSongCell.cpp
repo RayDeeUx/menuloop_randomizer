@@ -119,11 +119,12 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		current->setAnchorPoint({0.f, 0.f});
 
 		total->addChild(current);
-		current->setContentWidth(0.f);
 		total->setPosition({0.f, .5f});
 
 		total->setID("total-progress"_spr);
 		current->setID("current-progress"_spr);
+
+		this->addChild(total);
 
 		this->m_totalBar = total;
 		this->m_currentB = current;
@@ -178,17 +179,11 @@ void MLRSongCell::onPlaySong(CCObject*) {
 void MLRSongCell::updateProgressBar() const {
 	SongManager& songManager = SongManager::get();
 	if (!songManager.getFinishedCalculatingSongLengths() || !this->m_currentB || !this->m_totalBar) return;
-	geode::log::info("foobar songManager");
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
-	geode::log::info("foobar fmod");
 	const std::string& currSong = songManager.getCurrentSong();
-	geode::log::info("currSong: {}", currSong);
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
-	geode::log::info("no more early return");
 	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
-	geode::log::info("found fullLength: {}", fullLength);
 	const int lastPosition = songManager.getLastMenuLoopPosition();
-	geode::log::info("found lastPosition: {}", lastPosition);
 	this->m_currentB->setContentWidth(((1.f * lastPosition) / (1.f * fullLength)) * this->m_totalBar->getContentWidth());
 }
 
