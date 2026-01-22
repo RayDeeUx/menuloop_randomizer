@@ -177,7 +177,7 @@ std::string Utils::composedNotifString(std::string notifString, const std::strin
 
 void Utils::newCardAndDisplayNameFromCurrentSong() {
 	SongManager& songManager = SongManager::get();
-	const std::filesystem::path& currentSong = std::filesystem::path(songManager.getCurrentSong());
+	const std::filesystem::path& currentSong = Utils::toProblematicString(songManager.getCurrentSong());
 	const std::string& songFileName = Utils::toNormalizedString(currentSong.filename());
 	const std::string& songFileExtension = Utils::toNormalizedString(currentSong.extension());
 	const std::string& customSongDisplayName = geode::utils::string::replace(songFileName, songFileExtension, "");
