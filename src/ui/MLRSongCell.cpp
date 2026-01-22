@@ -105,8 +105,8 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	CCMenuItemSpriteExtra* playButton = CCMenuItemSpriteExtra::create(cocos2d::CCSprite::createWithSpriteFrameName("GJ_playMusicBtn_001.png"), this, menu_selector(MLRSongCell::onPlaySong));
 	playButton->setID("song-cell-play-button"_spr);
 
-	CCMenuItemSpriteExtra* skipBkwd = Utils::addButton("skip-bkwd", menu_selector(MLRSongCell::onSkipBkwdButton), menu, this, false);
-	CCMenuItemSpriteExtra* skipFwrd = Utils::addButton("skip-fwrd", menu_selector(MLRSongCell::onSkipFwrdButton), menu, this, false);
+	CCMenuItemSpriteExtra* skipBkwd = Utils::addButton("skip-bkwd", menu_selector(MLRSongCell::onSkipBkwdButton), menu, this, true);
+	CCMenuItemSpriteExtra* skipFwrd = Utils::addButton("skip-fwrd", menu_selector(MLRSongCell::onSkipFwrdButton), menu, this, true);
 	skipBkwd->setVisible(false);
 	skipFwrd->setVisible(false);
 
