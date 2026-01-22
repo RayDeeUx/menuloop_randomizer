@@ -445,11 +445,6 @@ void SongControlMenu::updateCurrentLabel() {
 	this->m_smallLabel->setSkewX(0.f);
 	this->m_smallLabel->setColor({255, 255, 255});
 	if (!songData.isFromConfigOrAltDir && !songData.isFromMusicDownloadManager) this->m_smallLabel->setSkewX(10.f);
-	if (songType == SongType::Favorited) {
-		this->m_smallLabel->setColor({255, 175, 0});
-	} else if (songType == SongType::Blacklisted) {
-		this->m_smallLabel->setColor({0, 0, 0});
-	} else {
-		this->m_smallLabel->setColor({255, 255, 255});
-	}
+	if (songType == SongType::Favorited) this->m_smallLabel->setColor({255, 175, 0});
+	else if (songType == SongType::Blacklisted) this->m_smallLabel->setColor({0, 0, 0});
 }
