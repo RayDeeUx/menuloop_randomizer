@@ -470,6 +470,7 @@ void Utils::popualteSongToSongDataMap() {
 	const std::vector<std::string>& favorites = songManager.getFavorites();
 	std::vector<std::string> tempKeys = {};
 	std::error_code ec, ed;
+	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 
 	for (const std::string_view song : songManager.getSongs()) {
 		SongType songType = SongType::Regular;
@@ -488,6 +489,7 @@ void Utils::popualteSongToSongDataMap() {
 			.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
 			.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
 			.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(theirPath.parent_path()),
+			.isFromMusicDownloadManager = mdm->pathForSong(geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(-1)) == song,
 			.isEmpty = false
 		};
 		songData.displayName = Utils::toNormalizedString(SongListLayer::generateDisplayName(songData)),

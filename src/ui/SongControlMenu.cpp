@@ -438,11 +438,15 @@ void SongControlMenu::updateCurrentLabel() {
 		this->m_headerLabl->setString(newHeaderString.c_str());
 	}
 	this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.0f, .0001f);
-	const SongType songType = songManager.getSongToSongDataEntries().contains(songManager.getCurrentSong()) ? SongType::Regular : songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.type;
+	const auto& entry = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong());
+	if (entry == songManager.getSongToSongDataEntries().end()) return;
+	const SongData& songData = entry->second;
+	const SongType songType = songData.type;
 	this->m_smallLabel->setSkewX(0.f);
+	this->m_smallLabel->setColor({255, 255, 255});
+	if (!songData.isFromConfigOrAltDir && !songData.isFromMusicDownloadManager) this->m_smallLabel->setSkewX(10.f);
 	if (songType == SongType::Favorited) {
 		this->m_smallLabel->setColor({255, 175, 0});
-		this->m_smallLabel->setSkewX(10.f);
 	} else if (songType == SongType::Blacklisted) {
 		this->m_smallLabel->setColor({0, 0, 0});
 	} else {

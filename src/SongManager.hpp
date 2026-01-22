@@ -16,6 +16,7 @@ struct SongData {
 	std::uintmax_t songFileSize = std::numeric_limits<std::uintmax_t>::max();
 	std::filesystem::file_time_type songWriteTime {};
 	bool isFromConfigOrAltDir = false;
+	bool isFromMusicDownloadManager = false;
 	bool isEmpty = false;
 };
 
