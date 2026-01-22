@@ -160,8 +160,9 @@ void MLRSongCell::checkIfCurrentSong() const {
 	if (this->m_songData.isEmpty || !this->m_songNameLabel || !this->m_songNameLabel->getParent() || !this->m_menu) return;
 	const bool isCurrentSong = this->m_songData.actualFilePath == SongManager::get().getCurrentSong();
 
+	auto children = m_menu->getChildrenExt();
 	int numVisible = 0;
-	for (CCNode* node : m_menu->getChildrenExt()) {
+	for (CCNode* node : children) {
 		if (!node || !node->isVisible()) continue;
 		numVisible++;
 	}
@@ -189,7 +190,7 @@ void MLRSongCell::checkIfCurrentSong() const {
 	}
 
 	int newVisible = 0;
-	for (CCNode* node : m_menu->getChildrenExt()) {
+	for (CCNode* node : children) {
 		if (!node || !node->isVisible()) continue;
 		newVisible++;
 	}
