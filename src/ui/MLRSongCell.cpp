@@ -2,10 +2,10 @@
 #include "../SongControl.hpp"
 #include "../Utils.hpp"
 
-MLRSongCell* MLRSongCell::create(const SongData& SongData, const bool isEven, const bool isCompact) {
+MLRSongCell* MLRSongCell::create(const SongData& songData, const bool isEven, const bool isCompact) {
 	auto* ret = new MLRSongCell();
 
-	if (ret->init(SongData, isEven, isCompact)) {
+	if (ret->init(songData, isEven, isCompact)) {
 		ret->autorelease();
 		return ret;
 	}
