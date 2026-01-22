@@ -115,8 +115,9 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		CCLayerColor* total = CCLayerColor::create({0, 0, 0, 127}, 356.f, 2.5f / compactModeFactor);
 		total->setAnchorPoint({0.f, 0.f});
 
-		CCLayerColor* current = CCLayerColor::create({255, 255, 255, 255}, 356.f, 2.5f / compactModeFactor);
+		CCLayerColor* current = CCLayerColor::create({255, 255, 255, 255}, 349.f, 2.5f / compactModeFactor);
 		current->setAnchorPoint({0.f, 0.f});
+		current->setPositionX(current->getPositionX() + 3.5f);
 
 		total->addChild(current);
 		total->setPosition({0.f, .5f});
@@ -184,7 +185,7 @@ void MLRSongCell::updateProgressBar() const {
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
 	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
 	const int lastPosition = songManager.getLastMenuLoopPosition();
-	this->m_currentB->setContentWidth(((1.f * lastPosition) / (1.f * fullLength)) * this->m_totalBar->getContentWidth());
+	this->m_currentB->setContentWidth(((1.f * lastPosition) / (1.f * fullLength)) * 349.f);
 }
 
 void MLRSongCell::checkIfCurrentSong() const {
