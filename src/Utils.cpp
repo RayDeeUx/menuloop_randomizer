@@ -226,9 +226,9 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && isNotFromConfigOrAltDir) {
 		// default: "Song Name, Artist, Song ID"
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
-		return Utils::newNotification(composedNotifString(notifString, Utils::getFormattedNGMLSongName(songInfo), suffix), true);
+		return Utils::newNotification(Utils::composedNotifString(notifString, Utils::getFormattedNGMLSongName(songInfo), suffix), true);
 	}
-	return Utils::newNotification(composedNotifString(notifString, customSongDisplayName, suffix), true);
+	return Utils::newNotification(Utils::composedNotifString(notifString, customSongDisplayName, suffix), true);
 }
 
 std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
@@ -601,7 +601,7 @@ SongInfoObject* Utils::getSongInfoObject() {
 	if (songManager.isOriginalMenuLoop()) return nullptr;
 
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
-	const std::filesystem::path& currentSongFilePath = std::filesystem::path(songManager.getCurrentSong());
+	const std::filesystem::path& currentSongFilePath = Utils::toProblematicString(songManager.getCurrentSong());
 
 	if (Utils::isFromConfigOrAlternateDir(currentSongFilePath.parent_path())) return nullptr;
 
