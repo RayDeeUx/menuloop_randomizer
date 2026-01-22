@@ -106,7 +106,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	playButton->setID("song-cell-play-button"_spr);
 
 	SongManager& songManager = SongManager::get();
-	if (CAN_USE_PLAYBACK_CONTROLS) {
+	if (songManager.getFinishedCalculatingSongLengths() && Utils::getBool("showPlaybackProgressControlsSongList") && songManager.getUndefined0Alk1m123TouchPrio()) {
 		CCMenuItemSpriteExtra* skipBkwd = Utils::addButton("skip-bkwd", menu_selector(MLRSongCell::onSkipBkwdButton), menu, this, true);
 		CCMenuItemSpriteExtra* skipFwrd = Utils::addButton("skip-fwrd", menu_selector(MLRSongCell::onSkipFwrdButton), menu, this, true);
 		skipBkwd->setVisible(false);
@@ -215,9 +215,9 @@ void MLRSongCell::checkIfCurrentSongScheduler(float) {
 }
 
 void MLRSongCell::onSkipBkwdButton(CCObject*) {
-	SongControl::skipBackward();
+	if (SongManager::get().getShowPlaybackControlsSongList()) SongControl::skipBackward();
 }
 
 void MLRSongCell::onSkipFwrdButton(CCObject*) {
-	SongControl::skipForward();
+	if (SongManager::get().getShowPlaybackControlsSongList()) SongControl::skipForward();
 }

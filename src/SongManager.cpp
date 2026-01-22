@@ -323,6 +323,14 @@ void SongManager::setFinishedCalculatingSongLengths(const bool value) {
 	m_finishedCalculatingSongLengths = value;
 }
 
+void SongManager::setShowPlaybackControlsSongList(const bool value) {
+	m_showPlaybackControlsSongList = value;
+}
+
+bool SongManager::getShowPlaybackControlsSongList() const {
+	return m_showPlaybackControlsSongList;
+}
+
 bool SongManager::getFinishedCalculatingSongLengths() const {
 	return m_finishedCalculatingSongLengths;
 }

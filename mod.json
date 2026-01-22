@@ -294,6 +294,13 @@
 			"default": true,
 			"enable-if": "loaded:alk.better-touch-prio"
 		},
+		"showPlaybackProgressControlsSongList": {
+			"name": "Song List: Show Playback Progress and Controls",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO CONTROLS WILL APPEAR.__***</c>\n\nChoose if you want to show playback controls for the currently playing song in the Song List menu.",
+			"type": "bool",
+			"default": true,
+			"enable-if": "loaded:alk.better-touch-prio"
+		},
 		"songIndicatorsInControlPanel": {
 			"name": "Control Panel: Song Indicators",
 			"description": "Apply the song indicators seen in the Song List menu into the Control Panel's song name text.\n\nAs a reminder, the song indicators are:\n- Gold = <cy>favorited</c>.\n- Green = <cg>current</c>.\n- Italics = NG/ML song stored in an unexpected place.\n- Dark gradients OR random letters/numbers = Jukebox/NONG, <c-ff0000>OR</c> someone else goofed up.\n\n<c-aaaaaa>For a number of reasons, the dark gradient and the green song name do not appear in the Control Panel.</c>",

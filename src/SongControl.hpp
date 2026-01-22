@@ -2,7 +2,7 @@
 
 #include "SongManager.hpp"
 
-#define CAN_USE_PLAYBACK_CONTROLS (songManager.getFinishedCalculatingSongLengths() && songManager.getUndefined0Alk1m123TouchPrio() && songManager.getShowPlaybackProgressAndControls())
+#define CAN_USE_PLAYBACK_CONTROLS (songManager.getFinishedCalculatingSongLengths() && songManager.getUndefined0Alk1m123TouchPrio())
 #define INCREMENT_DECREMENT_AMOUNT songManager.getIncrementDecrementByMilliseconds()
 
 namespace SongControl {

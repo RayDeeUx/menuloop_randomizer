@@ -201,6 +201,11 @@ $on_mod(Loaded) {
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressAndControls) return;
 		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "show-playback-progress-controls");
 	});
+	listenForSettingChanges<bool>("showPlaybackProgressControlsSongList", [](const bool showPlaybackProgressControlsSongList) {
+		SongManager::get().setShowPlaybackControlsSongList(showPlaybackProgressControlsSongList);
+		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressControlsSongList) return;
+		Utils::showMDPopup("Song List Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "show-playback-progress-controls");
+	});
 	listenForSettingChanges<int64_t>("incrementDecrementByMilliseconds", [](const int64_t incrementDecrementByMilliseconds) {
 		SongManager::get().setIncrementDecrementByMilliseconds(incrementDecrementByMilliseconds);
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) return;
