@@ -112,10 +112,10 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		skipBkwd->setVisible(false);
 		skipFwrd->setVisible(false);
 
-		CCLayerColor* total = CCLayerColor::create({0, 0, 0, 127}, 356.f, 5.f / compactModeFactor);
+		CCLayerColor* total = CCLayerColor::create({0, 0, 0, 127}, 356.f, 2.5f / compactModeFactor);
 		total->setAnchorPoint({0.f, 0.f});
 
-		CCLayerColor* current = CCLayerColor::create({255, 255, 255, 255}, 356.f, 5.f / compactModeFactor);
+		CCLayerColor* current = CCLayerColor::create({255, 255, 255, 255}, 356.f, 2.5f / compactModeFactor);
 		current->setAnchorPoint({0.f, 0.f});
 
 		total->addChild(current);
