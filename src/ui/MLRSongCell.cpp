@@ -105,10 +105,15 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	CCMenuItemSpriteExtra* playButton = CCMenuItemSpriteExtra::create(cocos2d::CCSprite::createWithSpriteFrameName("GJ_playMusicBtn_001.png"), this, menu_selector(MLRSongCell::onPlaySong));
 	playButton->setID("song-cell-play-button"_spr);
 
-	CCMenuItemSpriteExtra* skipBkwd = Utils::addButton("skip-bkwd", menu_selector(MLRSongCell::onSkipBkwdButton), menu, this, true);
-	CCMenuItemSpriteExtra* skipFwrd = Utils::addButton("skip-fwrd", menu_selector(MLRSongCell::onSkipFwrdButton), menu, this, true);
-	skipBkwd->setVisible(false);
-	skipFwrd->setVisible(false);
+	SongManager& songManager = SongManager::get();
+	if (CAN_USE_PLAYBACK_CONTROLS) {
+		CCMenuItemSpriteExtra* skipBkwd = Utils::addButton("skip-bkwd", menu_selector(MLRSongCell::onSkipBkwdButton), menu, this, true);
+		CCMenuItemSpriteExtra* skipFwrd = Utils::addButton("skip-fwrd", menu_selector(MLRSongCell::onSkipFwrdButton), menu, this, true);
+		skipBkwd->setVisible(false);
+		skipFwrd->setVisible(false);
+		this->m_bkwdButton = skipBkwd;
+		this->m_ffwdButton = skipFwrd;
+	}
 
 	geode::Layout* layout = geode::RowLayout::create()->setGap(0.f)->setAutoScale(true)->setAxisReverse(false)->setDefaultScaleLimits(.0001f, .75f);
 	layout->ignoreInvisibleChildren(true);
@@ -121,8 +126,6 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	if (extraInfoLabl) this->m_extraInfoLabl = extraInfoLabl;
 	this->m_divider = divider;
 	this->m_playButton = playButton;
-	this->m_bkwdButton = skipBkwd;
-	this->m_ffwdButton = skipFwrd;
 
 	this->addChild(songNameLabel);
 	if (extraInfoLabl) this->addChild(extraInfoLabl);
