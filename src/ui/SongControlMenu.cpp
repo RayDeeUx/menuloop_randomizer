@@ -441,6 +441,7 @@ void SongControlMenu::updateCurrentLabel() {
 	if (!Utils::getBool("songIndicatorsInControlPanel")) {
 		this->m_smallLabel->setSkewX(0.f);
 		this->m_smallLabel->setColor({255, 255, 255});
+		return;
 	}
 	const auto& entry = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong());
 	if (entry == songManager.getSongToSongDataEntries().end()) return;
