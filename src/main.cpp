@@ -206,6 +206,9 @@ $on_mod(Loaded) {
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) return;
 		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "playback-progress-incrdecr-amt");
 	});
+	listenForSettingChanges<bool>("songIndicatorsInControlPanel", [](const bool) {
+		Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
+	});
 	listenForSettingChanges<bool>("advancedLogs", [](const bool newAdvancedLogs) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
 	});

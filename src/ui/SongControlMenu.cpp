@@ -438,7 +438,10 @@ void SongControlMenu::updateCurrentLabel() {
 		this->m_headerLabl->setString(newHeaderString.c_str());
 	}
 	this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.0f, .0001f);
-	if (!Utils::getBool("songIndicatorsInControlPanel")) return;
+	if (!Utils::getBool("songIndicatorsInControlPanel")) {
+		this->m_smallLabel->setSkewX(0.f);
+		this->m_smallLabel->setColor({255, 255, 255});
+	}
 	const auto& entry = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong());
 	if (entry == songManager.getSongToSongDataEntries().end()) return;
 	const SongData& songData = entry->second;
