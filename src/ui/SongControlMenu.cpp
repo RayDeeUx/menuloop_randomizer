@@ -131,7 +131,7 @@ bool SongControlMenu::setup() {
 	currProgBar->setAnchorPoint({0.f, 0.f});
 	this->m_currProgBar = currProgBar;
 
-	cocos2d::CCLayerColor* darkProgBar = cocos2d::CCLayerColor::create({40, 40, 40, 255});
+	cocos2d::CCLayerColor* darkProgBar = cocos2d::CCLayerColor::create({10, 10, 10, 255});
 	darkProgBar->setContentSize({this->b->getContentWidth(), 2.5f});
 	darkProgBar->setAnchorPoint({0.f, 0.f});
 	darkProgBar->addChild(currProgBar);
