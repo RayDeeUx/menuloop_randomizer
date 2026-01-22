@@ -114,8 +114,6 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	layout->ignoreInvisibleChildren(true);
 
 	menu->addChild(playButton);
-	menu->addChild(skipBkwd);
-	menu->addChild(skipFwrd);
 	menu->setLayout(layout);
 
 	this->m_menu = menu;
@@ -159,8 +157,14 @@ void MLRSongCell::onPlaySong(CCObject*) {
 }
 
 void MLRSongCell::checkIfCurrentSong() const {
-	if (this->m_songData.isEmpty || !this->m_songNameLabel || !this->m_songNameLabel->getParent()) return;
+	if (this->m_songData.isEmpty || !this->m_songNameLabel || !this->m_songNameLabel->getParent() || !this->m_menu) return;
 	const bool isCurrentSong = this->m_songData.actualFilePath == SongManager::get().getCurrentSong();
+
+	int numVisible = 0;
+	for (CCNode* node : m_menu->getChildrenExt()) {
+		if (!node || !node->isVisible()) continue;
+		numVisible++;
+	}
 
 	if (isCurrentSong) {
 		this->m_songNameLabel->getParent()->setTag(12192025);
@@ -171,9 +175,26 @@ void MLRSongCell::checkIfCurrentSong() const {
 		this->m_songNameLabel->setColor({255, 255, 255});
 	}
 
-	if (this->m_playButton) this->m_playButton->setEnabled(!isCurrentSong);
-	if (this->m_bkwdButton) this->m_bkwdButton->setEnabled(isCurrentSong);
-	if (this->m_ffwdButton) this->m_ffwdButton->setEnabled(isCurrentSong);
+	if (this->m_playButton) {
+		this->m_playButton->setVisible(!isCurrentSong);
+		this->m_playButton->setEnabled(!isCurrentSong);
+	}
+	if (this->m_bkwdButton) {
+		this->m_bkwdButton->setVisible(isCurrentSong);
+		this->m_bkwdButton->setEnabled(isCurrentSong);
+	}
+	if (this->m_ffwdButton) {
+		this->m_ffwdButton->setVisible(isCurrentSong);
+		this->m_ffwdButton->setEnabled(isCurrentSong);
+	}
+
+	int newVisible = 0;
+	for (CCNode* node : m_menu->getChildrenExt()) {
+		if (!node || !node->isVisible()) continue;
+		newVisible++;
+	}
+
+	if (numVisible != newVisible && this->m_menu->getLayout()) this->m_menu->updateLayout();
 }
 
 void MLRSongCell::toggleEven(const bool isEven) {
