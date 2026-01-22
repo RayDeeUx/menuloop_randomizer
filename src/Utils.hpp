@@ -37,7 +37,7 @@ class Utils {
 	static void fadeOutCardRemotely(cocos2d::CCNode*);
 	static void removeCardRemotely(cocos2d::CCNode*);
 	static void queueUpdateFrontfacingLabelsInSCMAndSLL();
-	static void addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
+	static CCMenuItemSpriteExtra* addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static void addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string_view nodeID, cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static void showMDPopup(const std::string_view title, const std::string& bodyText, const int tag, const std::string_view nodeID);
 	static bool notFavoritesNorBlacklist(const std::filesystem::path&);

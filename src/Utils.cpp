@@ -682,8 +682,8 @@ void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {
 	else if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); SongManager::get().getUndefined0Alk1m123TouchPrio() && sll && sll->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID)) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(sll->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID))->getInputNode(), false); });
 }
 
-void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
-	if (!menu || !target || name.empty()) return;
+CCMenuItemSpriteExtra* Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
+	if (!menu || !target || name.empty()) return nullptr;
 
 	cocos2d::CCSprite* btnSprite = cocos2d::CCSprite::create(fmt::format("{}-btn-sprite.png"_spr, name).c_str());
 	btnSprite->setID(fmt::format("{}-button-sprite"_spr, name));
@@ -706,6 +706,7 @@ void Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler fu
 
 	menu->addChild(btn);
 	if (menu->getLayout()) menu->updateLayout();
+	return btn;
 }
 
 void Utils::addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string_view nodeID, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {

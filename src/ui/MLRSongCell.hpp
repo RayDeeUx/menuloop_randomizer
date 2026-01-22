@@ -13,8 +13,10 @@ public:
 	bool init(const SongData& songData, const bool isEven, const bool isCompact = true);
 	bool initEmpty(const bool);
 	void onPlaySong(CCObject*);
-	void checkIfCurrentSong() const;
 	void toggleEven(const bool);
+	void checkIfCurrentSong() const;
+	void onSkipBkwdButton(CCObject*);
+	void onSkipFwrdButton(CCObject*);
 	void checkIfCurrentSongScheduler(float);
 	SongData m_songData;
 	cocos2d::CCLabelBMFont* m_songNameLabel;
@@ -22,4 +24,6 @@ public:
 	cocos2d::CCLayerColor* m_divider;
 	cocos2d::CCMenu* m_menu;
 	CCMenuItemSpriteExtra* m_playButton;
+	CCMenuItemSpriteExtra* m_bkwdButton;
+	CCMenuItemSpriteExtra* m_ffwdButton;
 };

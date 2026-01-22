@@ -12,4 +12,6 @@ namespace SongControl {
 	void regenSong();
 	void shuffleSong(const SongManager& songManager = SongManager::get());
 	void addSongToPlaylist(const std::string& songPath = SongManager::get().getCurrentSong());
+	void skipBackward();
+	void skipForward();
 }

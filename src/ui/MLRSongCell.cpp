@@ -1,4 +1,5 @@
 #include "MLRSongCell.hpp"
+#include "../SongControl.hpp"
 #include "../Utils.hpp"
 
 MLRSongCell* MLRSongCell::create(const SongData& SongData, const bool isEven, const bool isCompact) {
@@ -104,14 +105,26 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	CCMenuItemSpriteExtra* playButton = CCMenuItemSpriteExtra::create(cocos2d::CCSprite::createWithSpriteFrameName("GJ_playMusicBtn_001.png"), this, menu_selector(MLRSongCell::onPlaySong));
 	playButton->setID("song-cell-play-button"_spr);
 
+	CCMenuItemSpriteExtra* skipBkwd = Utils::addButton("skip-bkwd", menu_selector(MLRSongCell::onSkipBkwdButton), menu, this);
+	CCMenuItemSpriteExtra* skipFwrd = Utils::addButton("skip-fwrd", menu_selector(MLRSongCell::onSkipFwrdButton), menu, this);
+	skipBkwd->setVisible(false);
+	skipFwrd->setVisible(false);
+
+	geode::Layout* layout = geode::RowLayout::create()->setGap(0.f)->setAutoScale(true)->setAxisReverse(false)->setDefaultScaleLimits(.0001f, .75f);
+	layout->ignoreInvisibleChildren(true);
+
 	menu->addChild(playButton);
-	menu->setLayout(geode::RowLayout::create()->setGap(0.f)->setAutoScale(true)->setAxisReverse(true)->setDefaultScaleLimits(.0001f, .75f));
+	menu->addChild(skipBkwd);
+	menu->addChild(skipFwrd);
+	menu->setLayout(layout);
 
 	this->m_menu = menu;
 	this->m_songNameLabel = songNameLabel;
 	if (extraInfoLabl) this->m_extraInfoLabl = extraInfoLabl;
 	this->m_divider = divider;
 	this->m_playButton = playButton;
+	this->m_bkwdButton = skipBkwd;
+	this->m_ffwdButton = skipFwrd;
 
 	this->addChild(songNameLabel);
 	if (extraInfoLabl) this->addChild(extraInfoLabl);
@@ -158,8 +171,9 @@ void MLRSongCell::checkIfCurrentSong() const {
 		this->m_songNameLabel->setColor({255, 255, 255});
 	}
 
-	if (this->m_menu) this->m_menu->setVisible(!isCurrentSong);
 	if (this->m_playButton) this->m_playButton->setEnabled(!isCurrentSong);
+	if (this->m_bkwdButton) this->m_bkwdButton->setEnabled(isCurrentSong);
+	if (this->m_ffwdButton) this->m_ffwdButton->setEnabled(isCurrentSong);
 }
 
 void MLRSongCell::toggleEven(const bool isEven) {
@@ -170,4 +184,12 @@ void MLRSongCell::toggleEven(const bool isEven) {
 
 void MLRSongCell::checkIfCurrentSongScheduler(float) {
 	MLRSongCell::checkIfCurrentSong();
+}
+
+void MLRSongCell::onSkipBkwdButton(CCObject*) {
+	SongControl::skipBackward();
+}
+
+void MLRSongCell::onSkipFwrdButton(CCObject*) {
+	SongControl::skipForward();
 }
