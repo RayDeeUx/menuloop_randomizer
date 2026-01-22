@@ -2,9 +2,6 @@
 #include "Utils.hpp"
 #include <Geode/ui/GeodeUI.hpp>
 
-#define CAN_USE_PLAYBACK_CONTROLS (songManager.getFinishedCalculatingSongLengths() && songManager.getUndefined0Alk1m123TouchPrio() && songManager.getShowPlaybackProgressAndControls())
-#define INCREMENT_DECREMENT_AMOUNT songManager.getIncrementDecrementByMilliseconds()
-
 namespace SongControl {
 	void woahThereBuddy(const std::string& reason) {
 		geode::createQuickPopup(
