@@ -252,7 +252,7 @@ void SongControlMenu::checkDaSongPositions(float) {
 	SongControlMenu::forceSharpCornerIllusion();
 
 	SongManager& songManager = SongManager::get();
-	const bool canShowPlaybackProgress = CAN_USE_PLAYBACK_CONTROLS && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED;
+	const bool canShowPlaybackProgress = CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED;
 
 	if (this->m_currTimeLb) this->m_currTimeLb->setVisible(canShowPlaybackProgress);
 	if (this->m_totlTimeLb) this->m_totlTimeLb->setVisible(canShowPlaybackProgress);

@@ -199,7 +199,7 @@ void MLRSongCell::checkIfCurrentSong() const {
 	}
 
 	if (numVisible != newVisible && this->m_menu->getLayout()) {
-		this->m_menu->setContentWidth(std::clamp<float>((30.f * newVisible) * (this->getContentHeight() / 36.f), 15.f, 30.f));
+		this->m_menu->setContentWidth(std::clamp<float>(30.f / (36.f / this->getContentHeight()) * newVisible, 15.f, 30.f));
 		this->m_menu->updateLayout();
 	}
 }
