@@ -5,6 +5,10 @@
   - You can toggle this option off in the mod settings.
   - You can also adjust how many milliseconds to increment/decrement by in the mod settings.
   - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> for this feature.
+- <cg>Added</c> song name indicators for the song name text in the Control Panel.
+  - You can toggle this option off in the mod settings.
+  - Song name indicators for song name label are the same as those seen in the Song List menu.
+  - For a number of reasons, the green "current song" indicator and the small dark gradient indicator for Jukebox songs does not apply to the Control Panel.
 - <co>Fixed</c> an issue where menu loop positions wouldn't be restored when leaving a level whose most recently played song was also the most recently selected menu loop.
 - <co>Fixed</c> several UI-related issues related to setting/unsetting a Song Override.
 ## v1.11.3, v1.11.4, and v1.11.5

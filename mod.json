@@ -294,6 +294,12 @@
 			"default": true,
 			"enable-if": "loaded:alk.better-touch-prio"
 		},
+		"songIndicatorsInControlPanel": {
+			"name": "Control Panel: Song Indicators",
+			"description": "Apply the song indicators seen in the Song List menu into the Control Panel's song name text.",
+			"type": "bool",
+			"default": true
+		},
 		"showPlaybackProgressAndControls": {
 			"name": "Control Panel: Show Playback Progress and Controls",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO CONTROLS OR PROGRESS BAR WILL APPEAR.__***</c>\n\nChoose if you want to show playback controls and playback progress about the currently playing song in the Control Panel menu.",
