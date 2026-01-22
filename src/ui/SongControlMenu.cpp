@@ -438,4 +438,14 @@ void SongControlMenu::updateCurrentLabel() {
 		this->m_headerLabl->setString(newHeaderString.c_str());
 	}
 	this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.0f, .0001f);
+	const SongType songType = songManager.getSongToSongDataEntries().contains(songManager.getCurrentSong()) ? SongType::Regular : songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.type;
+	this->m_smallLabel->setSkewX(0.f);
+	if (songType == SongType::Favorited) {
+		this->m_smallLabel->setColor({255, 175, 0});
+		this->m_smallLabel->setSkewX(10.f);
+	} else if (songType == SongType::Blacklisted) {
+		this->m_smallLabel->setColor({0, 0, 0});
+	} else {
+		this->m_smallLabel->setColor({255, 255, 255});
+	}
 }
