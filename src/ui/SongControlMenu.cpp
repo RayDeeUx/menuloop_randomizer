@@ -127,11 +127,11 @@ bool SongControlMenu::setup() {
 	// DONT ADD this->m_totlTimeLb AS A CHILD -- SongControlMenu::updateCurrentLabel() HANDLES THAT!
 
 	cocos2d::CCLayerColor* currProgBar = cocos2d::CCLayerColor::create({200, 200, 200, 255});
-	currProgBar->setContentSize({(this->b->getContentWidth() / 2.f) + 0.f, 2.5f});
+	currProgBar->setContentSize({0.f, 2.5f});
 	currProgBar->setAnchorPoint({0.f, 0.f});
 	this->m_currProgBar = currProgBar;
 
-	cocos2d::CCLayerColor* darkProgBar = cocos2d::CCLayerColor::create({30, 30, 30, 255});
+	cocos2d::CCLayerColor* darkProgBar = cocos2d::CCLayerColor::create({80, 80, 80, 255});
 	darkProgBar->setContentSize({this->b->getContentWidth(), 2.5f});
 	darkProgBar->setAnchorPoint({0.f, 0.f});
 	darkProgBar->addChild(currProgBar);

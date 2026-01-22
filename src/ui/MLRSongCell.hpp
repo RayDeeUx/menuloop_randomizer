@@ -14,6 +14,7 @@ public:
 	bool initEmpty(const bool);
 	void onPlaySong(CCObject*);
 	void toggleEven(const bool);
+	void updateProgressBar() const;
 	void checkIfCurrentSong() const;
 	void onSkipBkwdButton(CCObject*);
 	void onSkipFwrdButton(CCObject*);
@@ -22,6 +23,8 @@ public:
 	cocos2d::CCLabelBMFont* m_songNameLabel;
 	cocos2d::CCLabelBMFont* m_extraInfoLabl;
 	cocos2d::CCLayerColor* m_divider;
+	cocos2d::CCLayerColor* m_currentB;
+	cocos2d::CCLayerColor* m_totalBar;
 	cocos2d::CCMenu* m_menu;
 	CCMenuItemSpriteExtra* m_playButton;
 	CCMenuItemSpriteExtra* m_bkwdButton;

@@ -111,6 +111,22 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		CCMenuItemSpriteExtra* skipFwrd = Utils::addButton("skip-fwrd", menu_selector(MLRSongCell::onSkipFwrdButton), menu, this, true);
 		skipBkwd->setVisible(false);
 		skipFwrd->setVisible(false);
+
+		CCLayerColor* total = CCLayerColor::create({0, 0, 0, 127}, 356.f, 5.f / compactModeFactor);
+		total->setAnchorPoint({0.f, 0.f});
+
+		CCLayerColor* current = CCLayerColor::create({255, 255, 255, 255}, 356.f, 5.f / compactModeFactor);
+		current->setAnchorPoint({0.f, 0.f});
+
+		total->addChild(current);
+		current->setContentWidth(0.f);
+		total->setPosition({0.f, .5f});
+
+		total->setID("total-progress"_spr);
+		current->setID("current-progress"_spr);
+
+		this->m_totalBar = total;
+		this->m_currentB = current;
 		this->m_bkwdButton = skipBkwd;
 		this->m_ffwdButton = skipFwrd;
 	}
@@ -159,6 +175,17 @@ void MLRSongCell::onPlaySong(CCObject*) {
 	Utils::newCardAndDisplayNameFromCurrentSong();
 }
 
+void MLRSongCell::updateProgressBar() const {
+	SongManager& songManager = SongManager::get();
+	FMODAudioEngine* fmod = FMODAudioEngine::get();
+	const std::string& currSong = songManager.getCurrentSong();
+	if (fmod->getActiveMusic(0) == currSong && songManager.getSongToSongDataEntries().contains(currSong)) {
+		const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
+		const int lastPosition = songManager.getLastMenuLoopPosition();
+		this->m_currentB->setContentWidth(((1.f * lastPosition) / (1.f * fullLength)) * this->m_totalBar->getContentWidth());
+	}
+}
+
 void MLRSongCell::checkIfCurrentSong() const {
 	if (this->m_songData.isEmpty || !this->m_songNameLabel || !this->m_songNameLabel->getParent() || !this->m_menu) return;
 	const bool isCurrentSong = this->m_songData.actualFilePath == SongManager::get().getCurrentSong();
@@ -174,10 +201,14 @@ void MLRSongCell::checkIfCurrentSong() const {
 		this->m_songNameLabel->getParent()->setTag(12192025);
 		if (this->m_songData.type == SongType::Favorited) this->m_songNameLabel->setColor({0, 255, 255});
 		else this->m_songNameLabel->setColor({0, 255, 0});
+		if (this->m_currentB && this->m_totalBar) MLRSongCell::updateProgressBar();
 	} else {
 		this->m_songNameLabel->getParent()->setTag(-1);
 		this->m_songNameLabel->setColor({255, 255, 255});
 	}
+
+	if (this->m_totalBar) this->m_totalBar->setVisible(isCurrentSong);
+	if (this->m_currentB) this->m_currentB->setVisible(isCurrentSong);
 
 	if (this->m_playButton) {
 		this->m_playButton->setVisible(!isCurrentSong);
