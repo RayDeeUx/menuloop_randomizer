@@ -194,7 +194,10 @@ void MLRSongCell::checkIfCurrentSong() const {
 		newVisible++;
 	}
 
-	if (numVisible != newVisible && this->m_menu->getLayout()) this->m_menu->updateLayout();
+	if (numVisible != newVisible && this->m_menu->getLayout()) {
+		this->m_menu->updateLayout();
+		this->m_menu->setContentWidth(30.f * newVisible);
+	}
 }
 
 void MLRSongCell::toggleEven(const bool isEven) {
