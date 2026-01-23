@@ -55,7 +55,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	if (songData.type == SongType::Favorited) songNameLabel->setFntFile("goldFont.fnt");
 	else if (songData.type == SongType::Blacklisted) songNameLabel->setOpacity(128); // opacity is more apparopriate
 	// else if (songData.type == SongType::Regular) songNameLabel->setColor({255, 255, 255}); // filler code lol!
-	else if (songData.isJukeboxSong) {
+	else if (songData.isFromJukeboxDirectory) {
 		// dont modify songnamelabel, add gradient
 		cocos2d::CCLayerGradient* jukeboxGradient = cocos2d::CCLayerGradient::create({96, 96, 96, 128}, {0, 0, 0, 0});
 		jukeboxGradient->setContentSize({356.f, this->getContentHeight() / 4.f});
@@ -65,7 +65,8 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		this->addChildAtPosition(jukeboxGradient, geode::Anchor::Top);
 	}
 
-	if (!songData.isFromConfigOrAltDir && !songData.isFromMusicDownloadManager && !songData.isJukeboxSong) songNameLabel->setSkewX(10.f);
+	if (!songData.isFromConfigOrAltDir && !songData.isFromMusicDownloadManager && !songData.isFromJukeboxDirectory) songNameLabel->setSkewX(10.f);
+	if (songData.wasReplacedByAnotherJukeboxSong) songNameLabel->setColor({0,0,0});
 	songNameLabel->limitLabelWidth(356.f * (.8f / compactModeFactor), std::clamp<float>((.75f / compactModeFactor), .3, .75), .001f);
 	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.displayName));
 

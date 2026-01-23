@@ -478,6 +478,7 @@ void Utils::popualteSongToSongDataMap() {
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
 
 		const std::filesystem::path& theirPath = Utils::toProblematicString(song);
+		const int songID = geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(-1);
 
 		std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
 		std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(theirPath, ed);
@@ -489,10 +490,11 @@ void Utils::popualteSongToSongDataMap() {
 			.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
 			.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
 			.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(theirPath.parent_path()),
-			.isFromMusicDownloadManager = mdm->pathForSong(geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(-1)) == song,
-			.isJukeboxSong = geode::utils::string::contains(std::string(song), "fleym.nongd"),
+			.isFromMusicDownloadManager = mdm->pathForSong(songID) == song,
+			.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), "fleym.nongd"),
 			.isEmpty = false
 		};
+		// songData.wasReplacedByAnotherJukeboxSong = mdm->getSongInfoObject(songID) ? mdm->getMusicArtistForID(mdm->getSongInfoObject(songID)->m_artistID)->m_artistName != mdm->getSongInfoObject(songID)->m_artistName : false;
 		songData.displayName = Utils::toNormalizedString(SongListLayer::generateDisplayName(songData)),
 
 		songToSongData.emplace(theirPath, songData);

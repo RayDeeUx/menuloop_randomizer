@@ -17,7 +17,8 @@ struct SongData {
 	std::filesystem::file_time_type songWriteTime {};
 	bool isFromConfigOrAltDir = false;
 	bool isFromMusicDownloadManager = false;
-	bool isJukeboxSong = false;
+	bool isFromJukeboxDirectory = false;
+	bool wasReplacedByAnotherJukeboxSong = false;
 	bool isEmpty = false;
 };
 
