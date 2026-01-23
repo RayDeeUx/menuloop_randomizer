@@ -65,14 +65,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		this->addChildAtPosition(jukeboxGradient, geode::Anchor::Top);
 	}
 
-	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
-	const int songID = geode::utils::numFromString<int>(desiredFileName).unwrapOr(-1);
-	if (songID > 0 && !songData.isFromConfigOrAltDir && mdm->getSongInfoObject(songID)) {
-		const std::string& pathForSong = static_cast<std::string>(mdm->pathForSong(songID));
-		if (Utils::toProblematicString(songData.actualFilePath) != Utils::toProblematicString(pathForSong) && !geode::utils::string::contains(pathForSong, "fleym.nongd")) {
-			songNameLabel->setSkewX(10.f);
-		}
-	}
+	if (!songData.isFromConfigOrAltDir && !songData.isFromMusicDownloadManager && !songData.isJukeboxSong) songNameLabel->setSkewX(10.f);
 	songNameLabel->limitLabelWidth(356.f * (.8f / compactModeFactor), std::clamp<float>((.75f / compactModeFactor), .3, .75), .001f);
 	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.displayName));
 
