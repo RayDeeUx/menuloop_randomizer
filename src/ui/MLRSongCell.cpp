@@ -68,7 +68,8 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	const int songID = geode::utils::numFromString<int>(desiredFileName).unwrapOr(-1);
 	if (songID > 0 && !songData.isFromConfigOrAltDir && mdm->getSongInfoObject(songID)) {
-		if (Utils::toProblematicString(songData.actualFilePath) != Utils::toProblematicString(static_cast<std::string>(mdm->pathForSong(songID)))) {
+		const std::string& pathForSong = static_cast<std::string>(mdm->pathForSong(songID));
+		if (Utils::toProblematicString(songData.actualFilePath) != Utils::toProblematicString(pathForSong) && !geode::utils::string::contains(pathForSong, "fleym.nongd")) {
 			songNameLabel->setSkewX(10.f);
 		}
 	}
