@@ -490,6 +490,7 @@ void Utils::popualteSongToSongDataMap() {
 			.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
 			.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(theirPath.parent_path()),
 			.isFromMusicDownloadManager = mdm->pathForSong(geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(-1)) == song,
+			.isJukeboxSong = geode::utils::string::contains(std::string(song), "fleym.nongd"),
 			.isEmpty = false
 		};
 		songData.displayName = Utils::toNormalizedString(SongListLayer::generateDisplayName(songData)),
