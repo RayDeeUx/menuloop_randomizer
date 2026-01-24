@@ -47,7 +47,6 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	const float compactModeFactor = isCompact ? static_cast<float>(std::clamp<double>(geode::Mod::get()->getSettingValue<double>("compactModeScaleFactor"), 1.5, 2.0)) : 1.f;
 	this->setContentHeight(36.f / compactModeFactor);
 
-	const std::string& desiredFileName = geode::utils::string::replace(songData.fileName, songData.fileExtension, "");
 	cocos2d::CCLabelBMFont* songNameLabel = cocos2d::CCLabelBMFont::create(songData.displayName.c_str(), "bigFont.fnt");
 	songNameLabel->setAnchorPoint({.0f, .5f});
 	songNameLabel->setPosition({15, (this->getContentHeight() / 2.f) + 1.f});

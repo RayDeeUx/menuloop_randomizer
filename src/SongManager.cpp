@@ -213,8 +213,7 @@ bool SongManager::songSizeIsBad() const {
 	return m_songs.empty() || m_songs.size() < 2;
 }
 
-void SongManager::setCurrentSongDisplayName(std::string displayName) {
-	std::transform(displayName.begin(), displayName.end(), displayName.begin(), [](const unsigned char c){ return c < 128 ? static_cast<char>(c) : '?'; });
+void SongManager::setCurrentSongDisplayName(const std::string& displayName) {
 	m_displayName = displayName;
 }
 

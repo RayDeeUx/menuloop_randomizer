@@ -75,7 +75,7 @@ class SongManager {
 	std::string getPreviousSong();
 	bool isPreviousSong() const;
 	bool songSizeIsBad() const;
-	void setCurrentSongDisplayName(std::string);
+	void setCurrentSongDisplayName(const std::string&);
 	std::string getCurrentSongDisplayName();
 	void incrementTowerRepeatCount();
 	void resetTowerRepeatCount();

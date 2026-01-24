@@ -250,10 +250,12 @@ std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
 	const bool isMenuLoopFromNG = songInfo->m_songID == 584131;
 	const std::string& robtopSuffix = isMenuLoopFromNG ? " [OOF!]" : "";
 	Utils::adjustSongInfoIfJukeboxReplacedIt(songInfo);
-	if (formatSetting == "Song Name, Artist, Song ID") return fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
-	if (formatSetting == "Song Name + Artist") return fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
-	if (formatSetting == "Song Name + Song ID") return fmt::format("{} ({}){}", songInfo->m_songName, songInfo->m_songID, robtopSuffix);
-	return fmt::format("{}", songInfo->m_songName);
+	std::string displayName = fmt::format("{}", songInfo->m_songName);
+	if (formatSetting == "Song Name, Artist, Song ID") displayName = fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
+	else if (formatSetting == "Song Name + Artist") displayName = fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
+	else if (formatSetting == "Song Name + Song ID") displayName = fmt::format("{} ({}){}", songInfo->m_songName, songInfo->m_songID, robtopSuffix);
+	std::transform(displayName.begin(), displayName.end(), displayName.begin(), [](const unsigned char c){ return c < 128 ? static_cast<char>(c) : '?'; });
+	return displayName;
 }
 
 void Utils::copyCurrentSongName() {
