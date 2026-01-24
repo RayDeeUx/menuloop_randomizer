@@ -103,8 +103,6 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		}
 	}
 
-	desiredContentHeight += 5.f;
-
 	if (SONG_SORTING_ENABLED) {
 		if (SAVED("songListSortAlphabetically")) {
 			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
@@ -137,6 +135,9 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		scrollLayer->m_contentLayer->addChild(cell);
 		isEven = !isEven;
 	}
+
+	scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(true)); // intentonally blank song cell for padding for progress bar
+	desiredContentHeight += 3.5f;
 
 	scrollLayer->m_contentLayer->updateLayout();
 	scrollLayer->m_contentLayer->setContentHeight(desiredContentHeight);
