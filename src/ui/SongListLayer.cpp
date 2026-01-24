@@ -589,7 +589,7 @@ void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInpu
 	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
 	if (!placeholderLabelMaybe || placeholderLabelMaybe->getColor() != cocos2d::ccColor3B{150, 150, 150}) return;
 	if (updateString) placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", SongManager::get().getCurrentSongDisplayName()).c_str());
-	placeholderLabelMaybe->limitLabelWidth(350.f, .5f, .0001f);
+	if (placeholderLabelMaybe->isVisible()) placeholderLabelMaybe->limitLabelWidth(350.f, .5f, .0001f);
 	placeholderLabelMaybe->setTag(12242025);
 }
 
