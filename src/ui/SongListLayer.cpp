@@ -213,7 +213,9 @@ bool SongListLayer::setup() {
 		clearButton->setID("song-list-clear-button"_spr);
 		searchBarMenu->addChild(clearButton);
 
-		geode::TextInput* searchBar = geode::TextInput::create(370.f, fmt::format("Search... (Current Song: {})", songManager.getCurrentSongDisplayName()));
+		std::string currSong = songManager.getCurrentSongDisplayName();
+		std::transform(currSong.begin(), currSong.end(), currSong.begin(), [](const unsigned char c){ return c < 128 ? static_cast<char>(c) : '?'; });
+		geode::TextInput* searchBar = geode::TextInput::create(370.f, fmt::format("Search... (Current Song: {})", currSong));
 		searchBar->setCommonFilter(geode::CommonFilter::Any);
 		searchBar->setTextAlign(geode::TextInputAlign::Left);
 		searchBar->setPosition({145.f, 17.f});
@@ -589,7 +591,9 @@ void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInpu
 	cocos2d::CCLabelBMFont* placeholderLabelMaybe = static_cast<cocos2d::CCLabelBMFont*>(inputNode->getChildByTag(12242025));
 	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
 	if (!placeholderLabelMaybe || placeholderLabelMaybe->getColor() != cocos2d::ccColor3B{150, 150, 150}) return;
-	if (updateString) placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", SongManager::get().getCurrentSongDisplayName()).c_str());
+	std::string currSong = SongManager::get().getCurrentSongDisplayName();
+	std::transform(currSong.begin(), currSong.end(), currSong.begin(), [](const unsigned char c){ return c < 128 ? static_cast<char>(c) : '?'; });
+	if (updateString) placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", currSong).c_str());
 	placeholderLabelMaybe->limitLabelWidth(350.f, .5f, .0001f);
 	placeholderLabelMaybe->setTag(12242025);
 }
