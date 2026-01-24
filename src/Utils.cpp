@@ -235,6 +235,7 @@ std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
 	const std::string& formatSetting = geode::Mod::get()->getSettingValue<std::string>("songFormatNGML");
 	const bool isMenuLoopFromNG = songInfo->m_songID == 584131;
 	const std::string& robtopSuffix = isMenuLoopFromNG ? " [OOF!]" : "";
+	bool shouldReplaceDisplayName = false;
 	if (songManager.getFinishedCalculatingSongLengths()) {
 		if (SongToSongData::iterator pairedData = songManager.getSongToSongDataEntries().find(currentSongPath); pairedData != songManager.getSongToSongDataEntries().end() && static_cast<SongData>(pairedData->second).songInfoWasOverwrittenProbably) {
 			const std::filesystem::path& fileName = static_cast<std::filesystem::path>(pairedData->first).stem();
@@ -245,13 +246,18 @@ std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
 				auto barBaz = parsed.unwrap().get("default").unwrap().get("artist");
 				if (fooBar.isOk()) songInfo->m_songName = fooBar.unwrap().asString().unwrapOr(songInfo->m_songName);
 				if (barBaz.isOk()) songInfo->m_artistName = barBaz.unwrap().asString().unwrapOr(songInfo->m_artistName);
+				if (fooBar.isOk() && barBaz.isOk()) shouldReplaceDisplayName = true;
 			}
 		}
 	}
-	if (formatSetting == "Song Name, Artist, Song ID") return fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
-	if (formatSetting == "Song Name + Artist") return fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
-	if (formatSetting == "Song Name + Song ID") return fmt::format("{} ({}){}", songInfo->m_songName, songInfo->m_songID, robtopSuffix);
-	return fmt::format("{}", songInfo->m_songName);
+	std::string result;
+	if (formatSetting == "Song Name, Artist, Song ID") result = fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
+	else if (formatSetting == "Song Name + Artist") result = fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
+	else if (formatSetting == "Song Name + Song ID") result = fmt::format("{} ({}){}", songInfo->m_songName, songInfo->m_songID, robtopSuffix);
+	else result = fmt::format("{}", songInfo->m_songName);
+
+	if (songManager.getFinishedCalculatingSongLengths() && shouldReplaceDisplayName) songManager.getSongToSongDataEntries().find(currentSongPath)->second.displayName = result;
+	return result;
 }
 
 void Utils::copyCurrentSongName() {
@@ -665,13 +671,13 @@ std::string Utils::getSongName() {
 }
 
 std::string Utils::getSongArtist() {
-	const auto songInfo = Utils::getSongInfoObject();
+	SongInfoObject* songInfo = Utils::getSongInfoObject();
 	if (!songInfo) return "";
 	return songInfo->m_artistName;
 }
 
 int Utils::getSongID() {
-	const auto songInfo = Utils::getSongInfoObject();
+	SongInfoObject* songInfo = Utils::getSongInfoObject();
 	if (!songInfo) return -1;
 	return songInfo->m_songID;
 }
