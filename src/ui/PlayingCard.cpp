@@ -4,7 +4,7 @@
 
 using namespace geode::prelude;
 
-static const std::regex fileExtensionRegex = std::regex(R"(\.(?:mp3|ogg|oga|flac|wav)$)");
+static const std::regex fileExtensionRegex = std::regex(R"(\.(?:mp3|ogg|oga|flac|wav|aiff|aif|aifc|midi|mid|m3u|m3u8|wma|wmv|asf|asx|mod|it|mp2|pls|s3m)$)");
 static const std::regex unsupportedCharRegex = std::regex(R"([^[\]+,. !@#$%^&*()'|`~•/:;<>=?\-\w\\])");
 
 PlayingCard* PlayingCard::create(const std::string& output) {

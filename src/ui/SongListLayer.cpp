@@ -213,9 +213,7 @@ bool SongListLayer::setup() {
 		clearButton->setID("song-list-clear-button"_spr);
 		searchBarMenu->addChild(clearButton);
 
-		std::string currSong = songManager.getCurrentSongDisplayName();
-		std::transform(currSong.begin(), currSong.end(), currSong.begin(), [](const unsigned char c){ return c < 128 ? static_cast<char>(c) : '?'; });
-		geode::TextInput* searchBar = geode::TextInput::create(370.f, fmt::format("Search... (Current Song: {})", currSong));
+		geode::TextInput* searchBar = geode::TextInput::create(370.f, fmt::format("Search... (Current Song: {})", songManager.getCurrentSongDisplayName()));
 		searchBar->setCommonFilter(geode::CommonFilter::Any);
 		searchBar->setTextAlign(geode::TextInputAlign::Left);
 		searchBar->setPosition({145.f, 17.f});
@@ -566,15 +564,14 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 std::string SongListLayer::generateDisplayName(SongData& songData) {
 	if (!songData.displayName.empty()) return songData.displayName;
 
-	const std::string& displayName = Utils::toNormalizedString(Utils::toProblematicString(songData.actualFilePath).stem());
+	std::string displayName = Utils::toNormalizedString(Utils::toProblematicString(songData.actualFilePath).stem());
 	const int songID = geode::utils::numFromString<int>(displayName).unwrapOr(-1);
 	if (songID > 0 && !songData.isFromConfigOrAltDir) {
 		MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
-		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) return Utils::getFormattedNGMLSongName(songInfoObject);
-		// return fmt::format("{} - No song info found :(", songID); // geode::utils::numFromString is a bit fucking stupid and wont fail if first digit can be an integer
-		return displayName;
+		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) displayName = Utils::getFormattedNGMLSongName(songInfoObject);
 	}
 
+	std::transform(displayName.begin(), displayName.end(), displayName.begin(), [](const unsigned char c){ return c < 128 ? static_cast<char>(c) : '?'; });
 	return displayName;
 }
 
@@ -591,9 +588,7 @@ void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInpu
 	cocos2d::CCLabelBMFont* placeholderLabelMaybe = static_cast<cocos2d::CCLabelBMFont*>(inputNode->getChildByTag(12242025));
 	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
 	if (!placeholderLabelMaybe || placeholderLabelMaybe->getColor() != cocos2d::ccColor3B{150, 150, 150}) return;
-	std::string currSong = SongManager::get().getCurrentSongDisplayName();
-	std::transform(currSong.begin(), currSong.end(), currSong.begin(), [](const unsigned char c){ return c < 128 ? static_cast<char>(c) : '?'; });
-	if (updateString) placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", currSong).c_str());
+	if (updateString) placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", SongManager::get().getCurrentSongDisplayName()).c_str());
 	placeholderLabelMaybe->limitLabelWidth(350.f, .5f, .0001f);
 	placeholderLabelMaybe->setTag(12242025);
 }
