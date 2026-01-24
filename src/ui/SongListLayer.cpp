@@ -405,7 +405,7 @@ bool SongListLayer::setup() {
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE) {
 		SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE)->getInputNode());
-		this->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), .125f);
+		this->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
 	}
 
 	return true;
