@@ -103,6 +103,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		}
 	}
 
+	desiredContentHeight += 5.f;
+
 	if (SONG_SORTING_ENABLED) {
 		if (SAVED("songListSortAlphabetically")) {
 			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
