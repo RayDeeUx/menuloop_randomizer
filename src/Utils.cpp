@@ -508,7 +508,7 @@ void Utils::popualteSongToSongDataMap() {
 		if (!songData.isFromConfigOrAltDir && songData.isFromMusicDownloadManager && mdm->getSongInfoObject(songID)) {
 			songData.songInfoWasOverwrittenProbably = std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID));
 		}
-		songData.displayName = Utils::toNormalizedString(SongListLayer::generateDisplayName(songData)),
+		songData.displayName = SongListLayer::generateDisplayName(songData),
 
 		songToSongData.emplace(theirPath, songData);
 		tempKeys.push_back(songData.actualFilePath);

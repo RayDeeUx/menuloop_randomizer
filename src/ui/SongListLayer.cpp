@@ -564,12 +564,13 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 std::string SongListLayer::generateDisplayName(SongData& songData) {
 	if (!songData.displayName.empty()) return songData.displayName;
 
-	const std::string& displayName = geode::utils::string::replace(songData.fileName, songData.fileExtension, "");
+	const std::string& displayName = Utils::toNormalizedString(Utils::toProblematicString(songData.actualFilePath).stem());
 	const int songID = geode::utils::numFromString<int>(displayName).unwrapOr(-1);
 	if (songID > 0 && !songData.isFromConfigOrAltDir) {
 		MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) return Utils::getFormattedNGMLSongName(songInfoObject);
-		return fmt::format("{} - No song info found :(", songID);
+		// return fmt::format("{} - No song info found :(", songID); // geode::utils::numFromString is a bit fucking stupid and wont fail if first digit can be an integer
+		return displayName;
 	}
 
 	return displayName;
