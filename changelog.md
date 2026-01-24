@@ -11,6 +11,8 @@
   - For a number of reasons, the green "current song" indicator and the small dark gradient indicator for Jukebox songs do not apply to the Control Panel.
 - <co>Fixed</c> an issue where menu loop positions wouldn't be restored when leaving a level whose most recently played song was also the most recently selected menu loop.
 - <co>Fixed</c> several UI-related issues related to setting/unsetting a Song Override.
+- <co>Fixed</c> some issues with songs containing non-ASCII characters in ther titles.
+  - This also affects where these songs are placed when sorting songs alphabetically in the Song List menu.
 - <co>"Fixed"</c> a long-standing bug where song names and artist names modified by Jukebox would spill over to menu loop display names.
   - The quotation marks are there because the approach involved manually parsing Jukebox's own JSON data to fetch the original song name/artist name.
   - <cr>Please don't use this changelog item as a justification to harass any of the developers of the Jukebox mod, *especially* if you don't know what's going on beneath the hood in either mod.</c>
