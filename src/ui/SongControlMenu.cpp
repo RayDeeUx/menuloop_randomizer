@@ -272,7 +272,7 @@ void SongControlMenu::checkDaSongPositions(float) {
 	const std::string& currSong = songManager.getCurrentSong();
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
 
-	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
+	const int fullLength = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songManager.getCurrentSong()))->second.songLength;
 	const int lastPosition = songManager.getLastMenuLoopPosition();
 
 	this->m_currTimeLb->setString(fmt::format("{}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60)).c_str());
@@ -391,7 +391,7 @@ void SongControlMenu::updateCurrentLabel() {
 		this->m_smallLabel->setColor({255, 255, 255});
 		return;
 	}
-	const auto& entry = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong());
+	const auto& entry = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songManager.getCurrentSong()));
 	if (entry == songManager.getSongToSongDataEntries().end()) return;
 	const SongData& songData = entry->second;
 	const SongType songType = songData.type;

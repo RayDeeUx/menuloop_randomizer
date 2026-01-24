@@ -147,20 +147,16 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 
 void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs() {
 	SongManager& songManager = SongManager::get();
-	const std::filesystem::path& currentSong = std::filesystem::path(songManager.getCurrentSong());
+	const std::filesystem::path& currentSong = Utils::toProblematicString(songManager.getCurrentSong());
 	const std::string& songFileName = Utils::toNormalizedString(currentSong.filename());
-	const std::string& songFileExtension = Utils::toNormalizedString(currentSong.extension());
-	const std::string& customSongDisplayName = geode::utils::string::replace(songFileName, songFileExtension, "");
+	const std::string& customSongDisplayName = Utils::toNormalizedString(currentSong.stem());
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return songManager.setCurrentSongDisplayName(customSongDisplayName);
 	if (songManager.isOriginalMenuLoop()) return songManager.setCurrentSongDisplayName("Original Menu Loop by RobTop");
-	const size_t dotPos = songFileName.find_last_of('.');
-	if (dotPos == std::string::npos) return songManager.setCurrentSongDisplayName("Unknown");
-	const std::string& songFileNameWithoutExtension = songFileName.substr(0, dotPos);
-	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameWithoutExtension);
+	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(customSongDisplayName);
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	if (songFileNameAsID.isErr()) {
-		if (!songManager.getPlaylistIsEmpty()) return songManager.setCurrentSongDisplayName(songFileNameWithoutExtension);
-		return songManager.setCurrentSongDisplayName(fmt::format("Unknown ({})", songFileNameWithoutExtension));
+		if (!songManager.getPlaylistIsEmpty()) return songManager.setCurrentSongDisplayName(customSongDisplayName);
+		return songManager.setCurrentSongDisplayName(fmt::format("Unknown ({})", customSongDisplayName));
 	}
 	const int songID = songFileNameAsID.unwrapOr(-1);
 	const bool isNotFromConfigOrAltDir = !Utils::isFromConfigOrAlternateDir(currentSong);
@@ -232,11 +228,36 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 }
 
 std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
-	if (Utils::getBool("useCustomSongs") && SongManager::get().getPlaylistIsEmpty()) return Utils::currentCustomSong();
-	if (!songInfo) return Utils::toNormalizedString(std::filesystem::path(SongManager::get().getCurrentSong()).filename());
+	SongManager& songManager = SongManager::get();
+	const std::filesystem::path& currentSongPath = Utils::toProblematicString(songManager.getCurrentSong());
+	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return Utils::currentCustomSong();
+	if (!songInfo) return Utils::toNormalizedString(currentSongPath.filename());
 	const std::string& formatSetting = geode::Mod::get()->getSettingValue<std::string>("songFormatNGML");
 	const bool isMenuLoopFromNG = songInfo->m_songID == 584131;
 	const std::string& robtopSuffix = isMenuLoopFromNG ? " [OOF!]" : "";
+	if (songManager.getFinishedCalculatingSongLengths()) if (SongToSongData::iterator pairedData = songManager.getSongToSongDataEntries().find(currentSongPath); pairedData != songManager.getSongToSongDataEntries().end() && static_cast<SongData>(pairedData->second).songInfoWasOverwrittenProbably) {
+		geode::log::info("pairedData found");
+		const std::filesystem::path& fileName = static_cast<std::filesystem::path>(pairedData->first).stem();
+		geode::log::info("fileName: {}", fileName);
+		const std::filesystem::path& targetPath = geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", Utils::toNormalizedString(fileName));
+		geode::log::info("targetPath: {}", targetPath);
+		auto parsed = geode::utils::file::readJson(targetPath);
+		geode::log::info("parsed.isOk(): {}", parsed.isOk());
+		if (parsed.isOk()) geode::log::info("parsed.unwrap().contains(\"default\"): {}", parsed.unwrap().contains("default"));
+		if (parsed.isOk()) geode::log::info("parsed.unwrap().get(\"default\").isOk(): {}", parsed.unwrap().get("default").isOk());
+		if (parsed.isOk() && parsed.unwrap().contains("default") && parsed.unwrap().get("default").isOk()) {
+			auto fooBar = parsed.unwrap().get("default").unwrap().get("name");
+			auto barBaz = parsed.unwrap().get("default").unwrap().get("artist");
+			geode::log::info("fooBar.isOk(): {}", fooBar.isOk());
+			geode::log::info("barBaz.isOk(): {}", barBaz.isOk());
+			geode::log::info("songInfo->m_songName BEFORE: {}", songInfo->m_songName);
+			geode::log::info("songInfo->m_artistName BEFORE: {}", songInfo->m_artistName);
+			if (fooBar.isOk()) songInfo->m_songName = fooBar.unwrap().asString().unwrapOr(songInfo->m_songName);
+			if (barBaz.isOk()) songInfo->m_artistName = barBaz.unwrap().asString().unwrapOr(songInfo->m_artistName);
+			geode::log::info("songInfo->m_songName AFTER: {}", songInfo->m_songName);
+			geode::log::info("songInfo->m_artistName AFTER: {}", songInfo->m_artistName);
+		} else geode::log::info("FUCKITY FUCK JSON PARSE FAILED: {}", currentSongPath.stem());
+	} else if (songManager.getFinishedCalculatingSongLengths()) geode::log::info("FUCKITY FUCK PAIRED DATA FAILED: {}, static_cast<SongData>(pairedData->second).songInfoWasOverwrittenProbably: {}", currentSongPath.stem(), static_cast<SongData>(pairedData->second).songInfoWasOverwrittenProbably);
 	if (formatSetting == "Song Name, Artist, Song ID") return fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
 	if (formatSetting == "Song Name + Artist") return fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
 	if (formatSetting == "Song Name + Song ID") return fmt::format("{} ({}){}", songInfo->m_songName, songInfo->m_songID, robtopSuffix);
@@ -478,7 +499,7 @@ void Utils::popualteSongToSongDataMap() {
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
 
 		const std::filesystem::path& theirPath = Utils::toProblematicString(song);
-		const int songID = geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(-1);
+		const int songID = geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(0);
 
 		std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
 		std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(theirPath, ed);
@@ -494,7 +515,9 @@ void Utils::popualteSongToSongDataMap() {
 			.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), "fleym.nongd"),
 			.isEmpty = false
 		};
-		// songData.wasReplacedByAnotherJukeboxSong = mdm->getSongInfoObject(songID) ? mdm->getMusicArtistForID(mdm->getSongInfoObject(songID)->m_artistID)->m_artistName != mdm->getSongInfoObject(songID)->m_artistName : false;
+		if (!songData.isFromConfigOrAltDir && songData.isFromMusicDownloadManager && mdm->getSongInfoObject(songID)) {
+			songData.songInfoWasOverwrittenProbably = std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID));
+		}
 		songData.displayName = Utils::toNormalizedString(SongListLayer::generateDisplayName(songData)),
 
 		songToSongData.emplace(theirPath, songData);
@@ -619,7 +642,32 @@ SongInfoObject* Utils::getSongInfoObject() {
 	const std::string& songFileNameAsAtring = songFileName.substr(0, dotPos);
 	const geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(songFileNameAsAtring);
 	if (songFileNameAsID.isErr()) return nullptr;
-	return mdm->getSongInfoObject(songFileNameAsID.unwrapOr(-1));
+	// RESTORE ORIG
+	SongInfoObject* songInfo = mdm->getSongInfoObject(songFileNameAsID.unwrapOr(-1));
+	if (songManager.getFinishedCalculatingSongLengths()) if (SongToSongData::iterator pairedData = songManager.getSongToSongDataEntries().find(currentSongFilePath); pairedData != songManager.getSongToSongDataEntries().end() && static_cast<SongData>(pairedData->second).songInfoWasOverwrittenProbably) {
+		geode::log::info("pairedData found");
+		const std::filesystem::path& fileName = currentSongFilePath.stem();
+		geode::log::info("fileName: {}", fileName);
+		const std::filesystem::path& targetPath = geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", Utils::toNormalizedString(fileName));
+		geode::log::info("targetPath: {}", targetPath);
+		auto parsed = geode::utils::file::readJson(targetPath);
+		geode::log::info("parsed.isOk(): {}", parsed.isOk());
+		if (parsed.isOk()) geode::log::info("parsed.unwrap().contains(\"default\"): {}", parsed.unwrap().contains("default"));
+		if (parsed.isOk()) geode::log::info("parsed.unwrap().get(\"default\").isOk(): {}", parsed.unwrap().get("default").isOk());
+		if (parsed.isOk() && parsed.unwrap().contains("default") && parsed.unwrap().get("default").isOk()) {
+			auto fooBar = parsed.unwrap().get("default").unwrap().get("name");
+			auto barBaz = parsed.unwrap().get("default").unwrap().get("artist");
+			geode::log::info("fooBar.isOk(): {}", fooBar.isOk());
+			geode::log::info("barBaz.isOk(): {}", barBaz.isOk());
+			geode::log::info("songInfo->m_songName BEFORE: {}", songInfo->m_songName);
+			geode::log::info("songInfo->m_artistName BEFORE: {}", songInfo->m_artistName);
+			if (fooBar.isOk()) songInfo->m_songName = fooBar.unwrap().asString().unwrapOr(songInfo->m_songName);
+			if (barBaz.isOk()) songInfo->m_artistName = barBaz.unwrap().asString().unwrapOr(songInfo->m_artistName);
+			geode::log::info("songInfo->m_songName AFTER: {}", songInfo->m_songName);
+			geode::log::info("songInfo->m_artistName AFTER: {}", songInfo->m_artistName);
+		} else geode::log::info("FUCKITY FUCK JSON PARSE FAILED: {}", currentSongFilePath.stem());
+	} else if (songManager.getFinishedCalculatingSongLengths()) geode::log::info("FUCKITY FUCK PAIRED DATA FAILED: {}, static_cast<SongData>(pairedData->second).songInfoWasOverwrittenProbably: {}", currentSongFilePath.stem(), static_cast<SongData>(pairedData->second).songInfoWasOverwrittenProbably);
+	return songInfo;
 }
 
 std::string Utils::getSongName() {

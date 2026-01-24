@@ -247,7 +247,7 @@ namespace SongControl {
 		const std::string& currSong = songManager.getCurrentSong();
 		if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
 
-		const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
+		const int fullLength = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songManager.getCurrentSong()))->second.songLength;
 		const int lastPosition = songManager.getLastMenuLoopPosition();
 
 		songManager.setPauseSongPositionTracking(true);
@@ -274,7 +274,7 @@ namespace SongControl {
 		const std::string& currSong = songManager.getCurrentSong();
 		if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
 
-		const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
+		const int fullLength = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songManager.getCurrentSong()))->second.songLength;
 		const int lastPosition = songManager.getLastMenuLoopPosition();
 
 		songManager.setPauseSongPositionTracking(true);

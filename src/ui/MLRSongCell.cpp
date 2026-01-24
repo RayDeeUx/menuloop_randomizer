@@ -66,7 +66,6 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	}
 
 	if (!songData.isFromConfigOrAltDir && !songData.isFromMusicDownloadManager && !songData.isFromJukeboxDirectory) songNameLabel->setSkewX(10.f);
-	if (songData.wasReplacedByAnotherJukeboxSong) songNameLabel->setColor({0,0,0});
 	songNameLabel->limitLabelWidth(356.f * (.8f / compactModeFactor), std::clamp<float>((.75f / compactModeFactor), .3, .75), .001f);
 	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.displayName));
 
@@ -178,7 +177,7 @@ void MLRSongCell::updateProgressBar() const {
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
-	const int fullLength = songManager.getSongToSongDataEntries().find(songManager.getCurrentSong())->second.songLength;
+	const int fullLength = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songManager.getCurrentSong()))->second.songLength;
 	const int lastPosition = songManager.getLastMenuLoopPosition();
 	this->m_currentB->setContentWidth(((1.f * lastPosition) / (1.f * fullLength)) * 349.f);
 }
