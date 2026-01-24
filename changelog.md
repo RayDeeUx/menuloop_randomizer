@@ -1,9 +1,9 @@
 # Menu Loop Randomizer Changelog
 ## v1.12.0
 *<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from this update and features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
-- <cg>Added</c> playback increment/decrement controls.
-  - You can toggle this option off in the mod settings.
-  - You can also adjust how many milliseconds to increment/decrement by in the mod settings.
+- <cg>Added</c> playback increment/decrement controls and playback progress to both the Control Panel and the Song List menus.
+  - You can toggle this option off for either menu in the mod settings.
+  - You can also adjust how many milliseconds to increment/decrement by in the mod settings. Changes apply to both menus.
   - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> for this feature.
 - <cg>Added</c> song name indicators for the song name text in the Control Panel.
   - You can toggle this option off in the mod settings.
@@ -11,6 +11,9 @@
   - For a number of reasons, the green "current song" indicator and the small dark gradient indicator for Jukebox songs do not apply to the Control Panel.
 - <co>Fixed</c> an issue where menu loop positions wouldn't be restored when leaving a level whose most recently played song was also the most recently selected menu loop.
 - <co>Fixed</c> several UI-related issues related to setting/unsetting a Song Override.
+- <co>"Fixed"</c> a long-standing bug where song names and artist names modified by Jukebox would spill over to menu loop display names.
+  - The quotation marks are there because the approach involved manually parsing Jukebox's own JSON data to fetch the original song name/artist name.
+  - <cr>Please don't use this changelog item as a justification to harass any of the developers of the Jukebox mod, *especially* if you don't know what's going on beneath the hood in either mod.</c>
 ## v1.11.3, v1.11.4, and v1.11.5
 *<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - Fix massive oversights.
