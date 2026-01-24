@@ -227,6 +227,20 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 	return Utils::newNotification(Utils::composedNotifString(notifString, customSongDisplayName, suffix), true);
 }
 
+bool Utils::adjustSongInfoIfJukeboxReplacedIt(SongInfoObject* songInfo) {
+	bool shouldReplaceDisplayName = false;
+	const std::filesystem::path& targetPath = geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songInfo->m_songID);
+	auto parsed = geode::utils::file::readJson(targetPath);
+	if (parsed.isOk() && parsed.unwrap().contains("default") && parsed.unwrap().get("default").isOk()) {
+		auto fooBar = parsed.unwrap().get("default").unwrap().get("name");
+		auto barBaz = parsed.unwrap().get("default").unwrap().get("artist");
+		if (fooBar.isOk()) songInfo->m_songName = fooBar.unwrap().asString().unwrapOr(songInfo->m_songName);
+		if (barBaz.isOk()) songInfo->m_artistName = barBaz.unwrap().asString().unwrapOr(songInfo->m_artistName);
+		if (fooBar.isOk() && barBaz.isOk()) shouldReplaceDisplayName = true;
+	}
+	return shouldReplaceDisplayName;
+}
+
 std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSongPath = Utils::toProblematicString(songManager.getCurrentSong());
@@ -235,29 +249,11 @@ std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
 	const std::string& formatSetting = geode::Mod::get()->getSettingValue<std::string>("songFormatNGML");
 	const bool isMenuLoopFromNG = songInfo->m_songID == 584131;
 	const std::string& robtopSuffix = isMenuLoopFromNG ? " [OOF!]" : "";
-	bool shouldReplaceDisplayName = false;
-	if (songManager.getFinishedCalculatingSongLengths()) {
-		if (SongToSongData::iterator pairedData = songManager.getSongToSongDataEntries().find(currentSongPath); pairedData != songManager.getSongToSongDataEntries().end() && static_cast<SongData>(pairedData->second).songInfoWasOverwrittenProbably) {
-			const std::filesystem::path& fileName = static_cast<std::filesystem::path>(pairedData->first).stem();
-			const std::filesystem::path& targetPath = geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", Utils::toNormalizedString(fileName));
-			auto parsed = geode::utils::file::readJson(targetPath);
-			if (parsed.isOk() && parsed.unwrap().contains("default") && parsed.unwrap().get("default").isOk()) {
-				auto fooBar = parsed.unwrap().get("default").unwrap().get("name");
-				auto barBaz = parsed.unwrap().get("default").unwrap().get("artist");
-				if (fooBar.isOk()) songInfo->m_songName = fooBar.unwrap().asString().unwrapOr(songInfo->m_songName);
-				if (barBaz.isOk()) songInfo->m_artistName = barBaz.unwrap().asString().unwrapOr(songInfo->m_artistName);
-				if (fooBar.isOk() && barBaz.isOk()) shouldReplaceDisplayName = true;
-			}
-		}
-	}
-	std::string result;
-	if (formatSetting == "Song Name, Artist, Song ID") result = fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
-	else if (formatSetting == "Song Name + Artist") result = fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
-	else if (formatSetting == "Song Name + Song ID") result = fmt::format("{} ({}){}", songInfo->m_songName, songInfo->m_songID, robtopSuffix);
-	else result = fmt::format("{}", songInfo->m_songName);
-
-	if (songManager.getFinishedCalculatingSongLengths() && shouldReplaceDisplayName) songManager.getSongToSongDataEntries().find(currentSongPath)->second.displayName = result;
-	return result;
+	Utils::adjustSongInfoIfJukeboxReplacedIt(songInfo);
+	if (formatSetting == "Song Name, Artist, Song ID") return fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
+	if (formatSetting == "Song Name + Artist") return fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
+	if (formatSetting == "Song Name + Song ID") return fmt::format("{} ({}){}", songInfo->m_songName, songInfo->m_songID, robtopSuffix);
+	return fmt::format("{}", songInfo->m_songName);
 }
 
 void Utils::copyCurrentSongName() {
@@ -511,10 +507,12 @@ void Utils::popualteSongToSongDataMap() {
 			.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), "fleym.nongd"),
 			.isEmpty = false
 		};
-		if (!songData.isFromConfigOrAltDir && songData.isFromMusicDownloadManager && mdm->getSongInfoObject(songID)) {
+		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID); !songData.isFromConfigOrAltDir && songData.isFromMusicDownloadManager && songInfoObject) {
 			songData.songInfoWasOverwrittenProbably = std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID));
+			Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject);
+			songData.displayName = Utils::getFormattedNGMLSongName(songInfoObject);
 		}
-		songData.displayName = SongListLayer::generateDisplayName(songData),
+		songData.displayName = SongListLayer::generateDisplayName(songData);
 
 		songToSongData.emplace(theirPath, songData);
 		tempKeys.push_back(songData.actualFilePath);
@@ -633,19 +631,7 @@ SongInfoObject* Utils::getSongInfoObject() {
 	if (songFileNameAsID.isErr()) return nullptr;
 
 	SongInfoObject* songInfo = mdm->getSongInfoObject(songFileNameAsID.unwrapOr(-1));
-	if (songManager.getFinishedCalculatingSongLengths()) {
-		if (SongToSongData::iterator pairedData = songManager.getSongToSongDataEntries().find(currentSongFilePath); pairedData != songManager.getSongToSongDataEntries().end() && static_cast<SongData>(pairedData->second).songInfoWasOverwrittenProbably) {
-			const std::filesystem::path& fileName = currentSongFilePath.stem();
-			const std::filesystem::path& targetPath = geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", Utils::toNormalizedString(fileName));
-			auto parsed = geode::utils::file::readJson(targetPath);
-			if (parsed.isOk() && parsed.unwrap().contains("default") && parsed.unwrap().get("default").isOk()) {
-				auto fooBar = parsed.unwrap().get("default").unwrap().get("name");
-				auto barBaz = parsed.unwrap().get("default").unwrap().get("artist");
-				if (fooBar.isOk()) songInfo->m_songName = fooBar.unwrap().asString().unwrapOr(songInfo->m_songName);
-				if (barBaz.isOk()) songInfo->m_artistName = barBaz.unwrap().asString().unwrapOr(songInfo->m_artistName);
-			}
-		}
-	}
+	Utils::adjustSongInfoIfJukeboxReplacedIt(songInfo);
 	return songInfo;
 }
 

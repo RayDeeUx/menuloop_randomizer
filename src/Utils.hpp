@@ -1,4 +1,5 @@
 #pragma once
+#include "SongManager.hpp"
 
 class Utils {
   public:
@@ -16,6 +17,7 @@ class Utils {
 	static void composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs();
 	static std::string composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix);
 	static void newCardAndDisplayNameFromCurrentSong();
+	static bool adjustSongInfoIfJukeboxReplacedIt(SongInfoObject* songInfo) ;
 	static std::string getFormattedNGMLSongName(SongInfoObject*);
 	static void copyCurrentSongName();
 	static void loadFromPlaylistFile(const std::filesystem::path&);
