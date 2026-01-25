@@ -70,15 +70,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 
 	cocos2d::CCLabelBMFont* extraInfoLabl = nullptr;
 	if (isCompact && Utils::getBool("showExtraInfoLabel")) {
-		std::chrono::system_clock::time_point timepoint = std::chrono::system_clock::time_point(std::chrono::duration_cast<std::chrono::system_clock::duration>(songData.songWriteTime.time_since_epoch()));
-		auto datepoint = floor<std::chrono::days>(floor<std::chrono::seconds>(timepoint));
-		const std::chrono::year_month_day yearMonthDate{std::chrono::sys_days{datepoint}};
-		extraInfoLabl = cocos2d::CCLabelBMFont::create("PLACEHOLDER SO NOTHING CRASHES", "chatFont.fnt");
-		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) {
-			extraInfoLabl->setString(fmt::format("{} | {:.2f} sec | {:.2f} MB | {} {:02}, {:04}", songData.fileExtension, songData.songLength / 1000.f, songData.songFileSize / 1000000.f, months[static_cast<unsigned>(yearMonthDate.month()) - 1], static_cast<unsigned>(yearMonthDate.day()), static_cast<int>(yearMonthDate.year())).c_str());
-		} else {
-			extraInfoLabl->setString(fmt::format("{} | {:.2f} MB | {} {:02}, {:04}", songData.fileExtension, songData.songFileSize / 1000000.f, months[static_cast<unsigned>(yearMonthDate.month()) - 1], static_cast<unsigned>(yearMonthDate.day()), static_cast<int>(yearMonthDate.year())).c_str());
-		}
+		extraInfoLabl = cocos2d::CCLabelBMFont::create(songData.extraInfoText.c_str(), "chatFont.fnt");
 		extraInfoLabl->setAnchorPoint({.0f, .5f});
 		extraInfoLabl->setPosition({songNameLabel->getPositionX() + songNameLabel->getScaledContentWidth() + 5.f, this->getContentHeight() / 2.f});
 		extraInfoLabl->limitLabelWidth(356.f * (.7f / compactModeFactor), std::clamp<float>((.5f / compactModeFactor), .3, .75), .001f);

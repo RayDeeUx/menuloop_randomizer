@@ -11,6 +11,8 @@ struct SongData {
 	std::string fileExtension = "";
 	std::string fileName = "";
 	std::string displayName = "";
+	std::string dateTimeText = "";
+	std::string extraInfoText = "";
 	SongType type = SongType::Regular;
 	unsigned int songLength = std::numeric_limits<unsigned int>::max();
 	std::uintmax_t songFileSize = std::numeric_limits<std::uintmax_t>::max();
@@ -23,6 +25,11 @@ struct SongData {
 };
 
 typedef std::unordered_map<std::filesystem::path, SongData> SongToSongData;
+
+static constexpr std::array<std::string_view, 12> months = {
+	"Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.",
+	"Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."
+};
 
 #define VANILLA_GD_MENU_LOOP_DISABLED GameManager::sharedState()->getGameVariable("0122")
 #define CONFIG_DIR geode::Mod::get()->getConfigDir()

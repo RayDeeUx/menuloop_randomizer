@@ -516,6 +516,12 @@ void Utils::popualteSongToSongDataMap() {
 		}
 		songData.displayName = SongListLayer::generateDisplayName(songData);
 
+		std::chrono::system_clock::time_point timepoint = std::chrono::system_clock::time_point(std::chrono::duration_cast<std::chrono::system_clock::duration>(songData.songWriteTime.time_since_epoch()));
+		auto datepoint = floor<std::chrono::days>(floor<std::chrono::seconds>(timepoint));
+		const std::chrono::year_month_day yearMonthDate{std::chrono::sys_days{datepoint}};
+		songData.dateTimeText = fmt::format("{} {:02}, {:04}", months[static_cast<unsigned>(yearMonthDate.month()) - 1], static_cast<unsigned>(yearMonthDate.day()), static_cast<int>(yearMonthDate.year()));
+		songData.extraInfoText = fmt::format("{} | {:.2f} MB | {}", songData.fileExtension, songData.songFileSize / 1000000.f, songData.dateTimeText).c_str();
+
 		songToSongData.emplace(theirPath, songData);
 		tempKeys.push_back(songData.actualFilePath);
 	}
@@ -528,6 +534,7 @@ void Utils::popualteSongToSongDataMap() {
 				if (iterator == SongManager::get().getSongToSongDataEntries().end()) continue;
 				auto& [unused, songData] = *iterator;
 				songData.songLength = SongListLayer::getLength(std::string(song), std::numeric_limits<unsigned int>::max());
+				songData.extraInfoText = fmt::format("{} | {:.2f} sec | {:.2f} MB | {}", songData.fileExtension, songData.songLength / 1000.f, songData.songFileSize / 1000000.f, songData.dateTimeText).c_str();
 			}
 			SongManager::get().setFinishedCalculatingSongLengths(true);
 	   }).detach();
