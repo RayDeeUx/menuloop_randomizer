@@ -20,7 +20,6 @@ struct SongData {
 	bool isFromConfigOrAltDir = false;
 	bool isFromMusicDownloadManager = false;
 	bool isFromJukeboxDirectory = false;
-	bool songInfoWasOverwrittenProbably = false;
 	bool isEmpty = false;
 };
 
