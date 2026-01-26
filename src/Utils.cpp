@@ -510,8 +510,7 @@ void Utils::popualteSongToSongDataMap() {
 			.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), "fleym.nongd"),
 			.isEmpty = false
 		};
-		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID); !songData.isFromConfigOrAltDir && songData.isFromMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID))) {
-			Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject);
+		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID); !songData.isFromConfigOrAltDir && songData.isFromMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID)) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
 			songData.displayName = Utils::getFormattedNGMLSongName(songInfoObject);
 		}
 		songData.displayName = SongListLayer::generateDisplayName(songData);
