@@ -230,6 +230,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 bool Utils::adjustSongInfoIfJukeboxReplacedIt(SongInfoObject* songInfo) {
 	bool shouldReplaceDisplayName = false;
 	const std::filesystem::path& targetPath = geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songInfo->m_songID);
+	if (!std::filesystem::exists(targetPath)) return shouldReplaceDisplayName;
 	auto parsed = geode::utils::file::readJson(targetPath);
 	if (parsed.isOk() && parsed.unwrap().contains("default") && parsed.unwrap().get("default").isOk()) {
 		auto fooBar = parsed.unwrap().get("default").unwrap().get("name");
