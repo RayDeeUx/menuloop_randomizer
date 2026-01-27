@@ -770,8 +770,7 @@ void Utils::showMDPopup(const std::string_view title, const std::string& bodyTex
 }
 
 bool Utils::notFavoritesNorBlacklist(const std::filesystem::path& filePath) {
-	const std::string& fileString = Utils::toNormalizedString(filePath);
-	return !geode::utils::string::endsWith(fileString, "favorites.txt") && !geode::utils::string::endsWith(fileString, "blacklist.txt");
+	return filePath != (geode::Mod::get()->getConfigDir() / "favorites.txt") && filePath != (geode::Mod::get()->getConfigDir() / "blacklist.txt");
 }
 
 std::string Utils::getPlatform() {
