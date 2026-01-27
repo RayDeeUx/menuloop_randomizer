@@ -776,10 +776,7 @@ bool Utils::notFavoritesNorBlacklist(const std::filesystem::path& filePath) {
 
 std::string Utils::getPlatform() {
 	#if defined(GEODE_IS_IOS)
-	if (geode::Loader::get()->isPatchless()) {
-		return "iOS (JIT-less)";
-	}
-	return "iOS (JIT)";
+	return geode::Loader::get()->isPatchless() ? "iOS (JIT-less)" : "iOS (JIT)";
 	#elif defined(GEODE_IS_ANDROID32)
 	return "Android (32-bit)";
 	#elif defined(GEODE_IS_ANDROID64)
