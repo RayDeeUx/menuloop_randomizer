@@ -745,12 +745,12 @@ CCMenuItemToggler* Utils::addViewModeToggle(const bool relevantBoolean, const st
 	spriteTwoButtonSprite->updateBGImage("GJ_button_02.png");
 	spriteOneButtonSprite->setScale(.5f);
 	spriteTwoButtonSprite->setScale(.5f);
-	spriteOneButtonSprite->setID(fmt::format("{}-button-sprite"_spr, nodeID));
-	spriteTwoButtonSprite->setID(fmt::format("{}-button-sprite"_spr, nodeID));
-	spriteOneButtonSprite->m_BGSprite->setID(fmt::format("{}-button-background-sprite"_spr, nodeID));
-	spriteTwoButtonSprite->m_BGSprite->setID(fmt::format("{}-button-background-sprite"_spr, nodeID));
-	spriteOneButtonSprite->m_BGSprite->_scale9Image->setID(fmt::format("{}-button-background-sprite-scale-nine"_spr, nodeID));
-	spriteTwoButtonSprite->m_BGSprite->_scale9Image->setID(fmt::format("{}-button-background-sprite-scale-nine"_spr, nodeID));
+	spriteOneButtonSprite->setID(fmt::format("{}-off-button-sprite"_spr, nodeID));
+	spriteTwoButtonSprite->setID(fmt::format("{}-on-button-sprite"_spr, nodeID));
+	spriteOneButtonSprite->m_BGSprite->setID(fmt::format("{}-off-button-background-sprite"_spr, nodeID));
+	spriteTwoButtonSprite->m_BGSprite->setID(fmt::format("{}-on-button-background-sprite"_spr, nodeID));
+	spriteOneButtonSprite->m_BGSprite->_scale9Image->setID(fmt::format("{}-off-button-background-sprite-scale-nine"_spr, nodeID));
+	spriteTwoButtonSprite->m_BGSprite->_scale9Image->setID(fmt::format("{}-on-button-background-sprite-scale-nine"_spr, nodeID));
 
 	if (dontAddBG) {
 		spriteOneButtonSprite->setCascadeOpacityEnabled(false);
@@ -761,7 +761,7 @@ CCMenuItemToggler* Utils::addViewModeToggle(const bool relevantBoolean, const st
 
 	CCMenuItemToggler* toggle = CCMenuItemToggler::create(spriteOneButtonSprite, spriteTwoButtonSprite, target, function);
 	toggle->m_offButton->setID(fmt::format("{}-off-sprite"_spr, nodeID));
-	toggle->m_onButton->setID(fmt::format("{}-off-sprite"_spr, nodeID));
+	toggle->m_onButton->setID(fmt::format("{}-on-sprite"_spr, nodeID));
 	toggle->toggle(relevantBoolean);
 	toggle->setID(fmt::format("{}-button"_spr, nodeID));
 
