@@ -749,6 +749,8 @@ CCMenuItemToggler* Utils::addViewModeToggle(const bool relevantBoolean, const st
 	spriteTwoButtonSprite->setID(fmt::format("{}-button-sprite"_spr, nodeID));
 	spriteOneButtonSprite->m_BGSprite->setID(fmt::format("{}-button-background-sprite"_spr, nodeID));
 	spriteTwoButtonSprite->m_BGSprite->setID(fmt::format("{}-button-background-sprite"_spr, nodeID));
+	spriteOneButtonSprite->m_BGSprite->_scale9Image->setID(fmt::format("{}-button-background-sprite-scale-nine"_spr, nodeID));
+	spriteTwoButtonSprite->m_BGSprite->_scale9Image->setID(fmt::format("{}-button-background-sprite-scale-nine"_spr, nodeID));
 
 	if (dontAddBG) {
 		spriteOneButtonSprite->setCascadeOpacityEnabled(false);
