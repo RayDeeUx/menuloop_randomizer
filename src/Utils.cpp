@@ -736,12 +736,16 @@ CCMenuItemSpriteExtra* Utils::addButton(const std::string& name, const cocos2d::
 CCMenuItemToggler* Utils::addViewModeToggle(const bool relevantBoolean, const std::string &toggleIcon, const std::string_view nodeID, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu *menu, cocos2d::CCNode *target, const bool dontAddBG) {
 	cocos2d::CCSprite* smallModeIconSpriteOne = cocos2d::CCSprite::createWithSpriteFrameName(toggleIcon.c_str());
 	cocos2d::CCSprite* smallModeIconSpriteTwo = cocos2d::CCSprite::createWithSpriteFrameName(toggleIcon.c_str());
+	smallModeIconSpriteOne->setID(fmt::format("{}-sprite"_spr, nodeID));
+	smallModeIconSpriteTwo->setID(fmt::format("{}-sprite"_spr, nodeID));
 	ButtonSprite* spriteOneButtonSprite = ButtonSprite::create(smallModeIconSpriteOne, 30, 30, 30.f, 1.f, false);
 	ButtonSprite* spriteTwoButtonSprite = ButtonSprite::create(smallModeIconSpriteTwo, 30, 30, 30.f, 1.f, false);
 	spriteOneButtonSprite->updateBGImage("GJ_button_01.png");
 	spriteTwoButtonSprite->updateBGImage("GJ_button_02.png");
 	spriteOneButtonSprite->setScale(.5f);
 	spriteTwoButtonSprite->setScale(.5f);
+	spriteOneButtonSprite->setID(fmt::format("{}-button-sprite"_spr, nodeID));
+	spriteTwoButtonSprite->setID(fmt::format("{}-button-sprite"_spr, nodeID));
 
 	if (dontAddBG) {
 		spriteOneButtonSprite->setCascadeOpacityEnabled(false);
