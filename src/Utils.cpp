@@ -756,6 +756,8 @@ CCMenuItemToggler* Utils::addViewModeToggle(const bool relevantBoolean, const st
 	}
 
 	CCMenuItemToggler* toggle = CCMenuItemToggler::create(spriteOneButtonSprite, spriteTwoButtonSprite, target, function);
+	toggle->m_offButton->setID(fmt::format("{}-off-sprite"_spr, nodeID));
+	toggle->m_onButton->setID(fmt::format("{}-off-sprite"_spr, nodeID));
 	toggle->toggle(relevantBoolean);
 	toggle->setID(fmt::format("{}-button"_spr, nodeID));
 
