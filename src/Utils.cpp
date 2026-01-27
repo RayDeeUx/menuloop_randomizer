@@ -738,6 +738,7 @@ CCMenuItemToggler* Utils::addViewModeToggle(const bool relevantBoolean, const st
 	cocos2d::CCSprite* smallModeIconSpriteTwo = cocos2d::CCSprite::createWithSpriteFrameName(toggleIcon.c_str());
 	smallModeIconSpriteOne->setID(fmt::format("{}-sprite"_spr, nodeID));
 	smallModeIconSpriteTwo->setID(fmt::format("{}-sprite"_spr, nodeID));
+
 	ButtonSprite* spriteOneButtonSprite = ButtonSprite::create(smallModeIconSpriteOne, 30, 30, 30.f, 1.f, false);
 	ButtonSprite* spriteTwoButtonSprite = ButtonSprite::create(smallModeIconSpriteTwo, 30, 30, 30.f, 1.f, false);
 	spriteOneButtonSprite->updateBGImage("GJ_button_01.png");
@@ -760,6 +761,7 @@ CCMenuItemToggler* Utils::addViewModeToggle(const bool relevantBoolean, const st
 
 	menu->addChild(toggle);
 	if (menu->getLayout()) menu->updateLayout();
+
 	return toggle;
 }
 
