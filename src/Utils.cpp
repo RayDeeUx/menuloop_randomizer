@@ -733,7 +733,7 @@ CCMenuItemSpriteExtra* Utils::addButton(const std::string& name, const cocos2d::
 	return btn;
 }
 
-void Utils::addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string_view nodeID, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
+CCMenuItemToggler* Utils::addViewModeToggle(const bool relevantBoolean, const std::string &toggleIcon, const std::string_view nodeID, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu *menu, cocos2d::CCNode *target, const bool dontAddBG) {
 	const std::string& spriteOne = "GJ_button_01.png";
 	const std::string& spriteTwo = "GJ_button_02.png";
 
@@ -759,6 +759,7 @@ void Utils::addViewModeToggle(const bool relevantBoolean, const std::string& tog
 
 	menu->addChild(toggle);
 	if (menu->getLayout()) menu->updateLayout();
+	return toggle;
 }
 
 void Utils::showMDPopup(const std::string_view title, const std::string& bodyText, const int tag, const std::string_view nodeID) {
