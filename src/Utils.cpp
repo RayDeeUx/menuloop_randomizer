@@ -206,10 +206,9 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	const int songID = songFileNameAsID.unwrapOr(-1);
-	const bool isNotFromConfigOrAltDir = !Utils::isFromConfigOrAlternateDir(currentSong);
 
 	// sometimes songInfo is nullptr, so improvise
-	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && isNotFromConfigOrAltDir) {
+	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && !Utils::isFromConfigOrAlternateDir(currentSong)) {
 		// default: "Song Name, Artist, Song ID"
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
 		return Utils::newNotification(Utils::composedNotifString(notifString, Utils::getFormattedNGMLSongName(songInfo), suffix), true);
