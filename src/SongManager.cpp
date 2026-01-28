@@ -88,7 +88,7 @@ bool SongManager::getConstantShuffleMode() const {
 }
 
 void SongManager::setPlaylistFileName() {
-	m_playlistName = geode::utils::string::replace(Utils::toNormalizedString(geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile").filename()), ".txt", "");
+	m_playlistName = Utils::toNormalizedString(geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile").stem());
 }
 
 std::string SongManager::getPlaylistFileName() {

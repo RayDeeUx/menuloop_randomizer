@@ -175,8 +175,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSong = Utils::toProblematicString(songManager.getCurrentSong());
 	const std::string& songFileName = Utils::toNormalizedString(currentSong.filename());
-	const std::string& songFileExtension = Utils::toNormalizedString(currentSong.extension());
-	const std::string& customSongDisplayName = geode::utils::string::replace(songFileName, songFileExtension, "");
+	const std::string& customSongDisplayName = Utils::toNormalizedString(currentSong.stem());
 	songManager.setCurrentSongDisplayName(songFileName);
 
 	std::string notifString = "";
