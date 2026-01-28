@@ -278,7 +278,7 @@ void SongControlMenu::checkDaSongPositions(float) {
 	this->m_currTimeLb->setString(fmt::format("{}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60)).c_str());
 	this->m_totlTimeLb->setString(fmt::format("{}:{:02}", ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
 
-	this->m_currProgBar->setContentWidth(((1.f * lastPosition) / (1.f * fullLength)) * this->m_darkProgBar->getContentWidth());
+	this->m_currProgBar->setContentWidth(std::clamp<float>((1.f * lastPosition) / (1.f * std::max<int>(fullLength, fmod->getMusicLengthMS(0))), 0.f, 1.f) * this->m_darkProgBar->getContentWidth());
 }
 
 void SongControlMenu::onShuffleButton(CCObject*) {
