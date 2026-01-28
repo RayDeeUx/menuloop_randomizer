@@ -10,6 +10,7 @@
   - Song name indicators for song name label are the same as those seen in the Song List menu.
   - For a number of reasons, the green "current song" indicator and the small dark gradient indicator for Jukebox songs do not apply to the Control Panel.
 - <co>Fixed</c> an issue where menu loop positions wouldn't be restored when leaving a level whose most recently played song was also the most recently selected menu loop.
+- <co>Fixed</c> some math fumbles with counting songs in the Song List menu.
 - <co>Fixed</c> several UI-related issues related to setting/unsetting a Song Override.
 - <co>Fixed</c> some issues with songs containing non-ASCII characters in ther titles.
   - This also affects where these songs are placed when sorting songs alphabetically in the Song List menu.
