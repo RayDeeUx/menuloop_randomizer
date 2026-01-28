@@ -175,9 +175,9 @@ void MLRSongCell::checkIfCurrentSong() const {
 	if (this->m_songData.isEmpty || !this->m_songNameLabel || !this->m_songNameLabel->getParent() || !this->m_menu) return;
 	const bool isCurrentSong = this->m_songData.actualFilePath == SongManager::get().getCurrentSong();
 
-	geode::cocos::CCArrayExt<CCNode> children = m_menu->getChildrenExt();
+	geode::cocos::CCArrayExt<CCNode> childNodes = m_menu->getChildrenExt();
 	int numVisible = 0;
-	for (CCNode* node : children) if (node && node->isVisible()) numVisible++;
+	for (CCNode* node : childNodes) if (node && node->isVisible()) numVisible++;
 
 	if (isCurrentSong) {
 		this->m_songNameLabel->getParent()->setTag(12192025);
@@ -206,7 +206,7 @@ void MLRSongCell::checkIfCurrentSong() const {
 	}
 
 	int newVisible = 0;
-	for (CCNode* node : children) if (node && node->isVisible()) newVisible++;
+	for (CCNode* node : childNodes) if (node && node->isVisible()) newVisible++;
 
 	if (numVisible != newVisible && this->m_menu->getLayout()) {
 		this->m_menu->setContentWidth(std::clamp<float>(30.f / (36.f / this->getContentHeight()) * newVisible, 15.f, 30.f));
