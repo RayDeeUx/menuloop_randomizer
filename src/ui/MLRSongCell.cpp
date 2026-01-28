@@ -54,7 +54,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	if (songData.type == SongType::Favorited) songNameLabel->setFntFile("goldFont.fnt");
 	else if (songData.type == SongType::Blacklisted) songNameLabel->setOpacity(128); // opacity is more apparopriate
 	// else if (songData.type == SongType::Regular) songNameLabel->setColor({255, 255, 255}); // filler code lol!
-	else if (songData.isFromJukeboxDirectory) {
+	if (songData.isFromJukeboxDirectory) {
 		// dont modify songnamelabel, add gradient
 		cocos2d::CCLayerGradient* jukeboxGradient = cocos2d::CCLayerGradient::create({96, 96, 96, 128}, {0, 0, 0, 0});
 		jukeboxGradient->setContentSize({356.f, this->getContentHeight() / 4.f});
