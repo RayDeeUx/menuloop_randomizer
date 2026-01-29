@@ -39,14 +39,12 @@ jobs:
       - name: Build the mod (RelWithDebInfo)
         uses: geode-sdk/build-geode-mod@main
         with:
-          # sdk: "v4.10.0" # temp
           sdk: stable # temp
-          # configure-args: "-DSKIP_BUILDING_CODEGEN=OFF" # temp
           build-config: RelWithDebInfo
           export-symbols: true
           export-pdb: true
-          # bindings: geode-sdk/bindings # temp
-          # bindings-ref: 23d6ae03307e612430623a7ea693819d6fa963fa # temp
+          # bindings: geode-sdk/bindings
+          # bindings-ref: main
           combine: true
           target: ${{ matrix.config.target }}
 
