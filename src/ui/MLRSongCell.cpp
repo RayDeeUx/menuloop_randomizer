@@ -144,6 +144,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 
 	MLRSongCell::checkIfCurrentSong(); // call immediately
 	this->schedule(schedule_selector(MLRSongCell::checkIfCurrentSongScheduler), .125f); // schedule this function less often
+	this->schedule(schedule_selector(MLRSongCell::pressAndHoldScheduler), .125f); // at this point it's already clear it's the current song
 
 	return true;
 }
@@ -223,6 +224,30 @@ void MLRSongCell::toggleEven(const bool isEven) {
 void MLRSongCell::checkIfCurrentSongScheduler(float) {
 	MLRSongCell::checkIfCurrentSong();
 }
+
+void MLRSongCell::pressAndHoldScheduler(float dt) {
+	m_time += dt;
+
+	CCMenuItemSpriteExtra* ffwd = this->m_ffwdButton;
+	CCMenuItemSpriteExtra* bkwd = this->m_bkwdButton;
+	if (!ffwd || !bkwd) {
+		m_time = 0.f;
+		return;
+	}
+
+	const bool isCurrentSong = this->getTag() == 12192025 && ffwd->isEnabled() && ffwd->isVisible() && bkwd->isEnabled() && bkwd->isVisible();
+	if (!isCurrentSong) {
+		m_time = 0.f;
+		return;
+	}
+
+	if (m_time < .5f) return;
+
+	if (ffwd->isSelected() && ffwd->m_pListener && ffwd->m_pfnSelector) (ffwd->m_pListener->*ffwd->m_pfnSelector)(ffwd);
+	else if (bkwd->isSelected()&& bkwd->m_pListener && bkwd->m_pfnSelector) (bkwd->m_pListener->*bkwd->m_pfnSelector)(bkwd);
+	else m_time = 0;
+}
+
 
 void MLRSongCell::onSkipBkwdButton(CCObject*) {
 	if (SongManager::get().getShowPlaybackControlsSongList()) SongControl::skipBackward();

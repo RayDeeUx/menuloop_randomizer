@@ -14,6 +14,7 @@ public:
 	void onSkipBkwdButton(CCObject*);
 	void onSkipFwrdButton(CCObject*);
 	void checkIfCurrentSongScheduler(float);
+	void pressAndHoldScheduler(float);
 	SongData m_songData;
 	cocos2d::CCLabelBMFont* m_songNameLabel;
 	cocos2d::CCLabelBMFont* m_extraInfoLabl;
@@ -24,4 +25,5 @@ public:
 	CCMenuItemSpriteExtra* m_playButton;
 	CCMenuItemSpriteExtra* m_bkwdButton;
 	CCMenuItemSpriteExtra* m_ffwdButton;
+	float m_time = 0.f;
 };
