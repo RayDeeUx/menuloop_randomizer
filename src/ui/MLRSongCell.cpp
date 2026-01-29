@@ -91,7 +91,8 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	playButton->setID("song-cell-play-button"_spr);
 
 	SongManager& songManager = SongManager::get();
-	if (songManager.getFinishedCalculatingSongLengths() && Utils::getBool("showPlaybackProgressControlsSongList") && songManager.getUndefined0Alk1m123TouchPrio()) {
+	const bool canPlaybackProgress = songManager.getFinishedCalculatingSongLengths() && Utils::getBool("showPlaybackProgressControlsSongList") && songManager.getUndefined0Alk1m123TouchPrio();
+	if (canPlaybackProgress) {
 		CCMenuItemSpriteExtra* skipBkwd = Utils::addButton("skip-bkwd", menu_selector(MLRSongCell::onSkipBkwdButton), menu, this, true);
 		CCMenuItemSpriteExtra* skipFwrd = Utils::addButton("skip-fwrd", menu_selector(MLRSongCell::onSkipFwrdButton), menu, this, true);
 		skipBkwd->setVisible(false);
@@ -144,7 +145,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 
 	MLRSongCell::checkIfCurrentSong(); // call immediately
 	this->schedule(schedule_selector(MLRSongCell::checkIfCurrentSongScheduler), .125f); // schedule this function less often
-	this->schedule(schedule_selector(MLRSongCell::pressAndHoldScheduler), .125f); // at this point it's already clear it's the current song
+	if (canPlaybackProgress) this->schedule(schedule_selector(MLRSongCell::pressAndHoldScheduler), .125f); // at this point it's already clear it's the current song
 
 	return true;
 }
