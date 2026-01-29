@@ -110,8 +110,8 @@ bool SongControlMenu::setup() {
 
 	cocos2d::CCMenu* incrementDecrementMenu = cocos2d::CCMenu::create();
 	incrementDecrementMenu->setContentWidth(240.f);
-	Utils::addButton("skip-bkwd", menu_selector(SongControlMenu::onSkipBkwdButton), incrementDecrementMenu, this, true);
-	Utils::addButton("skip-fwrd", menu_selector(SongControlMenu::onSkipFwrdButton), incrementDecrementMenu, this, true);
+	this->m_ffwdButton = Utils::addButton("skip-bkwd", menu_selector(SongControlMenu::onSkipBkwdButton), incrementDecrementMenu, this, true);
+	this->m_bkwdButton = Utils::addButton("skip-fwrd", menu_selector(SongControlMenu::onSkipFwrdButton), incrementDecrementMenu, this, true);
 	incrementDecrementMenu->setLayout(geode::RowLayout::create()->setAutoScale(true)->setGap(1000.f)->setDefaultScaleLimits(.0001f, 1.f));
 	this->m_increDecreMenu = incrementDecrementMenu;
 	// DONT ADD this->m_increDecreMenu AS A CHILD -- SongControlMenu::updateCurrentLabel() HANDLES THAT!
@@ -281,6 +281,20 @@ void SongControlMenu::checkDaSongPositions(float) {
 	this->m_currProgBar->setContentWidth(std::clamp<float>((1.f * lastPosition) / (1.f * std::max<int>(fullLength, fmod->getMusicLengthMS(0))), 0.f, 1.f) * this->m_darkProgBar->getContentWidth());
 }
 
+void SongControlMenu::pressAndHoldScheduler(float dt) {
+	m_time += dt;
+	if (!this->m_ffwdButton || !this->m_bkwdButton) {
+		m_time = 0.f;
+		return;
+	}
+
+	if (m_time < .5f) return;
+
+	if (this->m_ffwdButton->isSelected() && this->m_ffwdButton->isVisible() && this->m_ffwdButton->isEnabled() && this->m_ffwdButton->m_pfnSelector && this->m_ffwdButton->m_pListener) (this->m_ffwdButton->m_pListener->*this->m_ffwdButton->m_pfnSelector)(this->m_ffwdButton);
+	else if (this->m_bkwdButton->isSelected() && this->m_bkwdButton->isVisible() && this->m_bkwdButton->isEnabled() && this->m_bkwdButton->m_pfnSelector && this->m_bkwdButton->m_pListener) (this->m_bkwdButton->m_pListener->*this->m_bkwdButton->m_pfnSelector)(this->m_bkwdButton);
+	else m_time = 0;
+}
+
 void SongControlMenu::onShuffleButton(CCObject*) {
 	SongControl::shuffleSong();
 	SongControlMenu::updateCurrentLabel();
@@ -373,6 +387,7 @@ void SongControlMenu::updateCurrentLabel() {
 		this->m_totlTimeLb->setScale(.35f);
 		SongControlMenu::checkDaSongPositions(0.f);
 		this->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
+		if (this->m_ffwdButton && this->m_bkwdButton) this->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
 	} else this->m_smallLabel->setString(currentSong.c_str(), "chatFont.fnt");
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_currTimeLb->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});

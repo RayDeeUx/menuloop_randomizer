@@ -13,10 +13,13 @@ protected:
 	cocos2d::CCMenu* m_infoMenu         {};
 	cocos2d::CCMenu* m_increDecreMenu   {};
 	InfoAlertButton* m_infoButton       {};
+	CCMenuItemSpriteExtra* m_ffwdButton {};
+	CCMenuItemSpriteExtra* m_bkwdButton {};
 	cocos2d::extension::CCScale9Sprite*b{};
 	cocos2d::CCLayerColor* m_darkProgBar{};
 	cocos2d::CCLayerColor* m_currProgBar{};
 	cocos2d::CCClippingNode* m_clipNode {};
+	float m_time = 0;
 	bool setup() override;
 	void onShuffleButton(CCObject*);
 	void onCopyButton(CCObject*);
@@ -31,6 +34,7 @@ protected:
 	void onSkipFwrdButton(CCObject*);
 	void checkManagerFinished(float);
 	void checkDaSongPositions(float);
+	void pressAndHoldScheduler(float);
 	void forceSharpCornerIllusion();
 public:
 	static SongControlMenu* create();
