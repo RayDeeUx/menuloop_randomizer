@@ -34,7 +34,7 @@ Ever felt like a song was an absolute dud? Click the <cl>blacklist button</c> (y
 # RayDeeUx would like to thank:
 - [dasshu_](https://linktr.ee/jaydasshu) <cj>for the new mod logo for v1.6.5 and onward.</c>
 - [mackron](https://twitter.com/mackron) <cj>for their [miniaudio](https://github.com/mackron/miniaudio) library, used to calculate the lengths of audio files on most platforms. (Except iOS. Everyone [optional adverb + present tense plural verb] iOS.)</c>
-- [sse2](https://github.com/sse2), [nosu](https://github.com/Nosu-u), and [melody](https://github.com/melowody) for making mods with similar functionality in past Geometry Dash versions.
+- [sse2](https://github.com/sse2), [nosu](https://github.com/Nosu-u), and [melody](https://github.com/melowody) <cj>for making mods with similar functionality in past Geometry Dash versions.</c>
 
 [Join RayDeeUx's Discord server](https://discord.gg/WqZBYdBWZW) to report issues with using the mod, or [open a GitHub issue](https://github.com/elnexreal/menuloop_randomizer/issues/new).
 
