@@ -4,6 +4,7 @@
 - <cg>Added</c> playback increment/decrement controls and playback progress to both the Control Panel and the Song List menus.
   - You can toggle this option off for either menu in the mod settings.
   - You can also adjust how many milliseconds to increment/decrement by in the mod settings. Changes apply to both menus.
+  - Press and hold either button for more than half a second to fast-forward/fast-rewind the current song!
   - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> for this feature.
 - <cg>Added</c> song name indicators for the song name text in the Control Panel.
   - You can toggle this option off in the mod settings.
@@ -214,7 +215,7 @@
 - Added Node IDs to nodes added by this mod.
 - Squash a few bugs, optimize a few things, minimize likelihood of potential crashes.
 ## v1.2.2
-- Added an option to enable the shuffle button (thx [reinmar](https://github.com/Reinmmar)).
+- Added an option to enable the shuffle button (thx [reinmar](https://github.com/Reinmmar)/[TimeStepYT](https://github.com/TimeStepYT)).
 ## v1.2.1
 - Fixed crash caused by Newgrounds manager trying to gather info of default menuLoop.mp3.
 ## v1.2.0
