@@ -117,13 +117,13 @@ namespace SongControl {
 
 		geode::log::info("blacklisting: {}", songBeingBlacklisted);
 
-		const bool useCustomSongs = Utils::getBool("useCustomSongs");
 		const int songID = Utils::getSongID();
+		const bool useCustomSongs = Utils::getBool("useCustomSongs") || songID < 1;
 
 		const std::string& songName = songID > 0 ? Utils::getSongName() : "";
 		const std::string& songArtist = songID > 0 ? Utils::getSongArtist() : "";
 		const std::string& customSong = songID < 1 ? Utils::currentCustomSong() : "";
-		const std::string& toWriteToFile = useCustomSongs || songID < 1 ? songBeingBlacklisted : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", songBeingBlacklisted, songName, songArtist);
+		const std::string& toWriteToFile = useCustomSongs ? songBeingBlacklisted : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", songBeingBlacklisted, songName, songArtist);
 
 		Utils::writeToFile(toWriteToFile, BLACKLIST_FILE);
 
