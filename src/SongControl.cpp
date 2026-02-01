@@ -86,7 +86,7 @@ namespace SongControl {
 		const std::string& songName = songID > 0 ? Utils::getSongName() : "";
 		const std::string& songArtist = songID > 0 ? Utils::getSongArtist() : "";
 		const std::string& customSong = songID < 1 ? Utils::currentCustomSong() : "";
-		const std::string& toWriteToFile = useCustomSongs? currentSong : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", currentSong, songName, songArtist);
+		const std::string& toWriteToFile = useCustomSongs ? currentSong : fmt::format("{} # [MLR] Song: {} by {} [MLR] #", currentSong, songName, songArtist);
 
 		Utils::writeToFile(toWriteToFile, FAVORITES_FILE);
 
