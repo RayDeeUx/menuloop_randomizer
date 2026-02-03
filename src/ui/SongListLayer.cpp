@@ -572,7 +572,7 @@ std::string SongListLayer::generateDisplayName(SongData& songData) {
 		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) displayName = Utils::getFormattedNGMLSongName(songInfoObject);
 	}
 
-	std::transform(displayName.begin(), displayName.end(), displayName.begin(), [](const unsigned char c){ return c < 128 ? static_cast<char>(c) : '?'; });
+	Utils::sanitizeASCII(displayName);
 	return displayName;
 }
 

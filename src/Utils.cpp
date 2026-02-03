@@ -153,7 +153,7 @@ void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSong = Utils::toProblematicString(songManager.getCurrentSong());
 	std::string customSongDisplayName = Utils::toNormalizedString(currentSong.stem());
-	std::transform(customSongDisplayName.begin(), customSongDisplayName.end(), customSongDisplayName.begin(), [](const unsigned char c){ return c < 128 ? static_cast<char>(c) : '?'; });
+	Utils::sanitizeASCII(customSongDisplayName);
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return songManager.setCurrentSongDisplayName(customSongDisplayName);
 	if (songManager.isOriginalMenuLoop()) return songManager.setCurrentSongDisplayName("Original Menu Loop by RobTop");
 	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(customSongDisplayName);
@@ -170,14 +170,18 @@ void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs
 
 std::string Utils::composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix) {
 	SongManager& songManager = SongManager::get();
-	if (!Utils::getBool("useCustomSongs") || !songManager.getPlaylistIsEmpty()) songManager.setCurrentSongDisplayName(middle);
+	const std::filesystem::path& currentSong = Utils::toProblematicString(songManager.getCurrentSong());
+	if (songManager.getFinishedCalculatingSongLengths() && !songManager.getSongToSongDataEntries().empty() && songManager.getSongToSongDataEntries().contains(currentSong)) songManager.setCurrentSongDisplayName(static_cast<SongData>(songManager.getSongToSongDataEntries().find(currentSong)->second).displayName);
+	else if (!Utils::getBool("useCustomSongs") || !songManager.getPlaylistIsEmpty()) songManager.setCurrentSongDisplayName(middle);
 	Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
-	return notifString.append(middle).append(suffix);
+	std::string result = notifString.append(middle).append(suffix);
+	return result;
 }
 
 void Utils::newCardAndDisplayNameFromCurrentSong() {
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSong = Utils::toProblematicString(songManager.getCurrentSong());
+	if (songManager.getFinishedCalculatingSongLengths() && !songManager.getSongToSongDataEntries().empty() && songManager.getSongToSongDataEntries().contains(currentSong)) return songManager.setCurrentSongDisplayName(static_cast<SongData>(songManager.getSongToSongDataEntries().find(currentSong)->second).displayName);
 	const std::string& songFileName = Utils::toNormalizedString(currentSong.filename());
 	const std::string& currentSongRawFileName = Utils::toNormalizedString(currentSong.stem());
 	songManager.setCurrentSongDisplayName(songFileName);
@@ -248,7 +252,7 @@ std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
 	if (formatSetting == "Song Name, Artist, Song ID") displayName = fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
 	else if (formatSetting == "Song Name + Artist") displayName = fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
 	else if (formatSetting == "Song Name + Song ID") displayName = fmt::format("{} ({}){}", songInfo->m_songName, songInfo->m_songID, robtopSuffix);
-	std::transform(displayName.begin(), displayName.end(), displayName.begin(), [](const unsigned char c){ return c < 128 ? static_cast<char>(c) : '?'; });
+	Utils::sanitizeASCII(displayName);
 	return displayName;
 }
 

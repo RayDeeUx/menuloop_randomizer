@@ -8,6 +8,9 @@ class Utils {
 	static bool goodExtension(const std::string_view);
 	static bool getBool(const std::string_view);
 	static std::string getString(const std::string_view);
+	static void sanitizeASCII(std::string& s) noexcept {
+		std::transform(s.begin(), s.end(), s.begin(), [](const unsigned char c) -> char { return c < 128 ? static_cast<char>(c) : '?'; });
+	}
 	static void removeCard();
 	static cocos2d::CCNode* findCard();
 	static cocos2d::CCNode* findCardRemotely();
