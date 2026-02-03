@@ -152,6 +152,7 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs() {
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSong = Utils::toProblematicString(songManager.getCurrentSong());
+	if (songManager.getFinishedCalculatingSongLengths() && !songManager.getSongToSongDataEntries().empty() && songManager.getSongToSongDataEntries().contains(currentSong)) return songManager.setCurrentSongDisplayName(static_cast<SongData>(songManager.getSongToSongDataEntries().find(currentSong)->second).displayName);
 	std::string customSongDisplayName = Utils::toNormalizedString(currentSong.stem());
 	Utils::sanitizeASCII(customSongDisplayName);
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return songManager.setCurrentSongDisplayName(customSongDisplayName);
@@ -181,7 +182,7 @@ std::string Utils::composedNotifString(std::string notifString, const std::strin
 void Utils::newCardAndDisplayNameFromCurrentSong() {
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSong = Utils::toProblematicString(songManager.getCurrentSong());
-	if (songManager.getFinishedCalculatingSongLengths() && !songManager.getSongToSongDataEntries().empty() && songManager.getSongToSongDataEntries().contains(currentSong)) return songManager.setCurrentSongDisplayName(static_cast<SongData>(songManager.getSongToSongDataEntries().find(currentSong)->second).displayName);
+	if (songManager.getFinishedCalculatingSongLengths() && !songManager.getSongToSongDataEntries().empty() && songManager.getSongToSongDataEntries().contains(currentSong)) songManager.setCurrentSongDisplayName(static_cast<SongData>(songManager.getSongToSongDataEntries().find(currentSong)->second).displayName);
 	const std::string& songFileName = Utils::toNormalizedString(currentSong.filename());
 	const std::string& currentSongRawFileName = Utils::toNormalizedString(currentSong.stem());
 	songManager.setCurrentSongDisplayName(songFileName);
@@ -485,6 +486,8 @@ void Utils::popualteSongToSongDataMap() {
 	std::error_code ec, ed;
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 
+	const std::string& dummyJukeboxPath = Utils::toNormalizedString(geode::dirs::getModsSaveDir() / "fleym.nongd" / "nongs");
+
 	for (const std::string_view song : songManager.getSongs()) {
 		SongType songType = SongType::Regular;
 		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
@@ -502,9 +505,9 @@ void Utils::popualteSongToSongDataMap() {
 			.fileName = Utils::toNormalizedString(theirPath.filename()),
 			.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
 			.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
-			.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(theirPath.parent_path()),
+			.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(theirPath.parent_path()) && mdm->getSongInfoObject(songID) == nullptr,
 			.isFromMusicDownloadManager = songID > -1 && mdm->pathForSong(songID) == song,
-			.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), "fleym.nongd"),
+			.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), dummyJukeboxPath),
 			.isEmpty = false
 		};
 		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID); !songData.isFromConfigOrAltDir && songData.isFromMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID)) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
