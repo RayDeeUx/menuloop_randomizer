@@ -426,11 +426,13 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 	if (songManager.getYoutubeAndVLCKeyboardShortcutsControlPanel()) {
 		if (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine) {
 			/* 48 == 0, 50 == 2, 57 == 9, etc. */
-			SongControl::setSongPercentage(100 * (static_cast<int>(key) - 48));
-		} else if ((cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() && key == cocos2d::KEY_N) || GEODE_MACOS((key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_Right) && cocos2d::CCKeyboardDispatcher::get()->getCommandKeyPressed()) GEODE_WINDOWS(key == cocos2d::KEY_Right && cocos2d::CCKeyboardDispatcher::get()->getControlKeyPressed())) {
-			SongControl::shuffleSong();
-		} else if ((cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() && key == cocos2d::KEY_P) || GEODE_MACOS((key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_Left) && cocos2d::CCKeyboardDispatcher::get()->getCommandKeyPressed()) GEODE_WINDOWS(key == cocos2d::KEY_Left && cocos2d::CCKeyboardDispatcher::get()->getControlKeyPressed())) {
-			SongControl::previousSong();
+			return SongControl::setSongPercentage(10 * (static_cast<int>(key) - 48));
+		}
+		if ((cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() && key == cocos2d::KEY_N) || GEODE_MACOS((key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_Right) && cocos2d::CCKeyboardDispatcher::get()->getCommandKeyPressed()) GEODE_WINDOWS(key == cocos2d::KEY_Right && cocos2d::CCKeyboardDispatcher::get()->getControlKeyPressed())) {
+			return SongControl::shuffleSong();
+		}
+		if ((cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() && key == cocos2d::KEY_P) || GEODE_MACOS((key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_Left) && cocos2d::CCKeyboardDispatcher::get()->getCommandKeyPressed()) GEODE_WINDOWS(key == cocos2d::KEY_Left && cocos2d::CCKeyboardDispatcher::get()->getControlKeyPressed())) {
+			return SongControl::previousSong();
 		}
 	}
 	if (CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED) {
