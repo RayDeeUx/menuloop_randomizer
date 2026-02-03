@@ -79,7 +79,7 @@ void Utils::setNewSong() {
 	SongManager& songManager = SongManager::get();
 	const std::string& songToBeStored = songManager.getCurrentSong();
 	if (!songToBeStored.empty()) {
-		if (const std::vector<std::string>& blacklist = songManager.getBlacklist(); std::ranges::find(blacklist.begin(), blacklist.end(), songBeingBlacklisted) != blacklist.end()) {
+		if (const std::vector<std::string>& blacklist = songManager.getBlacklist(); std::ranges::find(blacklist.begin(), blacklist.end(), songToBeStored) != blacklist.end()) {
 			songManager.setPreviousSong(songToBeStored);
 		}
 	}
@@ -152,8 +152,8 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs() {
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSong = Utils::toProblematicString(songManager.getCurrentSong());
-	const std::string& songFileName = Utils::toNormalizedString(currentSong.filename());
-	const std::string& customSongDisplayName = Utils::toNormalizedString(currentSong.stem());
+	std::string customSongDisplayName = Utils::toNormalizedString(currentSong.stem());
+	std::transform(customSongDisplayName.begin(), customSongDisplayName.end(), customSongDisplayName.begin(), [](const unsigned char c){ return c < 128 ? static_cast<char>(c) : '?'; });
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return songManager.setCurrentSongDisplayName(customSongDisplayName);
 	if (songManager.isOriginalMenuLoop()) return songManager.setCurrentSongDisplayName("Original Menu Loop by RobTop");
 	geode::Result<int> songFileNameAsID = geode::utils::numFromString<int>(customSongDisplayName);
@@ -487,7 +487,7 @@ void Utils::popualteSongToSongDataMap() {
 		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
 
 		const std::filesystem::path& theirPath = Utils::toProblematicString(song);
-		const int songID = geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(0);
+		const int songID = geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(-1);
 
 		std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
 		std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(theirPath, ed);
@@ -499,7 +499,7 @@ void Utils::popualteSongToSongDataMap() {
 			.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
 			.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
 			.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(theirPath.parent_path()),
-			.isFromMusicDownloadManager = mdm->pathForSong(songID) == song,
+			.isFromMusicDownloadManager = songID > -1 && mdm->pathForSong(songID) == song,
 			.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), "fleym.nongd"),
 			.isEmpty = false
 		};
@@ -613,8 +613,8 @@ void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_vie
 bool Utils::isFromConfigOrAlternateDir(const std::filesystem::path& parentPath) {
 	const geode::Mod* mod = geode::Mod::get();
 	const std::string& altDirString = Utils::toNormalizedString(mod->getSettingValue<std::filesystem::path>("additionalFolder"));
-	const bool isFromConfigDir = geode::utils::string::startsWith(Utils::toNormalizedString(parentPath), Utils::toNormalizedString(mod->getConfigDir()));
-	const bool isFromAlternateDir = !altDirString.empty() && geode::utils::string::startsWith(Utils::toNormalizedString(parentPath), altDirString);
+	const bool isFromConfigDir = geode::utils::string::contains(Utils::toNormalizedString(parentPath), Utils::toNormalizedString(mod->getConfigDir()));
+	const bool isFromAlternateDir = !altDirString.empty() && geode::utils::string::contains(Utils::toNormalizedString(parentPath), altDirString);
 	return isFromConfigDir || isFromAlternateDir;
 }
 
