@@ -75,6 +75,7 @@ void SongManager::setCurrentSongToSavedSong() {
 	const auto lastMenuLoopPath = geode::Mod::get()->getSavedValue<std::filesystem::path>("lastMenuLoopPath");
 	if (std::filesystem::exists(Utils::toProblematicString(lastMenuLoop))) m_currentSong = lastMenuLoop;
 	else if (std::filesystem::exists(lastMenuLoopPath)) m_currentSong = Utils::toNormalizedString(lastMenuLoopPath);
+	m_hashedCurrentSong = std::hash<std::string>{}(m_currentSong);
 }
 
 bool SongManager::isOriginalMenuLoop() const {
@@ -192,6 +193,7 @@ void SongManager::setCurrentSongToOverride() {
 	const std::string& override = SongManager::getOverrideSong();
 	if (override.empty() || !Utils::isSupportedFile(override)) return geode::log::info("override is not valid");
 	m_currentSong = override;
+	m_hashedCurrentSong = std::hash<std::string>{}(m_currentSong);
 }
 
 void SongManager::setPreviousSong(const std::string& value) {
