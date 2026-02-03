@@ -416,7 +416,7 @@ void SongControlMenu::updateCurrentLabel() {
 	const SongType songType = songData.type;
 	this->m_smallLabel->setSkewX(0.f);
 	this->m_smallLabel->setColor({255, 255, 255});
-	if (!songData.isFromConfigOrAltDir && !songData.couldPossiblyExistInMusicDownloadManager && !songData.isFromJukeboxDirectory) this->m_smallLabel->setSkewX(10.f);
+	if (songData.isInNonVanillaNGMLSongLocation && !songData.isFromConfigOrAltDir && songData.couldPossiblyExistInMusicDownloadManager && !songData.isFromJukeboxDirectory) this->m_smallLabel->setSkewX(10.f);
 	if (songType == SongType::Favorited) this->m_smallLabel->setColor({255, 175, 0});
 	else if (songType == SongType::Blacklisted) this->m_smallLabel->setColor({0, 0, 0});
 }

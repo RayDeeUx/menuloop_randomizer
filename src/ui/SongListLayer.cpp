@@ -47,6 +47,13 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	const SongToSongData& songToSongData = songManager.getSongToSongDataEntries();
 	std::error_code ec, ed;
 
+	const std::vector<std::string>& blacklist = songManager.getBlacklist();
+	const std::vector<std::string>& favorites = songManager.getFavorites();
+
+	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
+	const std::string& dummyJukeboxPath = Utils::toNormalizedString(geode::dirs::getModsSaveDir() / "fleym.nongd" / "nongs");
+	const std::string& hypotheticalPathWhereMDMSongsAreStored = Utils::toNormalizedString(Utils::toProblematicString(mdm->pathForSong(593059)).parent_path()); // this song ID in particular is banned from newgrounds
+
 	for (const std::string_view song : songsVector) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
 
@@ -58,26 +65,43 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			songData = songDataIterator->second;
 			songDataFromTheMap = true;
 		} else {
-			const std::vector<std::string>& blacklist = songManager.getBlacklist();
-			const std::vector<std::string>& favorites = songManager.getFavorites();
-
 			SongType songType = SongType::Regular;
 			if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
 			else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
 
-			std::uintmax_t fileSize = std::filesystem::file_size(songFilePath, ec);
-			std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(songFilePath, ed);
+			const std::filesystem::path& theirPath = Utils::toProblematicString(song);
+			const std::filesystem::path& theirParentPath = theirPath.parent_path();
+			const int songID = geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(-1);
+
+			std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
+			std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(theirPath, ed);
+			const bool isFromConfigOrAltDirWithoutMDMCheck = Utils::isFromConfigOrAlternateDir(theirParentPath);
+
+			SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID);
+			const bool isInNonVanillaNGMLSongLocation = songInfoObject && !geode::utils::string::contains(hypotheticalPathWhereMDMSongsAreStored, Utils::toNormalizedString(theirParentPath));
 
 			songData = {
-				.actualFilePath = Utils::toNormalizedString(songFilePath),
-				.fileExtension = Utils::toNormalizedString(songFilePath.extension()),
-				.fileName = Utils::toNormalizedString(songFilePath.filename()),
+				.actualFilePath = std::string(song),
+				.fileExtension = Utils::toNormalizedString(theirPath.extension()),
+				.fileName = Utils::toNormalizedString(theirPath.filename()),
 				.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
 				.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
-				.isFromConfigOrAltDir = Utils::isFromConfigOrAlternateDir(songFilePath.parent_path()),
+				.couldPossiblyExistInMusicDownloadManager = songID > -1 && songInfoObject,
+				.isFromConfigOrAltDir = isFromConfigOrAltDirWithoutMDMCheck,
+				.isInNonVanillaNGMLSongLocation = isInNonVanillaNGMLSongLocation,
+				.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), dummyJukeboxPath),
 				.isEmpty = false
 			};
+			if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID)) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
+				songData.displayName = Utils::getFormattedNGMLSongName(songInfoObject);
+			}
 			songData.displayName = SongListLayer::generateDisplayName(songData);
+
+			std::chrono::system_clock::time_point timepoint = std::chrono::system_clock::time_point(std::chrono::duration_cast<std::chrono::system_clock::duration>(songData.songWriteTime.time_since_epoch()));
+			auto datepoint = floor<std::chrono::days>(floor<std::chrono::seconds>(timepoint));
+			const std::chrono::year_month_day yearMonthDate{std::chrono::sys_days{datepoint}};
+			songData.dateTimeText = fmt::format("{} {:02}, {:04}", months[static_cast<unsigned>(yearMonthDate.month()) - 1], static_cast<unsigned>(yearMonthDate.day()), static_cast<int>(yearMonthDate.year()));
+			songData.extraInfoText = fmt::format("{} | {:.2f} MB | {}", songData.fileExtension, songData.songFileSize / 1000000.f, songData.dateTimeText).c_str();
 		}
 
 		if (songData.type == SongType::Blacklisted) continue;
