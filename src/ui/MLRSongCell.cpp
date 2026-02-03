@@ -175,7 +175,7 @@ void MLRSongCell::updateProgressBar() const {
 
 void MLRSongCell::checkIfCurrentSong() const {
 	if (this->m_songData.isEmpty || !this->m_songNameLabel || !this->m_songNameLabel->getParent() || !this->m_menu) return;
-	const bool isCurrentSong = this->m_songData.actualFilePath == SongManager::get().getCurrentSong();
+	const bool isCurrentSong = this->m_songData.hashedPath == SongManager::get().getHashedCurrentSong();
 
 	geode::cocos::CCArrayExt<CCNode> childNodes = m_menu->getChildrenExt();
 	int numVisible = 0;

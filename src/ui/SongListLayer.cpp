@@ -90,6 +90,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 				.isFromConfigOrAltDir = isFromConfigOrAltDirWithoutMDMCheck,
 				.isInNonVanillaNGMLSongLocation = isInNonVanillaNGMLSongLocation,
 				.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), dummyJukeboxPath),
+				.hashedPath = std::hash<std::string>{}(std::string(song)),
 				.isEmpty = false
 			};
 			if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID)) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {

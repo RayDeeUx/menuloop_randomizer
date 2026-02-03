@@ -22,6 +22,7 @@ struct SongData {
 	bool isInNonVanillaNGMLSongLocation = false;
 	bool isFromJukeboxDirectory = false;
 	bool isEmpty = false;
+	unsigned long hashedPath {};
 };
 
 typedef std::unordered_map<std::filesystem::path, SongData> SongToSongData;
@@ -112,6 +113,7 @@ class SongManager {
 	bool getFinishedCalculatingSongLengths() const;
 	void setIncrementDecrementByMilliseconds(const int);
 	int getIncrementDecrementByMilliseconds() const;
+	unsigned long getHashedCurrentSong() const;
 
   private:
 	SongManager();
@@ -145,4 +147,5 @@ class SongManager {
 	int m_incrementDecrementByMilliseconds = 0;
 	SongToSongData m_songToSongDataMap {};
 	geode::Mod* m_colonMenuLoopStartTime {};
+	unsigned long m_hashedCurrentSong {};
 };

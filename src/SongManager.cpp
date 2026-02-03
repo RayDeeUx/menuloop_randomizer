@@ -55,6 +55,7 @@ void SongManager::pickRandomSong() {
 		m_isMenuLoop = true;
 		m_currentSong = "menuLoop.mp3";
 	}
+	m_hashedCurrentSong = std::hash<std::string>{}(m_currentSong);
 }
 
 std::string SongManager::getCurrentSong() {
@@ -65,6 +66,7 @@ std::string SongManager::getCurrentSong() {
 void SongManager::setCurrentSong(const std::string& song) {
 	if (!SongManager::getOverrideSong().empty()) m_currentSong = SongManager::getOverrideSong();
 	else m_currentSong = song;
+	m_hashedCurrentSong = std::hash<std::string>{}(m_currentSong);
 }
 
 void SongManager::setCurrentSongToSavedSong() {
@@ -340,4 +342,8 @@ void SongManager::setIncrementDecrementByMilliseconds(const int value) {
 
 int SongManager::getIncrementDecrementByMilliseconds() const {
 	return m_incrementDecrementByMilliseconds;
+}
+
+unsigned long SongManager::getHashedCurrentSong() const {
+	return m_hashedCurrentSong;
 }
