@@ -3,7 +3,7 @@
 #include "SongManager.hpp"
 
 #define CAN_USE_PLAYBACK_CONTROLS (songManager.getFinishedCalculatingSongLengths() && songManager.getUndefined0Alk1m123TouchPrio())
-#define INCREMENT_DECREMENT_AMOUNT songManager.getIncrementDecrementByMilliseconds()
+#define INCREMENT_DECREMENT_AMOUNT (songManager.getIncrementDecrementByMilliseconds() * (cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() ? 2 : 1))
 
 namespace SongControl {
 	void woahThereBuddy(const std::string& reason);
