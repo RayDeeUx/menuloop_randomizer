@@ -41,5 +41,6 @@ public:
 	void onRegenButton(CCObject*);
 	void updateCurrentLabel();
 	void onExit() override;
+	void keyDown(cocos2d::enumKeyCodes key) override;
 	void toggleButtonState(cocos2d::CCNode *playlistButton, const bool isEnabled) const;
 };

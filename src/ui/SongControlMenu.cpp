@@ -420,3 +420,11 @@ void SongControlMenu::updateCurrentLabel() {
 	if (songType == SongType::Favorited) this->m_smallLabel->setColor({255, 175, 0});
 	else if (songType == SongType::Blacklisted) this->m_smallLabel->setColor({0, 0, 0});
 }
+
+void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
+	if (key == cocos2d::KEY_Right || key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_L) return SongControl::skipForward();
+	if (key == cocos2d::KEY_Left || key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_J) return SongControl::skipBackward();
+	if (key == cocos2d::enumKeyCodes::KEY_Escape) return this->onClose(nullptr);
+	if (key == cocos2d::enumKeyCodes::KEY_Space) return;
+	return FLAlertLayer::keyDown(key);
+}
