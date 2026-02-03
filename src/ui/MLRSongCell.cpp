@@ -223,7 +223,7 @@ void MLRSongCell::toggleEven(const bool isEven) {
 }
 
 void MLRSongCell::checkIfCurrentSongScheduler(float) {
-	if (this->isVisible()) MLRSongCell::checkIfCurrentSong();
+	MLRSongCell::checkIfCurrentSong();
 }
 
 void MLRSongCell::pressAndHoldScheduler(float dt) {
