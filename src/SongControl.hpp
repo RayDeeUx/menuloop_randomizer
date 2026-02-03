@@ -17,4 +17,5 @@ namespace SongControl {
 	void addSongToPlaylist(const std::string& songPath = SongManager::get().getCurrentSong());
 	void skipBackward();
 	void skipForward();
+	void setSongPercentage(const int percentage);
 }

@@ -346,6 +346,22 @@ int SongManager::getIncrementDecrementByMilliseconds() const {
 	return m_incrementDecrementByMilliseconds;
 }
 
+void SongManager::setYoutubeAndVLCKeyboardShortcutsSongList(const bool value) {
+	m_youtubeAndVLCKeyboardShortcutsSongList = value;
+}
+
+bool SongManager::getYoutubeAndVLCKeyboardShortcutsSongList() const {
+	return m_youtubeAndVLCKeyboardShortcutsSongList;
+}
+
+void SongManager::setYoutubeAndVLCKeyboardShortcutsControlPanel(const bool value) {
+	m_youtubeAndVLCKeyboardShortcutsControlPanel = value;
+}
+
+bool SongManager::getYoutubeAndVLCKeyboardShortcutsControlPanel() const {
+	return m_youtubeAndVLCKeyboardShortcutsControlPanel;
+}
+
 unsigned long SongManager::getHashedCurrentSong() const {
 	return m_hashedCurrentSong;
 }

@@ -572,8 +572,20 @@ void SongListLayer::toggleSavedValueAndSearch(const std::string_view savedValueK
 }
 
 void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
-	if (SongManager::get().getShowPlaybackControlsSongList() && (key == cocos2d::KEY_Right || key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_L)) return SongControl::skipForward();
-	if (SongManager::get().getShowPlaybackControlsSongList() && (key == cocos2d::KEY_Left || key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_J)) return SongControl::skipBackward();
+	if (SongManager::get().getYoutubeAndVLCKeyboardShortcutsSongList()) {
+		if (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine) {
+			/* 48 == 0, 50 == 2, 57 == 9, etc. */
+			SongControl::setSongPercentage(100 * (static_cast<int>(key) - 48));
+		} else if ((cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() && key == cocos2d::KEY_N) || GEODE_MACOS((key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_Right) && cocos2d::CCKeyboardDispatcher::get()->getCommandKeyPressed()) GEODE_WINDOWS(key == cocos2d::KEY_Right && cocos2d::CCKeyboardDispatcher::get()->getControlKeyPressed())) {
+			SongControl::shuffleSong();
+		} else if ((cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() && key == cocos2d::KEY_P) || GEODE_MACOS((key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_Left) && cocos2d::CCKeyboardDispatcher::get()->getCommandKeyPressed()) GEODE_WINDOWS(key == cocos2d::KEY_Left && cocos2d::CCKeyboardDispatcher::get()->getControlKeyPressed())) {
+			SongControl::previousSong();
+		}
+	}
+	if (SongManager::get().getShowPlaybackControlsSongList()) {
+		if (key == cocos2d::KEY_Right || key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_L) return SongControl::skipForward();
+		if (key == cocos2d::KEY_Left || key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_J) return SongControl::skipBackward();
+	}
 	// this is fine since searchbar swallows delete (macos)/backspace (all other platforms) key inputs first
 	if (SEARCH_BAR_DISABLED || (key != cocos2d::KEY_Enter && key != cocos2d::KEY_Delete && key != cocos2d::KEY_Backspace)) {
 		// code taken directly from geode::Popup keyDown impl as of dec 19 2025

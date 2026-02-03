@@ -113,6 +113,10 @@ class SongManager {
 	bool getFinishedCalculatingSongLengths() const;
 	void setIncrementDecrementByMilliseconds(const int);
 	int getIncrementDecrementByMilliseconds() const;
+	void setYoutubeAndVLCKeyboardShortcutsSongList(const bool);
+	bool getYoutubeAndVLCKeyboardShortcutsSongList() const;
+	void setYoutubeAndVLCKeyboardShortcutsControlPanel(const bool);
+	bool getYoutubeAndVLCKeyboardShortcutsControlPanel() const;
 	unsigned long getHashedCurrentSong() const;
 
   private:
@@ -142,6 +146,8 @@ class SongManager {
 	bool m_isUndefined0Alk1m123TouchPrio = false;
 	bool m_sawbladeCustomSongsFolder = false;
 	bool m_vibecodedVentilla = false;
+	bool m_youtubeAndVLCKeyboardShortcutsSongList = false;
+	bool m_youtubeAndVLCKeyboardShortcutsControlPanel = false;
 	int m_lastPosition = 0;
 	int m_towerRepeatCount = 0;
 	int m_incrementDecrementByMilliseconds = 0;

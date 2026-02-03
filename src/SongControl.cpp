@@ -241,14 +241,13 @@ namespace SongControl {
 	}
 	void skipBackward() {
 		SongManager& songManager = SongManager::get();
-		if (!songManager.getFinishedCalculatingSongLengths()) return;
 		if (!CAN_USE_PLAYBACK_CONTROLS || VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
 		const std::string& currSong = songManager.getCurrentSong();
 		if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
 
-		const int fullLength = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songManager.getCurrentSong()))->second.songLength;
+		const int fullLength = fmod->getMusicLengthMS(0);
 		const int lastPosition = songManager.getLastMenuLoopPosition();
 
 		songManager.setPauseSongPositionTracking(true);
@@ -269,14 +268,13 @@ namespace SongControl {
 	}
 	void skipForward() {
 		SongManager& songManager = SongManager::get();
-		if (!songManager.getFinishedCalculatingSongLengths()) return;
 		if (!CAN_USE_PLAYBACK_CONTROLS || VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
 		const std::string& currSong = songManager.getCurrentSong();
 		if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
 
-		const int fullLength = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songManager.getCurrentSong()))->second.songLength;
+		const int fullLength = fmod->getMusicLengthMS(0);
 		const int lastPosition = songManager.getLastMenuLoopPosition();
 
 		songManager.setPauseSongPositionTracking(true);
@@ -295,6 +293,20 @@ namespace SongControl {
 			fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
 		}
 		songManager.setLastMenuLoopPosition(newPosition);
+		songManager.setPauseSongPositionTracking(false);
+	}
+	void setSongPercentage(const int percentage) {
+		SongManager& songManager = SongManager::get();
+		if (!songManager.getFinishedCalculatingSongLengths() || VANILLA_GD_MENU_LOOP_DISABLED) return;
+
+		FMODAudioEngine* fmod = FMODAudioEngine::get();
+		const std::string& currSong = songManager.getCurrentSong();
+		if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
+
+		const int fullLength = fmod->getMusicLengthMS(0);
+
+		songManager.setPauseSongPositionTracking(true);
+		fmod->getActiveMusicChannel(0)->setPosition((1.f * fullLength) * (percentage / 100.f), FMOD_TIMEUNIT_MS);
 		songManager.setPauseSongPositionTracking(false);
 	}
 }

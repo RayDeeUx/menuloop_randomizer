@@ -23,6 +23,8 @@ $on_mod(Loaded) {
 	songManager.setAdvancedLogs(Mod::get()->getSettingValue<bool>("advancedLogs"));
 	songManager.setShowPlaybackProgressAndControls(Mod::get()->getSettingValue<bool>("showPlaybackProgressAndControls"));
 	songManager.setShowPlaybackControlsSongList(Mod::get()->getSettingValue<bool>("showPlaybackProgressControlsSongList"));
+	GEODE_DESKTOP(songManager.setYoutubeAndVLCKeyboardShortcutsSongList(Mod::get()->getSettingValue<bool>("youtubeAndVLCKeyboardShortcutsSongList"));)
+	GEODE_DESKTOP(songManager.setYoutubeAndVLCKeyboardShortcutsControlPanel(Mod::get()->getSettingValue<bool>("youtubeAndVLCKeyboardShortcutsControlPanel"));)
 	songManager.setIncrementDecrementByMilliseconds(Mod::get()->getSettingValue<int64_t>("incrementDecrementByMilliseconds"));
 	songManager.setVibecodedVentilla(VIBECODED_RADIO && (VIBECODED_RADIO->isEnabled() || VIBECODED_RADIO->shouldLoad()));
 	songManager.setUndefined0Alk1m123TouchPrio(BTP && (BTP->isEnabled() || BTP->shouldLoad()) && !BTP->hasUnresolvedDependencies() && !BTP->hasUnresolvedIncompatibilities());
@@ -215,6 +217,14 @@ $on_mod(Loaded) {
 	listenForSettingChanges<bool>("songIndicatorsInControlPanel", [](const bool) {
 		Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 	});
+	#ifdef GEODE_DESKTOP
+	listenForSettingChanges<bool>("youtubeAndVLCKeyboardShortcutsSongList", [](const bool youtubeAndVLCKeyboardShortcutsSongList) {
+		SongManager::get().setYoutubeAndVLCKeyboardShortcutsSongList(youtubeAndVLCKeyboardShortcutsSongList);
+	});
+	listenForSettingChanges<bool>("youtubeAndVLCKeyboardShortcutsControlPanel", [](const bool youtubeAndVLCKeyboardShortcutsControlPanel) {
+		SongManager::get().setYoutubeAndVLCKeyboardShortcutsControlPanel(youtubeAndVLCKeyboardShortcutsControlPanel);
+	});
+	#endif
 	listenForSettingChanges<bool>("advancedLogs", [](const bool newAdvancedLogs) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
 	});
