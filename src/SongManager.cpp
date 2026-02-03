@@ -58,17 +58,17 @@ void SongManager::pickRandomSong() {
 }
 
 std::string SongManager::getCurrentSong() {
-	if (!getOverrideSong().empty()) return getOverrideSong();
+	if (!SongManager::getOverrideSong().empty()) return SongManager::getOverrideSong();
 	return m_currentSong;
 }
 
 void SongManager::setCurrentSong(const std::string& song) {
-	if (!getOverrideSong().empty()) m_currentSong = getOverrideSong();
+	if (!SongManager::getOverrideSong().empty()) m_currentSong = SongManager::getOverrideSong();
 	else m_currentSong = song;
 }
 
 void SongManager::setCurrentSongToSavedSong() {
-	if (m_isMenuLoop || !getOverrideSong().empty()) return;
+	if (m_isMenuLoop || !SongManager::getOverrideSong().empty()) return;
 	const auto lastMenuLoop = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 	const auto lastMenuLoopPath = geode::Mod::get()->getSavedValue<std::filesystem::path>("lastMenuLoopPath");
 	if (std::filesystem::exists(Utils::toProblematicString(lastMenuLoop))) m_currentSong = lastMenuLoop;
@@ -120,7 +120,7 @@ bool SongManager::getPlaylistIsEmpty() const {
 }
 
 void SongManager::setHeldSong(const std::string& value) {
-	if (!getOverrideSong().empty()) return;
+	if (!SongManager::getOverrideSong().empty()) return;
 	m_heldSong = value;
 }
 
@@ -133,13 +133,13 @@ std::string SongManager::getHeldSong() {
 }
 
 void SongManager::addToBlacklist(const std::string& song) {
-	if (!getOverrideSong().empty()) return;
+	if (!SongManager::getOverrideSong().empty()) return;
 	if (std::ranges::find(m_favorites.begin(), m_favorites.end(), song) != m_favorites.end()) return geode::log::info("tried to blacklist a favorited song: {}", song);
 	m_blacklist.push_back(song);
 }
 
 void SongManager::addToBlacklist() {
-	if (!getOverrideSong().empty()) return;
+	if (!SongManager::getOverrideSong().empty()) return;
 	if (std::ranges::find(m_favorites.begin(), m_favorites.end(), m_currentSong) != m_favorites.end()) return geode::log::info("tried to blacklist a favorited song: {}", m_currentSong);
 	m_blacklist.push_back(m_currentSong);
 }
@@ -149,13 +149,13 @@ std::vector<std::string>& SongManager::getBlacklist() {
 }
 
 void SongManager::addToFavorites(const std::string& song) {
-	if (!getOverrideSong().empty()) return;
+	if (!SongManager::getOverrideSong().empty()) return;
 	if (std::ranges::find(m_blacklist.begin(), m_blacklist.end(), song) != m_blacklist.end()) return geode::log::info("tried to favorite a blacklisted song: {}", song);
 	m_favorites.push_back(song);
 }
 
 void SongManager::addToFavorites() {
-	if (!getOverrideSong().empty()) return;
+	if (!SongManager::getOverrideSong().empty()) return;
 	if (std::ranges::find(m_blacklist.begin(), m_blacklist.end(), m_currentSong) != m_blacklist.end()) return geode::log::info("tried to favorite a blacklisted song: {}", m_currentSong);
 	m_favorites.push_back(m_currentSong);
 }
@@ -176,7 +176,7 @@ void SongManager::setOverride(const std::string& path) {
 	geode::log::info("set override to false and override path to blank");
 }
 
-std::string SongManager::getOverrideSong() {
+std::string SongManager::SongManager::getOverrideSong() {
 	if (!Utils::isSupportedFile(m_overrideSong)) return "";
 	return m_overrideSong;
 }
@@ -187,7 +187,7 @@ bool SongManager::isOverride() const {
 
 void SongManager::setCurrentSongToOverride() {
 	geode::log::info("setting current song to override song if it exists");
-	const std::string& override = getOverrideSong();
+	const std::string& override = SongManager::getOverrideSong();
 	if (override.empty() || !Utils::isSupportedFile(override)) return geode::log::info("override is not valid");
 	m_currentSong = override;
 }

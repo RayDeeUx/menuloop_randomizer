@@ -385,9 +385,13 @@ void SongControlMenu::updateCurrentLabel() {
 		this->b->addChildAtPosition(this->m_clipNode, geode::Anchor::BottomLeft);
 		this->m_currTimeLb->setScale(.35f);
 		this->m_totlTimeLb->setScale(.35f);
-		SongControlMenu::checkDaSongPositions(0.f);
-		this->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
-		if (this->m_ffwdButton && this->m_bkwdButton) this->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
+		if (std::ranges::find(songManager.getSongs().begin(), songManager.getSongs().end(), songManager.getCurrentSong()) != songManager.getSongs().end()) {
+			SongControlMenu::checkDaSongPositions(0.f);
+			this->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
+		}
+		if (this->m_ffwdButton && this->m_bkwdButton) {
+			this->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
+		}
 	} else this->m_smallLabel->setString(currentSong.c_str(), "chatFont.fnt");
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_currTimeLb->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
