@@ -241,6 +241,7 @@ namespace SongControl {
 	}
 	void skipBackward() {
 		SongManager& songManager = SongManager::get();
+		if (!songManager.getFinishedCalculatingSongLengths()) return;
 		if (!CAN_USE_PLAYBACK_CONTROLS || VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
@@ -268,6 +269,7 @@ namespace SongControl {
 	}
 	void skipForward() {
 		SongManager& songManager = SongManager::get();
+		if (!songManager.getFinishedCalculatingSongLengths()) return;
 		if (!CAN_USE_PLAYBACK_CONTROLS || VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();

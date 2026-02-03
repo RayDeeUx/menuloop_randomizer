@@ -5,6 +5,7 @@
   - You can toggle this option off for either menu in the mod settings.
   - You can also adjust how many milliseconds to increment/decrement by in the mod settings. Changes apply to both menus.
   - Press and hold either button for more than half a second to fast-forward/fast-rewind the current song!
+  - Arrow keys and J/L keys are also available to increment/decrement current playback progress.
   - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> for this feature.
 - <cg>Added</c> song name indicators for the song name text in the Control Panel.
   - You can toggle this option off in the mod settings.
@@ -13,6 +14,8 @@
 - <co>Fixed</c> an issue where menu loop positions wouldn't be restored when leaving a level whose most recently played song was also the most recently selected menu loop.
 - <co>Fixed</c> some math fumbles with counting songs in the Song List menu.
 - <co>Fixed</c> several UI-related issues related to setting/unsetting a Song Override.
+- <co>Fixed</c> issues with detecting Newgrounds/Music Library songs stored in non-vanilla folders.
+  - Try to name your files using letters as well as numbers to reduce false positives.
 - <co>Fixed</c> some issues with songs containing non-ASCII characters in ther titles.
   - This also affects where these songs are placed when sorting songs alphabetically in the Song List menu.
 - <co>"Fixed"</c> a long-standing bug where song names and artist names modified by Jukebox would spill over to menu loop display names.
