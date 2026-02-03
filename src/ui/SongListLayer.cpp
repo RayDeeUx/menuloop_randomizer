@@ -567,7 +567,7 @@ std::string SongListLayer::generateDisplayName(SongData& songData) {
 
 	std::string displayName = Utils::toNormalizedString(Utils::toProblematicString(songData.actualFilePath).stem());
 	const int songID = geode::utils::numFromString<int>(displayName).unwrapOr(-1);
-	if (songID > 0 && !songData.isFromConfigOrAltDir) {
+	if (songID > 0 && songData.couldPossiblyExistInMusicDownloadManager) {
 		MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) displayName = Utils::getFormattedNGMLSongName(songInfoObject);
 	}

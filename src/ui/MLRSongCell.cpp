@@ -64,7 +64,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		this->addChildAtPosition(jukeboxGradient, geode::Anchor::Top);
 	}
 
-	if (!songData.isFromConfigOrAltDir && !songData.isFromMusicDownloadManager && !songData.isFromJukeboxDirectory) songNameLabel->setSkewX(10.f);
+	if (!songData.isFromConfigOrAltDir && !songData.couldPossiblyExistInMusicDownloadManager && !songData.isFromJukeboxDirectory) songNameLabel->setSkewX(10.f);
 	songNameLabel->limitLabelWidth(356.f * (.8f / compactModeFactor), std::clamp<float>((.75f / compactModeFactor), .3, .75), .001f);
 	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.displayName));
 
@@ -223,7 +223,7 @@ void MLRSongCell::toggleEven(const bool isEven) {
 }
 
 void MLRSongCell::checkIfCurrentSongScheduler(float) {
-	MLRSongCell::checkIfCurrentSong();
+	if (this->isVisible()) MLRSongCell::checkIfCurrentSong();
 }
 
 void MLRSongCell::pressAndHoldScheduler(float dt) {
