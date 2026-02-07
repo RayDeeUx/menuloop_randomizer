@@ -39,6 +39,10 @@ bool PlayingCard::init(const std::string& output) {
 
 	if (Utils::getBool("replaceUnsupportedChars")) nowPlayingLabel->setString(std::regex_replace(output, unsupportedCharRegex, "?").c_str());
 
+	std::string temp = nowPlayingLabel->getString();
+	Utils::sanitizeASCII(temp);
+	nowPlayingLabel->setString(temp.c_str());
+
 	CCNode* mainNode = CCNode::create();
 
 	this->setID("now-playing-card"_spr);
