@@ -304,7 +304,7 @@ bool SongListLayer::setup() {
 		Utils::addViewModeToggle(SAVED("songListSortFileSize"), "size.png"_spr, "song-size", menu_selector(SongListLayer::onSortSizeToggle), viewModeMenu, this);
 		Utils::addViewModeToggle(SAVED("songListSortFileExtn"), "xtension.png"_spr, "file-extension", menu_selector(SongListLayer::onSortExtnToggle), viewModeMenu, this);
 
-		viewModeMenu->setContentHeight((viewModeMenu->getChildrenCount() * 30.f) + separator->getScaledContentHeight());
+		viewModeMenu->setContentHeight(240.f);
 		viewModeMenu->ignoreAnchorPointForPosition(false);
 		viewModeMenu->setPosition({19.f, scrollLayer->getPositionY()});
 		viewModeMenu->setLayout(geode::ColumnLayout::create()->setAxisReverse(true));
