@@ -292,13 +292,19 @@ bool SongListLayer::setup() {
 		Utils::addViewModeToggle(SAVED("songListCompactMode"), "GJ_smallModeIcon_001.png", "compact-mode", menu_selector(SongListLayer::onCompactModeToggle), viewModeMenu, this);
 		Utils::addViewModeToggle(SAVED("songListFavoritesOnlyMode"), "favorites.png"_spr, "favorites-only", menu_selector(SongListLayer::onFavoritesOnlyToggle), viewModeMenu, this);
 		Utils::addViewModeToggle(SAVED("songListReverseSort"), "reverse.png"_spr, "reverse-list", menu_selector(SongListLayer::onSortReverseToggle), viewModeMenu, this);
+
+		cocos2d::CCSprite* separator = cocos2d::CCSprite::createWithSpriteFrameName("gridLine03_001.png");
+		separator->setOpacity(128);
+		separator->setID("sort-filter-separator"_spr);
+		viewModeMenu->addChild(separator);
+
 		Utils::addViewModeToggle(SAVED("songListSortAlphabetically"), "abc.png"_spr, "alphabetical", menu_selector(SongListLayer::onSortABCToggle), viewModeMenu, this);
 		Utils::addViewModeToggle(SAVED("songListSortDateAdded"), "dates.png"_spr, "date-added", menu_selector(SongListLayer::onSortDateToggle), viewModeMenu, this);
 		if (Utils::getBool("showSortSongLength")) Utils::addViewModeToggle(SAVED("songListSortSongLength"), "length.png"_spr, "song-length", menu_selector(SongListLayer::onSortLengthToggle), viewModeMenu, this);
 		Utils::addViewModeToggle(SAVED("songListSortFileSize"), "size.png"_spr, "song-size", menu_selector(SongListLayer::onSortSizeToggle), viewModeMenu, this);
 		Utils::addViewModeToggle(SAVED("songListSortFileExtn"), "xtension.png"_spr, "file-extension", menu_selector(SongListLayer::onSortExtnToggle), viewModeMenu, this);
 
-		viewModeMenu->setContentHeight(viewModeMenu->getChildrenCount() * 30.f);
+		viewModeMenu->setContentHeight((viewModeMenu->getChildrenCount() * 30.f) + separator->getScaledContentHeight());
 		viewModeMenu->ignoreAnchorPointForPosition(false);
 		viewModeMenu->setPosition({19.f, scrollLayer->getPositionY()});
 		viewModeMenu->setLayout(geode::ColumnLayout::create()->setAxisReverse(true));
