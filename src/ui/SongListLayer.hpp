@@ -31,6 +31,7 @@ public:
 	static void handleMutuallyExclusiveSortToggle(const std::string_view savedValueKeyToMatch, const std::string_view nodeID, const std::string_view savedValueKey, cocos2d::CCNode *viewModeMenu, const bool originalSavedValue);
 	void disableAllSortFiltersThenToggleThenSearch(const std::string_view);
 	void toggleSavedValueAndSearch(const std::string_view);
+	void scrollToCurrentSong();
 	void keyDown(const cocos2d::enumKeyCodes) override;
 	void searchSongs(const std::string&);
 

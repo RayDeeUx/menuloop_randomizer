@@ -266,6 +266,12 @@
 			"type": "bool",
 			"default": true
 		},
+		"autoScrollToCurrentSong": {
+			"name": "Song List: Auto-Scroll to Current Song",
+			"description": "Choose if you want to automatically scrol to the current song in the Song List menu.",
+			"type": "bool",
+			"default": true
+		},
 		"showSearchBar": {
 			"name": "Song List: Show Search Bar",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SEARCH BAR WILL APPEAR.__***</c>\n\nChoose if you want to show the search bar in the Song List menu.",

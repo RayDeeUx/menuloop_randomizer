@@ -434,6 +434,8 @@ bool SongListLayer::setup() {
 		this->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
 	}
 
+	if (Utils::getBool("autoScrollToCurrentSong") && !VANILLA_GD_MENU_LOOP_DISABLED && !songManager.isOverride()) SongListLayer::scrollToCurrentSong();
+
 	return true;
 }
 
@@ -480,10 +482,10 @@ void SongListLayer::onScrollTopButton(CCObject*) {
 	contentLayer->setPositionY((contentLayer->getContentHeight() * -1.f) + contentLayer->getParent()->getContentHeight());
 }
 
-void SongListLayer::onScrollCurButton(CCObject*) {
-	if (!Utils::getBool("showScrollingShortcuts")) return;
+void SongListLayer::scrollToCurrentSong() {
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || !SongListLayer::tallEnough(static_cast<geode::ScrollLayer*>(contentLayer->getParent()))) return; // cmon bruh it's in plain sight lol
+	if (!contentLayer || !SongListLayer::tallEnough(static_cast<geode::ScrollLayer*>(contentLayer->getParent()))) return;
+	// cmon bruh it's in plain sight lol
 	CCNode* currentCell = contentLayer->getChildByTag(12192025);
 	const float theAbsolluteTop = contentLayer->getContentHeight() * -1.f + contentLayer->getParent()->getContentHeight();
 	const float centerOrCurrent = (cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() || !currentCell) ? ((contentLayer->getContentHeight() + contentLayer->getParent()->getContentHeight()) * -1.f * .5f) : ((currentCell->getPositionY() * -1.f) - (contentLayer->getParent()->getContentHeight() / 2.f) + 20.f);
@@ -491,6 +493,11 @@ void SongListLayer::onScrollCurButton(CCObject*) {
 	if (desiredPosition > 0.f) contentLayer->setPositionY(0.f);
 	else if (desiredPosition < theAbsolluteTop) contentLayer->setPositionY(theAbsolluteTop);
 	else contentLayer->setPositionY(desiredPosition);
+}
+
+void SongListLayer::onScrollCurButton(CCObject*) {
+	if (!Utils::getBool("showScrollingShortcuts")) return;
+	SongListLayer::scrollToCurrentSong();
 }
 
 void SongListLayer::onScrollBtmButton(CCObject*) {
