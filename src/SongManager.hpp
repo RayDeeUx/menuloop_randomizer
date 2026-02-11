@@ -22,7 +22,7 @@ struct SongData {
 	bool isInNonVanillaNGMLSongLocation = false;
 	bool isFromJukeboxDirectory = false;
 	bool isEmpty = false;
-	unsigned long hashedPath {};
+	unsigned long long hashedPath {};
 };
 
 typedef std::unordered_map<std::filesystem::path, SongData> SongToSongData;
