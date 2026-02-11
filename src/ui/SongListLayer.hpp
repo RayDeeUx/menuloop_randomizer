@@ -6,6 +6,15 @@
 #define SEARCH_BAR_NODE_ID "song-list-search-bar"_spr
 
 class SongListLayer final : public geode::Popup<> {
+protected:
+	CCMenuItemToggler* m_songListCompactMode {};
+    CCMenuItemToggler* m_songListFavoritesOnlyMode {};
+    CCMenuItemToggler* m_songListReverseSort {};
+    CCMenuItemToggler* m_songListSortAlphabetically {};
+    CCMenuItemToggler* m_songListSortDateAdded {};
+    CCMenuItemToggler* m_songListSortSongLength {};
+    CCMenuItemToggler* m_songListSortFileSize {};
+    CCMenuItemToggler* m_songListSortFileExtn {};
 public:
 	static SongListLayer* create();
 	void addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString = "");

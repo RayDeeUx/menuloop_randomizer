@@ -289,20 +289,20 @@ bool SongListLayer::setup() {
 	if (SONG_SORTING_ENABLED) {
 		cocos2d::CCMenu* viewModeMenu = cocos2d::CCMenu::create();
 
-		Utils::addViewModeToggle(SAVED("songListCompactMode"), "GJ_smallModeIcon_001.png", "compact-mode", menu_selector(SongListLayer::onCompactModeToggle), viewModeMenu, this);
-		Utils::addViewModeToggle(SAVED("songListFavoritesOnlyMode"), "favorites.png"_spr, "favorites-only", menu_selector(SongListLayer::onFavoritesOnlyToggle), viewModeMenu, this);
-		Utils::addViewModeToggle(SAVED("songListReverseSort"), "reverse.png"_spr, "reverse-list", menu_selector(SongListLayer::onSortReverseToggle), viewModeMenu, this);
+		this->m_songListCompactMode = Utils::addViewModeToggle(SAVED("songListCompactMode"), "GJ_smallModeIcon_001.png", "compact-mode", menu_selector(SongListLayer::onCompactModeToggle), viewModeMenu, this);
+		this->m_songListFavoritesOnlyMode = Utils::addViewModeToggle(SAVED("songListFavoritesOnlyMode"), "favorites.png"_spr, "favorites-only", menu_selector(SongListLayer::onFavoritesOnlyToggle), viewModeMenu, this);
+		this->m_songListReverseSort = Utils::addViewModeToggle(SAVED("songListReverseSort"), "reverse.png"_spr, "reverse-list", menu_selector(SongListLayer::onSortReverseToggle), viewModeMenu, this);
 
 		cocos2d::CCSprite* separator = cocos2d::CCSprite::createWithSpriteFrameName("gridLine03_001.png");
 		separator->setOpacity(128);
 		separator->setID("sort-filter-separator"_spr);
 		viewModeMenu->addChild(separator);
 
-		Utils::addViewModeToggle(SAVED("songListSortAlphabetically"), "abc.png"_spr, "alphabetical", menu_selector(SongListLayer::onSortABCToggle), viewModeMenu, this);
-		Utils::addViewModeToggle(SAVED("songListSortDateAdded"), "dates.png"_spr, "date-added", menu_selector(SongListLayer::onSortDateToggle), viewModeMenu, this);
-		if (Utils::getBool("showSortSongLength")) Utils::addViewModeToggle(SAVED("songListSortSongLength"), "length.png"_spr, "song-length", menu_selector(SongListLayer::onSortLengthToggle), viewModeMenu, this);
-		Utils::addViewModeToggle(SAVED("songListSortFileSize"), "size.png"_spr, "song-size", menu_selector(SongListLayer::onSortSizeToggle), viewModeMenu, this);
-		Utils::addViewModeToggle(SAVED("songListSortFileExtn"), "xtension.png"_spr, "file-extension", menu_selector(SongListLayer::onSortExtnToggle), viewModeMenu, this);
+		this->m_songListSortAlphabetically = Utils::addViewModeToggle(SAVED("songListSortAlphabetically"), "abc.png"_spr, "alphabetical", menu_selector(SongListLayer::onSortABCToggle), viewModeMenu, this);
+		this->m_songListSortDateAdded = Utils::addViewModeToggle(SAVED("songListSortDateAdded"), "dates.png"_spr, "date-added", menu_selector(SongListLayer::onSortDateToggle), viewModeMenu, this);
+		if (Utils::getBool("showSortSongLength")) this->m_songListSortSongLength = Utils::addViewModeToggle(SAVED("songListSortSongLength"), "length.png"_spr, "song-length", menu_selector(SongListLayer::onSortLengthToggle), viewModeMenu, this);
+		this->m_songListSortFileSize = Utils::addViewModeToggle(SAVED("songListSortFileSize"), "size.png"_spr, "song-size", menu_selector(SongListLayer::onSortSizeToggle), viewModeMenu, this);
+		this->m_songListSortFileExtn = Utils::addViewModeToggle(SAVED("songListSortFileExtn"), "xtension.png"_spr, "file-extension", menu_selector(SongListLayer::onSortExtnToggle), viewModeMenu, this);
 
 		viewModeMenu->setContentHeight(240.f);
 		viewModeMenu->ignoreAnchorPointForPosition(false);
@@ -494,7 +494,7 @@ void SongListLayer::scrollToCurrentSong() {
 	// cmon bruh it's in plain sight lol
 	CCNode* currentCell = contentLayer->getChildByTag(12192025);
 	const float theAbsolluteTop = contentLayer->getContentHeight() * -1.f + contentLayer->getParent()->getContentHeight();
-	const float centerOrCurrent = (cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() || !currentCell) ? ((contentLayer->getContentHeight() + contentLayer->getParent()->getContentHeight()) * -1.f * .5f) : ((currentCell->getPositionY() * -1.f) - (contentLayer->getParent()->getContentHeight() / 2.f) + 20.f);
+	const float centerOrCurrent = (cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() && (!cocos2d::CCKeyboardDispatcher::get()->getAltKeyPressed() || !cocos2d::CCKeyboardDispatcher::get()->getControlKeyPressed() || !cocos2d::CCKeyboardDispatcher::get()->getCommandKeyPressed()) || !currentCell) ? ((contentLayer->getContentHeight() + contentLayer->getParent()->getContentHeight()) * -1.f * .5f) : ((currentCell->getPositionY() * -1.f) - (contentLayer->getParent()->getContentHeight() / 2.f) + 20.f);
 	const float desiredPosition = centerOrCurrent + contentLayer->getParent()->getContentHeight();
 	if (desiredPosition > 0.f) contentLayer->setPositionY(0.f);
 	else if (desiredPosition < theAbsolluteTop) contentLayer->setPositionY(theAbsolluteTop);
@@ -595,28 +595,28 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	const bool isAlt = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(cckd->getAltKeyPressed());
 	if (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine) {
 		if (!isShift && !isCmd && !isCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
-		if (isShift && (isCtrl || isCmd)) {
-			if (key == cocos2d::KEY_One) return SongListLayer::onCompactModeToggle(nullptr);
-			if (key == cocos2d::KEY_Two) return SongListLayer::onFavoritesOnlyToggle(nullptr);
-			if (key == cocos2d::KEY_Three) return SongListLayer::onSortReverseToggle(nullptr);
-			if (key == cocos2d::KEY_Four) return SongListLayer::onSortABCToggle(nullptr);
-			if (key == cocos2d::KEY_Five) return SongListLayer::onSortDateToggle(nullptr);
-			if (key == cocos2d::KEY_Six) return SongListLayer::onSortLengthToggle(nullptr);
-			if (key == cocos2d::KEY_Seven) return SongListLayer::onSortSizeToggle(nullptr);
-			if (key == cocos2d::KEY_Eight) return SongListLayer::onSortExtnToggle(nullptr);
+		if (isShift && (isCtrl || isCanonicalCtrl)) {
+			if (key == cocos2d::KEY_One && this->m_songListCompactMode) this->m_songListCompactMode->activate();
+			if (key == cocos2d::KEY_Two && this->m_songListFavoritesOnlyMode) this->m_songListFavoritesOnlyMode->activate();
+			if (key == cocos2d::KEY_Three && this->m_songListReverseSort) this->m_songListReverseSort->activate();
+			if (key == cocos2d::KEY_Four && this->m_songListSortAlphabetically) this->m_songListSortAlphabetically->activate();
+			if (key == cocos2d::KEY_Five && this->m_songListSortDateAdded) this->m_songListSortDateAdded->activate();
+			if (key == cocos2d::KEY_Six && this->m_songListSortSongLength) this->m_songListSortSongLength->activate();
+			if (key == cocos2d::KEY_Seven && this->m_songListSortFileSize) this->m_songListSortFileSize->activate();
+			if (key == cocos2d::KEY_Eight && this->m_songListSortFileExtn) this->m_songListSortFileExtn->activate();
 		}
 	}
 	if (key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9) {
 		if (!isShift && !isCmd && !isCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
-		if (isShift && (isCtrl || isCmd)) {
-			if (key == cocos2d::KEY_NumPad1) return SongListLayer::onCompactModeToggle(nullptr);
-			if (key == cocos2d::KEY_NumPad2) return SongListLayer::onFavoritesOnlyToggle(nullptr);
-			if (key == cocos2d::KEY_NumPad3) return SongListLayer::onSortReverseToggle(nullptr);
-			if (key == cocos2d::KEY_NumPad4) return SongListLayer::onSortABCToggle(nullptr);
-			if (key == cocos2d::KEY_NumPad5) return SongListLayer::onSortDateToggle(nullptr);
-			if (key == cocos2d::KEY_NumPad6) return SongListLayer::onSortLengthToggle(nullptr);
-			if (key == cocos2d::KEY_NumPad7) return SongListLayer::onSortSizeToggle(nullptr);
-			if (key == cocos2d::KEY_NumPad8) return SongListLayer::onSortExtnToggle(nullptr);
+		if (isShift && (isCtrl || isCanonicalCtrl)) {
+			if (key == cocos2d::KEY_NumPad1 && this->m_songListCompactMode) this->m_songListCompactMode->activate();
+			if (key == cocos2d::KEY_NumPad2 && this->m_songListFavoritesOnlyMode) this->m_songListFavoritesOnlyMode->activate();
+			if (key == cocos2d::KEY_NumPad3 && this->m_songListReverseSort) this->m_songListReverseSort->activate();
+			if (key == cocos2d::KEY_NumPad4 && this->m_songListSortAlphabetically) this->m_songListSortAlphabetically->activate();
+			if (key == cocos2d::KEY_NumPad5 && this->m_songListSortDateAdded) this->m_songListSortDateAdded->activate();
+			if (key == cocos2d::KEY_NumPad6 && this->m_songListSortSongLength) this->m_songListSortSongLength->activate();
+			if (key == cocos2d::KEY_NumPad7 && this->m_songListSortFileSize) this->m_songListSortFileSize->activate();
+			if (key == cocos2d::KEY_NumPad8 && this->m_songListSortFileExtn) this->m_songListSortFileExtn->activate();
 		}
 	}
 	if ((isCtrl || isCmd) && key == cocos2d::KEY_R) {
