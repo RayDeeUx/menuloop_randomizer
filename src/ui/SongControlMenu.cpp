@@ -442,7 +442,7 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 			return SongControl::previousSong();
 		}
 		if (key == cocos2d::KEY_B && isShift && isAlt) {
-			return SongControl::favoriteSong();
+			return SongControlMenu::onFavoriteButton(nullptr);
 		}
 		if ((key == cocos2d::KEY_K && (isCtrl || isCmd)) && songManager.getFinishedCalculatingSongLengths()) {
 			return SongControlMenu::onPlaylistButton(nullptr);

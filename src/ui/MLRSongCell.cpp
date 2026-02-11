@@ -183,8 +183,7 @@ void MLRSongCell::checkIfCurrentSong() const {
 
 	if (isCurrentSong) {
 		this->m_songNameLabel->getParent()->setTag(12192025);
-		if (this->m_songData.type == SongType::Favorited) this->m_songNameLabel->setColor({0, 255, 255});
-		else this->m_songNameLabel->setColor({0, 255, 0});
+		this->m_songNameLabel->setColor(this->m_songData.type == SongType::Favorited ? cocos2d::ccColor3B{0, 255, 255} : cocos2d::ccColor3B{0, 255, 0});
 		if (this->m_currentB && this->m_totalBar) MLRSongCell::updateProgressBar();
 	} else {
 		this->m_songNameLabel->getParent()->setTag(-1);
@@ -223,7 +222,16 @@ void MLRSongCell::toggleEven(const bool isEven) {
 }
 
 void MLRSongCell::checkIfCurrentSongScheduler(float) {
+	const bool wasRegular = this->m_songData.type == SongType::Regular;
 	MLRSongCell::checkIfCurrentSong();
+	if (!this->m_songNameLabel || this->getTag() != 12192025 || this->m_songData.hashedPath != SongManager::get().getHashedCurrentSong() || wasRegular && static_cast<SongData>(SongManager::get().getSongToSongDataEntries().find(Utils::toProblematicString(this->m_songData.actualFilePath))->second).type == SongType::Regular) return;
+	const float compactModeFactor = 36.f / this->getContentHeight();
+	this->m_songNameLabel->setFntFile("goldFont.fnt");
+	this->m_songNameLabel->setColor(cocos2d::ccColor3B{0, 255, 255});
+	this->m_songNameLabel->limitLabelWidth(356.f * (.8f / compactModeFactor), std::clamp<float>((.75f / compactModeFactor), .3, .75), .001f);
+	if (compactModeFactor != 1.0 && this->m_extraInfoLabl) {
+		this->m_extraInfoLabl->limitLabelWidth(356.f * (.7f / compactModeFactor), std::clamp<float>((.5f / compactModeFactor), .3, .75), .001f);
+	}
 }
 
 void MLRSongCell::pressAndHoldScheduler(float dt) {
