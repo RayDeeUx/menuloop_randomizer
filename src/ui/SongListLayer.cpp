@@ -585,24 +585,30 @@ void SongListLayer::toggleSavedValueAndSearch(const std::string_view savedValueK
 }
 
 void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
-	if (SongManager::get().getYoutubeAndVLCKeyboardShortcutsSongList()) {
-		cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
-		const bool isShift = cckd->getShiftKeyPressed();
-		const bool isCtrl = GEODE_MACOS(false) GEODE_WINDOWS(cckd->getControlKeyPressed());
-		const bool isCmd = GEODE_MACOS(cckd->getCommandKeyPressed()) GEODE_WINDOWS(false);
-		const bool isAlt = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(cckd->getAltKeyPressed());
-		if (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine) {
-			return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
-		}
-		if (key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9) {
-			return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
-		}
-		if ((isShift && key == cocos2d::KEY_N) || ((key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_Right) && (isCtrl || isCmd))) {
-			return SongControl::shuffleSong();
-		}
-		if ((isShift && key == cocos2d::KEY_P) || ((key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_Left) && (isCtrl || isCmd))) {
-			return SongControl::previousSong();
-		}
+	SongManager& songManager = SongManager::get();
+	if (!songManager.getYoutubeAndVLCKeyboardShortcutsSongList()) return;
+	cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
+	const bool isShift = cckd->getShiftKeyPressed();
+	const bool isCtrl = GEODE_MACOS(false) GEODE_WINDOWS(cckd->getControlKeyPressed());
+	const bool isCmd = GEODE_MACOS(cckd->getCommandKeyPressed()) GEODE_WINDOWS(false);
+	const bool isAlt = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(cckd->getAltKeyPressed());
+	if (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine) {
+		return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
+	}
+	if (key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9) {
+		return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
+	}
+	if ((isShift && key == cocos2d::KEY_N) || ((key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_Right) && (isCtrl || isCmd))) {
+		return SongControl::shuffleSong();
+	}
+	if ((isShift && key == cocos2d::KEY_P) || ((key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_Left) && (isCtrl || isCmd))) {
+		return SongControl::previousSong();
+	}
+	if (key == cocos2d::KEY_B && isShift && isAlt) {
+		return SongControl::favoriteSong();
+	}
+	if ((key == cocos2d::KEY_K && (isCtrl || isCmd)) && songManager.getFinishedCalculatingSongLengths()) {
+		return SongListLayer::onControlsButton(nullptr);
 	}
 	if (SongManager::get().getShowPlaybackControlsSongList()) {
 		if (key == cocos2d::KEY_Right || key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_L) return SongControl::skipForward();
