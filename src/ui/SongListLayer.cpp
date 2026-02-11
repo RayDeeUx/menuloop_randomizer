@@ -594,10 +594,30 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	const bool isCanonicalCtrl = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(false);
 	const bool isAlt = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(cckd->getAltKeyPressed());
 	if (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine) {
-		return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
+		if (!isShift && !isCmd && !isCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
+		if (isShift && (isCtrl || isCmd)) {
+			if (key == cocos2d::KEY_One) return SongListLayer::onCompactModeToggle(nullptr);
+			if (key == cocos2d::KEY_Two) return SongListLayer::onFavoritesOnlyToggle(nullptr);
+			if (key == cocos2d::KEY_Three) return SongListLayer::onSortReverseToggle(nullptr);
+			if (key == cocos2d::KEY_Four) return SongListLayer::onSortABCToggle(nullptr);
+			if (key == cocos2d::KEY_Five) return SongListLayer::onSortDateToggle(nullptr);
+			if (key == cocos2d::KEY_Six) return SongListLayer::onSortLengthToggle(nullptr);
+			if (key == cocos2d::KEY_Seven) return SongListLayer::onSortSizeToggle(nullptr);
+			if (key == cocos2d::KEY_Eight) return SongListLayer::onSortExtnToggle(nullptr);
+		}
 	}
 	if (key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9) {
-		return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
+		if (!isShift && !isCmd && !isCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
+		if (isShift && (isCtrl || isCmd)) {
+			if (key == cocos2d::KEY_NumPad1) return SongListLayer::onCompactModeToggle(nullptr);
+			if (key == cocos2d::KEY_NumPad2) return SongListLayer::onFavoritesOnlyToggle(nullptr);
+			if (key == cocos2d::KEY_NumPad3) return SongListLayer::onSortReverseToggle(nullptr);
+			if (key == cocos2d::KEY_NumPad4) return SongListLayer::onSortABCToggle(nullptr);
+			if (key == cocos2d::KEY_NumPad5) return SongListLayer::onSortDateToggle(nullptr);
+			if (key == cocos2d::KEY_NumPad6) return SongListLayer::onSortLengthToggle(nullptr);
+			if (key == cocos2d::KEY_NumPad7) return SongListLayer::onSortSizeToggle(nullptr);
+			if (key == cocos2d::KEY_NumPad8) return SongListLayer::onSortExtnToggle(nullptr);
+		}
 	}
 	if ((isCtrl || isCmd) && key == cocos2d::KEY_R) {
 		return SongControl::setSongPercentage(0);
