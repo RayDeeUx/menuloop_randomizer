@@ -23,6 +23,8 @@ $on_mod(Loaded) {
 	songManager.setAdvancedLogs(Mod::get()->getSettingValue<bool>("advancedLogs"));
 	songManager.setShowPlaybackProgressAndControls(Mod::get()->getSettingValue<bool>("showPlaybackProgressAndControls"));
 	songManager.setShowPlaybackControlsSongList(Mod::get()->getSettingValue<bool>("showPlaybackProgressControlsSongList"));
+	GEODE_MOBILE(songManager.setYoutubeAndVLCKeyboardShortcutsSongList(false);)
+	GEODE_MOBILE(songManager.setYoutubeAndVLCKeyboardShortcutsControlPanel(false);)
 	GEODE_DESKTOP(songManager.setYoutubeAndVLCKeyboardShortcutsSongList(Mod::get()->getSettingValue<bool>("youtubeAndVLCKeyboardShortcutsSongList"));)
 	GEODE_DESKTOP(songManager.setYoutubeAndVLCKeyboardShortcutsControlPanel(Mod::get()->getSettingValue<bool>("youtubeAndVLCKeyboardShortcutsControlPanel"));)
 	songManager.setIncrementDecrementByMilliseconds(Mod::get()->getSettingValue<int64_t>("incrementDecrementByMilliseconds"));

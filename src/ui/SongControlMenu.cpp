@@ -424,15 +424,28 @@ void SongControlMenu::updateCurrentLabel() {
 void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 	SongManager& songManager = SongManager::get();
 	if (songManager.getYoutubeAndVLCKeyboardShortcutsControlPanel()) {
+		cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
+		const bool isShift = cckd->getShiftKeyPressed();
+		const bool isCtrl = GEODE_MACOS(false) GEODE_WINDOWS(cckd->getControlKeyPressed());
+		const bool isCmd = GEODE_MACOS(cckd->getCommandKeyPressed()) GEODE_WINDOWS(false);
+		const bool isAlt = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(cckd->getAltKeyPressed());
 		if (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine) {
-			/* 48 == 0, 50 == 2, 57 == 9, etc. */
-			return SongControl::setSongPercentage(10 * (static_cast<int>(key) - 48));
+			return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
 		}
-		if ((cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() && key == cocos2d::KEY_N) || GEODE_MACOS((key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_Right) && cocos2d::CCKeyboardDispatcher::get()->getCommandKeyPressed()) GEODE_WINDOWS(key == cocos2d::KEY_Right && cocos2d::CCKeyboardDispatcher::get()->getControlKeyPressed())) {
+		if (key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9) {
+			return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
+		}
+		if ((isShift && key == cocos2d::KEY_N) || ((key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_Right) && (isCtrl || isCmd))) {
 			return SongControl::shuffleSong();
 		}
-		if ((cocos2d::CCKeyboardDispatcher::get()->getShiftKeyPressed() && key == cocos2d::KEY_P) || GEODE_MACOS((key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_Left) && cocos2d::CCKeyboardDispatcher::get()->getCommandKeyPressed()) GEODE_WINDOWS(key == cocos2d::KEY_Left && cocos2d::CCKeyboardDispatcher::get()->getControlKeyPressed())) {
+		if ((isShift && key == cocos2d::KEY_P) || ((key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_Left) && (isCtrl || isCmd))) {
 			return SongControl::previousSong();
+		}
+		if (key == cocos2d::KEY_B && isShift && isAlt) {
+			return SongControl::favoriteSong();
+		}
+		if ((key == cocos2d::KEY_K && (isCtrl || isCmd)) && songManager.getFinishedCalculatingSongLengths() && songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSearchBar")) {
+			return SongControlMenu::onPlaylistButton(nullptr);
 		}
 	}
 	if (CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED) {
