@@ -16,7 +16,9 @@
   - <cr>Shift + P</c>, <c-FFA544>Command + Left Arrow</c> (macOS)/<c-FFA544>Ctrl + Left Arrow</c> (Windows): Play previous song (if available)
   - <c-06CE91>Command + R</c> (macOS)/<c-06CE91>Ctrl + R</c> (Windows): Restart current song
   - <c-06CE91>Shift + Ctrl + B</c> (macOS)/<c-06CE91>Shift + Alt + B</c> (Windows): Favorite current song
-  - <c-06CE91>Shift + Cmd + K</c> (macOS)/<c-06CE91>Shift + Ctrl + K</c> (Windows): Favorite current song
+  - <c-06CE91>Shift + Cmd + K</c> (macOS)/<c-06CE91>Shift + Ctrl + K</c> (Windows): Switch between Control Panel and Song List
+  - <c-06CE91>Shift + Cmd + H</c> (macOS)/<c-06CE91>Shift + Ctrl + H</c> (Windows): Go from Song List menu to Control Panel
+  - <c-06CE91>Shift + Cmd + J</c> (macOS)/<c-06CE91>Shift + Ctrl + J</c> (Windows): Scroll to current song in Song List
   - Keybinds are *not* 1:1 exact to their source material; RobTop has yet to fix the crash where the Alt/Option key crashes the game, so some keybinds were changed to avoid collisions.
   - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> for some parts of this feature.
 - <cg>Added</c> song name indicators for the song name text in the Control Panel.
