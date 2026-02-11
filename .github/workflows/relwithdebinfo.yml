@@ -39,7 +39,7 @@ jobs:
       - name: Build the mod (RelWithDebInfo)
         uses: geode-sdk/build-geode-mod@main
         with:
-          sdk: stable # temp
+          sdk: "v4.10.0" # temp
           build-config: RelWithDebInfo
           export-symbols: true
           export-pdb: true
