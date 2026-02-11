@@ -608,7 +608,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		}
 	}
 	if (key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9) {
-		if (!isShift && !isCmd && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
+		if (!isShift && !macOSCtrl && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
 		if (isShift && (windowsCtrl || macOSCtrl)) {
 			if (key == cocos2d::KEY_NumPad1 && this->m_songListCompactMode) this->m_songListCompactMode->activate();
 			if (key == cocos2d::KEY_NumPad2 && this->m_songListFavoritesOnlyMode) this->m_songListFavoritesOnlyMode->activate();

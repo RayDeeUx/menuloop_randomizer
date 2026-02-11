@@ -327,7 +327,7 @@
 		},
 		"youtubeAndVLCKeyboardShortcutsSongList": {
 			"name": "Song List: YT/VLC-like Hotkeys",
-			"description": "Choose if you want to use YT/VLC-like shortcuts to control playback progress or control song selection in the Song List menu.\n\n- <co>0, 1, 2, 3, 4, 5, 6, 7, 8, 9 on the numrow</c>: <cl>Set playback progress position to 0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, or 90% of the song's duration.</c>\n- <co>Shift + N, Command + Right Arrow (macOS)/Ctrl + Right Arrow (Windows)</c>: <cl>Shuffle song</c>\n- <co>Shift + P, Command + Left Arrow (macOS)/Ctrl + Left Arrow (Windows)</c>: <cl>Previous song</c> (can only backtrack once)",
+			"description": "Choose if you want to use YT/VLC-like shortcuts to control playback progress or control song selection in the Song List menu.\n\n- <co>0, 1, 2, 3, 4, 5, 6, 7, 8, 9</c>: <cl>Set playback progress position to 0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, or 90% of the song's duration.</c>\n- <co>Shift + N, Command + Right Arrow (macOS)/Ctrl + Right Arrow (Windows)</c>: <cl>Shuffle song</c>\n- <co>Shift + P, Command + Left Arrow (macOS)/Ctrl + Left Arrow (Windows)</c>: <cl>Previous song</c> (can only backtrack once)",
 			"type": "bool",
 			"default": {
 				"win": true,
@@ -352,7 +352,7 @@
 		},
 		"youtubeAndVLCKeyboardShortcutsControlPanel": {
 			"name": "Control Panel: YT/VLC-like Hotkeys",
-			"description": "Choose if you want to use YT/VLC-like shortcuts to control playback progress or control song selection in the Control Panel menu.\n\n- <co>0, 1, 2, 3, 4, 5, 6, 7, 8, 9 on the numrow</c>: <cl>Set playback progress position to 0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, or 90% of the song's duration.</c>\n- <co>Shift + N, Command + Right Arrow (macOS)/Ctrl + Right Arrow (Windows)</c>: <cl>Shuffle song</c>\n- <co>Shift + P, Command + Left Arrow (macOS)/Ctrl + Left Arrow (Windows)</c>: <cl>Previous song</c> (can only backtrack once)",
+			"description": "Choose if you want to use YT/VLC-like shortcuts to control playback progress or control song selection in the Control Panel menu.\n\n- <co>0, 1, 2, 3, 4, 5, 6, 7, 8, 9</c>: <cl>Set playback progress position to 0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, or 90% of the song's duration.</c>\n- <co>Shift + N, Command + Right Arrow (macOS)/Ctrl + Right Arrow (Windows)</c>: <cl>Shuffle song</c>\n- <co>Shift + P, Command + Left Arrow (macOS)/Ctrl + Left Arrow (Windows)</c>: <cl>Previous song</c> (can only backtrack once)",
 			"type": "bool",
 			"default": {
 				"win": true,

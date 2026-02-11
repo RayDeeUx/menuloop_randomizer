@@ -6,7 +6,19 @@
   - You can also adjust how many milliseconds to increment/decrement by in the mod settings. Changes apply to both menus.
   - Press and hold either button for more than half a second to fast-forward/fast-rewind the current song!
   - Arrow keys and J/L keys are also available to increment/decrement current playback progress.
+  - Hold Shift to increment/decrement 2x as much, and hold both Shift ***__and__*** Control (macOS)/Alt (Windows) to increment/decrement 3x as much.
   - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> for this feature.
+- <cg>Added</c> numerous keybinds inspired by <cr>YouTube</c>, <c-FFA544>VLC</c>, and <c-06CE91>Spotify</c> into both the Control Panel and the Song List menus.
+  - <co>***__THIS FEATURE IS ONLY FOR WINDOWS AND MACOS.__***</c>
+  - <co>***KEYBINDS ARE*** ***__NOT__*** ***REBINDABLE.***</c>
+  - <cr>Numrow/Numpad 0-9</c>: Control playback progress position. (0 = 0%, 1 = 10%, etc..., 9 = 90%.)
+  - <cr>Shift + N</c>, <c-06CE91>Ctrl + S</c>, <c-FFA544>Command + Right Arrow</c> (macOS)/<c-FFA544>Ctrl + Right Arrow</c> (Windows): Shuffle song
+  - <cr>Shift + P</c>, <c-FFA544>Command + Left Arrow</c> (macOS)/<c-FFA544>Ctrl + Left Arrow</c> (Windows): Play previous song (if available)
+  - <c-06CE91>Command + R</c> (macOS)/<c-06CE91>Ctrl + R</c> (Windows): Restart current song
+  - <c-06CE91>Shift + Ctrl + B</c> (macOS)/<c-06CE91>Shift + Alt + B</c> (Windows): Favorite current song
+  - <c-06CE91>Shift + Cmd + K</c> (macOS)/<c-06CE91>Shift + Ctrl + K</c> (Windows): Favorite current song
+  - Keybinds are *not* 1:1 exact to their source material; RobTop has yet to fix the crash where the Alt/Option key crashes the game, so some keybinds were changed to avoid collisions.
+  - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> for some parts of this feature.
 - <cg>Added</c> song name indicators for the song name text in the Control Panel.
   - You can toggle this option off in the mod settings.
   - Song name indicators for song name label are the same as those seen in the Song List menu.
