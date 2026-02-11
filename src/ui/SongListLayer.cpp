@@ -631,7 +631,10 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	if (key == cocos2d::KEY_B && isShift && isAlt) {
 		return SongControl::favoriteSong();
 	}
-	if ((key == cocos2d::KEY_K && (isCtrl || isCmd)) && songManager.getFinishedCalculatingSongLengths()) {
+	if (key == cocos2d::KEY_J && isShift && isAlt) {
+		return SongListLayer::scrollToCurrentSong();
+	}
+	if (((key == cocos2d::KEY_K || key == cocos2d::KEY_H) && (isCtrl || isCmd)) && songManager.getFinishedCalculatingSongLengths()) {
 		return SongListLayer::onControlsButton(nullptr);
 	}
 	if (SongManager::get().getShowPlaybackControlsSongList()) {
