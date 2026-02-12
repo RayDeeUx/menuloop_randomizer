@@ -22,6 +22,7 @@ protected:
 public:
 	static SongListLayer* create();
 	void addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString = "");
+	void updateSongCountAndFavoritesCount(SongManager& songManager);
 	bool setup() override;
 	void onSettingsButton(CCObject*);
 	void onShuffleButton(CCObject*);

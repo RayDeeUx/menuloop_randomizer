@@ -116,16 +116,20 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	if (this->m_scrollShortcuts) this->m_scrollShortcuts->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 }
 
-bool SongListLayer::setup() {
-	this->setUserObject("user95401.scrollbar_everywhere/scrollbar", cocos2d::CCBool::create(true)); // fuck off, user95401.
-	this->m_noElasticity = true;
-
-	SongManager& songManager = SongManager::get();
+void SongListLayer::updateSongCountAndFavoritesCount(SongManager& songManager) {
 	const int favorites = std::clamp<int>(songManager.getFavorites().size(), 0, std::numeric_limits<int>::max());
 	const int songCount = std::clamp<int>(songManager.getSongsSize() - favorites, 0, std::numeric_limits<int>::max());;
 	this->setTitle(fmt::format("Menu Loop Randomizer - Your {} Song{} ({} Favorite{})", songCount, (songCount == 1 ? "" : "s"), favorites, (favorites == 1 ? "" : "s")));
 	this->m_title->setID("song-list-title"_spr);
 	this->m_title->limitLabelWidth(320.f, 1.f, .0001f);
+}
+
+bool SongListLayer::setup() {
+	this->setUserObject("user95401.scrollbar_everywhere/scrollbar", cocos2d::CCBool::create(true)); // fuck off, user95401.
+	this->m_noElasticity = true;
+
+	SongManager& songManager = SongManager::get();
+	SongListLayer::updateSongCountAndFavoritesCount(songManager);
 
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
 	CCLayer* mainLayer = this->m_mainLayer;
@@ -565,7 +569,8 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 			return SongControl::previousSong();
 		}
 		if (key == cocos2d::KEY_B && isShift && isAlt) {
-			return SongControl::favoriteSong();
+			SongControl::favoriteSong();
+			return SongListLayer::updateSongCountAndFavoritesCount(songManager);
 		}
 		if (key == cocos2d::KEY_J && isShift && isAlt) {
 			return SongListLayer::scrollToCurrentSong();
