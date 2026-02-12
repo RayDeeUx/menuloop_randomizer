@@ -32,7 +32,7 @@ SongListLayer* SongListLayer::create() {
 }
 
 void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString) {
-	std::vector<std::string_view> alreadyAdded {};
+	std::vector<std::filesystem::path> alreadyAdded {};
 	std::vector<MLRSongCell*> cellsToAdd {};
 
 	const bool songListCompactMode = SONG_SORTING_DISABLED ? false : SAVED("songListCompactMode");
@@ -41,74 +41,12 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 	if (SEARCH_BAR_ENABLED) scrollLayer->m_contentLayer->addChild(MLRSongCell::createEmpty(false)); // intentonally blank song cell for padding to go beneath search bar. 36.f units tall
 
-	const std::vector<std::string>& songsVector = songManager.getSongs();
 	float desiredContentHeight = SEARCH_BAR_ENABLED ? 36.f : 0.f; // always start with the height of the blank song cell, which is guaranteed to be 36.f units
 
-	const SongToSongData& songToSongData = songManager.getSongToSongDataEntries();
-	std::error_code ec, ed;
-
-	const std::vector<std::string>& blacklist = songManager.getBlacklist();
-	const std::vector<std::string>& favorites = songManager.getFavorites();
-
-	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
-	const std::string& dummyJukeboxPath = Utils::toNormalizedString(geode::dirs::getModsSaveDir() / "fleym.nongd" / "nongs");
-	const std::string& hypotheticalPathWhereMDMSongsAreStored = Utils::toNormalizedString(Utils::toProblematicString(mdm->pathForSong(593059)).parent_path()); // this song ID in particular is banned from newgrounds
-
-	for (const std::string_view song : songsVector) {
+	for (auto& [song, songData] : songManager.getSongToSongDataEntries()) {
 		if (std::ranges::find(alreadyAdded.begin(), alreadyAdded.end(), song) != alreadyAdded.end()) continue;
 
-		SongData songData {};
-		bool songDataFromTheMap = false;
-		const std::filesystem::path& songFilePath = Utils::toProblematicString(song);
-		auto songDataIterator = songToSongData.find(songFilePath);
-		if (songDataIterator != songToSongData.end()) {
-			songData = songDataIterator->second;
-			songDataFromTheMap = true;
-		} else {
-			SongType songType = SongType::Regular;
-			if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
-			else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
-
-			const std::filesystem::path& theirPath = Utils::toProblematicString(song);
-			const std::filesystem::path& theirParentPath = theirPath.parent_path();
-			const int songID = geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(-1);
-
-			std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
-			std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(theirPath, ed);
-			const bool isFromConfigOrAltDirWithoutMDMCheck = Utils::isFromConfigOrAlternateDir(theirParentPath);
-
-			SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID);
-			const bool isInNonVanillaNGMLSongLocation = songInfoObject && !geode::utils::string::contains(hypotheticalPathWhereMDMSongsAreStored, Utils::toNormalizedString(theirParentPath));
-
-			songData = {
-				.actualFilePath = std::string(song),
-				.fileExtension = Utils::toNormalizedString(theirPath.extension()),
-				.fileName = Utils::toNormalizedString(theirPath.filename()),
-				.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
-				.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
-				.hashedPath = std::hash<std::string>{}(std::string(song)),
-				.isFromConfigOrAltDir = isFromConfigOrAltDirWithoutMDMCheck,
-				.couldPossiblyExistInMusicDownloadManager = songID > -1 && songInfoObject,
-				.isInNonVanillaNGMLSongLocation = isInNonVanillaNGMLSongLocation,
-				.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), dummyJukeboxPath),
-				.isEmpty = false
-			};
-			if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID)) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
-				songData.displayName = Utils::getFormattedNGMLSongName(songInfoObject);
-			}
-			songData.displayName = SongListLayer::generateDisplayName(songData);
-
-			std::chrono::system_clock::time_point timepoint = std::chrono::system_clock::time_point(std::chrono::duration_cast<std::chrono::system_clock::duration>(songData.songWriteTime.time_since_epoch()));
-			auto datepoint = floor<std::chrono::days>(floor<std::chrono::seconds>(timepoint));
-			const std::chrono::year_month_day yearMonthDate{std::chrono::sys_days{datepoint}};
-			songData.dateTimeText = fmt::format("{} {:02}, {:04}", months[static_cast<unsigned>(yearMonthDate.month()) - 1], static_cast<unsigned>(yearMonthDate.day()), static_cast<int>(yearMonthDate.year()));
-			songData.extraInfoText = fmt::format("{} | {:.2f} MB | {}", songData.fileExtension, songData.songFileSize / 1000000.f, songData.dateTimeText).c_str();
-		}
-
-		if (songData.type == SongType::Blacklisted) continue;
-		if (songListFavoritesOnlyMode && songData.type != SongType::Favorited) continue;
-
-		if (SONG_SORTING_ENABLED && SAVED("songListSortSongLength") && !songDataFromTheMap) songData.songLength = SongListLayer::getLength(songData.actualFilePath, reverse);
+		if (songData.type == SongType::Blacklisted || songListFavoritesOnlyMode && songData.type != SongType::Favorited) continue;
 
 		if (SEARCH_BAR_ENABLED && !queryString.empty()) {
 			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.displayName), geode::utils::string::toLower(queryString));
