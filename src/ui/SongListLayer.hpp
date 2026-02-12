@@ -41,7 +41,7 @@ public:
 	void onSortSizeToggle(CCObject*);
 	void onSortExtnToggle(CCObject*);
 
-	static void handleMutuallyExclusiveSortToggle(const std::string_view savedValueKeyToMatch, const std::string_view nodeID, const std::string_view savedValueKey, cocos2d::CCNode *viewModeMenu, const bool originalSavedValue);
+	static void handleMutuallyExclusiveSortToggle(CCMenuItemToggler* toggle, const std::string_view savedValueKeyToMatch, const std::string_view savedValueKey, const bool originalSavedValue);
 	void disableAllSortFiltersThenToggleThenSearch(const std::string_view);
 	void toggleSavedValueAndSearch(const std::string_view);
 	void scrollToCurrentSong();

@@ -553,24 +553,21 @@ void SongListLayer::onSortExtnToggle(CCObject*) {
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileExtn");
 }
 
-void SongListLayer::handleMutuallyExclusiveSortToggle(const std::string_view savedValueKeyToMatch, const std::string_view nodeID, const std::string_view savedValueKey, cocos2d::CCNode *viewModeMenu, const bool originalSavedValue) {
+void SongListLayer::handleMutuallyExclusiveSortToggle(CCMenuItemToggler* toggle, const std::string_view savedValueKeyToMatch, const std::string_view savedValueKey, const bool originalSavedValue) {
 	geode::Mod::get()->setSavedValue<bool>(savedValueKeyToMatch, false);
-	if (const auto toggler = static_cast<CCMenuItemToggler*>(viewModeMenu->getChildByID(nodeID)); toggler) {
-		toggler->toggle(false);
-		if (savedValueKey == savedValueKeyToMatch) toggler->toggle(originalSavedValue);
-	}
+	if (!toggle) return;
+	toggle->toggle(false);
+	if (savedValueKey == savedValueKeyToMatch) toggle->toggle(originalSavedValue);
 }
 
 void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_view savedValueKey) {
-	if (SONG_SORTING_DISABLED) return;
-	cocos2d::CCMenu* viewModeMenu = this->m_viewFiltersMenu;
-	if (!viewModeMenu) return;
+	if (SONG_SORTING_DISABLED || !this->m_viewFiltersMenu) return;
 	const bool originalSavedValue = SAVED(savedValueKey);
-	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortAlphabetically", "alphabetical-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
-	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortDateAdded", "date-added-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
-	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortSongLength", "song-length-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
-	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortFileSize", "song-size-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
-	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortFileExtn", "file-extension-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
+	SongListLayer::handleMutuallyExclusiveSortToggle(this->m_songListSortAlphabetically, "songListSortAlphabetically", savedValueKey, originalSavedValue);
+	SongListLayer::handleMutuallyExclusiveSortToggle(this->m_songListSortDateAdded, "songListSortDateAdded", savedValueKey, originalSavedValue);
+	SongListLayer::handleMutuallyExclusiveSortToggle(this->m_songListSortSongLength, "songListSortSongLength", savedValueKey, originalSavedValue);
+	SongListLayer::handleMutuallyExclusiveSortToggle(this->m_songListSortFileSize, "songListSortFileSize", savedValueKey, originalSavedValue);
+	SongListLayer::handleMutuallyExclusiveSortToggle(this->m_songListSortFileExtn, "songListSortFileExtn", savedValueKey, originalSavedValue);
 	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
 	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
