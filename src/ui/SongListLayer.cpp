@@ -450,7 +450,7 @@ void SongListLayer::searchSongs(const std::string& queryString) {
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
 	if (!contentLayer || !contentLayer->getLayout()) return;
 	contentLayer->removeAllChildrenWithCleanup(true);
-	SongListLayer::addSongsToScrollLayer(static_cast<geode::ScrollLayer*>(contentLayer->getParent()), SongManager::get(), queryString);
+	SongListLayer::addSongsToScrollLayer(this->m_scrollLayer, SongManager::get(), queryString);
 }
 
 void SongListLayer::onSettingsButton(CCObject*) {
