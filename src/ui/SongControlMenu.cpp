@@ -458,7 +458,6 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 		if (key == cocos2d::KEY_Right || key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_L) return SongControl::skipForward();
 		if (key == cocos2d::KEY_Left || key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_J) return SongControl::skipBackward();
 	}
-	/* youtubeAndVLCKeyboardShortcutsControlPanel */
 	if (key == cocos2d::enumKeyCodes::KEY_Escape) return this->onClose(nullptr);
 	if (key == cocos2d::enumKeyCodes::KEY_Space) return;
 	return FLAlertLayer::keyDown(key);
