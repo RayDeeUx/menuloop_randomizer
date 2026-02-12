@@ -326,8 +326,8 @@
 			"enable-if": "loaded:alk.better-touch-prio"
 		},
 		"youtubeAndVLCKeyboardShortcutsSongList": {
-			"name": "Song List: YT/VLC-like Hotkeys",
-			"description": "Choose if you want to use YT/VLC-like shortcuts to control playback progress or control song selection in the Song List menu.\n\n- <co>0, 1, 2, 3, 4, 5, 6, 7, 8, 9</c>: <cl>Set playback progress position to 0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, or 90% of the song's duration.</c>\n- <co>Shift + N, Command + Right Arrow (macOS)/Ctrl + Right Arrow (Windows)</c>: <cl>Shuffle song</c>\n- <co>Shift + P, Command + Left Arrow (macOS)/Ctrl + Left Arrow (Windows)</c>: <cl>Previous song</c> (can only backtrack once)",
+			"name": "Song List: YT/VLC/Spotify-like Hotkeys",
+			"description": "Choose if you want to use <cr>YT</c>/<c-FFA544>VLC</c>/<c-06CE91>Spotify</c>-like shortcuts to control playback progress or control song selection in the Song List menu.\n\n- <cr>Numrow/Numpad 0-9</c>: Control playback progress position. (0 = 0%, 1 = 10%, etc..., 9 = 90%.)\n- <cr>Shift + N</c>, <c-06CE91>Ctrl + S</c>, <c-FFA544>Command + Right Arrow</c> (macOS)/<c-FFA544>Ctrl + Right Arrow</c> (Windows): Shuffle song\n- <cr>Shift + P</c>, <c-FFA544>Command + Left Arrow</c> (macOS)/<c-FFA544>Ctrl + Left Arrow</c> (Windows): Play previous song (if available)\n- <c-06CE91>Command + R</c> (macOS)/<c-06CE91>Ctrl + R</c> (Windows): Restart current song\n- <c-06CE91>Cmd + H</c> (macOS)/<c-06CE91>Ctrl + H</c>, <c-06CE91>Cmd + K</c> (macOS)/<c-06CE91>Ctrl + K</c> (Windows): Switch to Control Panel\n- <c-06CE91>Shift + Ctrl + B</c> (macOS)/<c-06CE91>Shift + Alt + B</c> (Windows): Favorite current song\n- <c-06CE91>Shift + Cmd + J</c> (macOS)/<c-06CE91>Shift + Ctrl + J</c> (Windows): Scroll to current song",
 			"type": "bool",
 			"default": {
 				"win": true,
@@ -351,8 +351,8 @@
 			"enable-if": "loaded:alk.better-touch-prio"
 		},
 		"youtubeAndVLCKeyboardShortcutsControlPanel": {
-			"name": "Control Panel: YT/VLC-like Hotkeys",
-			"description": "Choose if you want to use YT/VLC-like shortcuts to control playback progress or control song selection in the Control Panel menu.\n\n- <co>0, 1, 2, 3, 4, 5, 6, 7, 8, 9</c>: <cl>Set playback progress position to 0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, or 90% of the song's duration.</c>\n- <co>Shift + N, Command + Right Arrow (macOS)/Ctrl + Right Arrow (Windows)</c>: <cl>Shuffle song</c>\n- <co>Shift + P, Command + Left Arrow (macOS)/Ctrl + Left Arrow (Windows)</c>: <cl>Previous song</c> (can only backtrack once)",
+			"name": "Control Panel: YT/VLC/Spotify-like Hotkeys",
+			"description": "Choose if you want to use <cr>YT</c>/<c-FFA544>VLC</c>/<c-06CE91>Spotify</c>-like shortcuts to control playback progress or control song selection in the Control Panel menu.\n\n- <cr>Numrow/Numpad 0-9</c>: Control playback progress position. (0 = 0%, 1 = 10%, etc..., 9 = 90%.)\n- <cr>Shift + N</c>, <c-06CE91>Ctrl + S</c>, <c-FFA544>Command + Right Arrow</c> (macOS)/<c-FFA544>Ctrl + Right Arrow</c> (Windows): Shuffle song\n- <cr>Shift + P</c>, <c-FFA544>Command + Left Arrow</c> (macOS)/<c-FFA544>Ctrl + Left Arrow</c> (Windows): Play previous song (if available)\n- <c-06CE91>Command + R</c> (macOS)/<c-06CE91>Ctrl + R</c> (Windows): Restart current song\n- <c-06CE91>Cmd + K</c> (macOS)/<c-06CE91>Ctrl + K</c> (Windows): Switch to Song List\n- <c-06CE91>Shift + Ctrl + B</c> (macOS)/<c-06CE91>Shift + Alt + B</c> (Windows): Favorite current song",
 			"type": "bool",
 			"default": {
 				"win": true,
