@@ -639,6 +639,11 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		if (((key == cocos2d::KEY_K || key == cocos2d::KEY_H) && (windowsCtrl || isCmd)) && songManager.getFinishedCalculatingSongLengths()) {
 			return SongListLayer::onControlsButton(nullptr);
 		}
+		if (!SEARCH_BAR_DISABLED && (key == cocos2d::KEY_F && (isCmd || windowsCtrl))) {
+			CCNode* searchBar = GET_SEARCH_BAR_NODE;
+			if (searchBar) static_cast<geode::TextInput*>(searchBar)->focus();
+			return;
+		}
 	}
 	#endif
 	if (songManager.getShowPlaybackControlsSongList()) {
@@ -685,6 +690,7 @@ float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
 void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode* inputNode, const bool updateString) {
 	if (SEARCH_BAR_DISABLED || !inputNode || (inputNode->m_selected && !inputNode->getString().empty())) return;
 	cocos2d::CCLabelBMFont* placeholderLabelMaybe = static_cast<cocos2d::CCLabelBMFont*>(inputNode->getChildByTag(12242025));
+	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->m_textLabel;
 	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
 	if (!placeholderLabelMaybe || placeholderLabelMaybe->getColor() != cocos2d::ccColor3B{150, 150, 150}) return;
 	if (updateString) placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", SongManager::get().getCurrentSongDisplayName()).c_str());
