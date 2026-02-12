@@ -639,10 +639,13 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		if (((key == cocos2d::KEY_K || key == cocos2d::KEY_H) && (windowsCtrl || isCmd)) && songManager.getFinishedCalculatingSongLengths()) {
 			return SongListLayer::onControlsButton(nullptr);
 		}
-		if (!SEARCH_BAR_DISABLED && (key == cocos2d::KEY_F && (isCmd || windowsCtrl))) {
-			CCNode* searchBar = GET_SEARCH_BAR_NODE;
-			if (searchBar) static_cast<geode::TextInput*>(searchBar)->focus();
-			return;
+		if (GET_SEARCH_BAR_NODE && (key == cocos2d::KEY_F && (isCmd || windowsCtrl))) {
+			geode::TextInput* searchBar = static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE);
+			if (searchBar->getInputNode()->m_cursor->isVisible()) return;
+			searchBar->focus();
+			return geode::Loader::get()->queueInMainThread([sb = geode::Ref(searchBar)] {
+				if (sb) sb->setString("", false);
+			});
 		}
 	}
 	#endif
@@ -651,13 +654,18 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		if (key == cocos2d::KEY_Left || key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_J) return SongControl::skipBackward();
 	}
 	// this is fine since searchbar swallows delete (macos)/backspace (all other platforms) key inputs first
-	if (SEARCH_BAR_DISABLED || (key != cocos2d::KEY_Enter && key != cocos2d::KEY_Delete && key != cocos2d::KEY_Backspace)) {
+	if (SEARCH_BAR_DISABLED) {
 		// code taken directly from geode::Popup keyDown impl as of dec 19 2025
-		if (key == cocos2d::enumKeyCodes::KEY_Escape) return this->onClose(nullptr);
-		if (key == cocos2d::enumKeyCodes::KEY_Space) return;
+		if (key == cocos2d::KEY_Escape) return this->onClose(nullptr);
+		if (key == cocos2d::KEY_Space) return;
 		return FLAlertLayer::keyDown(key);
 	}
 	CCNode* searchBar = GET_SEARCH_BAR_NODE;
+	if (key == cocos2d::KEY_Escape) {
+		if (!searchBar) return this->onClose(nullptr);
+		if (static_cast<geode::TextInput*>(searchBar)->getInputNode()->m_cursor->isVisible()) return static_cast<geode::TextInput*>(searchBar)->getInputNode()->onClickTrackNode(false);
+		return this->onClose(nullptr);
+	}
 	if (!searchBar || (GET_SEARCH_STRING.empty() && searchBar->getTag() == -1)) return;
 	if (key != cocos2d::KEY_Enter) EMPTY_SEARCH_STRG // clear search query before re-populating
 	const std::string& queryString = GET_SEARCH_STRING;
