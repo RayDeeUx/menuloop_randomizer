@@ -86,11 +86,11 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 				.fileName = Utils::toNormalizedString(theirPath.filename()),
 				.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
 				.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
+				.hashedPath = std::hash<std::string>{}(std::string(song)),
 				.couldPossiblyExistInMusicDownloadManager = songID > -1 && songInfoObject,
 				.isFromConfigOrAltDir = isFromConfigOrAltDirWithoutMDMCheck,
 				.isInNonVanillaNGMLSongLocation = isInNonVanillaNGMLSongLocation,
 				.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), dummyJukeboxPath),
-				.hashedPath = std::hash<std::string>{}(std::string(song)),
 				.isEmpty = false
 			};
 			if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID)) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
@@ -587,58 +587,61 @@ void SongListLayer::toggleSavedValueAndSearch(const std::string_view savedValueK
 
 void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	SongManager& songManager = SongManager::get();
-	if (!songManager.getYoutubeAndVLCKeyboardShortcutsSongList()) return;
-	cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
-	const bool isShift = cckd->getShiftKeyPressed();
-	const bool isCmd = GEODE_MACOS(cckd->getCommandKeyPressed()) GEODE_WINDOWS(false);
-	const bool macOSCtrl = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(false);
-	const bool windowsCtrl = GEODE_MACOS(false) GEODE_WINDOWS(cckd->getControlKeyPressed());
-	const bool isAlt = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(cckd->getAltKeyPressed());
-	if (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine) {
-		if (!isShift && !isCmd && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
-		if (isShift && (windowsCtrl || macOSCtrl)) {
-			if (key == cocos2d::KEY_One && this->m_songListCompactMode) this->m_songListCompactMode->activate();
-			if (key == cocos2d::KEY_Two && this->m_songListFavoritesOnlyMode) this->m_songListFavoritesOnlyMode->activate();
-			if (key == cocos2d::KEY_Three && this->m_songListReverseSort) this->m_songListReverseSort->activate();
-			if (key == cocos2d::KEY_Four && this->m_songListSortAlphabetically) this->m_songListSortAlphabetically->activate();
-			if (key == cocos2d::KEY_Five && this->m_songListSortDateAdded) this->m_songListSortDateAdded->activate();
-			if (key == cocos2d::KEY_Six && this->m_songListSortSongLength) this->m_songListSortSongLength->activate();
-			if (key == cocos2d::KEY_Seven && this->m_songListSortFileSize) this->m_songListSortFileSize->activate();
-			if (key == cocos2d::KEY_Eight && this->m_songListSortFileExtn) this->m_songListSortFileExtn->activate();
+	#ifdef GEODE_IS_DESKTOP
+	if (songManager.getYoutubeAndVLCKeyboardShortcutsSongList()) {
+		cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
+		const bool isShift = cckd->getShiftKeyPressed();
+		const bool isCmd = GEODE_MACOS(cckd->getCommandKeyPressed()) GEODE_WINDOWS(false);
+		const bool macOSCtrl = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(false);
+		const bool windowsCtrl = GEODE_MACOS(false) GEODE_WINDOWS(cckd->getControlKeyPressed());
+		const bool isAlt = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(cckd->getAltKeyPressed());
+		if (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine) {
+			if (!isShift && !isCmd && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
+			if (isShift && (windowsCtrl || macOSCtrl)) {
+				if (key == cocos2d::KEY_One && this->m_songListCompactMode) this->m_songListCompactMode->activate();
+				if (key == cocos2d::KEY_Two && this->m_songListFavoritesOnlyMode) this->m_songListFavoritesOnlyMode->activate();
+				if (key == cocos2d::KEY_Three && this->m_songListReverseSort) this->m_songListReverseSort->activate();
+				if (key == cocos2d::KEY_Four && this->m_songListSortAlphabetically) this->m_songListSortAlphabetically->activate();
+				if (key == cocos2d::KEY_Five && this->m_songListSortDateAdded) this->m_songListSortDateAdded->activate();
+				if (key == cocos2d::KEY_Six && this->m_songListSortSongLength) this->m_songListSortSongLength->activate();
+				if (key == cocos2d::KEY_Seven && this->m_songListSortFileSize) this->m_songListSortFileSize->activate();
+				if (key == cocos2d::KEY_Eight && this->m_songListSortFileExtn) this->m_songListSortFileExtn->activate();
+			}
+		}
+		if (key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9) {
+			if (!isShift && !macOSCtrl && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
+			if (isShift && (windowsCtrl || macOSCtrl)) {
+				if (key == cocos2d::KEY_NumPad1 && this->m_songListCompactMode) this->m_songListCompactMode->activate();
+				if (key == cocos2d::KEY_NumPad2 && this->m_songListFavoritesOnlyMode) this->m_songListFavoritesOnlyMode->activate();
+				if (key == cocos2d::KEY_NumPad3 && this->m_songListReverseSort) this->m_songListReverseSort->activate();
+				if (key == cocos2d::KEY_NumPad4 && this->m_songListSortAlphabetically) this->m_songListSortAlphabetically->activate();
+				if (key == cocos2d::KEY_NumPad5 && this->m_songListSortDateAdded) this->m_songListSortDateAdded->activate();
+				if (key == cocos2d::KEY_NumPad6 && this->m_songListSortSongLength) this->m_songListSortSongLength->activate();
+				if (key == cocos2d::KEY_NumPad7 && this->m_songListSortFileSize) this->m_songListSortFileSize->activate();
+				if (key == cocos2d::KEY_NumPad8 && this->m_songListSortFileExtn) this->m_songListSortFileExtn->activate();
+			}
+		}
+		if ((windowsCtrl || isCmd) && key == cocos2d::KEY_R) {
+			return SongControl::setSongPercentage(0);
+		}
+		if (((macOSCtrl || windowsCtrl) && key == cocos2d::KEY_S) || ((key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_Right) && (windowsCtrl || isCmd))) {
+			return SongControl::shuffleSong();
+		}
+		if ((isShift && key == cocos2d::KEY_P) || ((key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_Left) && (windowsCtrl || isCmd))) {
+			return SongControl::previousSong();
+		}
+		if (key == cocos2d::KEY_B && isShift && isAlt) {
+			return SongControl::favoriteSong();
+		}
+		if (key == cocos2d::KEY_J && isShift && isAlt) {
+			return SongListLayer::scrollToCurrentSong();
+		}
+		if (((key == cocos2d::KEY_K || key == cocos2d::KEY_H) && (windowsCtrl || isCmd)) && songManager.getFinishedCalculatingSongLengths()) {
+			return SongListLayer::onControlsButton(nullptr);
 		}
 	}
-	if (key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9) {
-		if (!isShift && !macOSCtrl && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
-		if (isShift && (windowsCtrl || macOSCtrl)) {
-			if (key == cocos2d::KEY_NumPad1 && this->m_songListCompactMode) this->m_songListCompactMode->activate();
-			if (key == cocos2d::KEY_NumPad2 && this->m_songListFavoritesOnlyMode) this->m_songListFavoritesOnlyMode->activate();
-			if (key == cocos2d::KEY_NumPad3 && this->m_songListReverseSort) this->m_songListReverseSort->activate();
-			if (key == cocos2d::KEY_NumPad4 && this->m_songListSortAlphabetically) this->m_songListSortAlphabetically->activate();
-			if (key == cocos2d::KEY_NumPad5 && this->m_songListSortDateAdded) this->m_songListSortDateAdded->activate();
-			if (key == cocos2d::KEY_NumPad6 && this->m_songListSortSongLength) this->m_songListSortSongLength->activate();
-			if (key == cocos2d::KEY_NumPad7 && this->m_songListSortFileSize) this->m_songListSortFileSize->activate();
-			if (key == cocos2d::KEY_NumPad8 && this->m_songListSortFileExtn) this->m_songListSortFileExtn->activate();
-		}
-	}
-	if ((windowsCtrl || isCmd) && key == cocos2d::KEY_R) {
-		return SongControl::setSongPercentage(0);
-	}
-	if (((macOSCtrl || windowsCtrl) && key == cocos2d::KEY_S) || ((key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_Right) && (windowsCtrl || isCmd))) {
-		return SongControl::shuffleSong();
-	}
-	if ((isShift && key == cocos2d::KEY_P) || ((key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_Left) && (windowsCtrl || isCmd))) {
-		return SongControl::previousSong();
-	}
-	if (key == cocos2d::KEY_B && isShift && isAlt) {
-		return SongControl::favoriteSong();
-	}
-	if (key == cocos2d::KEY_J && isShift && isAlt) {
-		return SongListLayer::scrollToCurrentSong();
-	}
-	if (((key == cocos2d::KEY_K || key == cocos2d::KEY_H) && (windowsCtrl || isCmd)) && songManager.getFinishedCalculatingSongLengths()) {
-		return SongListLayer::onControlsButton(nullptr);
-	}
-	if (SongManager::get().getShowPlaybackControlsSongList()) {
+	#endif
+	if (songManager.getShowPlaybackControlsSongList()) {
 		if (key == cocos2d::KEY_Right || key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_L) return SongControl::skipForward();
 		if (key == cocos2d::KEY_Left || key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_J) return SongControl::skipBackward();
 	}

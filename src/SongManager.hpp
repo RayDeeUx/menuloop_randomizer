@@ -17,12 +17,12 @@ struct SongData {
 	unsigned int songLength = std::numeric_limits<unsigned int>::max();
 	std::uintmax_t songFileSize = std::numeric_limits<std::uintmax_t>::max();
 	std::filesystem::file_time_type songWriteTime {};
+	unsigned long long hashedPath {};
 	bool isFromConfigOrAltDir = false;
 	bool couldPossiblyExistInMusicDownloadManager = false;
 	bool isInNonVanillaNGMLSongLocation = false;
 	bool isFromJukeboxDirectory = false;
 	bool isEmpty = false;
-	unsigned long long hashedPath {};
 };
 
 typedef std::unordered_map<std::filesystem::path, SongData> SongToSongData;

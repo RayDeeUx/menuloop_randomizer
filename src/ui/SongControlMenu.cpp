@@ -423,6 +423,7 @@ void SongControlMenu::updateCurrentLabel() {
 
 void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 	SongManager& songManager = SongManager::get();
+	#ifdef GEODE_IS_DESKTOP
 	if (songManager.getYoutubeAndVLCKeyboardShortcutsControlPanel()) {
 		cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
 		const bool isShift = cckd->getShiftKeyPressed();
@@ -452,6 +453,7 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 			return SongControlMenu::onPlaylistButton(nullptr);
 		}
 	}
+	#endif
 	if (CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED) {
 		if (key == cocos2d::KEY_Right || key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_L) return SongControl::skipForward();
 		if (key == cocos2d::KEY_Left || key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_J) return SongControl::skipBackward();

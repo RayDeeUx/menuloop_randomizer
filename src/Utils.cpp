@@ -511,11 +511,11 @@ void Utils::popualteSongToSongDataMap() {
 			.fileName = Utils::toNormalizedString(theirPath.filename()),
 			.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
 			.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
+			.hashedPath = std::hash<std::string>{}(std::string(song)),
 			.isFromConfigOrAltDir = isFromConfigOrAltDirWithoutMDMCheck,
 			.couldPossiblyExistInMusicDownloadManager = songID > -1 && songInfoObject,
 			.isInNonVanillaNGMLSongLocation = isInNonVanillaNGMLSongLocation,
 			.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), dummyJukeboxPath),
-			.hashedPath = std::hash<std::string>{}(std::string(song)),
 			.isEmpty = false
 		};
 		if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID)) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
