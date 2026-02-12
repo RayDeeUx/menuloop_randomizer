@@ -30,12 +30,14 @@
 - <co>Fixed</c> some math fumbles with counting songs in the Song List menu.
 - <co>Fixed</c> several UI-related issues related to setting/unsetting a Song Override.
 - <co>Fixed</c> issues with detecting Newgrounds/Music Library songs stored in non-vanilla folders.
-  - Try to name your files using letters as well as numbers to reduce false positives.
+  - Try to name your files using both letters and numbers to reduce false positives.
 - <co>Fixed</c> some issues with songs containing non-ASCII characters in ther titles.
   - This also affects where these songs are placed when sorting songs alphabetically in the Song List menu.
+- <co>"Fixed"</c> a long-standing bug where menu loops saved between game restarts would be shuffled twice when Constant Shuffle Mode (formerly Playlist Mode) was enabled.
 - <co>"Fixed"</c> a long-standing bug where song names and artist names modified by Jukebox would spill over to menu loop display names.
   - The quotation marks are there because the approach involved manually parsing Jukebox's own JSON data to fetch the original song name/artist name.
-  - <cr>Please don't use this changelog item as a justification to harass any of the developers of the Jukebox mod, *especially* if you don't know what's going on beneath the hood in either mod.</c>
+  - This "fix" requires loading Jukebox as a dependency, as both Menu Loop Randomizer and Jukebox rely on the same information for separate reasons.
+  - <c-ff0000>Please don't use this changelog item as a justification to harass any of the developers of the Jukebox mod, *especially* if you don't know what's going on beneath the hood in either mod.</c>
 ## v1.11.3, v1.11.4, and v1.11.5
 *<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - Fix massive oversights.

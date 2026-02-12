@@ -108,10 +108,9 @@ void Utils::constantShuffleModeNewSong() {
 	if (songManager.getCalledOnce() || !Utils::getBool("saveSongOnGameClose")) {
 		if (SongManager::get().getAdvancedLogs()) geode::log::info("playing song as normal");
 		if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
-	} else {
-		const bool override = songManager.isOverride();
-		const std::string& song = override ? songManager.getOverrideSong() : geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
-		if (SongManager::get().getAdvancedLogs()) geode::log::info("playing song from {}: {}", override ? "override" : "saved value", song);
+	} else if (songManager.isOverride()) {
+		const std::string& song = songManager.getOverrideSong();
+		if (SongManager::get().getAdvancedLogs()) geode::log::info("playing song from override: {}", song);
 		songManager.setCurrentSong(song);
 	}
 	GameManager::sharedState()->playMenuMusic();
