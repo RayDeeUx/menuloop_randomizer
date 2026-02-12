@@ -15,6 +15,10 @@ protected:
     CCMenuItemToggler* m_songListSortSongLength {};
     CCMenuItemToggler* m_songListSortFileSize {};
     CCMenuItemToggler* m_songListSortFileExtn {};
+	cocos2d::CCMenu* m_scrollShortcuts {};
+	cocos2d::CCMenu* m_viewFiltersMenu {};
+	geode::ScrollLayer* m_scrollLayer {};
+	geode::Scrollbar* m_scrollBar {};
 public:
 	static SongListLayer* create();
 	void addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString = "");
@@ -59,4 +63,6 @@ public:
 	static unsigned int getLength(const std::string& path, const bool reverse);
 
 	void displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float);
+
+	geode::TextInput* m_searchBar {};
 };

@@ -11,10 +11,10 @@
 
 #define SAVED(key) geode::Mod::get()->getSavedValue<bool>(key, false)
 
-#define GET_SEARCH_BAR_NODE this->m_mainLayer->getChildByIDRecursive(SEARCH_BAR_NODE_ID)
-#define GET_SEARCH_STRING static_cast<geode::TextInput*>(searchBar)->getString()
-#define EMPTY_SEARCH_STRG static_cast<geode::TextInput*>(searchBar)->setString("", false);
-#define LIMIT_PLACEHOLDER SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE)->getInputNode());
+#define GET_SEARCH_BAR_NODE this->m_searchBar
+#define GET_SEARCH_STRING m_searchBar->getString()
+#define EMPTY_SEARCH_STRG m_searchBar->setString("", false);
+#define LIMIT_PLACEHOLDER SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
 
 #define SONG_SORTING_DISABLED !SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")
 #define SEARCH_BAR_DISABLED !SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSearchBar")
@@ -174,8 +174,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
 
-	if (CCNode* scrollBar = this->m_mainLayer->getChildByID("song-list-scrollbar"_spr)) scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));
-	if (CCNode* scrollShortcuts = this->m_mainLayer->getChildByID("scroll-shortcuts-menu"_spr)) scrollShortcuts->setPositionY(SongListLayer::determineYPosition(scrollLayer));
+	if (this->m_scrollBar) this->m_scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));
+	if (this->m_scrollShortcuts) this->m_scrollShortcuts->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 }
 
 bool SongListLayer::setup() {
@@ -193,13 +193,13 @@ bool SongListLayer::setup() {
 	CCLayer* mainLayer = this->m_mainLayer;
 	mainLayer->setID("main-layer"_spr);
 
-	geode::ScrollLayer* scrollLayer = geode::ScrollLayer::create({356.f, 220.f});
-	scrollLayer->m_contentLayer->setLayout(geode::ColumnLayout::create()->setAxisReverse(true)->setAxisAlignment(geode::AxisAlignment::End)->setAutoGrowAxis(std::make_optional<float>(220.f))->setGap(.0f));
-	scrollLayer->ignoreAnchorPointForPosition(false);
-	scrollLayer->setID("list-of-songs"_spr);
-	this->m_mainLayer->addChildAtPosition(scrollLayer, geode::Anchor::Center);
+	this->m_scrollLayer = geode::ScrollLayer::create({356.f, 220.f});
+	this->m_scrollLayer->m_contentLayer->setLayout(geode::ColumnLayout::create()->setAxisReverse(true)->setAxisAlignment(geode::AxisAlignment::End)->setAutoGrowAxis(std::make_optional<float>(220.f))->setGap(.0f));
+	this->m_scrollLayer->ignoreAnchorPointForPosition(false);
+	this->m_scrollLayer->setID("list-of-songs"_spr);
+	this->m_mainLayer->addChildAtPosition(this->m_scrollLayer, geode::Anchor::Center);
 
-	SongListLayer::addSongsToScrollLayer(scrollLayer, songManager);
+	SongListLayer::addSongsToScrollLayer(this->m_scrollLayer, songManager);
 
 	if (SEARCH_BAR_ENABLED) {
 		// search code UI graciously provided by hiimjasmine00
@@ -239,15 +239,15 @@ bool SongListLayer::setup() {
 		clearButton->setID("song-list-clear-button"_spr);
 		searchBarMenu->addChild(clearButton);
 
-		geode::TextInput* searchBar = geode::TextInput::create(370.f, fmt::format("Search... (Current Song: {})", songManager.getCurrentSongDisplayName()));
-		searchBar->setCommonFilter(geode::CommonFilter::Any);
-		searchBar->setTextAlign(geode::TextInputAlign::Left);
-		searchBar->setPosition({145.f, 17.f});
-		searchBar->setScale(.75f);
-		searchBar->setID(SEARCH_BAR_NODE_ID);
-		searchBarMenu->addChild(searchBar);
+		this->m_searchBar = geode::TextInput::create(370.f, fmt::format("Search... (Current Song: {})", songManager.getCurrentSongDisplayName()));
+		this->m_searchBar->setCommonFilter(geode::CommonFilter::Any);
+		this->m_searchBar->setTextAlign(geode::TextInputAlign::Left);
+		this->m_searchBar->setPosition({145.f, 17.f});
+		this->m_searchBar->setScale(.75f);
+		this->m_searchBar->setID(SEARCH_BAR_NODE_ID);
+		searchBarMenu->addChild(this->m_searchBar);
 
-		CCTextInputNode* inputNode = searchBar->getInputNode();
+		CCTextInputNode* inputNode = this->m_searchBar->getInputNode();
 		inputNode->setLabelPlaceholderScale(.5f);
 		inputNode->setMaxLabelScale(.5f);
 		inputNode->setID("song-list-search-bar-input-node"_spr);
@@ -261,55 +261,55 @@ bool SongListLayer::setup() {
 
 	geode::ListBorders* listBorder = geode::ListBorders::create();
 	listBorder->setSpriteFrames("GJ_commentTop2_001.png", "GJ_commentSide2_001.png");
-	listBorder->setContentSize(scrollLayer->getContentSize());
+	listBorder->setContentSize(this->m_scrollLayer->getContentSize());
 	listBorder->ignoreAnchorPointForPosition(false);
 	listBorder->setID("songs-list-border"_spr);
 	this->m_mainLayer->addChildAtPosition(listBorder, geode::Anchor::Center);
 
 	if (Utils::getBool("showScrollingShortcuts")) {
-		cocos2d::CCMenu* scrollShortcutsMenu = cocos2d::CCMenu::create();
-		scrollShortcutsMenu->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(600.f)->setAxisReverse(true)->setAutoScale(true));
-		Utils::addButton("scroll-top", menu_selector(SongListLayer::onScrollTopButton), scrollShortcutsMenu, this, true);
-		Utils::addButton("scroll-cur", menu_selector(SongListLayer::onScrollCurButton), scrollShortcutsMenu, this, true);
-		Utils::addButton("scroll-btm", menu_selector(SongListLayer::onScrollBtmButton), scrollShortcutsMenu, this, true);
+		this->m_scrollShortcuts = cocos2d::CCMenu::create();
+		this->m_scrollShortcuts->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(600.f)->setAxisReverse(true)->setAutoScale(true));
+		Utils::addButton("scroll-top", menu_selector(SongListLayer::onScrollTopButton), this->m_scrollShortcuts, this, true);
+		Utils::addButton("scroll-cur", menu_selector(SongListLayer::onScrollCurButton), this->m_scrollShortcuts, this, true);
+		Utils::addButton("scroll-btm", menu_selector(SongListLayer::onScrollBtmButton), this->m_scrollShortcuts, this, true);
 
-		scrollShortcutsMenu->setPosition({405.f, SongListLayer::determineYPosition(scrollLayer)});
-		scrollShortcutsMenu->ignoreAnchorPointForPosition(false);
-		scrollShortcutsMenu->setContentHeight(220.f);
-		scrollShortcutsMenu->updateLayout();
-		scrollShortcutsMenu->setID("scroll-shortcuts-menu"_spr);
-		this->m_mainLayer->addChild(scrollShortcutsMenu);
+		this->m_scrollShortcuts->setPosition({405.f, SongListLayer::determineYPosition(this->m_scrollLayer)});
+		this->m_scrollShortcuts->ignoreAnchorPointForPosition(false);
+		this->m_scrollShortcuts->setContentHeight(220.f);
+		this->m_scrollShortcuts->updateLayout();
+		this->m_scrollShortcuts->setID("scroll-shortcuts-menu"_spr);
+		this->m_mainLayer->addChild(this->m_scrollShortcuts);
 	}
 
-	geode::Scrollbar* scrollBar = geode::Scrollbar::create(scrollLayer);
-	scrollBar->setPosition({scrollLayer->getPositionX() + (scrollLayer->getContentWidth() / 2.f) + 5.f, SongListLayer::determineYPosition(scrollLayer)});
-	scrollBar->setID("song-list-scrollbar"_spr);
-	this->m_mainLayer->addChild(scrollBar);
+	this->m_scrollBar = geode::Scrollbar::create(this->m_scrollLayer);
+	this->m_scrollBar->setPosition({this->m_scrollLayer->getPositionX() + (this->m_scrollLayer->getContentWidth() / 2.f) + 5.f, SongListLayer::determineYPosition(this->m_scrollLayer)});
+	this->m_scrollBar->setID("song-list-scrollbar"_spr);
+	this->m_mainLayer->addChild(this->m_scrollBar);
 
 	if (SONG_SORTING_ENABLED) {
-		cocos2d::CCMenu* viewModeMenu = cocos2d::CCMenu::create();
+		this->m_viewFiltersMenu = cocos2d::CCMenu::create();
 
-		this->m_songListCompactMode = Utils::addViewModeToggle(SAVED("songListCompactMode"), "GJ_smallModeIcon_001.png", "compact-mode", menu_selector(SongListLayer::onCompactModeToggle), viewModeMenu, this);
-		this->m_songListFavoritesOnlyMode = Utils::addViewModeToggle(SAVED("songListFavoritesOnlyMode"), "favorites.png"_spr, "favorites-only", menu_selector(SongListLayer::onFavoritesOnlyToggle), viewModeMenu, this);
-		this->m_songListReverseSort = Utils::addViewModeToggle(SAVED("songListReverseSort"), "reverse.png"_spr, "reverse-list", menu_selector(SongListLayer::onSortReverseToggle), viewModeMenu, this);
+		this->m_songListCompactMode = Utils::addViewModeToggle(SAVED("songListCompactMode"), "GJ_smallModeIcon_001.png", "compact-mode", menu_selector(SongListLayer::onCompactModeToggle), this->m_viewFiltersMenu, this);
+		this->m_songListFavoritesOnlyMode = Utils::addViewModeToggle(SAVED("songListFavoritesOnlyMode"), "favorites.png"_spr, "favorites-only", menu_selector(SongListLayer::onFavoritesOnlyToggle), this->m_viewFiltersMenu, this);
+		this->m_songListReverseSort = Utils::addViewModeToggle(SAVED("songListReverseSort"), "reverse.png"_spr, "reverse-list", menu_selector(SongListLayer::onSortReverseToggle), this->m_viewFiltersMenu, this);
 
 		cocos2d::CCSprite* separator = cocos2d::CCSprite::createWithSpriteFrameName("gridLine03_001.png");
 		separator->setOpacity(128);
 		separator->setID("sort-filter-separator"_spr);
-		viewModeMenu->addChild(separator);
+		this->m_viewFiltersMenu->addChild(separator);
 
-		this->m_songListSortAlphabetically = Utils::addViewModeToggle(SAVED("songListSortAlphabetically"), "abc.png"_spr, "alphabetical", menu_selector(SongListLayer::onSortABCToggle), viewModeMenu, this);
-		this->m_songListSortDateAdded = Utils::addViewModeToggle(SAVED("songListSortDateAdded"), "dates.png"_spr, "date-added", menu_selector(SongListLayer::onSortDateToggle), viewModeMenu, this);
-		if (Utils::getBool("showSortSongLength")) this->m_songListSortSongLength = Utils::addViewModeToggle(SAVED("songListSortSongLength"), "length.png"_spr, "song-length", menu_selector(SongListLayer::onSortLengthToggle), viewModeMenu, this);
-		this->m_songListSortFileSize = Utils::addViewModeToggle(SAVED("songListSortFileSize"), "size.png"_spr, "song-size", menu_selector(SongListLayer::onSortSizeToggle), viewModeMenu, this);
-		this->m_songListSortFileExtn = Utils::addViewModeToggle(SAVED("songListSortFileExtn"), "xtension.png"_spr, "file-extension", menu_selector(SongListLayer::onSortExtnToggle), viewModeMenu, this);
+		this->m_songListSortAlphabetically = Utils::addViewModeToggle(SAVED("songListSortAlphabetically"), "abc.png"_spr, "alphabetical", menu_selector(SongListLayer::onSortABCToggle), this->m_viewFiltersMenu, this);
+		this->m_songListSortDateAdded = Utils::addViewModeToggle(SAVED("songListSortDateAdded"), "dates.png"_spr, "date-added", menu_selector(SongListLayer::onSortDateToggle), this->m_viewFiltersMenu, this);
+		if (Utils::getBool("showSortSongLength")) this->m_songListSortSongLength = Utils::addViewModeToggle(SAVED("songListSortSongLength"), "length.png"_spr, "song-length", menu_selector(SongListLayer::onSortLengthToggle), this->m_viewFiltersMenu, this);
+		this->m_songListSortFileSize = Utils::addViewModeToggle(SAVED("songListSortFileSize"), "size.png"_spr, "song-size", menu_selector(SongListLayer::onSortSizeToggle), this->m_viewFiltersMenu, this);
+		this->m_songListSortFileExtn = Utils::addViewModeToggle(SAVED("songListSortFileExtn"), "xtension.png"_spr, "file-extension", menu_selector(SongListLayer::onSortExtnToggle), this->m_viewFiltersMenu, this);
 
-		viewModeMenu->setContentHeight(240.f);
-		viewModeMenu->ignoreAnchorPointForPosition(false);
-		viewModeMenu->setPosition({19.f, scrollLayer->getPositionY()});
-		viewModeMenu->setLayout(geode::ColumnLayout::create()->setAxisReverse(true));
-		viewModeMenu->setID("view-mode-menu"_spr);
-		this->m_mainLayer->addChild(viewModeMenu);
+		this->m_viewFiltersMenu->setContentHeight(240.f);
+		this->m_viewFiltersMenu->ignoreAnchorPointForPosition(false);
+		this->m_viewFiltersMenu->setPosition({19.f, this->m_scrollLayer->getPositionY()});
+		this->m_viewFiltersMenu->setLayout(geode::ColumnLayout::create()->setAxisReverse(true));
+		this->m_viewFiltersMenu->setID("view-mode-menu"_spr);
+		this->m_mainLayer->addChild(this->m_viewFiltersMenu);
 	}
 
 	cocos2d::CCMenu* infoMenu = cocos2d::CCMenu::create();
@@ -337,8 +337,8 @@ bool SongListLayer::setup() {
 	settingsMenu->setLayout(geode::RowLayout::create()->setAutoScale(true)->setAxis(geode::Axis::Row)->setGap(.0f));
 	settingsMenu->setContentSize({24.f, 23.f});
 	settingsMenu->setID("songlayerlist-settings-menu"_spr);
-	Utils::addButton("settings", menu_selector(SongListLayer::onSettingsButton), settingsMenu, this);
-	if (CCMenuItemSpriteExtra* button = settingsMenu->getChildByType<CCMenuItemSpriteExtra>(0)) button->setPosition(settingsMenu->getContentSize() / 2.f);
+	CCMenuItemSpriteExtra* settings = Utils::addButton("settings", menu_selector(SongListLayer::onSettingsButton), settingsMenu, this);
+	settings->setPosition(settingsMenu->getContentSize() / 2.f);
 	settingsMenu->setPosition({395.f, this->m_title->getPositionY()});
 	settingsMenu->setScale(.825f);
 	this->m_mainLayer->addChild(settingsMenu);
@@ -370,7 +370,7 @@ bool SongListLayer::setup() {
 	constantShuffleModeLabel->ignoreAnchorPointForPosition(false);
 	platformLabel->ignoreAnchorPointForPosition(false);
 
-	const float sllWidth = scrollLayer->getContentWidth();
+	const float sllWidth = this->m_scrollLayer->getContentWidth();
 	constexpr float offset = 25.f;
 	constexpr float topRowYPos = 27.5f;
 	constexpr float bottomRowYPos = 16.5f;
@@ -436,7 +436,7 @@ bool SongListLayer::setup() {
 	songManager.resetTowerRepeatCount();
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE) {
-		SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE)->getInputNode());
+		SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
 		this->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
 	}
 
@@ -476,21 +476,20 @@ void SongListLayer::onControlsButton(CCObject*) {
 }
 
 CCContentLayer* SongListLayer::getContentLayer() const {
-	CCNode* scrollLayer = this->m_mainLayer->getChildByID("list-of-songs"_spr);
-	if (scrollLayer) return static_cast<geode::ScrollLayer*>(scrollLayer)->m_contentLayer;
+	if (this->m_scrollLayer) return this->m_scrollLayer->m_contentLayer;
 	return nullptr;
 }
 
 void SongListLayer::onScrollTopButton(CCObject*) {
 	if (!Utils::getBool("showScrollingShortcuts")) return;
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || !SongListLayer::tallEnough(static_cast<geode::ScrollLayer*>(contentLayer->getParent()))) return; // cmon bruh it's in plain sight lol
+	if (!contentLayer || !this->m_scrollLayer || !SongListLayer::tallEnough(this->m_scrollLayer)) return; // cmon bruh it's in plain sight lol
 	contentLayer->setPositionY((contentLayer->getContentHeight() * -1.f) + contentLayer->getParent()->getContentHeight());
 }
 
 void SongListLayer::scrollToCurrentSong() {
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || !SongListLayer::tallEnough(static_cast<geode::ScrollLayer*>(contentLayer->getParent()))) return;
+	if (!contentLayer || !this->m_scrollLayer || !SongListLayer::tallEnough(this->m_scrollLayer)) return;
 	// cmon bruh it's in plain sight lol
 	CCNode* currentCell = contentLayer->getChildByTag(12192025);
 	cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
@@ -508,9 +507,9 @@ void SongListLayer::onScrollCurButton(CCObject*) {
 }
 
 void SongListLayer::onScrollBtmButton(CCObject*) {
-	if (!Utils::getBool("showScrollingShortcuts")) return;
+	if (!Utils::getBool("showScrollingShortcuts") || !this->m_scrollLayer) return;
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || !SongListLayer::tallEnough(static_cast<geode::ScrollLayer*>(contentLayer->getParent()))) return; // cmon bruh it's in plain sight lol
+	if (!contentLayer || !SongListLayer::tallEnough(this->m_scrollLayer)) return; // cmon bruh it's in plain sight lol
 	contentLayer->setPositionY(0.f);
 }
 
@@ -564,7 +563,7 @@ void SongListLayer::handleMutuallyExclusiveSortToggle(const std::string_view sav
 
 void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_view savedValueKey) {
 	if (SONG_SORTING_DISABLED) return;
-	cocos2d::CCNode* viewModeMenu = this->m_mainLayer->getChildByID("view-mode-menu"_spr);
+	cocos2d::CCNode* viewModeMenu = this->m_viewFiltersMenu;
 	if (!viewModeMenu) return;
 	const bool originalSavedValue = SAVED(savedValueKey);
 	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortAlphabetically", "alphabetical-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
@@ -640,10 +639,9 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 			return SongListLayer::onControlsButton(nullptr);
 		}
 		if (GET_SEARCH_BAR_NODE && (key == cocos2d::KEY_F && (isCmd || windowsCtrl))) {
-			geode::TextInput* searchBar = static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE);
-			if (searchBar->getInputNode()->m_cursor->isVisible()) return;
-			searchBar->focus();
-			return geode::Loader::get()->queueInMainThread([sb = geode::Ref(searchBar)] {
+			if (this->m_searchBar->getInputNode()->m_cursor->isVisible()) return;
+			this->m_searchBar->focus();
+			return geode::Loader::get()->queueInMainThread([sb = geode::Ref(this->m_searchBar)] {
 				if (sb) sb->setString("", false);
 			});
 		}
@@ -663,7 +661,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	CCNode* searchBar = GET_SEARCH_BAR_NODE;
 	if (key == cocos2d::KEY_Escape) {
 		if (!searchBar) return this->onClose(nullptr);
-		if (static_cast<geode::TextInput*>(searchBar)->getInputNode()->m_cursor->isVisible()) return static_cast<geode::TextInput*>(searchBar)->getInputNode()->onClickTrackNode(false);
+		if (this->m_searchBar->getInputNode()->m_cursor->isVisible()) return this->m_searchBar->getInputNode()->onClickTrackNode(false);
 		return this->onClose(nullptr);
 	}
 	if (!searchBar || (GET_SEARCH_STRING.empty() && searchBar->getTag() == -1)) return;
@@ -689,11 +687,12 @@ std::string SongListLayer::generateDisplayName(SongData& songData) {
 }
 
 bool SongListLayer::tallEnough(geode::ScrollLayer* scrollLayer) {
+	if (!scrollLayer || !scrollLayer->m_contentLayer) return false;
 	return scrollLayer->m_contentLayer->getContentHeight() > scrollLayer->getContentHeight();
 }
 
 float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
-	return SongListLayer::tallEnough(scrollLayer) ? 145.f : 99999.f;
+	return scrollLayer && SongListLayer::tallEnough(scrollLayer) ? 145.f : 99999.f;
 }
 
 void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode* inputNode, const bool updateString) {
@@ -819,5 +818,5 @@ unsigned int SongListLayer::getLength(const std::string& path, const bool revers
 
 void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float) {
 	if (SEARCH_BAR_DISABLED || !GET_SEARCH_BAR_NODE) return;
-	SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<geode::TextInput*>(GET_SEARCH_BAR_NODE)->getInputNode());
+	SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
 }
