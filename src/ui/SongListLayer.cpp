@@ -665,8 +665,8 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		return this->onClose(nullptr);
 	}
 	if (!searchBar || (GET_SEARCH_STRING.empty() && searchBar->getTag() == -1)) return;
-	if (key == cocos2d::KEY_Delete || key == cocos2d::KEY_Backspace) return EMPTY_SEARCH_STRG; // clear search query before re-populating
-	if (key != cocos2d::KEY_Enter) return;
+	if (key == cocos2d::KEY_Delete || key == cocos2d::KEY_Backspace) EMPTY_SEARCH_STRG; // clear search query before re-populating
+	if (key != cocos2d::KEY_Enter && key != cocos2d::KEY_Delete && key != cocos2d::KEY_Backspace) return;
 	const std::string& queryString = GET_SEARCH_STRING;
 	searchBar->setTag(queryString.empty() ? -1 : 12202025);
 	SongListLayer::searchSongs(queryString);
