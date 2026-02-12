@@ -87,8 +87,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 				.type = songType, .songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
 				.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
 				.hashedPath = std::hash<std::string>{}(std::string(song)),
-				.couldPossiblyExistInMusicDownloadManager = songID > -1 && songInfoObject,
 				.isFromConfigOrAltDir = isFromConfigOrAltDirWithoutMDMCheck,
+				.couldPossiblyExistInMusicDownloadManager = songID > -1 && songInfoObject,
 				.isInNonVanillaNGMLSongLocation = isInNonVanillaNGMLSongLocation,
 				.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), dummyJukeboxPath),
 				.isEmpty = false
