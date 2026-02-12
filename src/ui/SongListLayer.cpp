@@ -214,7 +214,7 @@ bool SongListLayer::setup() {
 		searchBarMenu->addChild(searchBackground);
 
 		CCMenuItemSpriteExtra* searchButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("gj_findBtn_001.png", 0.7f, [this](auto) {
-			CCNode* searchBar = GET_SEARCH_BAR_NODE;
+			geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 			if (!searchBar || (searchBar->getTag() == -1 && GET_SEARCH_STRING.empty())) return;
 			const std::string& queryString = GET_SEARCH_STRING;
 			searchBar->setTag(queryString.empty() ? -1 : 12202025);
@@ -229,7 +229,7 @@ bool SongListLayer::setup() {
 		fakeDeleteIcon->setID("fake-delete-sprite"_spr);
 
 		CCMenuItemSpriteExtra* clearButton = geode::cocos::CCMenuItemExt::createSpriteExtra(fakeDeleteIcon, [this](auto) {
-			CCNode* searchBar = GET_SEARCH_BAR_NODE;
+			geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 			if (!searchBar || (searchBar->getTag() == -1 && GET_SEARCH_STRING.empty())) return;
 			EMPTY_SEARCH_STRG
 			searchBar->setTag(-1);
@@ -447,7 +447,7 @@ bool SongListLayer::setup() {
 
 void SongListLayer::searchSongs(const std::string& queryString) {
 	if (SONG_SORTING_DISABLED && SEARCH_BAR_DISABLED) return;
-	CCNode* contentLayer = SongListLayer::getContentLayer();
+	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
 	if (!contentLayer || !contentLayer->getLayout()) return;
 	contentLayer->removeAllChildrenWithCleanup(true);
 	SongListLayer::addSongsToScrollLayer(static_cast<geode::ScrollLayer*>(contentLayer->getParent()), SongManager::get(), queryString);
@@ -563,7 +563,7 @@ void SongListLayer::handleMutuallyExclusiveSortToggle(const std::string_view sav
 
 void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_view savedValueKey) {
 	if (SONG_SORTING_DISABLED) return;
-	cocos2d::CCNode* viewModeMenu = this->m_viewFiltersMenu;
+	cocos2d::CCMenu* viewModeMenu = this->m_viewFiltersMenu;
 	if (!viewModeMenu) return;
 	const bool originalSavedValue = SAVED(savedValueKey);
 	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortAlphabetically", "alphabetical-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
@@ -572,7 +572,7 @@ void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_
 	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortFileSize", "song-size-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
 	SongListLayer::handleMutuallyExclusiveSortToggle("songListSortFileExtn", "file-extension-button"_spr, savedValueKey, viewModeMenu, originalSavedValue);
 	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
-	CCNode* searchBar = GET_SEARCH_BAR_NODE;
+	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
 }
 
@@ -580,7 +580,7 @@ void SongListLayer::toggleSavedValueAndSearch(const std::string_view savedValueK
 	if (SONG_SORTING_DISABLED) return;
 	const bool originalSavedValue = SAVED(savedValueKey);
 	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
-	CCNode* searchBar = GET_SEARCH_BAR_NODE;
+	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
 }
 
@@ -658,7 +658,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		if (key == cocos2d::KEY_Space) return;
 		return FLAlertLayer::keyDown(key);
 	}
-	CCNode* searchBar = GET_SEARCH_BAR_NODE;
+	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 	if (key == cocos2d::KEY_Escape) {
 		if (!searchBar) return this->onClose(nullptr);
 		if (this->m_searchBar->getInputNode()->m_cursor->isVisible()) return this->m_searchBar->getInputNode()->onClickTrackNode(false);
