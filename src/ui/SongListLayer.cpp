@@ -495,7 +495,7 @@ void SongListLayer::scrollToCurrentSong() {
 	CCNode* currentCell = contentLayer->getChildByTag(12192025);
 	cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
 	const float theAbsolluteTop = contentLayer->getContentHeight() * -1.f + contentLayer->getParent()->getContentHeight();
-	const float centerOrCurrent = (cckd->getShiftKeyPressed() && (GEODE_MACOS(!cckd->getControlKeyPressed()) GEODE_WINDOWS(!cckd->getAltKeyPressed())) || !currentCell) ? ((contentLayer->getContentHeight() + contentLayer->getParent()->getContentHeight()) * -1.f * .5f) : ((currentCell->getPositionY() * -1.f) - (contentLayer->getParent()->getContentHeight() / 2.f) + 20.f);
+	const float centerOrCurrent = (cckd->getShiftKeyPressed() && (GEODE_MOBILE(true) GEODE_MACOS(!cckd->getControlKeyPressed()) GEODE_WINDOWS(!cckd->getAltKeyPressed())) || !currentCell) ? ((contentLayer->getContentHeight() + contentLayer->getParent()->getContentHeight()) * -1.f * .5f) : ((currentCell->getPositionY() * -1.f) - (contentLayer->getParent()->getContentHeight() / 2.f) + 20.f);
 	const float desiredPosition = centerOrCurrent + contentLayer->getParent()->getContentHeight();
 	if (desiredPosition > 0.f) contentLayer->setPositionY(0.f);
 	else if (desiredPosition < theAbsolluteTop) contentLayer->setPositionY(theAbsolluteTop);
