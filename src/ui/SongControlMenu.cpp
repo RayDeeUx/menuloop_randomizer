@@ -6,7 +6,7 @@
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 #define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
-#define CAN_SHOW_PLAYBACK_PROGRESS CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED
+#define CAN_SHOW_PLAYBACK_PROGRESS CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong())
 
 bool SongControlMenu::setup() {
 	this->setTitle("Menu Loop Randomizer - Control Panel");
@@ -390,11 +390,8 @@ void SongControlMenu::updateCurrentLabel() {
 		this->b->addChildAtPosition(this->m_clipNode, geode::Anchor::BottomLeft);
 		this->m_currTimeLb->setScale(.35f);
 		this->m_totlTimeLb->setScale(.35f);
-		if (std::ranges::find(songManager.getSongs().begin(), songManager.getSongs().end(), songManager.getCurrentSong()) != songManager.getSongs().end()) {
-			SongControlMenu::checkDaSongPositions(0.f);
-			this->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
-			this->schedule(schedule_selector(SongControlMenu::forceSharpCornerIllusionScheduler));
-		}
+		this->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
+		this->schedule(schedule_selector(SongControlMenu::forceSharpCornerIllusionScheduler));
 		if (this->m_ffwdButton && this->m_bkwdButton) {
 			this->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
 		}

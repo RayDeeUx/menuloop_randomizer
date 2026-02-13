@@ -100,7 +100,11 @@ void Utils::constantShuffleModeNewSong() {
 	fmod->m_backgroundMusicChannel->stop();
 	SongManager& songManager = SongManager::get();
 	const std::string& songToBeStored = songManager.getCurrentSong();
-	if (!songToBeStored.empty()) songManager.setPreviousSong(songToBeStored);
+	if (!songToBeStored.empty()) {
+		if (const std::vector<std::string>& blacklist = songManager.getBlacklist(); std::ranges::find(blacklist.begin(), blacklist.end(), songToBeStored) != blacklist.end()) {
+			songManager.setPreviousSong(songToBeStored);
+		}
+	}
 	// else geode::log::info("no current song found, probably");
 	songManager.pickRandomSong();
 	Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
