@@ -272,7 +272,7 @@ void SongControlMenu::checkDaSongPositions(float) {
 	const std::string& currSong = songManager.getCurrentSong();
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
 
-	const int fullLength = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songManager.getCurrentSong()))->second.songLength;
+	const int fullLength = Utils::getSongDataOfCurrentSong().songLength;
 	const int lastPosition = songManager.getLastMenuLoopPosition();
 
 	this->m_currTimeLb->setString(fmt::format("{}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60)).c_str());
@@ -375,7 +375,7 @@ void SongControlMenu::onSkipFwrdButton(CCObject*) {
 void SongControlMenu::updateCurrentLabel() {
 	SongManager& songManager = SongManager::get();
 	songManager.resetTowerRepeatCount();
-	const std::string& currentSong = !songManager.getFinishedCalculatingSongLengths() ? songManager.getCurrentSongDisplayName() : static_cast<SongData>(songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songManager.getCurrentSong()))->second).fullDisplayNameForControlPanelAndSongList;
+	const std::string& currentSong = !songManager.getFinishedCalculatingSongLengths() ? songManager.getCurrentSongDisplayName() : Utils::getSongDataOfCurrentSong().fullDisplayNameForControlPanelAndSongList;
 	if (!this->m_smallLabel || !this->m_smallLabel->getParent() || this->m_smallLabel->getParent() != this->b) {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
 		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center, {0.f, 3.5f});
@@ -410,9 +410,8 @@ void SongControlMenu::updateCurrentLabel() {
 		this->m_smallLabel->setColor({255, 255, 255});
 		return;
 	}
-	const auto& entry = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songManager.getCurrentSong()));
-	if (entry == songManager.getSongToSongDataEntries().end()) return;
-	const SongData& songData = entry->second;
+	if (!Utils::songDataContainsSong(songManager.getCurrentSong())) return;
+	SongData& songData = Utils::getSongDataOfCurrentSong();
 	const SongType songType = songData.type;
 	this->m_smallLabel->setSkewX(0.f);
 	this->m_smallLabel->setColor({255, 255, 255});

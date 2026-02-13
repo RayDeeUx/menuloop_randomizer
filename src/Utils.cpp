@@ -151,7 +151,7 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs() {
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSong = Utils::toProblematicString(songManager.getCurrentSong());
-	if (songManager.getFinishedCalculatingSongLengths() && !songManager.getSongToSongDataEntries().empty() && songManager.getSongToSongDataEntries().contains(currentSong)) return songManager.setCurrentSongDisplayName(static_cast<SongData>(songManager.getSongToSongDataEntries().find(currentSong)->second).displayName);
+	if (songManager.getFinishedCalculatingSongLengths() && !songManager.getSongToSongDataEntries().empty() && songManager.getSongToSongDataEntries().contains(currentSong)) return songManager.setCurrentSongDisplayName(Utils::getSongDataOfCurrentSong().displayName);
 	std::string customSongDisplayName = Utils::toNormalizedString(currentSong.stem());
 	Utils::sanitizeASCII(customSongDisplayName);
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return songManager.setCurrentSongDisplayName(customSongDisplayName);
@@ -171,7 +171,7 @@ void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs
 std::string Utils::composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix) {
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSong = Utils::toProblematicString(songManager.getCurrentSong());
-	if (songManager.getFinishedCalculatingSongLengths() && !songManager.getSongToSongDataEntries().empty() && songManager.getSongToSongDataEntries().contains(currentSong)) songManager.setCurrentSongDisplayName(static_cast<SongData>(songManager.getSongToSongDataEntries().find(currentSong)->second).displayName);
+	if (songManager.getFinishedCalculatingSongLengths() && !songManager.getSongToSongDataEntries().empty() && songManager.getSongToSongDataEntries().contains(currentSong)) songManager.setCurrentSongDisplayName(Utils::getSongDataOfCurrentSong().displayName);
 	else if (!Utils::getBool("useCustomSongs") || !songManager.getPlaylistIsEmpty()) songManager.setCurrentSongDisplayName(middle);
 	Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 	std::string result = notifString.append(middle).append(suffix);
@@ -181,7 +181,7 @@ std::string Utils::composedNotifString(std::string notifString, const std::strin
 void Utils::newCardAndDisplayNameFromCurrentSong() {
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSong = Utils::toProblematicString(songManager.getCurrentSong());
-	if (songManager.getFinishedCalculatingSongLengths() && !songManager.getSongToSongDataEntries().empty() && songManager.getSongToSongDataEntries().contains(currentSong)) songManager.setCurrentSongDisplayName(static_cast<SongData>(songManager.getSongToSongDataEntries().find(currentSong)->second).displayName);
+	if (songManager.getFinishedCalculatingSongLengths() && !songManager.getSongToSongDataEntries().empty() && songManager.getSongToSongDataEntries().contains(currentSong)) songManager.setCurrentSongDisplayName(Utils::getSongDataOfCurrentSong().displayName);
 	const std::string& songFileName = Utils::toNormalizedString(currentSong.filename());
 	const std::string& currentSongRawFileName = Utils::toNormalizedString(currentSong.stem());
 	songManager.setCurrentSongDisplayName(songFileName);
@@ -712,6 +712,27 @@ void Utils::removeCardRemotely(cocos2d::CCNode* card) {
 void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {
 	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
 	else if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); SongManager::get().getUndefined0Alk1m123TouchPrio() && sll && sll->m_searchBar) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(sll->m_searchBar->getInputNode(), false); });
+}
+
+SongData& Utils::getSongDataOfCurrentSong() {
+	return Utils::getSongDataOfSong(SongManager::get().getCurrentSong());
+}
+
+SongData& Utils::getSongDataOfSong(const std::string_view song) {
+	SongManager& songManager = SongManager::get();
+	return static_cast<SongData&>(songManager.getSongToSongDataEntries().find(Utils::toProblematicString(song))->second);
+}
+
+SongData& Utils::getSongDataOfSongPath(const std::filesystem::path& song) {
+	return static_cast<SongData&>(SongManager::get().getSongToSongDataEntries().find(song)->second);
+}
+
+bool Utils::songDataContainsSong(const std::string_view song) {
+	return SongManager::get().getSongToSongDataEntries().contains(Utils::toProblematicString(song));
+}
+
+bool Utils::songDataContainsSongPath(const std::filesystem::path& song) {
+	return SongManager::get().getSongToSongDataEntries().contains(song);
 }
 
 CCMenuItemSpriteExtra* Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {

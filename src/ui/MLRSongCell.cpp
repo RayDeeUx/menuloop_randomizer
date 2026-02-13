@@ -171,7 +171,7 @@ void MLRSongCell::updateProgressBar() const {
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
-	this->m_currentB->setContentWidth(std::clamp<float>(((1.f * songManager.getLastMenuLoopPosition()) / (1.f * std::max<int>(songManager.getSongToSongDataEntries().find(Utils::toProblematicString(currSong))->second.songLength, fmod->getMusicLengthMS(0)))), 0.f, 1.f) * 349.f); // some songs hae lengths calculated by miniaudio, so clamp it to 1.f
+	this->m_currentB->setContentWidth(std::clamp<float>(((1.f * songManager.getLastMenuLoopPosition()) / (1.f * std::max<int>(Utils::getSongDataOfCurrentSong().songLength, fmod->getMusicLengthMS(0)))), 0.f, 1.f) * 349.f); // some songs hae lengths calculated by miniaudio, so clamp it to 1.f
 }
 
 void MLRSongCell::checkIfCurrentSong() const {
@@ -225,7 +225,7 @@ void MLRSongCell::toggleEven(const bool isEven) {
 void MLRSongCell::checkIfCurrentSongScheduler(float) {
 	const bool wasRegular = this->m_songData.type == SongType::Regular;
 	MLRSongCell::checkIfCurrentSong();
-	if (!this->m_songNameLabel || this->getTag() != 12192025 || this->m_songData.hashedPath != SongManager::get().getHashedCurrentSong() || wasRegular && static_cast<SongData>(SongManager::get().getSongToSongDataEntries().find(Utils::toProblematicString(this->m_songData.actualFilePath))->second).type == SongType::Regular) return;
+	if (!this->m_songNameLabel || this->getTag() != 12192025 || this->m_songData.hashedPath != SongManager::get().getHashedCurrentSong() || wasRegular && Utils::getSongDataOfSongPath(this->m_songData.actualFilePath).type == SongType::Regular) return;
 	const float compactModeFactor = 36.f / this->getContentHeight();
 	this->m_songNameLabel->setFntFile("goldFont.fnt");
 	this->m_songNameLabel->setColor(cocos2d::ccColor3B{0, 255, 255});

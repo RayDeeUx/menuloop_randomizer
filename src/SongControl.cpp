@@ -93,8 +93,8 @@ namespace SongControl {
 		songManager.addToFavorites();
 		songManager.addSong(currentSong);
 
-		if (songManager.getSongToSongDataEntries().contains(Utils::toProblematicString(currentSong))) {
-			SongData& songDataToEdit = songManager.getSongToSongDataEntries().find(Utils::toProblematicString(currentSong))->second;
+		if (Utils::songDataContainsSong(currentSong)) {
+			SongData& songDataToEdit = Utils::getSongDataOfCurrentSong();
 			songDataToEdit.type = SongType::Favorited;
 		}
 
@@ -139,8 +139,8 @@ namespace SongControl {
 			geode::log::info("updated size: {}", songManager.getSongsSize());
 		}
 
-		if (songManager.getSongToSongDataEntries().contains(songBeingBlacklistedPath)) {
-			SongData& songDataToEdit = songManager.getSongToSongDataEntries().find(songBeingBlacklistedPath)->second;
+		if (Utils::songDataContainsSongPath(songBeingBlacklistedPath)) {
+			SongData& songDataToEdit = Utils::getSongDataOfSongPath(songBeingBlacklistedPath);
 			songDataToEdit.type = SongType::Blacklisted;
 		}
 
