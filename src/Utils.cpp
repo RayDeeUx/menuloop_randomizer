@@ -164,7 +164,7 @@ void Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs
 	}
 	const int songID = songFileNameAsID.unwrapOr(-1);
 	const bool isNotFromConfigOrAltDir = !Utils::isFromConfigOrAlternateDir(currentSong);
-	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && isNotFromConfigOrAltDir) return songManager.setCurrentSongDisplayName(Utils::getFormattedNGMLSongName(songInfo));
+	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && isNotFromConfigOrAltDir) return songManager.setCurrentSongDisplayName(Utils::getFormattedNGMLSongName(songInfo, false));
 	return songManager.setCurrentSongDisplayName(customSongDisplayName);
 }
 
@@ -219,7 +219,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && !Utils::isFromConfigOrAlternateDir(currentSong)) {
 		// default: "Song Name, Artist, Song ID"
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
-		return Utils::newNotification(Utils::composedNotifString(notifString, Utils::getFormattedNGMLSongName(songInfo), suffix), true);
+		return Utils::newNotification(Utils::composedNotifString(notifString, Utils::getFormattedNGMLSongName(songInfo, false), suffix), true);
 	}
 	return Utils::newNotification(Utils::composedNotifString(notifString, currentSongRawFileName, suffix), true);
 }
@@ -239,7 +239,7 @@ bool Utils::adjustSongInfoIfJukeboxReplacedIt(SongInfoObject* songInfo) {
 	return shouldReplaceDisplayName;
 }
 
-std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
+std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo, const bool showFullAnyway) {
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSongPath = Utils::toProblematicString(songManager.getCurrentSong());
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return Utils::currentCustomSong();
@@ -249,7 +249,7 @@ std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo) {
 	const std::string& robtopSuffix = isMenuLoopFromNG ? " [OOF!]" : "";
 	Utils::adjustSongInfoIfJukeboxReplacedIt(songInfo);
 	std::string displayName = fmt::format("{}", songInfo->m_songName);
-	if (formatSetting == "Song Name, Artist, Song ID") displayName = fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
+	if (showFullAnyway || formatSetting == "Song Name, Artist, Song ID") displayName = fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
 	else if (formatSetting == "Song Name + Artist") displayName = fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
 	else if (formatSetting == "Song Name + Song ID") displayName = fmt::format("{} ({}){}", songInfo->m_songName, songInfo->m_songID, robtopSuffix);
 	Utils::sanitizeASCII(displayName);
@@ -519,7 +519,7 @@ void Utils::popualteSongToSongDataMap() {
 			.isEmpty = false
 		};
 		if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID)) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
-			songData.displayName = Utils::getFormattedNGMLSongName(songInfoObject);
+			songData.displayName = Utils::getFormattedNGMLSongName(songInfoObject, false);
 		}
 		songData.displayName = SongListLayer::generateDisplayName(songData);
 

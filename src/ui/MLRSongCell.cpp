@@ -47,13 +47,14 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	const float compactModeFactor = isCompact ? static_cast<float>(std::clamp<double>(geode::Mod::get()->getSettingValue<double>("compactModeScaleFactor"), 1.5, 2.0)) : 1.f;
 	this->setContentHeight(36.f / compactModeFactor);
 
-	cocos2d::CCLabelBMFont* songNameLabel = cocos2d::CCLabelBMFont::create(songData.displayName.c_str(), "bigFont.fnt");
+	cocos2d::CCLabelBMFont* songNameLabel = cocos2d::CCLabelBMFont::create(songData.fullDisplayNameForControlPanelAndSongList.c_str(), "bigFont.fnt");
 	songNameLabel->setAnchorPoint({.0f, .5f});
 	songNameLabel->setPosition({15, (this->getContentHeight() / 2.f) + 1.f});
 
 	if (songData.type == SongType::Favorited) songNameLabel->setFntFile("goldFont.fnt");
 	else if (songData.type == SongType::Blacklisted) songNameLabel->setOpacity(128); // opacity is more apparopriate
 	// else if (songData.type == SongType::Regular) songNameLabel->setColor({255, 255, 255}); // filler code lol!
+
 	if (songData.isFromJukeboxDirectory) {
 		// dont modify songnamelabel, add gradient
 		cocos2d::CCLayerGradient* jukeboxGradient = cocos2d::CCLayerGradient::create({96, 96, 96, 128}, {0, 0, 0, 0});
@@ -66,7 +67,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 
 	if (songData.isInNonVanillaNGMLSongLocation && !songData.isFromConfigOrAltDir && songData.couldPossiblyExistInMusicDownloadManager && !songData.isFromJukeboxDirectory) songNameLabel->setSkewX(10.f);
 	songNameLabel->limitLabelWidth(356.f * (.8f / compactModeFactor), std::clamp<float>((.75f / compactModeFactor), .3, .75), .001f);
-	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.displayName));
+	this->setUserObject("song-name"_spr, cocos2d::CCString::create(songData.fullDisplayNameForControlPanelAndSongList));
 
 	cocos2d::CCLabelBMFont* extraInfoLabl = nullptr;
 	if (isCompact && Utils::getBool("showExtraInfoLabel")) {

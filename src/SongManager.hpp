@@ -13,6 +13,7 @@ struct SongData {
 	std::string displayName = "";
 	std::string dateTimeText = "";
 	std::string extraInfoText = "";
+	std::string fullDisplayNameForControlPanelAndSongList = "";
 	SongType type = SongType::Regular;
 	unsigned int songLength = std::numeric_limits<unsigned int>::max();
 	std::uintmax_t songFileSize = std::numeric_limits<std::uintmax_t>::max();

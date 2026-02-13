@@ -63,18 +63,6 @@
 			"type": "bool",
 			"default": false
 		},
-		"songFormatNGML": {
-			"name": "Newgrounds/Music Library Song Name Format",
-			"description": "Choose the format you prefer for \"Now Playing\" notifications or the Song List menu.\n\n<cy>Only applies to Newgrounds/Music Library songs.</c>",
-			"type": "string",
-			"default": "Song Name, Artist, Song ID",
-			"one-of": [
-				"Song Name",
-				"Song Name + Artist",
-				"Song Name + Song ID",
-				"Song Name, Artist, Song ID"
-			]
-		},
 		"buttonMode": {
 			"name": "Button Mode",
 			"description": "<cl>Original idea by dasshuDEV and Hanifinio.</c>\n\nMinimal: Only the \"Control Panel\" button is added.\n\nReduced: The <cl>Blacklist Song</c>, <cl>Favorite Song</c>, <cl>Hold Song</c>, <cl>Previous Song</c>, <cl>Add to Playlist</c>, and <cl>View Song List</c> buttons stay inside the MLR \"Control Panel\" to reduce clutter on MenuLayer.\n\nClassic: Places the <cl>Blacklist Song</c>, <cl>Favorite Song</c>, <cl>Hold Song</c>, <cl>Previous Song</c>, <cl>Add to Playlist</c>, and <cl>View Song List</c> buttons to the right side of MenuLayer (or the bottom of MenuLayer, if you use Overcharged Main Menu).",
@@ -150,6 +138,18 @@
 			"description": "Enables the <cj>notification regeneration button</c> in the main menu.",
 			"type": "bool",
 			"default": true
+		},
+		"songFormatNGML": {
+			"name": "Notifs: Newgrounds/Music Library Song Name Format",
+			"description": "Choose the format you prefer for \"Now Playing\" notifications (and as a fallback option for other menus from MLR).\n\n<cy>Only applies to Newgrounds/Music Library songs.</c>",
+			"type": "string",
+			"default": "Song Name, Artist, Song ID",
+			"one-of": [
+				"Song Name",
+				"Song Name + Artist",
+				"Song Name + Song ID",
+				"Song Name, Artist, Song ID"
+			]
 		},
 		"removeSuffix": {
 			"name": "Notifs: Hide File Extension",

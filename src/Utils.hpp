@@ -21,7 +21,7 @@ class Utils {
 	static std::string composedNotifString(std::string notifString, const std::string& middle, const std::string& suffix);
 	static void newCardAndDisplayNameFromCurrentSong();
 	static bool adjustSongInfoIfJukeboxReplacedIt(SongInfoObject* songInfo) ;
-	static std::string getFormattedNGMLSongName(SongInfoObject*);
+	static std::string getFormattedNGMLSongName(SongInfoObject*, const bool);
 	static void copyCurrentSongName();
 	static void loadFromPlaylistFile(const std::filesystem::path&);
 	static void populateVector(const bool customSongs, const std::filesystem::path& path = "", std::vector<std::string> textFileBlacklist = {}, std::vector<std::string> textFileFavorites = {});

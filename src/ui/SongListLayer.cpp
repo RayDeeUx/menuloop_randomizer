@@ -49,9 +49,9 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		if (songData.type == SongType::Blacklisted || songListFavoritesOnlyMode && songData.type != SongType::Favorited) continue;
 
 		if (SEARCH_BAR_ENABLED && !queryString.empty()) {
-			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.displayName), geode::utils::string::toLower(queryString));
+			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.fullDisplayNameForControlPanelAndSongList), geode::utils::string::toLower(queryString));
 			if (SongManager::get().getAdvancedLogs()) {
-				geode::log::info("songData.displayName: {}", songData.displayName);
+				geode::log::info("songData.fullDisplayNameForControlPanelAndSongList: {}", songData.fullDisplayNameForControlPanelAndSongList);
 				geode::log::info("queryString: {}", queryString);
 				geode::log::info("contains: {}", contains);
 				geode::log::info("==============================================");
@@ -613,16 +613,23 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 }
 
 std::string SongListLayer::generateDisplayName(SongData& songData) {
-	if (!songData.displayName.empty()) return songData.displayName;
+	if (!songData.fullDisplayNameForControlPanelAndSongList.empty()) return songData.fullDisplayNameForControlPanelAndSongList;
 
 	std::string displayName = Utils::toNormalizedString(Utils::toProblematicString(songData.actualFilePath).stem());
+	std::string fullDisplayNameForControlPanelAndSongList = displayName;
 	const int songID = geode::utils::numFromString<int>(displayName).unwrapOr(-1);
 	if (songID > 0 && songData.couldPossiblyExistInMusicDownloadManager) {
 		MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
-		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) displayName = Utils::getFormattedNGMLSongName(songInfoObject);
+		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) {
+			displayName = Utils::getFormattedNGMLSongName(songInfoObject, false);
+			fullDisplayNameForControlPanelAndSongList = Utils::getFormattedNGMLSongName(songInfoObject, true);
+		}
 	}
 
 	Utils::sanitizeASCII(displayName);
+	Utils::sanitizeASCII(fullDisplayNameForControlPanelAndSongList);
+
+	songData.fullDisplayNameForControlPanelAndSongList = fullDisplayNameForControlPanelAndSongList;
 	return displayName;
 }
 
@@ -641,7 +648,9 @@ void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInpu
 	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->m_textLabel;
 	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
 	if (!placeholderLabelMaybe || placeholderLabelMaybe->getColor() != cocos2d::ccColor3B{150, 150, 150}) return;
-	if (updateString) placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", SongManager::get().getCurrentSongDisplayName()).c_str());
+	SongManager& songManager = SongManager::get();
+	const std::string& displayName = !songManager.getFinishedCalculatingSongLengths() ? songManager.getCurrentSongDisplayName() : static_cast<SongData>(songManager.getSongToSongDataEntries().find(Utils::toProblematicString(songManager.getCurrentSong()))->second).fullDisplayNameForControlPanelAndSongList;
+	if (updateString) placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", displayName).c_str());
 	if (placeholderLabelMaybe->isVisible()) placeholderLabelMaybe->limitLabelWidth(350.f, .5f, .0001f);
 	placeholderLabelMaybe->setTag(12242025);
 }
