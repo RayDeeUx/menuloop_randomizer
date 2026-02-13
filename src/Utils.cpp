@@ -79,7 +79,7 @@ void Utils::setNewSong() {
 	SongManager& songManager = SongManager::get();
 	const std::string& songToBeStored = songManager.getCurrentSong();
 	if (!songToBeStored.empty()) {
-		if (const std::vector<std::string>& blacklist = songManager.getBlacklist(); std::ranges::find(blacklist.begin(), blacklist.end(), songToBeStored) != blacklist.end()) {
+		if (Utils::songDataContainsSong(songToBeStored) && Utils::getSongDataOfSong(songToBeStored).type != SongType::Blacklisted) {
 			songManager.setPreviousSong(songToBeStored);
 		}
 	}
@@ -101,7 +101,7 @@ void Utils::constantShuffleModeNewSong() {
 	SongManager& songManager = SongManager::get();
 	const std::string& songToBeStored = songManager.getCurrentSong();
 	if (!songToBeStored.empty()) {
-		if (const std::vector<std::string>& blacklist = songManager.getBlacklist(); std::ranges::find(blacklist.begin(), blacklist.end(), songToBeStored) != blacklist.end()) {
+		if (Utils::songDataContainsSong(songToBeStored) && Utils::getSongDataOfSong(songToBeStored).type != SongType::Blacklisted) {
 			songManager.setPreviousSong(songToBeStored);
 		}
 	}
