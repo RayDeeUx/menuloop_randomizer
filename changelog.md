@@ -26,7 +26,7 @@
   - You can toggle this option off in the mod settings.
   - Song name indicators for song name label are the same as those seen in the Song List menu.
   - For a number of reasons, the green "current song" indicator and the small dark gradient indicator for Jukebox songs do not apply to the Control Panel.
-- <cy>Changed</c> the  `Newgrounds/Music Library Song Name Format`  setting to only apply to "Now Playing" notificiations as per past behavior.
+- <c-D0FF00>Changed</c> the  `Newgrounds/Music Library Song Name Format`  setting to only apply to "Now Playing" notificiations as per past behavior.
   - This change was made to make song searching less dependenct on this age-old setting.
   - Depending on how many songs you've set for MLR, this setting will still be applied to other menus from MLR as a fallback approach if MLR is still busy calculating song lengths.
 - <co>Fixed</c> an issue where menu loop positions wouldn't be restored when leaving a level whose most recently played song was also the most recently selected menu loop.
