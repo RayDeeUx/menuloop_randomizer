@@ -380,7 +380,7 @@ void SongControlMenu::onSkipFwrdButton(CCObject*) {
 void SongControlMenu::updateCurrentLabel() {
 	SongManager& songManager = SongManager::get();
 	songManager.resetTowerRepeatCount();
-	const std::string& currentSong = !songManager.getFinishedCalculatingSongLengths() ? songManager.getCurrentSongDisplayName() : Utils::getSongDataOfCurrentSong().fullDisplayNameForControlPanelAndSongList;
+	const std::string& currentSong = !songManager.getFinishedCalculatingSongLengths() || !Utils::songDataContainsSong(songManager.getCurrentSong()) ? songManager.getCurrentSongDisplayName() : Utils::getSongDataOfCurrentSong().fullDisplayNameForControlPanelAndSongList;
 	if (!this->m_smallLabel || !this->m_smallLabel->getParent() || this->m_smallLabel->getParent() != this->b) {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
 		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center, {0.f, 3.5f});
