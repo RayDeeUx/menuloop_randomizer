@@ -104,6 +104,8 @@ class SongManager {
 	geode::Mod* getColonMenuLoopStartTime() const;
 	void setVibecodedVentilla(const bool);
 	bool getVibecodedVentilla() const;
+	void setVobecidedJota(const bool);
+	bool getVobecidedJota() const;
 	void setPauseSongPositionTracking(const bool);
 	bool getPauseSongPositionTracking() const;
 	void setShowPlaybackProgressAndControls(const bool);
@@ -147,6 +149,7 @@ class SongManager {
 	bool m_isUndefined0Alk1m123TouchPrio = false;
 	bool m_sawbladeCustomSongsFolder = false;
 	bool m_vibecodedVentilla = false;
+	bool m_vobecidedJota = false;
 	bool m_youtubeAndVLCKeyboardShortcutsSongList = false;
 	bool m_youtubeAndVLCKeyboardShortcutsControlPanel = false;
 	int m_lastPosition = 0;

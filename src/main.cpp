@@ -10,6 +10,7 @@ SongManager& songManager = SongManager::get();
 const std::filesystem::path& configDir = Mod::get()->getConfigDir();
 bool originalOverrideWasEmpty = false;
 
+/* CHANGE THIS LATER */ #define VOBECIDED_JOTA Loader::get()->getInstalledMod("jotabelike.foobarbaz")
 #define VIBECODED_RADIO Loader::get()->getInstalledMod("joseii.ventilla")
 #define BTP Loader::get()->getInstalledMod("alk.better-touch-prio")
 #define USE_BETTER_TOUCH_PRIO_DAMMIT "# <c-ff0000>***__Please install \"Better Touch Prio\" to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but nothing more will happen unless if you install the \"Better Touch Prio\" mod.</c>"
@@ -29,6 +30,8 @@ $on_mod(Loaded) {
 	GEODE_DESKTOP(songManager.setYoutubeAndVLCKeyboardShortcutsControlPanel(Mod::get()->getSettingValue<bool>("youtubeAndVLCKeyboardShortcutsControlPanel"));)
 	songManager.setIncrementDecrementByMilliseconds(Mod::get()->getSettingValue<int64_t>("incrementDecrementByMilliseconds"));
 	songManager.setVibecodedVentilla(VIBECODED_RADIO && (VIBECODED_RADIO->isEnabled() || VIBECODED_RADIO->shouldLoad()));
+	/* CHANGE THIS LATER */ // songManager.setVobecidedJota(VOBECIDED_JOTA && (VOBECIDED_JOTA->isEnabled() || VOBECIDED_JOTA->shouldLoad()));
+	/* REMOVE THIS LATER */ songManager.setVobecidedJota(false);
 	songManager.setUndefined0Alk1m123TouchPrio(BTP && (BTP->isEnabled() || BTP->shouldLoad()) && !BTP->hasUnresolvedDependencies() && !BTP->hasUnresolvedIncompatibilities());
 	if (!std::filesystem::exists(configDir / "playlistOne.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistOne.txt");
 	if (!std::filesystem::exists(configDir / "playlistTwo.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistTwo.txt");

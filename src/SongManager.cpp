@@ -306,6 +306,14 @@ bool SongManager::getVibecodedVentilla() const {
 	return m_vibecodedVentilla;
 }
 
+void SongManager::setVobecidedJota(const bool value) {
+	m_vobecidedJota = value;
+}
+
+bool SongManager::getVobecidedJota() const {
+	return m_vobecidedJota;
+}
+
 void SongManager::setPauseSongPositionTracking(const bool value) {
 	m_pausedSongPositionTracking = value;
 }
