@@ -92,6 +92,21 @@ $on_mod(Loaded) {
 	}
 	Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs();
 
+	int i = 0;
+	if (Mod::get()->getSavedValue<bool>("songListSortAlphabetically")) i++;
+	if (Mod::get()->getSavedValue<bool>("songListSortDateAdded")) i++;
+	if (Mod::get()->getSavedValue<bool>("songListSortSongLength")) i++;
+	if (Mod::get()->getSavedValue<bool>("songListSortFileSize")) i++;
+	if (Mod::get()->getSavedValue<bool>("songListSortFileExtn")) i++;
+	if (i > 1) {
+		// because i don't trust toddlers to not edit saved.json nilly willy
+		Mod::get()->setSavedValue<bool>("songListSortAlphabetically", false);
+		Mod::get()->setSavedValue<bool>("songListSortDateAdded", false);
+		Mod::get()->setSavedValue<bool>("songListSortSongLength", false);
+		Mod::get()->setSavedValue<bool>("songListSortFileSize", false);
+		Mod::get()->setSavedValue<bool>("songListSortFileExtn", false);
+	}
+
 	if (!std::filesystem::exists(configDir / R"(store_your_disabled_menuloops_here)")) {
 		std::filesystem::create_directory(configDir / R"(store_your_disabled_menuloops_here)");
 	}
