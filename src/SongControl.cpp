@@ -98,9 +98,9 @@ namespace SongControl {
 			songDataToEdit.type = SongType::Favorited;
 		}
 
-		if (!Utils::getBool("enableNotification")) return;
 		if (!useCustomSongs) return Utils::newNotification(fmt::format("Favorited {} by {} ({})!", songName, songArtist, songID));
 		if (!customSong.empty()) return Utils::newNotification(fmt::format("Favorited {}!", customSong));
+		if (Utils::songDataContainsSong(currentSong)) return Utils::newNotification(fmt::format("Favorited {}!", Utils::getSongDataOfCurrentSong().displayName));
 	}
 	void blacklistSong(SongManager& songManager) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
@@ -139,8 +139,10 @@ namespace SongControl {
 			geode::log::info("updated size: {}", songManager.getSongsSize());
 		}
 
+		std::string backup;
 		if (Utils::songDataContainsSongPath(songBeingBlacklistedPath)) {
 			SongData& songDataToEdit = Utils::getSongDataOfSongPath(songBeingBlacklistedPath);
+			backup = songDataToEdit.displayName;
 			songDataToEdit.type = SongType::Blacklisted;
 		}
 
@@ -160,6 +162,7 @@ namespace SongControl {
 			return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", Utils::toNormalizedString(songBeingBlacklistedPath.filename()), Utils::getSongName()));
 		}
 		if (!customSong.empty()) return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", customSong, Utils::currentCustomSong()));
+		return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", backup, Utils::currentCustomSong()));
 	}
 	void copySong() {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;

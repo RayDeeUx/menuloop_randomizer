@@ -688,7 +688,7 @@ std::string Utils::currentCustomSong() {
 	SongManager& songManager = SongManager::get();
 	if (!Utils::getBool("useCustomSongs") || !songManager.getPlaylistIsEmpty()) return Utils::getSongName();
 	if (songManager.isOriginalMenuLoop()) return "";
-	return Utils::toNormalizedString(std::filesystem::path(songManager.getCurrentSong()).filename());
+	return Utils::toNormalizedString(Utils::toProblematicString(songManager.getCurrentSong()).filename());
 }
 
 std::string Utils::toNormalizedString(const std::filesystem::path& path) {
