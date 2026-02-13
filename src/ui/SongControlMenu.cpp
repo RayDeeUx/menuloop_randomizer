@@ -6,6 +6,7 @@
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 #define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
+#define CAN_SHOW_PLAYBACK_PROGRESS CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED
 
 bool SongControlMenu::setup() {
 	this->setTitle("Menu Loop Randomizer - Control Panel");
@@ -240,19 +241,27 @@ void SongControlMenu::checkManagerFinished(float) {
 }
 
 void SongControlMenu::forceSharpCornerIllusion() {
-	if (this->b) {
-		this->b->_bottom->setPositionX(0.f);
-		this->b->_bottom->setScaleX(9.375f);
-		this->b->_bottomLeft->setVisible(false);
-		this->b->_bottomRight->setVisible(false);
-	}
+	if (!this->b) return;
+	this->b->_bottom->setPositionX(0.f);
+	this->b->_bottom->setScaleX(9.375f);
+	this->b->_bottomLeft->setVisible(false);
+	this->b->_bottomRight->setVisible(false);
+
+	SongManager& songManager = SongManager::get();
+	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
+
+	if (!this->m_smallLabel) return;
+	this->m_smallLabel->setPositionY(canShowPlaybackProgress ? 18.5f : 15.f);
+	this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * (canShowPlaybackProgress ? .85f : 1.f), (canShowPlaybackProgress ? .85f : 1.f), .0001f);
+}
+
+void SongControlMenu::forceSharpCornerIllusionScheduler(const float) {
+	SongControlMenu::forceSharpCornerIllusion();
 }
 
 void SongControlMenu::checkDaSongPositions(float) {
-	SongControlMenu::forceSharpCornerIllusion();
-
 	SongManager& songManager = SongManager::get();
-	const bool canShowPlaybackProgress = CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED;
+	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
 
 	if (this->m_currTimeLb) this->m_currTimeLb->setVisible(canShowPlaybackProgress);
 	if (this->m_totlTimeLb) this->m_totlTimeLb->setVisible(canShowPlaybackProgress);
@@ -260,10 +269,6 @@ void SongControlMenu::checkDaSongPositions(float) {
 	if (this->m_darkProgBar) this->m_darkProgBar->setVisible(canShowPlaybackProgress);
 	if (this->m_increDecreMenu) this->m_increDecreMenu->setVisible(canShowPlaybackProgress);
 	if (this->m_clipNode) this->m_clipNode->setVisible(canShowPlaybackProgress);
-	if (this->m_smallLabel) {
-		this->m_smallLabel->setPositionY(canShowPlaybackProgress ? 18.5f : 15.f);
-		if (this->b) this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * (canShowPlaybackProgress ? .85f : 1.f), (canShowPlaybackProgress ? .85f : 1.f), .0001f);
-	}
 
 	if (!canShowPlaybackProgress) return;
 	if (!this->m_currTimeLb || !this->m_totlTimeLb || !this->m_currProgBar || !this->m_darkProgBar) return;
@@ -388,6 +393,7 @@ void SongControlMenu::updateCurrentLabel() {
 		if (std::ranges::find(songManager.getSongs().begin(), songManager.getSongs().end(), songManager.getCurrentSong()) != songManager.getSongs().end()) {
 			SongControlMenu::checkDaSongPositions(0.f);
 			this->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
+			this->schedule(schedule_selector(SongControlMenu::forceSharpCornerIllusionScheduler));
 		}
 		if (this->m_ffwdButton && this->m_bkwdButton) {
 			this->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);

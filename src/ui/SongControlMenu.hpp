@@ -36,6 +36,7 @@ protected:
 	void checkDaSongPositions(float);
 	void pressAndHoldScheduler(float);
 	void forceSharpCornerIllusion();
+	void forceSharpCornerIllusionScheduler(float);
 public:
 	static SongControlMenu* create();
 	void onRegenButton(CCObject*);
