@@ -625,6 +625,8 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		if (isShift && (macOSCtrl || windowsCtrl) && !(macOSAlt || windowsAlt)) speedModifier = 3.f;
 		if (isShift && !(macOSCtrl || windowsCtrl) && (macOSAlt || windowsAlt)) speedModifier = 3.f;
 		if (isShift && !(macOSCtrl || windowsCtrl) && !(macOSAlt || windowsAlt)) speedModifier = 2.f;
+		if (!isShift && (macOSCtrl || windowsCtrl) && !(macOSAlt || windowsAlt)) speedModifier = 2.f;
+		if (!isShift && !(macOSCtrl || windowsCtrl) && (macOSAlt || windowsAlt)) speedModifier = 2.f;
 
 		return contentLayer->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCMoveBy::create(1.f / 60.f, {0, 5.f * std::abs(5.f - this->m_scaleFactor) * upOrDownModifier * speedModifier})))->setTag(20260214);
 	}
