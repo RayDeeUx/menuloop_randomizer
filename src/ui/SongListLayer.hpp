@@ -19,6 +19,9 @@ protected:
 	cocos2d::CCMenu* m_viewFiltersMenu {};
 	geode::ScrollLayer* m_scrollLayer {};
 	geode::Scrollbar* m_scrollBar {};
+private:
+	float m_scaleFactor = 1.f;
+	float m_tallestPoint = -0.f;
 public:
 	static SongListLayer* create();
 	void addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString = "");
@@ -46,7 +49,9 @@ public:
 	void disableAllSortFiltersThenToggleThenSearch(const std::string_view);
 	void toggleSavedValueAndSearch(const std::string_view);
 	void scrollToCurrentSong();
+
 	void keyDown(const cocos2d::enumKeyCodes) override;
+	void keyUp(const cocos2d::enumKeyCodes) override;
 	void searchSongs(const std::string&);
 
 	static std::string generateDisplayName(SongData&);

@@ -112,6 +112,9 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
 
+	this->m_scaleFactor = !songListCompactMode ? 1.f : static_cast<float>(std::clamp<double>(geode::Mod::get()->getSettingValue<double>("compactModeScaleFactor"), 1.5, 2.0));
+	this->m_tallestPoint = (scrollLayer->m_contentLayer->getContentHeight() * -1.f) + scrollLayer->getContentHeight();
+
 	if (this->m_scrollBar) this->m_scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 	if (this->m_scrollShortcuts) this->m_scrollShortcuts->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 }
@@ -435,11 +438,10 @@ void SongListLayer::scrollToCurrentSong() {
 	// cmon bruh it's in plain sight lol
 	CCNode* currentCell = contentLayer->getChildByTag(12192025);
 	cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
-	const float theAbsolluteTop = contentLayer->getContentHeight() * -1.f + contentLayer->getParent()->getContentHeight();
 	const float centerOrCurrent = (cckd->getShiftKeyPressed() && (GEODE_MOBILE(true) GEODE_MACOS(!cckd->getControlKeyPressed()) GEODE_WINDOWS(!cckd->getAltKeyPressed())) || !currentCell) ? ((contentLayer->getContentHeight() + contentLayer->getParent()->getContentHeight()) * -1.f * .5f) : ((currentCell->getPositionY() * -1.f) - (contentLayer->getParent()->getContentHeight() / 2.f) + 20.f);
 	const float desiredPosition = centerOrCurrent + contentLayer->getParent()->getContentHeight();
 	if (desiredPosition > 0.f) contentLayer->setPositionY(0.f);
-	else if (desiredPosition < theAbsolluteTop) contentLayer->setPositionY(theAbsolluteTop);
+	else if (desiredPosition < this->m_tallestPoint) contentLayer->setPositionY(this->m_tallestPoint);
 	else contentLayer->setPositionY(desiredPosition);
 }
 
@@ -523,15 +525,23 @@ void SongListLayer::toggleSavedValueAndSearch(const std::string_view savedValueK
 	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
 }
 
+void SongListLayer::keyUp(const cocos2d::enumKeyCodes key) {
+	if (key == cocos2d::KEY_Up || key == cocos2d::KEY_ArrowUp || key == cocos2d::KEY_Down || key == cocos2d::KEY_ArrowDown) {
+		CCContentLayer* contentLayer = SongListLayer::getContentLayer();
+		if (!contentLayer) return;
+		return contentLayer->stopActionByTag(20260214);
+	}
+}
+
 void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	SongManager& songManager = SongManager::get();
 	#ifdef GEODE_IS_DESKTOP
+	cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
+	const bool isShift = cckd->getShiftKeyPressed();
+	const bool macOSCtrl = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(false);
+	const bool windowsCtrl = GEODE_MACOS(false) GEODE_WINDOWS(cckd->getControlKeyPressed());
 	if (songManager.getYoutubeAndVLCKeyboardShortcutsSongList()) {
-		cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
-		const bool isShift = cckd->getShiftKeyPressed();
 		const bool isCmd = GEODE_MACOS(cckd->getCommandKeyPressed()) GEODE_WINDOWS(false);
-		const bool macOSCtrl = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(false);
-		const bool windowsCtrl = GEODE_MACOS(false) GEODE_WINDOWS(cckd->getControlKeyPressed());
 		const bool isAlt = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(cckd->getAltKeyPressed());
 		if (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine) {
 			if (!isShift && !isCmd && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
@@ -585,6 +595,28 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 				if (sb) sb->setString("", false);
 			});
 		}
+	}
+	if (key == cocos2d::KEY_Up || key == cocos2d::KEY_ArrowUp || key == cocos2d::KEY_Down || key == cocos2d::KEY_ArrowDown) {
+		CCContentLayer* contentLayer = SongListLayer::getContentLayer();
+		if (!contentLayer || !this->m_scrollLayer || !SongListLayer::tallEnough(this->m_scrollLayer)) return; // cmon bruh it's in plain sight lol
+
+		contentLayer->stopActionByTag(20260214);
+
+		if (contentLayer->getPositionY() > 0) return contentLayer->setPositionY(0);
+		if (contentLayer->getPositionY() < m_tallestPoint) return contentLayer->setPositionY(m_tallestPoint);
+
+		const bool macOSAlt = GEODE_MACOS(cckd->getAltKeyPressed()) GEODE_WINDOWS(false);
+		const bool windowsAlt = GEODE_MACOS(false) GEODE_WINDOWS(cckd->getAltKeyPressed());
+
+		const float upOrDownModifier = key == cocos2d::KEY_Up || key == cocos2d::KEY_ArrowUp ? -1.f : 1.f;
+		float speedModifier = 1.f;
+
+		if (isShift && (macOSCtrl || windowsCtrl) && (macOSAlt || windowsAlt)) speedModifier = 4.f;
+		if (isShift && (macOSCtrl || windowsCtrl) && !(macOSAlt || windowsAlt)) speedModifier = 3.f;
+		if (isShift && !(macOSCtrl || windowsCtrl) && (macOSAlt || windowsAlt)) speedModifier = 3.f;
+		if (isShift && !(macOSCtrl || windowsCtrl) && !(macOSAlt || windowsAlt)) speedModifier = 2.f;
+
+		return contentLayer->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCMoveBy::create(1.f / 60.f, {0, 5.f * std::abs(5.f - this->m_scaleFactor) * upOrDownModifier * speedModifier})))->setTag(20260214);
 	}
 	#endif
 	if (songManager.getShowPlaybackControlsSongList()) {
