@@ -524,6 +524,7 @@ void Utils::popualteSongToSongDataMap() {
 		};
 		if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID)) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
 			songData.displayName = Utils::getFormattedNGMLSongName(songInfoObject, false);
+			songData.songID = songInfoObject->m_songID;
 		}
 		songData.displayName = SongListLayer::generateDisplayName(songData);
 

@@ -15,6 +15,7 @@ struct SongData {
 	std::string extraInfoText = "";
 	std::string fullDisplayNameForControlPanelAndSongList = "";
 	SongType type = SongType::Regular;
+	int songID = std::numeric_limits<int>::max();
 	unsigned int songLength = std::numeric_limits<unsigned int>::max();
 	std::uintmax_t songFileSize = std::numeric_limits<std::uintmax_t>::max();
 	unsigned long long hashedPath = std::numeric_limits<unsigned long long>::min();
