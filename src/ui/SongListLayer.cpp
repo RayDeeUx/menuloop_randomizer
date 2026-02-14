@@ -385,6 +385,8 @@ bool SongListLayer::setup() {
 		this->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
 	}
 
+	this->schedule(schedule_selector(SongListLayer::checkPosition));
+
 	if (Utils::getBool("autoScrollToCurrentSong") && !VANILLA_GD_MENU_LOOP_DISABLED && !songManager.isOverride()) SongListLayer::scrollToCurrentSong();
 
 	return true;
@@ -523,6 +525,14 @@ void SongListLayer::toggleSavedValueAndSearch(const std::string_view savedValueK
 	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
 	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
+}
+
+void SongListLayer::checkPosition(const float) {
+	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
+	if (!contentLayer || !contentLayer->getActionByTag(20260214)) return;
+	if (contentLayer->getPositionY() > 0 || contentLayer->getPositionY() < m_tallestPoint) contentLayer->stopActionByTag(20260214);
+	if (contentLayer->getPositionY() > 0) contentLayer->setPositionY(0);
+	else if (contentLayer->getPositionY() < m_tallestPoint) contentLayer->setPositionY(m_tallestPoint);
 }
 
 void SongListLayer::keyUp(const cocos2d::enumKeyCodes key) {

@@ -50,6 +50,7 @@ public:
 	void toggleSavedValueAndSearch(const std::string_view);
 	void scrollToCurrentSong();
 
+	void checkPosition(const float);
 	void keyDown(const cocos2d::enumKeyCodes) override;
 	void keyUp(const cocos2d::enumKeyCodes) override;
 	void searchSongs(const std::string&);
