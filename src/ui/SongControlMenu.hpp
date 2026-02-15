@@ -15,7 +15,7 @@ protected:
 	InfoAlertButton* m_infoButton       {};
 	CCMenuItemSpriteExtra* m_ffwdButton {};
 	CCMenuItemSpriteExtra* m_bkwdButton {};
-	cocos2d::extension::CCScale9Sprite*b{};
+	geode::NineSlice* b                 {};
 	cocos2d::CCLayerColor* m_darkProgBar{};
 	cocos2d::CCLayerColor* m_currProgBar{};
 	cocos2d::CCClippingNode* m_clipNode {};
