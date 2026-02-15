@@ -205,7 +205,9 @@ bool SongControlMenu::init() {
 	this->m_increDecreMenu->setID("incdec-time-menu"_spr);
 	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
 	this->m_openSongListMenu->setID("song-list-menu"_spr);
+	this->b->getBatchNode()->setID("the-darn-scale-9"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
+	this->m_bgSprite->getBatchNode()->setID("the-less-darned-sprite-9"_spr);
 
 	this->m_noElasticity = true;
 
