@@ -1,6 +1,6 @@
 #pragma once
 
-class SongControlMenu final : public geode::Popup<> {
+class SongControlMenu final : public geode::Popup {
 protected:
 	cocos2d::CCLabelBMFont* m_smallLabel{};
 	cocos2d::CCLabelBMFont* m_otherLabel{};

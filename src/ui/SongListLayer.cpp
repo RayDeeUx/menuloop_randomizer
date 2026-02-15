@@ -23,7 +23,7 @@
 
 SongListLayer* SongListLayer::create() {
 	SongListLayer* ret = new SongListLayer();
-	if (ret->initAnchored(420.f, 290.f, "GJ_square02.png")) {
+	if (ret->init()) {
 		ret->autorelease();
 		return ret;
 	}
@@ -127,7 +127,9 @@ void SongListLayer::updateSongCountAndFavoritesCount(SongManager& songManager) {
 	this->m_title->limitLabelWidth(320.f, 1.f, .0001f);
 }
 
-bool SongListLayer::setup() {
+bool SongListLayer::init() {
+	if (!geode::Popup::init(420.f, 290.f, "GJ_square02.png")) return false;
+
 	this->setUserObject("user95401.scrollbar_everywhere/scrollbar", cocos2d::CCBool::create(true)); // fuck off, user95401.
 	this->m_noElasticity = true;
 

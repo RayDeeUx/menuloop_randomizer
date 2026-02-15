@@ -5,7 +5,7 @@
 
 #define SEARCH_BAR_NODE_ID "song-list-search-bar"_spr
 
-class SongListLayer final : public geode::Popup<> {
+class SongListLayer final : public geode::Popup {
 protected:
 	CCMenuItemToggler* m_songListCompactMode {};
     CCMenuItemToggler* m_songListFavoritesOnlyMode {};

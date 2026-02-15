@@ -8,7 +8,9 @@
 #define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
 #define CAN_SHOW_PLAYBACK_PROGRESS CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong())
 
-bool SongControlMenu::setup() {
+bool SongControlMenu::init() {
+	if (!geode::Popup::init(300.f, 150.f, "GJ_square05.png")) return false;
+
 	this->setTitle("Menu Loop Randomizer - Control Panel");
 	this->m_title->setScale(.45f);
 
@@ -214,7 +216,7 @@ bool SongControlMenu::setup() {
 
 SongControlMenu* SongControlMenu::create() {
 	SongControlMenu* ret = new SongControlMenu();
-	if (ret->initAnchored(300.f, 150.f, "GJ_square05.png")) {
+	if (ret->init()) {
 		ret->autorelease();
 		return ret;
 	}
