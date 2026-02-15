@@ -23,7 +23,7 @@
 
 SongListLayer* SongListLayer::create() {
 	SongListLayer* ret = new SongListLayer();
-	if (ret->initAnchored(420.f, 290.f, "GJ_square02.png")) {
+	if (ret->init()) {
 		ret->autorelease();
 		return ret;
 	}
@@ -127,7 +127,9 @@ void SongListLayer::updateSongCountAndFavoritesCount(SongManager& songManager) {
 	this->m_title->limitLabelWidth(320.f, 1.f, .0001f);
 }
 
-bool SongListLayer::setup() {
+bool SongListLayer::init() {
+	if (!geode::Popup::init(420.f, 290.f, "GJ_square02.png")) return false;
+
 	this->setUserObject("user95401.scrollbar_everywhere/scrollbar", cocos2d::CCBool::create(true)); // fuck off, user95401.
 	this->m_noElasticity = true;
 
@@ -535,7 +537,7 @@ void SongListLayer::checkPosition(const float) {
 	else if (contentLayer->getPositionY() < m_tallestPoint) contentLayer->setPositionY(m_tallestPoint);
 }
 
-void SongListLayer::keyUp(const cocos2d::enumKeyCodes key) {
+void SongListLayer::keyUp(const cocos2d::enumKeyCodes key, double p1) {
 	if (key == cocos2d::KEY_Up || key == cocos2d::KEY_ArrowUp || key == cocos2d::KEY_Down || key == cocos2d::KEY_ArrowDown) {
 		CCContentLayer* contentLayer = SongListLayer::getContentLayer();
 		if (!contentLayer) return;
@@ -543,7 +545,7 @@ void SongListLayer::keyUp(const cocos2d::enumKeyCodes key) {
 	}
 }
 
-void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
+void SongListLayer::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 	SongManager& songManager = SongManager::get();
 	#ifdef GEODE_IS_DESKTOP
 	cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
@@ -640,7 +642,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		// code taken directly from geode::Popup keyDown impl as of dec 19 2025
 		if (key == cocos2d::KEY_Escape) return this->onClose(nullptr);
 		if (key == cocos2d::KEY_Space) return;
-		return FLAlertLayer::keyDown(key);
+		return FLAlertLayer::keyDown(key, p1);
 	}
 	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 	if (key == cocos2d::KEY_Escape) {

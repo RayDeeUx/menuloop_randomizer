@@ -5,7 +5,7 @@
 
 #define SEARCH_BAR_NODE_ID "song-list-search-bar"_spr
 
-class SongListLayer final : public geode::Popup<> {
+class SongListLayer final : public geode::Popup {
 protected:
 	CCMenuItemToggler* m_songListCompactMode {};
     CCMenuItemToggler* m_songListFavoritesOnlyMode {};
@@ -26,7 +26,7 @@ public:
 	static SongListLayer* create();
 	void addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString = "");
 	void updateSongCountAndFavoritesCount(SongManager& songManager);
-	bool setup() override;
+	bool init() override;
 	void onSettingsButton(cocos2d::CCObject*);
 	void onShuffleButton(cocos2d::CCObject*);
 	void onCopyButton(cocos2d::CCObject*);
@@ -51,8 +51,8 @@ public:
 	void scrollToCurrentSong();
 
 	void checkPosition(const float);
-	void keyDown(const cocos2d::enumKeyCodes) override;
-	void keyUp(const cocos2d::enumKeyCodes) override;
+	void keyDown(const cocos2d::enumKeyCodes, double p1) override;
+	void keyUp(const cocos2d::enumKeyCodes, double p1) override;
 	void searchSongs(const std::string&);
 
 	static std::string generateDisplayName(SongData&);
