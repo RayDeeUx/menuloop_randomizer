@@ -1,6 +1,7 @@
 # Menu Loop Randomizer Changelog
 ## v1.12.0
 *<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from this update and features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
+- Port to Geode v5.0.0-beta.1 and GD 2.2081.
 - <cg>Added</c> playback increment/decrement controls and playback progress to both the Control Panel and the Song List menus.
   - You can toggle this option off for either menu in the mod settings.
   - You can also adjust how many milliseconds to increment/decrement by in the mod settings. Changes apply to both menus.
