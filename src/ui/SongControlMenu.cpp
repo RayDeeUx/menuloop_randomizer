@@ -244,7 +244,7 @@ void SongControlMenu::checkManagerFinished(float) {
 
 void SongControlMenu::forceSharpCornerIllusion() {
 	if (!this->b) return;
-	this->b->getBottomLeft()->setPositionX(0.f);
+	this->b->getBottom()->setPositionX(0.f);
 	this->b->getBottom()->setScaleX(9.375f);
 	this->b->getBottomLeft()->setVisible(false);
 	this->b->getBottomRight()->setVisible(false);
