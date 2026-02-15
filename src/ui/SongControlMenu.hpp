@@ -20,7 +20,7 @@ protected:
 	cocos2d::CCLayerColor* m_currProgBar{};
 	cocos2d::CCClippingNode* m_clipNode {};
 	float m_time = 0;
-	bool setup() override;
+	bool init() override;
 	void onShuffleButton(cocos2d::CCObject*);
 	void onCopyButton(cocos2d::CCObject*);
 	void onBlacklistButton(cocos2d::CCObject*);
@@ -42,6 +42,6 @@ public:
 	void onRegenButton(cocos2d::CCObject*);
 	void updateCurrentLabel();
 	void onExit() override;
-	void keyDown(cocos2d::enumKeyCodes key) override;
+	void keyDown(cocos2d::enumKeyCodes key, double p1) override;
 	void toggleButtonState(cocos2d::CCNode *playlistButton, const bool isEnabled) const;
 };

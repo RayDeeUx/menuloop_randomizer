@@ -425,7 +425,7 @@ void SongControlMenu::updateCurrentLabel() {
 	else if (songType == SongType::Blacklisted) this->m_smallLabel->setColor({0, 0, 0});
 }
 
-void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
+void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 	SongManager& songManager = SongManager::get();
 	#ifdef GEODE_IS_DESKTOP
 	if (songManager.getYoutubeAndVLCKeyboardShortcutsControlPanel()) {

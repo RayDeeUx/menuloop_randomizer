@@ -537,7 +537,7 @@ void SongListLayer::checkPosition(const float) {
 	else if (contentLayer->getPositionY() < m_tallestPoint) contentLayer->setPositionY(m_tallestPoint);
 }
 
-void SongListLayer::keyUp(const cocos2d::enumKeyCodes key) {
+void SongListLayer::keyUp(const cocos2d::enumKeyCodes key, double p1) {
 	if (key == cocos2d::KEY_Up || key == cocos2d::KEY_ArrowUp || key == cocos2d::KEY_Down || key == cocos2d::KEY_ArrowDown) {
 		CCContentLayer* contentLayer = SongListLayer::getContentLayer();
 		if (!contentLayer) return;
@@ -545,7 +545,7 @@ void SongListLayer::keyUp(const cocos2d::enumKeyCodes key) {
 	}
 }
 
-void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
+void SongListLayer::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 	SongManager& songManager = SongManager::get();
 	#ifdef GEODE_IS_DESKTOP
 	cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
