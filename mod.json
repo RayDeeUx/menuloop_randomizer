@@ -1,12 +1,12 @@
 {
-	"geode": "4.10.2",
+	"geode": "5.0.0",
 	"gd": {
 		"win": "2.2074",
 		"mac": "2.2074",
 		"ios": "2.2074",
 		"android": "2.2074"
 	},
-	"version": "v1.12.0-beta.1",
+	"version": "v1.12.0",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developers": [
@@ -431,8 +431,8 @@
 	},
 	"incompatibilities": {
 		"joseii.ventilla": {
-			"version": ">=1.0.0",
-			"importance": "conflicting"
+			"version": "*",
+			"breaking": false
 		}
 	}
 }
