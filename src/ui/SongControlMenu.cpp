@@ -101,7 +101,7 @@ bool SongControlMenu::init() {
 	this->m_headerLabl->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_headerLabl->setPosition({centerStage, 107.5f});
 
-	this->b = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
+	this->b = geode::NineSlice::create("square02b_001.png");
 	this->b->ignoreAnchorPointForPosition(false);
 	this->b->setContentSize({250.f, 30.f});
 	this->b->setAnchorPoint({0.f, .5f});
@@ -202,12 +202,10 @@ bool SongControlMenu::init() {
 	this->m_smallLabel->setID("current-song-label"_spr);
 	this->m_currTimeLb->setID("current-time-label"_spr);
 	this->m_headerLabl->setID("current-song-header"_spr);
-	this->b->_scale9Image->setID("the-darn-scale-9"_spr);
 	this->m_increDecreMenu->setID("incdec-time-menu"_spr);
 	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
 	this->m_openSongListMenu->setID("song-list-menu"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
-	this->m_bgSprite->_scale9Image->setID("the-less-darned-sprite-9"_spr);
 
 	this->m_noElasticity = true;
 
@@ -244,10 +242,10 @@ void SongControlMenu::checkManagerFinished(float) {
 
 void SongControlMenu::forceSharpCornerIllusion() {
 	if (!this->b) return;
-	this->b->_bottom->setPositionX(0.f);
-	this->b->_bottom->setScaleX(9.375f);
-	this->b->_bottomLeft->setVisible(false);
-	this->b->_bottomRight->setVisible(false);
+	this->b->getBottomLeft()->setPositionX(0.f);
+	this->b->getBottom()->setScaleX(9.375f);
+	this->b->getBottomLeft()->setVisible(false);
+	this->b->getBottomRight()->setVisible(false);
 
 	SongManager& songManager = SongManager::get();
 	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
@@ -464,5 +462,5 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 	}
 	if (key == cocos2d::enumKeyCodes::KEY_Escape) return this->onClose(nullptr);
 	if (key == cocos2d::enumKeyCodes::KEY_Space) return;
-	return FLAlertLayer::keyDown(key);
+	return FLAlertLayer::keyDown(key, p1);
 }

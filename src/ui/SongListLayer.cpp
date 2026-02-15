@@ -642,7 +642,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 		// code taken directly from geode::Popup keyDown impl as of dec 19 2025
 		if (key == cocos2d::KEY_Escape) return this->onClose(nullptr);
 		if (key == cocos2d::KEY_Space) return;
-		return FLAlertLayer::keyDown(key);
+		return FLAlertLayer::keyDown(key, p1);
 	}
 	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 	if (key == cocos2d::KEY_Escape) {
