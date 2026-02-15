@@ -29,8 +29,8 @@ $on_mod(Loaded) {
 	GEODE_DESKTOP(songManager.setYoutubeAndVLCKeyboardShortcutsSongList(Mod::get()->getSettingValue<bool>("youtubeAndVLCKeyboardShortcutsSongList"));)
 	GEODE_DESKTOP(songManager.setYoutubeAndVLCKeyboardShortcutsControlPanel(Mod::get()->getSettingValue<bool>("youtubeAndVLCKeyboardShortcutsControlPanel"));)
 	songManager.setIncrementDecrementByMilliseconds(Mod::get()->getSettingValue<int64_t>("incrementDecrementByMilliseconds"));
-	songManager.setVibecodedVentilla(VIBECODED_RADIO && (VIBECODED_RADIO->isEnabled() || VIBECODED_RADIO->shouldLoad()));
-	/* CHANGE THIS LATER */ // songManager.setVobecidedJota(VOBECIDED_JOTA && (VOBECIDED_JOTA->isEnabled() || VOBECIDED_JOTA->shouldLoad()));
+	songManager.setVibecodedVentilla(VIBECODED_RADIO && (VIBECODED_RADIO->isOrWillBeEnabled() || VIBECODED_RADIO->shouldLoad()));
+	/* CHANGE THIS LATER */ // songManager.setVobecidedJota(VOBECIDED_JOTA && (VOBECIDED_JOTA->isOrWillBeEnabled() || VOBECIDED_JOTA->shouldLoad()));
 	/* REMOVE THIS LATER */ songManager.setVobecidedJota(false);
 	songManager.setUndefined0Alk1m123TouchPrio(BTP && (BTP->isEnabled() || BTP->shouldLoad()) && !BTP->hasUnresolvedDependencies() && !BTP->hasUnresolvedIncompatibilities());
 	if (!std::filesystem::exists(configDir / "playlistOne.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistOne.txt");
