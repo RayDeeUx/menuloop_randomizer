@@ -5,7 +5,7 @@
   - You can toggle this option off for either menu in the mod settings.
   - You can also adjust how many milliseconds to increment/decrement by in the mod settings. Changes apply to both menus.
   - Press and hold either button for more than half a second to fast-forward/fast-rewind the current song!
-  - Arrow keys and J/L keys are also available to increment/decrement current playback progress.
+  - Left/Right arrow keys and J/L keys are also available to increment/decrement current playback progress.
   - Hold Shift to increment/decrement 2x as much, and hold both Shift ***__and__*** Control (macOS)/Alt (Windows) to increment/decrement 3x as much.
   - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> for this feature.
 - <cg>Added</c> numerous keybinds inspired by <cr>YouTube</c>, <c-FFA544>VLC</c>, and <c-06CE91>Spotify</c> into both the Control Panel and the Song List menus.
@@ -26,6 +26,10 @@
   - You can toggle this option off in the mod settings.
   - Song name indicators for song name label are the same as those seen in the Song List menu.
   - For a number of reasons, the green "current song" indicator and the small dark gradient indicator for Jukebox songs do not apply to the Control Panel.
+- <cg>Added</c> up/down arrow key support for scrolling through the song list.
+  - <co>***__THIS FEATURE IS ONLY FOR WINDOWS AND MACOS.__***</c>
+  - <co>***KEYBINDS ARE*** ***__NOT__*** ***REBINDABLE.***</c>
+  - Hold any combination of Shift, Control, or Alt to scroll at least 2x and up to 4x faster than just holding an arrow key.
 - <c-D0FF00>Changed</c> the  `Newgrounds/Music Library Song Name Format`  setting to only apply to "Now Playing" notificiations as per past behavior.
   - This change was made to make song searching less dependenct on this age-old setting.
   - Depending on how many songs you've set for MLR, this setting will still be applied to other menus from MLR as a fallback approach if MLR is still busy calculating song lengths.
