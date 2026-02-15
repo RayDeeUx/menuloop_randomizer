@@ -430,9 +430,6 @@
 		"homepage": "https://discord.com/channels/822510988409831486/1206371881222144020"
 	},
 	"incompatibilities": {
-		"joseii.ventilla": {
-			"version": "*",
-			"breaking": false
-		}
+		"joseii.ventilla": ">=1.0.0"
 	}
 }
