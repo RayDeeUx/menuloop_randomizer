@@ -21,17 +21,17 @@ protected:
 	cocos2d::CCClippingNode* m_clipNode {};
 	float m_time = 0;
 	bool setup() override;
-	void onShuffleButton(CCObject*);
-	void onCopyButton(CCObject*);
-	void onBlacklistButton(CCObject*);
-	void onFavoriteButton(CCObject*);
-	void onHoldSongButton(CCObject*);
-	void onPreviousButton(CCObject*);
-	void onPlaylistButton(CCObject*);
-	void onAddToPlylstBtn(CCObject*);
-	void onSettingsButton(CCObject*);
-	void onSkipBkwdButton(CCObject*);
-	void onSkipFwrdButton(CCObject*);
+	void onShuffleButton(cocos2d::CCObject*);
+	void onCopyButton(cocos2d::CCObject*);
+	void onBlacklistButton(cocos2d::CCObject*);
+	void onFavoriteButton(cocos2d::CCObject*);
+	void onHoldSongButton(cocos2d::CCObject*);
+	void onPreviousButton(cocos2d::CCObject*);
+	void onPlaylistButton(cocos2d::CCObject*);
+	void onAddToPlylstBtn(cocos2d::CCObject*);
+	void onSettingsButton(cocos2d::CCObject*);
+	void onSkipBkwdButton(cocos2d::CCObject*);
+	void onSkipFwrdButton(cocos2d::CCObject*);
 	void checkManagerFinished(float);
 	void checkDaSongPositions(float);
 	void pressAndHoldScheduler(float);
@@ -39,7 +39,7 @@ protected:
 	void forceSharpCornerIllusionScheduler(float);
 public:
 	static SongControlMenu* create();
-	void onRegenButton(CCObject*);
+	void onRegenButton(cocos2d::CCObject*);
 	void updateCurrentLabel();
 	void onExit() override;
 	void keyDown(cocos2d::enumKeyCodes key) override;
