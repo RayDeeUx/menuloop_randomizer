@@ -7,12 +7,12 @@ public:
 	static MLRSongCell* createEmpty(const bool);
 	bool init(const SongData& songData, const bool isEven, const bool isCompact = true);
 	bool initEmpty(const bool);
-	void onPlaySong(CCObject*);
+	void onPlaySong(cocos2d::CCObject*);
 	void toggleEven(const bool);
 	void updateProgressBar() const;
 	void checkIfCurrentSong() const;
-	void onSkipBkwdButton(CCObject*);
-	void onSkipFwrdButton(CCObject*);
+	void onSkipBkwdButton(cocos2d::CCObject*);
+	void onSkipFwrdButton(cocos2d::CCObject*);
 	void checkIfCurrentSongScheduler(float);
 	void pressAndHoldScheduler(float);
 	SongData m_songData;
