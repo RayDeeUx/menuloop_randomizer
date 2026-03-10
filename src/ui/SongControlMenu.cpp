@@ -144,6 +144,14 @@ bool SongControlMenu::setup() {
 	clippingNode->addChild(darkProgBar);
 	this->m_clipNode = clippingNode;
 
+	this->m_audieoVisual = FMODLevelVisualizer::create();
+	this->m_audieoVisual->setID("budget-audio-visualizer-inspired-by-osu-first"_spr);
+	this->m_audieoVisual->setPosition({50.f, -10.f});
+	this->m_audieoVisual->setRotation(90.f);
+	this->m_mainLayer->addChild(this->m_audieoVisual);
+
+	this->schedule(schedule_selector(SongControlMenu::visualizerScheduler));
+
 	SongControlMenu::forceSharpCornerIllusion();
 	SongControlMenu::updateCurrentLabel();
 
@@ -302,6 +310,13 @@ void SongControlMenu::pressAndHoldScheduler(float dt) {
 	else m_time = 0;
 }
 
+void SongControlMenu::visualizerScheduler(float dt) {
+	FMODAudioEngine* fmod = FMODAudioEngine::get();
+	if (!this->m_audieoVisual || !fmod) return;
+	if (!fmod->m_metering) fmod->enableMetering();
+	this->m_audieoVisual->updateVisualizer(fmod->m_pulse1, 0.f, dt); // no idea how to fill in the second param lol
+}
+
 void SongControlMenu::onShuffleButton(CCObject*) {
 	SongControl::shuffleSong();
 	SongControlMenu::updateCurrentLabel();
@@ -427,7 +442,7 @@ void SongControlMenu::updateCurrentLabel() {
 
 void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 	SongManager& songManager = SongManager::get();
-	if (key == cocos2d::KEY_O /* && songManager.getOsu() */) {
+	if (key == cocos2d::KEY_O || key == cocos2d::KEY_Enter) {
 		this->m_osu = !this->m_osu;
 		this->stopAllActions();
 		this->m_mainLayer->stopAllActions();

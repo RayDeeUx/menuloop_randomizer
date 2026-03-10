@@ -20,7 +20,8 @@ protected:
 	cocos2d::CCLayerColor* m_darkProgBar{};
 	cocos2d::CCLayerColor* m_currProgBar{};
 	cocos2d::CCClippingNode* m_clipNode {};
-	float m_time = 0;
+	FMODLevelVisualizer* m_audieoVisual {};
+	float m_time = 0.f;
 	bool setup() override;
 	void onShuffleButton(cocos2d::CCObject*);
 	void onCopyButton(cocos2d::CCObject*);
@@ -36,6 +37,7 @@ protected:
 	void checkManagerFinished(float);
 	void checkDaSongPositions(float);
 	void pressAndHoldScheduler(float);
+	void visualizerScheduler(float);
 	void forceSharpCornerIllusion();
 	void forceSharpCornerIllusionScheduler(float);
 public:
