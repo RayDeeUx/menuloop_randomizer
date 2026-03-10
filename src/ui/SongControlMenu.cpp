@@ -147,6 +147,8 @@ bool SongControlMenu::setup() {
 	SongControlMenu::forceSharpCornerIllusion();
 	SongControlMenu::updateCurrentLabel();
 
+	this->m_osu = false;
+
 	/*
 	if (songManager.getSawbladeCustomSongsFolder()) {
 		cocos2d::CCLabelBMFont* customSongsFolderBottom = cocos2d::CCLabelBMFont::create("CUSTOM SONGS FOLDER BY SAWBLADE IS LOADED!!! BUGS REPORTS WILL BE IGNORED.", "chatFont.fnt");
@@ -425,6 +427,15 @@ void SongControlMenu::updateCurrentLabel() {
 
 void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 	SongManager& songManager = SongManager::get();
+	if (key == cocos2d::KEY_O /* && songManager.getOsu() */) {
+		this->m_osu = !this->m_osu;
+		this->m_mainLayer->stopAllActions();
+		if (this->m_osu) {
+			this->m_mainLayer->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCScaleTo::create(.75f, 1.5f)));
+		} else {
+			this->m_mainLayer->runAction(cocos2d::CCEaseExponentialIn::create(cocos2d::CCScaleTo::create(.35f, 1.f)));
+		}
+	}
 	#ifdef GEODE_IS_DESKTOP
 	if (songManager.getYoutubeAndVLCKeyboardShortcutsControlPanel()) {
 		cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();

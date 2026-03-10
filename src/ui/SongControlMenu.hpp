@@ -2,6 +2,7 @@
 
 class SongControlMenu final : public geode::Popup<> {
 protected:
+	bool m_osu = false;
 	cocos2d::CCLabelBMFont* m_smallLabel{};
 	cocos2d::CCLabelBMFont* m_otherLabel{};
 	cocos2d::CCLabelBMFont* m_headerLabl{};
