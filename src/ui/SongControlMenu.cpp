@@ -429,11 +429,14 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 	SongManager& songManager = SongManager::get();
 	if (key == cocos2d::KEY_O /* && songManager.getOsu() */) {
 		this->m_osu = !this->m_osu;
+		this->stopAllActions();
 		this->m_mainLayer->stopAllActions();
 		if (this->m_osu) {
-			this->m_mainLayer->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCScaleTo::create(.75f, 1.5f)));
+			this->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.65f, 255)));
+			this->m_mainLayer->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCScaleTo::create(.65f, 1.5f)));
 		} else {
-			this->m_mainLayer->runAction(cocos2d::CCEaseExponentialIn::create(cocos2d::CCScaleTo::create(.35f, 1.f)));
+			this->runAction(cocos2d::CCEaseExponentialIn::create(cocos2d::CCFadeTo::create(.3f, 105)));
+			this->m_mainLayer->runAction(cocos2d::CCEaseExponentialIn::create(cocos2d::CCScaleTo::create(.3f, 1.f)));
 		}
 	}
 	#ifdef GEODE_IS_DESKTOP
