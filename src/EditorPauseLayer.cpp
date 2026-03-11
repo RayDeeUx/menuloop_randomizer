@@ -5,6 +5,11 @@
 using namespace geode::prelude;
 
 class $modify(MenuLoopEPLHook, EditorPauseLayer) {
+	void iHateHookingMultipleThingsToGetSomethingDone() {
+		SongManager::get().setPauseSongPositionTracking(true);
+		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
+		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
+	}
 	#ifdef GEODE_IS_IOS
 	struct Fields {
 		~Fields() {
@@ -13,11 +18,6 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 		}
 	};
 	#endif
-	void iHateHookingMultipleThingsToGetSomethingDone() {
-		SongManager::get().setPauseSongPositionTracking(true);
-		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
-		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
-	}
 	#ifndef __APPLE__
 	void onExitEditor(CCObject* sender) {
 		MenuLoopEPLHook::iHateHookingMultipleThingsToGetSomethingDone();
