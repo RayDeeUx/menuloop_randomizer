@@ -4,23 +4,24 @@
 
 using namespace geode::prelude;
 
+void iHateHookingMultipleThingsToGetSomethingDone() {
+	SongManager::get().setPauseSongPositionTracking(true);
+	if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
+	else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
+}
+
 class $modify(MenuLoopEPLHook, EditorPauseLayer) {
-	void iHateHookingMultipleThingsToGetSomethingDone() {
-		SongManager::get().setPauseSongPositionTracking(true);
-		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
-		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
-	}
 	#ifdef GEODE_IS_IOS
 	struct Fields {
 		~Fields() {
-			MenuLoopEPLHook::iHateHookingMultipleThingsToGetSomethingDone();
+			iHateHookingMultipleThingsToGetSomethingDone();
 			Utils::removeCardRemotely(Utils::findCardRemotely());
 		}
 	};
 	#endif
 	#ifndef __APPLE__
 	void onExitEditor(CCObject* sender) {
-		MenuLoopEPLHook::iHateHookingMultipleThingsToGetSomethingDone();
+		iHateHookingMultipleThingsToGetSomethingDone();
 
 		EditorPauseLayer::onExitEditor(sender);
 
@@ -43,7 +44,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 	-- raydeeux
 	*/
 	void onSaveAndExit(CCObject* sender) {
-		MenuLoopEPLHook::iHateHookingMultipleThingsToGetSomethingDone();
+		iHateHookingMultipleThingsToGetSomethingDone();
 
 		EditorPauseLayer::onSaveAndExit(sender);
 
@@ -87,7 +88,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		if (!shouldClose) return EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 
-		MenuLoopEPLHook::iHateHookingMultipleThingsToGetSomethingDone();
+		iHateHookingMultipleThingsToGetSomethingDone();
 
 		EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 
