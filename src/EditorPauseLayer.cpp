@@ -5,6 +5,14 @@
 using namespace geode::prelude;
 
 class $modify(MenuLoopEPLHook, EditorPauseLayer) {
+	#ifdef GEODE_IS_IOS
+	struct Fields {
+		~Fields() {
+			MenuLoopEPLHook::iHateHookingMultipleThingsToGetSomethingDone();
+			Utils::removeCardRemotely(Utils::findCardRemotely());
+		}
+	};
+	#endif
 	void iHateHookingMultipleThingsToGetSomethingDone() {
 		SongManager::get().setPauseSongPositionTracking(true);
 		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
@@ -19,7 +27,8 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 		Utils::removeCardRemotely(Utils::findCardRemotely());
 
 	}
-	#else
+	#endif
+	#ifdef GEODE_IS_MACOS
 	/*
 	this section is for macOS (both intel and ARM). remarks:
 	- don't hook onSaveAndPlay; while it IS macos hookable, it goes to playlayer

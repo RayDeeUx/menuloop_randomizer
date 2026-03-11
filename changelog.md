@@ -1,4 +1,7 @@
 # Menu Loop Randomizer Changelog
+## v1.12.1
+*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
+- Fix a really obscure crash with iOS JIT-less devices. (Hopefully, anyhow.)
 ## v1.12.0
 *<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from this update and features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - Port to Geode v5.0.0-beta.1 and GD 2.2081.
