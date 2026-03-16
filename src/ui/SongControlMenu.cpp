@@ -446,12 +446,13 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 		this->m_osu = !this->m_osu;
 		this->stopAllActions();
 		this->m_mainLayer->stopAllActions();
+		// easing types and easing values taken from https://github.com/ppy/osu/blob/master/osu.Game/Screens/Menu/ButtonSystem.cs#L475 under the MIT license, but they're just silly numbers at the end of the day
 		if (this->m_osu) {
-			this->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.65f, 255)));
-			this->m_mainLayer->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCScaleTo::create(.65f, 1.5f)));
+			this->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
+			this->m_mainLayer->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCScaleTo::create(.8f, 1.5f)));
 		} else {
-			this->runAction(cocos2d::CCEaseExponentialIn::create(cocos2d::CCFadeTo::create(.3f, 105)));
-			this->m_mainLayer->runAction(cocos2d::CCEaseExponentialIn::create(cocos2d::CCScaleTo::create(.3f, 1.f)));
+			this->runAction(cocos2d::CCEaseSineIn::create(cocos2d::CCFadeTo::create(.3f, 105)));
+			this->m_mainLayer->runAction(cocos2d::CCEaseSineIn::create(cocos2d::CCScaleTo::create(.3f, 1.f)));
 		}
 	}
 	#ifdef GEODE_IS_DESKTOP
