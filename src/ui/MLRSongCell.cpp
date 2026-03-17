@@ -120,7 +120,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		this->m_ffwdButton = skipFwrd;
 	}
 
-	geode::Layout* layout = geode::RowLayout::create()->setGap(0.f)->setAutoScale(true)->setAxisReverse(false)->setDefaultScaleLimits(.0001f, .75f);
+	geode::AxisLayout* layout = geode::RowLayout::create()->setGap(0.f)->setAutoScale(true)->setAxisReverse(false)->setDefaultScaleLimits(.0001f, .75f);
 	layout->ignoreInvisibleChildren(true);
 
 	menu->addChild(playButton);

@@ -8,7 +8,9 @@
 #define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
 #define CAN_SHOW_PLAYBACK_PROGRESS CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong())
 
-bool SongControlMenu::setup() {
+bool SongControlMenu::init() {
+	if (!geode::Popup::init(300.f, 150.f, "GJ_square05.png")) return false;
+
 	this->setTitle("Menu Loop Randomizer - Control Panel");
 	this->m_title->setScale(.45f);
 
@@ -99,7 +101,7 @@ bool SongControlMenu::setup() {
 	this->m_headerLabl->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_headerLabl->setPosition({centerStage, 107.5f});
 
-	this->b = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
+	this->b = geode::NineSlice::create("square02b_001.png");
 	this->b->ignoreAnchorPointForPosition(false);
 	this->b->setContentSize({250.f, 30.f});
 	this->b->setAnchorPoint({0.f, .5f});
@@ -200,12 +202,12 @@ bool SongControlMenu::setup() {
 	this->m_smallLabel->setID("current-song-label"_spr);
 	this->m_currTimeLb->setID("current-time-label"_spr);
 	this->m_headerLabl->setID("current-song-header"_spr);
-	this->b->_scale9Image->setID("the-darn-scale-9"_spr);
 	this->m_increDecreMenu->setID("incdec-time-menu"_spr);
 	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
 	this->m_openSongListMenu->setID("song-list-menu"_spr);
+	this->b->getBatchNode()->setID("the-darn-scale-9"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
-	this->m_bgSprite->_scale9Image->setID("the-less-darned-sprite-9"_spr);
+	this->m_bgSprite->getBatchNode()->setID("the-less-darned-sprite-9"_spr);
 
 	this->m_noElasticity = true;
 
@@ -214,7 +216,7 @@ bool SongControlMenu::setup() {
 
 SongControlMenu* SongControlMenu::create() {
 	SongControlMenu* ret = new SongControlMenu();
-	if (ret->initAnchored(300.f, 150.f, "GJ_square05.png")) {
+	if (ret->init()) {
 		ret->autorelease();
 		return ret;
 	}
@@ -242,10 +244,10 @@ void SongControlMenu::checkManagerFinished(float) {
 
 void SongControlMenu::forceSharpCornerIllusion() {
 	if (!this->b) return;
-	this->b->_bottom->setPositionX(0.f);
-	this->b->_bottom->setScaleX(9.375f);
-	this->b->_bottomLeft->setVisible(false);
-	this->b->_bottomRight->setVisible(false);
+	this->b->getBottom()->setPositionX(0.f);
+	this->b->getBottom()->setScaleX(9.375f);
+	this->b->getBottomLeft()->setVisible(false);
+	this->b->getBottomRight()->setVisible(false);
 
 	SongManager& songManager = SongManager::get();
 	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
@@ -423,7 +425,7 @@ void SongControlMenu::updateCurrentLabel() {
 	else if (songType == SongType::Blacklisted) this->m_smallLabel->setColor({0, 0, 0});
 }
 
-void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
+void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 	SongManager& songManager = SongManager::get();
 	#ifdef GEODE_IS_DESKTOP
 	if (songManager.getYoutubeAndVLCKeyboardShortcutsControlPanel()) {
@@ -462,5 +464,5 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 	}
 	if (key == cocos2d::enumKeyCodes::KEY_Escape) return this->onClose(nullptr);
 	if (key == cocos2d::enumKeyCodes::KEY_Space) return;
-	return FLAlertLayer::keyDown(key);
+	return FLAlertLayer::keyDown(key, p1);
 }

@@ -4,22 +4,32 @@
 
 using namespace geode::prelude;
 
+void iHateHookingMultipleThingsToGetSomethingDone() {
+	SongManager::get().setPauseSongPositionTracking(true);
+	if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
+	else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
+}
+
 class $modify(MenuLoopEPLHook, EditorPauseLayer) {
-	void iHateHookingMultipleThingsToGetSomethingDone() {
-		SongManager::get().setPauseSongPositionTracking(true);
-		if (Utils::getBool("randomizeWhenExitingEditor")) SongManager::get().pickRandomSong();
-		else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
-	}
+	#ifdef GEODE_IS_IOS
+	struct Fields {
+		~Fields() {
+			iHateHookingMultipleThingsToGetSomethingDone();
+			Utils::removeCardRemotely(Utils::findCardRemotely());
+		}
+	};
+	#endif
 	#ifndef __APPLE__
 	void onExitEditor(CCObject* sender) {
-		MenuLoopEPLHook::iHateHookingMultipleThingsToGetSomethingDone();
+		iHateHookingMultipleThingsToGetSomethingDone();
 
 		EditorPauseLayer::onExitEditor(sender);
 
 		Utils::removeCardRemotely(Utils::findCardRemotely());
 
 	}
-	#else
+	#endif
+	#ifdef GEODE_IS_MACOS
 	/*
 	this section is for macOS (both intel and ARM). remarks:
 	- don't hook onSaveAndPlay; while it IS macos hookable, it goes to playlayer
@@ -34,7 +44,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 	-- raydeeux
 	*/
 	void onSaveAndExit(CCObject* sender) {
-		MenuLoopEPLHook::iHateHookingMultipleThingsToGetSomethingDone();
+		iHateHookingMultipleThingsToGetSomethingDone();
 
 		EditorPauseLayer::onSaveAndExit(sender);
 
@@ -78,7 +88,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		if (!shouldClose) return EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 
-		MenuLoopEPLHook::iHateHookingMultipleThingsToGetSomethingDone();
+		iHateHookingMultipleThingsToGetSomethingDone();
 
 		EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
 
