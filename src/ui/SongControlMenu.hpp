@@ -1,6 +1,6 @@
 #pragma once
 
-class SongControlMenu final : public geode::Popup<> {
+class SongControlMenu final : public geode::Popup {
 protected:
 	bool m_osu = false;
 	cocos2d::CCLabelBMFont* m_smallLabel{};
@@ -16,7 +16,7 @@ protected:
 	InfoAlertButton* m_infoButton       {};
 	CCMenuItemSpriteExtra* m_ffwdButton {};
 	CCMenuItemSpriteExtra* m_bkwdButton {};
-	cocos2d::extension::CCScale9Sprite*b{};
+	geode::NineSlice* b                 {};
 	cocos2d::CCLayerColor* m_darkProgBar{};
 	cocos2d::CCLayerColor* m_currProgBar{};
 	cocos2d::CCClippingNode* m_clipNode {};
@@ -45,6 +45,6 @@ public:
 	void onRegenButton(cocos2d::CCObject*);
 	void updateCurrentLabel();
 	void onExit() override;
-	void keyDown(cocos2d::enumKeyCodes key) override;
+	void keyDown(cocos2d::enumKeyCodes key, double p1) override;
 	void toggleButtonState(cocos2d::CCNode *playlistButton, const bool isEnabled) const;
 };
