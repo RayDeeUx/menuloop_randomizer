@@ -47,7 +47,8 @@ bool PlayingCard::init(const std::string& output) {
 
 	this->setID("now-playing-card"_spr);
 
-	geode::NineSlice* bg = geode::NineSlice::create("black-square.png"_spr);
+	// geode::NineSlice* bg = geode::NineSlice::create("black-square.png"_spr);
+	CCScale9Sprite* bg = CCScale9Sprite::create("black-square.png"_spr);
 	bg->setContentSize(cardSize);
 	bg->setAnchorPoint({0.5f, 0.0f});
 
