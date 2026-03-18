@@ -1,0 +1,280 @@
+Subject: [PATCH] apply this patch to compile for geode v4
+---
+Index: src/ui/SongListLayer.hpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/ui/SongListLayer.hpp b/src/ui/SongListLayer.hpp
+--- a/src/ui/SongListLayer.hpp	(revision 0df8bf499f4a1a5b7567b729c05a7e0a407d2d8c)
++++ b/src/ui/SongListLayer.hpp	(date 1773793769989)
+@@ -5,7 +5,8 @@
+ 
+ #define SEARCH_BAR_NODE_ID "song-list-search-bar"_spr
+ 
+-class SongListLayer final : public geode::Popup {
++// class SongListLayer final : public geode::Popup {
++class SongListLayer final : public geode::Popup<> {
+ protected:
+ 	CCMenuItemToggler* m_songListCompactMode {};
+     CCMenuItemToggler* m_songListFavoritesOnlyMode {};
+@@ -26,7 +27,8 @@
+ 	static SongListLayer* create();
+ 	void addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString = "");
+ 	void updateSongCountAndFavoritesCount(SongManager& songManager);
+-	bool init() override;
++	// bool init() override;
++	bool setup() override;
+ 	void onSettingsButton(cocos2d::CCObject*);
+ 	void onShuffleButton(cocos2d::CCObject*);
+ 	void onCopyButton(cocos2d::CCObject*);
+@@ -51,8 +53,12 @@
+ 	void scrollToCurrentSong();
+ 
+ 	void checkPosition(const float);
++	/*
+ 	void keyDown(const cocos2d::enumKeyCodes, double p1) override;
+ 	void keyUp(const cocos2d::enumKeyCodes, double p1) override;
++	*/
++	void keyDown(const cocos2d::enumKeyCodes) override;
++	void keyUp(const cocos2d::enumKeyCodes) override;
+ 	void searchSongs(const std::string&);
+ 
+ 	static std::string generateDisplayName(SongData&);
+Index: src/ui/SongListLayer.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/ui/SongListLayer.cpp b/src/ui/SongListLayer.cpp
+--- a/src/ui/SongListLayer.cpp	(revision 0df8bf499f4a1a5b7567b729c05a7e0a407d2d8c)
++++ b/src/ui/SongListLayer.cpp	(date 1773793769979)
+@@ -23,7 +23,8 @@
+ 
+ SongListLayer* SongListLayer::create() {
+ 	SongListLayer* ret = new SongListLayer();
+-	if (ret->init()) {
++	// if (ret->init()) {
++	if (ret->initAnchored(420.f, 290.f, "GJ_square02.png")) {
+ 		ret->autorelease();
+ 		return ret;
+ 	}
+@@ -127,8 +128,9 @@
+ 	this->m_title->limitLabelWidth(320.f, 1.f, .0001f);
+ }
+ 
+-bool SongListLayer::init() {
+-	if (!geode::Popup::init(420.f, 290.f, "GJ_square02.png")) return false;
++// bool SongListLayer::init() {
++bool SongListLayer::setup() {
++	// if (!geode::Popup::init(420.f, 290.f, "GJ_square02.png")) return false;
+ 
+ 	this->setUserObject("user95401.scrollbar_everywhere/scrollbar", cocos2d::CCBool::create(true)); // fuck off, user95401.
+ 	this->m_noElasticity = true;
+@@ -537,7 +539,8 @@
+ 	else if (contentLayer->getPositionY() < m_tallestPoint) contentLayer->setPositionY(m_tallestPoint);
+ }
+ 
+-void SongListLayer::keyUp(const cocos2d::enumKeyCodes key, double p1) {
++// void SongListLayer::keyUp(const cocos2d::enumKeyCodes key, double p1) {
++void SongListLayer::keyUp(const cocos2d::enumKeyCodes key) {
+ 	if (key == cocos2d::KEY_Up || key == cocos2d::KEY_ArrowUp || key == cocos2d::KEY_Down || key == cocos2d::KEY_ArrowDown) {
+ 		CCContentLayer* contentLayer = SongListLayer::getContentLayer();
+ 		if (!contentLayer) return;
+@@ -545,7 +548,8 @@
+ 	}
+ }
+ 
+-void SongListLayer::keyDown(const cocos2d::enumKeyCodes key, double p1) {
++// void SongListLayer::keyDown(const cocos2d::enumKeyCodes key, double p1) {
++void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
+ 	SongManager& songManager = SongManager::get();
+ 	#ifdef GEODE_IS_DESKTOP
+ 	cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
+@@ -642,7 +646,8 @@
+ 		// code taken directly from geode::Popup keyDown impl as of dec 19 2025
+ 		if (key == cocos2d::KEY_Escape) return this->onClose(nullptr);
+ 		if (key == cocos2d::KEY_Space) return;
+-		return FLAlertLayer::keyDown(key, p1);
++		// return FLAlertLayer::keyDown(key, p1);
++		return FLAlertLayer::keyDown(key);
+ 	}
+ 	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
+ 	if (key == cocos2d::KEY_Escape) {
+Index: src/ui/SongControlMenu.hpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/ui/SongControlMenu.hpp b/src/ui/SongControlMenu.hpp
+--- a/src/ui/SongControlMenu.hpp	(revision 0df8bf499f4a1a5b7567b729c05a7e0a407d2d8c)
++++ b/src/ui/SongControlMenu.hpp	(date 1773793769933)
+@@ -1,6 +1,7 @@
+ #pragma once
+ 
+-class SongControlMenu final : public geode::Popup {
++// class SongControlMenu final : public geode::Popup {
++class SongControlMenu final : public geode::Popup<> {
+ protected:
+ 	bool m_osu = false;
+ 	cocos2d::CCLabelBMFont* m_smallLabel{};
+@@ -16,13 +17,15 @@
+ 	InfoAlertButton* m_infoButton       {};
+ 	CCMenuItemSpriteExtra* m_ffwdButton {};
+ 	CCMenuItemSpriteExtra* m_bkwdButton {};
+-	geode::NineSlice* b                 {};
++	// geode::NineSlice* b                 {};
++	cocos2d::extension::CCScale9Sprite*b{};
+ 	cocos2d::CCLayerColor* m_darkProgBar{};
+ 	cocos2d::CCLayerColor* m_currProgBar{};
+ 	cocos2d::CCClippingNode* m_clipNode {};
+ 	FMODLevelVisualizer* m_audieoVisual {};
+ 	float m_time = 0.f;
+-	bool init() override;
++	// bool init() override;
++	bool setup() override;
+ 	void onShuffleButton(cocos2d::CCObject*);
+ 	void onCopyButton(cocos2d::CCObject*);
+ 	void onBlacklistButton(cocos2d::CCObject*);
+@@ -45,6 +48,7 @@
+ 	void onRegenButton(cocos2d::CCObject*);
+ 	void updateCurrentLabel();
+ 	void onExit() override;
+-	void keyDown(cocos2d::enumKeyCodes key, double p1) override;
++	// void keyDown(cocos2d::enumKeyCodes key, double p1) override;
++	void keyDown(cocos2d::enumKeyCodes key) override;
+ 	void toggleButtonState(cocos2d::CCNode *playlistButton, const bool isEnabled) const;
+ };
+\ No newline at end of file
+Index: src/ui/SongControlMenu.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/ui/SongControlMenu.cpp b/src/ui/SongControlMenu.cpp
+--- a/src/ui/SongControlMenu.cpp	(revision 0df8bf499f4a1a5b7567b729c05a7e0a407d2d8c)
++++ b/src/ui/SongControlMenu.cpp	(date 1773793746186)
+@@ -8,8 +8,9 @@
+ #define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
+ #define CAN_SHOW_PLAYBACK_PROGRESS CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong())
+ 
+-bool SongControlMenu::init() {
+-	if (!geode::Popup::init(300.f, 150.f, "GJ_square05.png")) return false;
++// bool SongControlMenu::init() {
++bool SongControlMenu::setup() {
++	// if (!geode::Popup::init(300.f, 150.f, "GJ_square05.png")) return false;
+ 
+ 	this->setTitle("Menu Loop Randomizer - Control Panel");
+ 	this->m_title->setScale(.45f);
+@@ -101,7 +102,8 @@
+ 	this->m_headerLabl->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+ 	this->m_headerLabl->setPosition({centerStage, 107.5f});
+ 
+-	this->b = geode::NineSlice::create("square02b_001.png");
++	// this->b = geode::NineSlice::create("square02b_001.png");
++	this->b = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
+ 	this->b->ignoreAnchorPointForPosition(false);
+ 	this->b->setContentSize({250.f, 30.f});
+ 	this->b->setAnchorPoint({0.f, .5f});
+@@ -215,9 +217,11 @@
+ 	this->m_increDecreMenu->setID("incdec-time-menu"_spr);
+ 	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
+ 	this->m_openSongListMenu->setID("song-list-menu"_spr);
+-	this->b->getBatchNode()->setID("the-darn-scale-9"_spr);
++	// this->b->getBatchNode()->setID("the-darn-scale-9"_spr);
++	this->b->_scale9Image->setID("the-darn-scale-9"_spr);
+ 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
+-	this->m_bgSprite->getBatchNode()->setID("the-less-darned-sprite-9"_spr);
++	// this->m_bgSprite->getBatchNode()->setID("the-less-darned-sprite-9"_spr);
++	this->m_bgSprite->_scale9Image->setID("the-less-darned-sprite-9"_spr);
+ 
+ 	this->m_noElasticity = true;
+ 
+@@ -226,7 +230,8 @@
+ 
+ SongControlMenu* SongControlMenu::create() {
+ 	SongControlMenu* ret = new SongControlMenu();
+-	if (ret->init()) {
++	// if (ret->init()) {
++	if (ret->initAnchored(300.f, 150.f, "GJ_square05.png")) {
+ 		ret->autorelease();
+ 		return ret;
+ 	}
+@@ -254,10 +259,16 @@
+ 
+ void SongControlMenu::forceSharpCornerIllusion() {
+ 	if (!this->b) return;
++	/*
+ 	this->b->getBottom()->setPositionX(0.f);
+ 	this->b->getBottom()->setScaleX(9.375f);
+ 	this->b->getBottomLeft()->setVisible(false);
+ 	this->b->getBottomRight()->setVisible(false);
++	*/
++	this->b->_bottom->setPositionX(0.f);
++	this->b->_bottom->setScaleX(9.375f);
++	this->b->_bottomLeft->setVisible(false);
++	this->b->_bottomRight->setVisible(false);
+ 
+ 	SongManager& songManager = SongManager::get();
+ 	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
+@@ -442,7 +453,8 @@
+ 	else if (songType == SongType::Blacklisted) this->m_smallLabel->setColor({0, 0, 0});
+ }
+ 
+-void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key, double p1) {
++// void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key, double p1) {
++void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
+ 	SongManager& songManager = SongManager::get();
+ 	if (key == cocos2d::KEY_O || key == cocos2d::KEY_Enter) {
+ 		this->m_osu = !this->m_osu;
+@@ -494,5 +506,6 @@
+ 	}
+ 	if (key == cocos2d::enumKeyCodes::KEY_Escape) return this->onClose(nullptr);
+ 	if (key == cocos2d::enumKeyCodes::KEY_Space) return;
+-	return FLAlertLayer::keyDown(key, p1);
++	// return FLAlertLayer::keyDown(key, p1);
++	return FLAlertLayer::keyDown(key);
+ }
+\ No newline at end of file
+Index: mod.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/mod.json b/mod.json
+--- a/mod.json	(revision 0df8bf499f4a1a5b7567b729c05a7e0a407d2d8c)
++++ b/mod.json	(date 1773793769997)
+@@ -1,10 +1,10 @@
+ {
+-	"geode": "5.3.0",
++	"geode": "4.10.2",
+ 	"gd": {
+-		"win": "2.2081",
+-		"mac": "2.2081",
+-		"ios": "2.2081",
+-		"android": "2.2081"
++		"win": "2.2074",
++		"mac": "2.2074",
++		"ios": "2.2074",
++		"android": "2.2074"
+ 	},
+ 	"version": "v1.12.2",
+ 	"id": "elnexreal.menuloop_randomizer",
+Index: src/ui/PlayingCard.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/ui/PlayingCard.cpp b/src/ui/PlayingCard.cpp
+--- a/src/ui/PlayingCard.cpp	(revision 0df8bf499f4a1a5b7567b729c05a7e0a407d2d8c)
++++ b/src/ui/PlayingCard.cpp	(date 1773793746172)
+@@ -47,7 +47,8 @@
+ 
+ 	this->setID("now-playing-card"_spr);
+ 
+-	geode::NineSlice* bg = geode::NineSlice::create("black-square.png"_spr);
++	// geode::NineSlice* bg = geode::NineSlice::create("black-square.png"_spr);
++	CCScale9Sprite* bg = CCScale9Sprite::create("black-square.png"_spr);
+ 	bg->setContentSize(cardSize);
+ 	bg->setAnchorPoint({0.5f, 0.0f});
+ 
