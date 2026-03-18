@@ -137,7 +137,7 @@ bool SongListLayer::init() {
 	SongListLayer::updateSongCountAndFavoritesCount(songManager);
 
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
-	CCLayer* mainLayer = this->m_mainLayer;
+	cocos2d::CCLayer* mainLayer = this->m_mainLayer;
 	mainLayer->setID("main-layer"_spr);
 
 	this->m_scrollLayer = geode::ScrollLayer::create({356.f, 220.f});

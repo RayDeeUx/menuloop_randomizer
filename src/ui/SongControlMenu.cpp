@@ -17,7 +17,7 @@ bool SongControlMenu::init() {
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
 	const float idealWidth = layerSize.width * .95f;
 	const float centerStage = layerSize.width / 2.f;
-	CCLayer* mainLayer = this->m_mainLayer;
+	cocos2d::CCLayer* mainLayer = this->m_mainLayer;
 	mainLayer->setID("main-layer"_spr);
 
 	this->m_title->setPositionY(this->m_title->getPositionY() + 2.f);
