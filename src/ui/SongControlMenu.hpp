@@ -22,7 +22,7 @@ protected:
 	cocos2d::CCClippingNode* m_clipNode {};
 	FMODLevelVisualizer* m_audieoVisual {};
 	float m_time = 0.f;
-	bool setup() override;
+	bool init() override;
 	void onShuffleButton(cocos2d::CCObject*);
 	void onCopyButton(cocos2d::CCObject*);
 	void onBlacklistButton(cocos2d::CCObject*);
