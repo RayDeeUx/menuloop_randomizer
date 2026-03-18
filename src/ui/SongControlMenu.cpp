@@ -319,42 +319,42 @@ void SongControlMenu::visualizerScheduler(float dt) {
 	this->m_audieoVisual->updateVisualizer(fmod->m_pulse1, 0.f, dt); // no idea how to fill in the second param lol
 }
 
-void SongControlMenu::onShuffleButton(CCObject*) {
+void SongControlMenu::onShuffleButton(cocos2d::CCObject*) {
 	SongControl::shuffleSong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onRegenButton(CCObject*) {
+void SongControlMenu::onRegenButton(cocos2d::CCObject*) {
 	SongControl::regenSong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onCopyButton(CCObject*) {
+void SongControlMenu::onCopyButton(cocos2d::CCObject*) {
 	SongControl::copySong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onBlacklistButton(CCObject*) {
+void SongControlMenu::onBlacklistButton(cocos2d::CCObject*) {
 	SongControl::blacklistSong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onFavoriteButton(CCObject*) {
+void SongControlMenu::onFavoriteButton(cocos2d::CCObject*) {
 	SongControl::favoriteSong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onHoldSongButton(CCObject*) {
+void SongControlMenu::onHoldSongButton(cocos2d::CCObject*) {
 	SongControl::holdSong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onPreviousButton(CCObject*) {
+void SongControlMenu::onPreviousButton(cocos2d::CCObject*) {
 	SongControl::previousSong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onPlaylistButton(CCObject*) {
+void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
 		FLAlertLayer* alert = FLAlertLayer::create("Hold on a sec!", "Menu Loop Randomizer is still calculating song lengths to set up the Song List menu. Hang tight, and try again later.", "I Understand");
 		alert->m_noElasticity = true;
@@ -365,7 +365,7 @@ void SongControlMenu::onPlaylistButton(CCObject*) {
 	SongListLayer::create()->show();
 }
 
-void SongControlMenu::onAddToPlylstBtn(CCObject*) {
+void SongControlMenu::onAddToPlylstBtn(cocos2d::CCObject*) {
 	SongManager& songManager = SongManager::get();
 	if (Utils::getBool("loadPlaylistFile") && !songManager.getPlaylistIsEmpty()) {
 		geode::log::info("tried adding current song to a playlist file. BOOOOOOOOOOOOO");
@@ -378,7 +378,7 @@ void SongControlMenu::onAddToPlylstBtn(CCObject*) {
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onSettingsButton(CCObject*) {
+void SongControlMenu::onSettingsButton(cocos2d::CCObject*) {
 	geode::openSettingsPopup(geode::Mod::get());
 	if (this->m_infoMenu) this->m_infoMenu->setScale(0.f);
 	if (this->m_infoButton) {
@@ -388,11 +388,11 @@ void SongControlMenu::onSettingsButton(CCObject*) {
 	}
 }
 
-void SongControlMenu::onSkipBkwdButton(CCObject*) {
+void SongControlMenu::onSkipBkwdButton(cocos2d::CCObject*) {
 	SongControl::skipBackward();
 }
 
-void SongControlMenu::onSkipFwrdButton(CCObject*) {
+void SongControlMenu::onSkipFwrdButton(cocos2d::CCObject*) {
 	SongControl::skipForward();
 }
 

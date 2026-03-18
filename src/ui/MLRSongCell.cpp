@@ -151,7 +151,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	return true;
 }
 
-void MLRSongCell::onPlaySong(CCObject*) {
+void MLRSongCell::onPlaySong(cocos2d::CCObject*) {
 	if (this->m_songData.type == SongType::Blacklisted || this->getTag() == 12192025) return;
 	SongManager& songManager = SongManager::get();
 	if (songManager.isOverride()) return;
@@ -259,10 +259,10 @@ void MLRSongCell::pressAndHoldScheduler(float dt) {
 }
 
 
-void MLRSongCell::onSkipBkwdButton(CCObject*) {
+void MLRSongCell::onSkipBkwdButton(cocos2d::CCObject*) {
 	if (SongManager::get().getShowPlaybackControlsSongList()) SongControl::skipBackward();
 }
 
-void MLRSongCell::onSkipFwrdButton(CCObject*) {
+void MLRSongCell::onSkipFwrdButton(cocos2d::CCObject*) {
 	if (SongManager::get().getShowPlaybackControlsSongList()) SongControl::skipForward();
 }

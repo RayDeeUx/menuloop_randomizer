@@ -40,7 +40,7 @@ public:
 	bool hasNonDefaultValue() const {
 		return false;
 	}
-	void onConfigDirButton(CCObject*) {
+	void onConfigDirButton(cocos2d::CCObject*) {
 		file::openFolder(Mod::get()->getConfigDir());
 		#ifndef GEODE_IS_MOBILE
 		if (!CCKeyboardDispatcher::get()->getShiftKeyPressed()) return;

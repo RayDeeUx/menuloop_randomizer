@@ -20,7 +20,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 	};
 	#endif
 	#ifndef __APPLE__
-	void onExitEditor(CCObject* sender) {
+	void onExitEditor(cocos2d::CCObject* sender) {
 		iHateHookingMultipleThingsToGetSomethingDone();
 
 		EditorPauseLayer::onExitEditor(sender);
@@ -43,7 +43,7 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 		let that sink in for a moment.]
 	-- raydeeux
 	*/
-	void onSaveAndExit(CCObject* sender) {
+	void onSaveAndExit(cocos2d::CCObject* sender) {
 		iHateHookingMultipleThingsToGetSomethingDone();
 
 		EditorPauseLayer::onSaveAndExit(sender);

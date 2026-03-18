@@ -64,19 +64,19 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (Utils::getBool("enableViewSongListButton")) Utils::addButton("playlist", menu_selector(MenuLayerMLHook::onSongListButton), REST_OF_THE_OWL);
 		return true;
 	}
-	void onShuffleButton(CCObject*) { SongControl::shuffleSong(); }
-	void onRegenButton(CCObject*) { SongControl::regenSong(); }
-	void onCopyButton(CCObject*) { SongControl::copySong(); }
-	void onBlacklistButton(CCObject*) { SongControl::blacklistSong(); }
-	void onFavoriteButton(CCObject*) { SongControl::favoriteSong(); }
-	void onHoldSongButton(CCObject*) { SongControl::holdSong(); }
-	void onPreviousButton(CCObject*) { SongControl::previousSong(); }
-	void onAddToPlylstBtn(CCObject*) { SongControl::addSongToPlaylist(SongManager::get().getCurrentSong()); }
-	void onSongListButton(CCObject*) {
+	void onShuffleButton(cocos2d::CCObject*) { SongControl::shuffleSong(); }
+	void onRegenButton(cocos2d::CCObject*) { SongControl::regenSong(); }
+	void onCopyButton(cocos2d::CCObject*) { SongControl::copySong(); }
+	void onBlacklistButton(cocos2d::CCObject*) { SongControl::blacklistSong(); }
+	void onFavoriteButton(cocos2d::CCObject*) { SongControl::favoriteSong(); }
+	void onHoldSongButton(cocos2d::CCObject*) { SongControl::holdSong(); }
+	void onPreviousButton(cocos2d::CCObject*) { SongControl::previousSong(); }
+	void onAddToPlylstBtn(cocos2d::CCObject*) { SongControl::addSongToPlaylist(SongManager::get().getCurrentSong()); }
+	void onSongListButton(cocos2d::CCObject*) {
 		if (!SongManager::get().getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy! Please wait.");
 		SongListLayer::create()->show();
 	}
-	void onControlsButton(CCObject*) {
+	void onControlsButton(cocos2d::CCObject*) {
 		if (Utils::getString("buttonMode") == "Classic") return;
 		if (CCScene::get()->getChildByType<SongControlMenu>(0)) return;
 		SongControlMenu::create()->show();

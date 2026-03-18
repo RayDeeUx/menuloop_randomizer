@@ -402,24 +402,24 @@ void SongListLayer::searchSongs(const std::string& queryString) {
 	SongListLayer::addSongsToScrollLayer(this->m_scrollLayer, SongManager::get(), queryString);
 }
 
-void SongListLayer::onSettingsButton(CCObject*) {
+void SongListLayer::onSettingsButton(cocos2d::CCObject*) {
 	this->onClose(nullptr);
 	geode::openSettingsPopup(geode::Mod::get());
 }
 
-void SongListLayer::onShuffleButton(CCObject*) {
+void SongListLayer::onShuffleButton(cocos2d::CCObject*) {
 	SongControl::shuffleSong();
 }
 
-void SongListLayer::onCopyButton(CCObject*) {
+void SongListLayer::onCopyButton(cocos2d::CCObject*) {
 	SongControl::copySong();
 }
 
-void SongListLayer::onPreviousButton(CCObject*) {
+void SongListLayer::onPreviousButton(cocos2d::CCObject*) {
 	SongControl::previousSong();
 }
 
-void SongListLayer::onControlsButton(CCObject*) {
+void SongListLayer::onControlsButton(cocos2d::CCObject*) {
 	this->onClose(nullptr);
 	SongControlMenu::create()->show();
 }
@@ -429,7 +429,7 @@ CCContentLayer* SongListLayer::getContentLayer() const {
 	return nullptr;
 }
 
-void SongListLayer::onScrollTopButton(CCObject*) {
+void SongListLayer::onScrollTopButton(cocos2d::CCObject*) {
 	if (!Utils::getBool("showScrollingShortcuts")) return;
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
 	if (!contentLayer || !this->m_scrollLayer || !SongListLayer::tallEnough(this->m_scrollLayer)) return; // cmon bruh it's in plain sight lol
@@ -449,54 +449,54 @@ void SongListLayer::scrollToCurrentSong() {
 	else contentLayer->setPositionY(desiredPosition);
 }
 
-void SongListLayer::onScrollCurButton(CCObject*) {
+void SongListLayer::onScrollCurButton(cocos2d::CCObject*) {
 	if (!Utils::getBool("showScrollingShortcuts")) return;
 	SongListLayer::scrollToCurrentSong();
 }
 
-void SongListLayer::onScrollBtmButton(CCObject*) {
+void SongListLayer::onScrollBtmButton(cocos2d::CCObject*) {
 	if (!Utils::getBool("showScrollingShortcuts") || !this->m_scrollLayer) return;
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
 	if (!contentLayer || !SongListLayer::tallEnough(this->m_scrollLayer)) return; // cmon bruh it's in plain sight lol
 	contentLayer->setPositionY(0.f);
 }
 
-void SongListLayer::onCompactModeToggle(CCObject*) {
+void SongListLayer::onCompactModeToggle(cocos2d::CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::toggleSavedValueAndSearch("songListCompactMode");
 }
 
-void SongListLayer::onFavoritesOnlyToggle(CCObject*) {
+void SongListLayer::onFavoritesOnlyToggle(cocos2d::CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::toggleSavedValueAndSearch("songListFavoritesOnlyMode");
 }
 
-void SongListLayer::onSortReverseToggle(CCObject*) {
+void SongListLayer::onSortReverseToggle(cocos2d::CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::toggleSavedValueAndSearch("songListReverseSort");
 }
 
-void SongListLayer::onSortABCToggle(CCObject*) {
+void SongListLayer::onSortABCToggle(cocos2d::CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortAlphabetically");
 }
 
-void SongListLayer::onSortDateToggle(CCObject*) {
+void SongListLayer::onSortDateToggle(cocos2d::CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortDateAdded");
 }
 
-void SongListLayer::onSortLengthToggle(CCObject*) {
+void SongListLayer::onSortLengthToggle(cocos2d::CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortSongLength");
 }
 
-void SongListLayer::onSortSizeToggle(CCObject*) {
+void SongListLayer::onSortSizeToggle(cocos2d::CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileSize");
 }
 
-void SongListLayer::onSortExtnToggle(CCObject*) {
+void SongListLayer::onSortExtnToggle(cocos2d::CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileExtn");
 }
