@@ -13,13 +13,13 @@ class SongListLayer final : public geode::Popup<> {
 #endif
 protected:
 	CCMenuItemToggler* m_songListCompactMode {};
-    CCMenuItemToggler* m_songListFavoritesOnlyMode {};
-    CCMenuItemToggler* m_songListReverseSort {};
-    CCMenuItemToggler* m_songListSortAlphabetically {};
-    CCMenuItemToggler* m_songListSortDateAdded {};
-    CCMenuItemToggler* m_songListSortSongLength {};
-    CCMenuItemToggler* m_songListSortFileSize {};
-    CCMenuItemToggler* m_songListSortFileExtn {};
+	CCMenuItemToggler* m_songListFavoritesOnlyMode {};
+	CCMenuItemToggler* m_songListReverseSort {};
+	CCMenuItemToggler* m_songListSortAlphabetically {};
+	CCMenuItemToggler* m_songListSortDateAdded {};
+	CCMenuItemToggler* m_songListSortSongLength {};
+	CCMenuItemToggler* m_songListSortFileSize {};
+	CCMenuItemToggler* m_songListSortFileExtn {};
 	cocos2d::CCMenu* m_scrollShortcuts {};
 	cocos2d::CCMenu* m_viewFiltersMenu {};
 	geode::ScrollLayer* m_scrollLayer {};
