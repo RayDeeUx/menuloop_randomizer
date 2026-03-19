@@ -1,7 +1,11 @@
 #pragma once
 
-// class SongControlMenu final : public geode::Popup {
+#if GEODE_COMP_GD_VERSION == 22081
+class SongControlMenu final : public geode::Popup {
+#endif
+#if GEODE_COMP_GD_VERSION == 22074
 class SongControlMenu final : public geode::Popup<> {
+#endif
 protected:
 	cocos2d::CCLabelBMFont* m_smallLabel{};
 	cocos2d::CCLabelBMFont* m_otherLabel{};
@@ -16,16 +20,29 @@ protected:
 	InfoAlertButton* m_infoButton       {};
 	CCMenuItemSpriteExtra* m_ffwdButton {};
 	CCMenuItemSpriteExtra* m_bkwdButton {};
-	// geode::NineSlice* b                 {};
+	#if GEODE_COMP_GD_VERSION == 22081
+	geode::NineSlice* b                 {};
+	#endif
+	#if GEODE_COMP_GD_VERSION == 22074
 	cocos2d::extension::CCScale9Sprite*b{};
+	#endif
+	#if GEODE_COMP_GD_VERSION == 22081
+	geode::NineSlice* w                 {};
+	#endif
+	#if GEODE_COMP_GD_VERSION == 22074
 	cocos2d::extension::CCScale9Sprite*w{};
+	#endif
 	cocos2d::CCLayerColor* m_darkProgBar{};
 	cocos2d::CCLayerColor* m_currProgBar{};
 	cocos2d::CCClippingNode* m_clipNode {};
 	FMODLevelVisualizer* m_audieoVisual {};
 	float m_time = 0.f;
-	// bool init() override;
+	#if GEODE_COMP_GD_VERSION == 22081
+	bool init() override;
+	#endif
+	#if GEODE_COMP_GD_VERSION == 22074
 	bool setup() override;
+	#endif
 	void onShuffleButton(cocos2d::CCObject*);
 	void onCopyButton(cocos2d::CCObject*);
 	void onBlacklistButton(cocos2d::CCObject*);
@@ -53,7 +70,11 @@ public:
 	void onExit() override;
 	void toggleOsu();
 	void onClose(cocos2d::CCObject*) override;
-	// void keyDown(cocos2d::enumKeyCodes key, double p1) override;
+	#if GEODE_COMP_GD_VERSION == 22081
+	void keyDown(cocos2d::enumKeyCodes key, double p1) override;
+	#endif
+	#if GEODE_COMP_GD_VERSION == 22074
 	void keyDown(cocos2d::enumKeyCodes key) override;
+	#endif
 	void toggleButtonState(cocos2d::CCNode *playlistButton, const bool isEnabled) const;
 };

@@ -5,8 +5,12 @@
 
 #define SEARCH_BAR_NODE_ID "song-list-search-bar"_spr
 
-// class SongListLayer final : public geode::Popup {
+#if GEODE_COMP_GD_VERSION == 22081
+class SongListLayer final : public geode::Popup {
+#endif
+#if GEODE_COMP_GD_VERSION == 22074
 class SongListLayer final : public geode::Popup<> {
+#endif
 protected:
 	CCMenuItemToggler* m_songListCompactMode {};
     CCMenuItemToggler* m_songListFavoritesOnlyMode {};
@@ -27,8 +31,12 @@ public:
 	static SongListLayer* create();
 	void addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString = "");
 	void updateSongCountAndFavoritesCount(SongManager& songManager);
-	// bool init() override;
+	#if GEODE_COMP_GD_VERSION == 22081
+	bool init() override;
+	#endif
+	#if GEODE_COMP_GD_VERSION == 22074
 	bool setup() override;
+	#endif
 	void onSettingsButton(cocos2d::CCObject*);
 	void onShuffleButton(cocos2d::CCObject*);
 	void onCopyButton(cocos2d::CCObject*);
@@ -53,12 +61,14 @@ public:
 	void scrollToCurrentSong();
 
 	void checkPosition(const float);
-	/*
+	#if GEODE_COMP_GD_VERSION == 22081
 	void keyDown(const cocos2d::enumKeyCodes, double p1) override;
 	void keyUp(const cocos2d::enumKeyCodes, double p1) override;
-	*/
+	#endif
+	#if GEODE_COMP_GD_VERSION == 22074
 	void keyDown(const cocos2d::enumKeyCodes) override;
 	void keyUp(const cocos2d::enumKeyCodes) override;
+	#endif
 	void searchSongs(const std::string&);
 
 	static std::string generateDisplayName(SongData&);
