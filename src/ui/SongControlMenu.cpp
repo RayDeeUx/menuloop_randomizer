@@ -6,7 +6,7 @@
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 #define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
-#define CAN_SHOW_PLAYBACK_PROGRESS CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong())
+#define CAN_SHOW_PLAYBACK_PROGRESS songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong())
 
 // bool SongControlMenu::init() {
 bool SongControlMenu::setup() {
@@ -111,6 +111,19 @@ bool SongControlMenu::setup() {
 	this->b->setColor({0, 0, 0});
 	this->b->setOpacity(128);
 
+	// this->w = geode::NineSlice::create("square02b_001.png");
+	this->w = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
+	this->w->setContentSize(this->m_mainLayer->getContentSize());
+	this->w->setPosition(this->w->getContentSize() / 2.f);
+	this->w->ignoreAnchorPointForPosition(false);
+	this->w->setAnchorPoint({.5f, .5f});
+	this->w->setColor({255, 255, 255});
+	this->w->setZOrder(-8124);
+	this->w->setOpacity(0);
+	this->w->setTag(8124);
+
+	this->m_mainLayer->addChild(this->w);
+
 	this->schedule(schedule_selector(SongControlMenu::checkManagerFinished));
 
 	cocos2d::CCMenu* incrementDecrementMenu = cocos2d::CCMenu::create();
@@ -152,6 +165,11 @@ bool SongControlMenu::setup() {
 	this->m_audieoVisual->setID("budget-audio-visualizer-inspired-by-osu-first"_spr);
 	this->m_audieoVisual->setPosition({50.f, -10.f});
 	this->m_audieoVisual->setRotation(90.f);
+
+	for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(static_cast<cocos2d::CCSpriteBatchNode*>(this->m_audieoVisual->getChildByIndex(0))->m_pChildren)) {
+		spriteChild->setOpacity(0);
+	}
+
 	this->m_mainLayer->addChild(this->m_audieoVisual);
 
 	this->schedule(schedule_selector(SongControlMenu::visualizerScheduler));
@@ -202,6 +220,7 @@ bool SongControlMenu::setup() {
 	mainLayer->addChild(this->m_theTimeoutCorner);
 
 	this->b->setID("trans-bg"_spr);
+	this->w->setID("ripple-bg"_spr);
 	this->m_title->setID("title"_spr);
 	this->m_clipNode->setID("clip-node"_spr);
 	this->m_bgSprite->setID("background"_spr);
@@ -219,6 +238,8 @@ bool SongControlMenu::setup() {
 	this->m_openSongListMenu->setID("song-list-menu"_spr);
 	// this->b->getBatchNode()->setID("the-darn-scale-9"_spr);
 	this->b->_scale9Image->setID("the-darn-scale-9"_spr);
+	// this->w->getBatchNode()->setID("osu-darn-scale-9"_spr);
+	this->w->_scale9Image->setID("osu-darn-scale-9"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
 	// this->m_bgSprite->getBatchNode()->setID("the-less-darned-sprite-9"_spr);
 	this->m_bgSprite->_scale9Image->setID("the-less-darned-sprite-9"_spr);
@@ -241,6 +262,11 @@ SongControlMenu* SongControlMenu::create() {
 
 void SongControlMenu::onExit() {
 	Popup::onExit();
+}
+
+void SongControlMenu::onClose(cocos2d::CCObject* sender) {
+	if (MenuLayer::get() && !MenuLayer::get()->isVisible() && this->m_osu) MenuLayer::get()->setVisible(true);
+	Popup::onClose(sender);
 }
 
 void SongControlMenu::toggleButtonState(cocos2d::CCNode* playlistButton, const bool isEnabled) const {
@@ -298,9 +324,9 @@ void SongControlMenu::checkDaSongPositions(float) {
 
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
-	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
+	if (fmod->getActiveMusic(0) != currSong) return;
 
-	const int fullLength = Utils::getSongDataOfCurrentSong().songLength;
+	const int fullLength = fmod->getMusicLengthMS(0);
 	const int lastPosition = songManager.getLastMenuLoopPosition();
 
 	this->m_currTimeLb->setString(fmt::format("{}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60)).c_str());
@@ -372,6 +398,7 @@ void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 		alert->show();
 		return;
 	}
+	if (MenuLayer::get() && !MenuLayer::get()->isVisible() && this->m_osu) MenuLayer::get()->setVisible(true);
 	SongControlMenu::onClose(nullptr);
 	SongListLayer::create()->show();
 }
@@ -453,21 +480,80 @@ void SongControlMenu::updateCurrentLabel() {
 	else if (songType == SongType::Blacklisted) this->m_smallLabel->setColor({0, 0, 0});
 }
 
+void SongControlMenu::toggleMenuLayerVisibility() {
+	MenuLayer::get()->setVisible(!this->m_osu);
+}
+
+void SongControlMenu::doTheRippleEffectFromOsuLazer() {
+	if (!this->w) return;
+	this->w->stopAllActions();
+	this->w->setScale(1.f);
+	if (this->m_osu) {
+		this->w->setOpacity(0);
+		this->w->setVisible(false);
+	} else {
+		this->w->setOpacity(255);
+		this->w->setVisible(true);
+		// easing types and easing values taken from https://github.com/ppy/osu/blob/master/osu.Game/Screens/Menu/OsuLogo.cs#L429 under the MIT license, but they're just silly numbers at the end of the day
+		this->w->runAction(
+			cocos2d::CCSequence::create(
+				cocos2d::CCSpawn::create(
+					cocos2d::CCEaseIn::create(cocos2d::CCScaleTo::create(.25f, 1.12f), .5f),
+					cocos2d::CCEaseIn::create(cocos2d::CCFadeOut::create(.25f), .5f),
+					nullptr
+				),
+				cocos2d::CCScaleTo::create(0.f, 1.f),
+				nullptr
+			)
+		);
+	}
+}
+
+void SongControlMenu::toggleOsu() {
+	this->m_osu = !this->m_osu;
+	this->stopAllActions();
+	this->m_mainLayer->stopAllActions();
+	for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(static_cast<cocos2d::CCSpriteBatchNode*>(this->m_audieoVisual->getChildByIndex(0))->m_pChildren)) {
+		spriteChild->stopAllActions();
+	}
+	// easing types and easing values taken from https://github.com/ppy/osu/blob/master/osu.Game/Screens/Menu/ButtonSystem.cs#L476 and https://github.com/ppy/osu/blob/master/osu.Game/Screens/Menu/ButtonSystem.cs#L495 under the MIT license, but they're just silly numbers at the end of the day
+	if (this->m_osu) {
+		this->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
+		for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(static_cast<cocos2d::CCSpriteBatchNode*>(this->m_audieoVisual->getChildByIndex(0))->m_pChildren)) {
+			spriteChild->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, spriteChild->getTag() < 100 ? 100 : 255)));
+		}
+		// this->m_audieoVisual->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
+		this->m_mainLayer->runAction(
+			cocos2d::CCSequence::create(
+				cocos2d::CCCallFunc::create(this, callfunc_selector(SongControlMenu::doTheRippleEffectFromOsuLazer)),
+				cocos2d::CCEaseExponentialOut::create(cocos2d::CCScaleTo::create(.8f, 1.5f)),
+				cocos2d::CCCallFunc::create(this, callfunc_selector(SongControlMenu::toggleMenuLayerVisibility)),
+				nullptr
+			)
+		);
+	} else {
+		this->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 105), .5f));
+		for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(static_cast<cocos2d::CCSpriteBatchNode*>(this->m_audieoVisual->getChildByIndex(0))->m_pChildren)) {
+			spriteChild->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
+		}
+		// this->m_audieoVisual->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
+		this->m_mainLayer->runAction(
+			cocos2d::CCSequence::create(
+				cocos2d::CCCallFunc::create(this, callfunc_selector(SongControlMenu::toggleMenuLayerVisibility)),
+				cocos2d::CCEaseIn::create(cocos2d::CCScaleTo::create(.2f, 1.f), 1.f),
+				cocos2d::CCCallFunc::create(this, callfunc_selector(SongControlMenu::doTheRippleEffectFromOsuLazer)),
+				nullptr
+			)
+		);
+	}
+}
+
 // void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 	SongManager& songManager = SongManager::get();
-	if (key == cocos2d::KEY_O || key == cocos2d::KEY_Enter) {
-		this->m_osu = !this->m_osu;
-		this->stopAllActions();
-		this->m_mainLayer->stopAllActions();
-		// easing types and easing values taken from https://github.com/ppy/osu/blob/master/osu.Game/Screens/Menu/ButtonSystem.cs#L476 and https://github.com/ppy/osu/blob/master/osu.Game/Screens/Menu/ButtonSystem.cs#L495 under the MIT license, but they're just silly numbers at the end of the day
-		if (this->m_osu) {
-			this->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
-			this->m_mainLayer->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCScaleTo::create(.8f, 1.5f)));
-		} else {
-			this->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 105), 1.f));
-			this->m_mainLayer->runAction(cocos2d::CCEaseIn::create(cocos2d::CCScaleTo::create(.2f, 1.f), 1.f));
-		}
+	if (songManager.getOsu() && (key == cocos2d::KEY_O || key == cocos2d::KEY_Enter)) {
+		SongControlMenu::toggleOsu();
+		return;
 	}
 	#ifdef GEODE_IS_DESKTOP
 	if (songManager.getYoutubeAndVLCKeyboardShortcutsControlPanel()) {
@@ -500,11 +586,14 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 		}
 	}
 	#endif
-	if (CAN_USE_PLAYBACK_CONTROLS && songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED) {
+	if (CAN_SHOW_PLAYBACK_PROGRESS) {
 		if (key == cocos2d::KEY_Right || key == cocos2d::KEY_ArrowRight || key == cocos2d::KEY_L) return SongControl::skipForward();
 		if (key == cocos2d::KEY_Left || key == cocos2d::KEY_ArrowLeft || key == cocos2d::KEY_J) return SongControl::skipBackward();
 	}
-	if (key == cocos2d::enumKeyCodes::KEY_Escape) return this->onClose(nullptr);
+	if (key == cocos2d::enumKeyCodes::KEY_Escape) {
+		if (MenuLayer::get() && !MenuLayer::get()->isVisible() && this->m_osu) MenuLayer::get()->setVisible(true);
+		return this->onClose(nullptr);
+	}
 	if (key == cocos2d::enumKeyCodes::KEY_Space) return;
 	// return FLAlertLayer::keyDown(key, p1);
 	return FLAlertLayer::keyDown(key);

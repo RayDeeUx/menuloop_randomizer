@@ -278,9 +278,9 @@
 		},
 		"alwaysAutoScrollToCurrentSong": {
 			"name": "Always Auto-Scroll to Current Song",
-			"description": "Choose if you always want to automatically scrol to the current song when doing anything in the Song List menu.",
+			"description": "Choose if you always want to automatically scroll to the current song when doing anything in the Song List menu.",
 			"type": "bool",
-			"default": true,
+			"default": false,
 			"enable-if": "autoScrollToCurrentSong"
 		},
 		"showSearchBar": {
@@ -361,10 +361,9 @@
 		},
 		"showPlaybackProgressAndControls": {
 			"name": "Show Playback Progress and Controls",
-			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO CONTROLS OR PROGRESS BAR WILL APPEAR.__***</c>\n\nChoose if you want to show playback controls and playback progress about the currently playing song in the Control Panel menu.",
+			"description": "Choose if you want to show playback controls and playback progress about the currently playing song in the Control Panel menu.",
 			"type": "bool",
-			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio"
+			"default": true
 		},
 		"youtubeAndVLCKeyboardShortcutsControlPanel": {
 			"name": "YT/VLC/Spotify-like Hotkeys",
@@ -377,6 +376,12 @@
 				"ios": "false"
 			},
 			"platforms": [ "win", "mac" ]
+		},
+		"osuLazerBootleg": {
+			"name": "\"welcome to osu!\" bootleg",
+			"description": "<c-ff66aa>welcome to osu!</c>\n\nPress  `O`  or  `Enter`  to make the Control Panel the only visible UI element on-screen, much like the <c-ff66aa>osu!</c> cookie logo seen in <c-ff66aa>osu!lazer</c>.",
+			"type": "bool",
+			"default": true
 		},
 		"misc-header": {
 			"name": "Miscellaneous Settings",
@@ -481,10 +486,18 @@
 		"community": "https://discord.gg/WqZBYdBWZW",
 		"homepage": "https://discord.com/channels/822510988409831486/1206371881222144020"
 	},
+	"dependencies": {
+		"eclipse.eclipse-menu": {
+			"version": "<=1.7.0",
+			"required": false,
+			"importance": "suggested"
+		}
+	},
 	"incompatibilities": {
 		"joseii.ventilla": {
 			"version": ">=1.0.0",
-			"breaking": false
+			"breaking": false,
+			"importance": "conflicting"
 		}
 	}
 }

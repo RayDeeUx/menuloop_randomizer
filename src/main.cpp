@@ -2,6 +2,7 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
 #include "Settings.hpp"
+#include "ui/SongControlMenu.hpp"
 #include <Geode/loader/SettingV3.hpp>
 
 using namespace geode::prelude;
@@ -17,6 +18,7 @@ bool originalOverrideWasEmpty = false;
 
 $on_mod(Loaded) {
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
+	songManager.setOsu(Mod::get()->getSettingValue<bool>("osuLazerBootleg"));
 	songManager.setConstantShuffleMode();
 	songManager.setLastMenuLoopPosition(0);
 	songManager.setShouldRestoreMenuLoopPoint(true);
@@ -245,7 +247,102 @@ $on_mod(Loaded) {
 		SongManager::get().setYoutubeAndVLCKeyboardShortcutsControlPanel(youtubeAndVLCKeyboardShortcutsControlPanel);
 	});
 	#endif
+	listenForSettingChanges<bool>("osuLazerBootleg", [](const bool osuLazerBootlegNew) {
+		if (osuLazerBootlegNew || !CCScene::get()) {
+			songManager.setOsu(osuLazerBootlegNew);
+			return;
+		}
+		SongControlMenu* scm = CCScene::get()->getChildByType<SongControlMenu>(0);
+		if (!scm || !scm->m_osu) {
+			songManager.setOsu(osuLazerBootlegNew);
+			return;
+		}
+		if (MenuLayer::get() && !MenuLayer::get()->isVisible() && scm->m_osu) MenuLayer::get()->setVisible(true);
+		scm->toggleOsu();
+		songManager.setOsu(osuLazerBootlegNew);
+	});
 	listenForSettingChanges<bool>("advancedLogs", [](const bool newAdvancedLogs) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
+	});
+}
+
+#define ECLIPSE_MODULES_HPP
+#include <eclipse.eclipse-menu/include/eclipse.hpp>
+#include <Geode/ui/GeodeUI.hpp>
+#include "SongControl.hpp"
+
+using namespace eclipse;
+using namespace geode::prelude;
+
+class EclipsePlaybackProgressDummyNode final : public CCNode {
+public:
+	void playbackProgressScheduler(float) {
+		SongManager& sm = SongManager::get();
+		if (!sm.eclipseSongDurationLabel.has_value()) return;
+
+		FMODAudioEngine* fmod = FMODAudioEngine::get();
+		const std::string& currSong = sm.getCurrentSong();
+		if (std::hash<std::string>{}(fmod->getActiveMusic(0)) != std::hash<std::string>{}(currSong)) return;
+
+		const int fullLength = fmod->getMusicLengthMS(0);
+		const int lastPosition = sm.getLastMenuLoopPosition();
+
+		SongManager::get().eclipseSongDurationLabel.value().setText(fmt::format("Progress: {}:{:02} / {}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60), ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
+	}
+};
+
+$on_mod(Loaded) {
+	Loader::get()->queueInMainThread([]() {
+		auto tab = MenuTab::find("Menu Loop Randomizer");
+
+		SongManager::get().eclipseSongNameLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Current song: [[Hold on, MLR is still loading things!]]"));
+		SongManager::get().eclipseSongDurationLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Progress: [[Hold on, MLR is still loading things!]]"));
+
+		GameManager::get()->schedule(schedule_selector(EclipsePlaybackProgressDummyNode::playbackProgressScheduler));
+
+		(void) tab.addLabel("Song Selection");
+		tab.addButton("Shuffle Song", []() {
+			SongControl::shuffleSong();
+		});
+		tab.addButton("Previous Song (Go back once)", []() {
+			SongControl::previousSong();
+		});
+		tab.addButton("Hold Song (like Tetris)", []() {
+			SongControl::holdSong();
+		});
+
+		(void) tab.addLabel("Playback/Seeking");
+		tab.addButton("Seek Backward", []() {
+			SongControl::skipBackward();
+		});
+		tab.addButton("Seek Forward", []() {
+			SongControl::skipForward();
+		});
+		tab.addButton("Seek to 0%", []() {
+			SongControl::setSongPercentage(0);
+		});
+		tab.addButton("Seek to 25%", []() {
+			SongControl::setSongPercentage(25);
+		});
+		tab.addButton("Seek to 50%", []() {
+			SongControl::setSongPercentage(50);
+		});
+		tab.addButton("Seek to 75%", []() {
+			SongControl::setSongPercentage(75);
+		});
+
+		(void) tab.addLabel("Other Controls");
+		tab.addButton("Favorite Song", []() {
+			SongControl::favoriteSong();
+		}).setDescription("");
+		tab.addButton("Blacklist Song", []() {
+			SongControl::blacklistSong();
+		}).setDescription("");
+		tab.addButton("Copy Song Name/ID", []() {
+			SongControl::copySong();
+		});
+		tab.addButton("New Notification", []() {
+			SongControl::regenSong();
+		});
 	});
 }

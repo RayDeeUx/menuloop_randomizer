@@ -3,7 +3,6 @@
 // class SongControlMenu final : public geode::Popup {
 class SongControlMenu final : public geode::Popup<> {
 protected:
-	bool m_osu = false;
 	cocos2d::CCLabelBMFont* m_smallLabel{};
 	cocos2d::CCLabelBMFont* m_otherLabel{};
 	cocos2d::CCLabelBMFont* m_headerLabl{};
@@ -19,6 +18,7 @@ protected:
 	CCMenuItemSpriteExtra* m_bkwdButton {};
 	// geode::NineSlice* b                 {};
 	cocos2d::extension::CCScale9Sprite*b{};
+	cocos2d::extension::CCScale9Sprite*w{};
 	cocos2d::CCLayerColor* m_darkProgBar{};
 	cocos2d::CCLayerColor* m_currProgBar{};
 	cocos2d::CCClippingNode* m_clipNode {};
@@ -43,11 +43,16 @@ protected:
 	void visualizerScheduler(float);
 	void forceSharpCornerIllusion();
 	void forceSharpCornerIllusionScheduler(float);
+	void toggleMenuLayerVisibility();
+	void doTheRippleEffectFromOsuLazer();
 public:
+	bool m_osu = false;
 	static SongControlMenu* create();
 	void onRegenButton(cocos2d::CCObject*);
 	void updateCurrentLabel();
 	void onExit() override;
+	void toggleOsu();
+	void onClose(cocos2d::CCObject*) override;
 	// void keyDown(cocos2d::enumKeyCodes key, double p1) override;
 	void keyDown(cocos2d::enumKeyCodes key) override;
 	void toggleButtonState(cocos2d::CCNode *playlistButton, const bool isEnabled) const;

@@ -12,7 +12,6 @@ class Utils {
 		std::transform(s.begin(), s.end(), s.begin(), [](const unsigned char c) -> char { return c < 128 ? static_cast<char>(c) : '?'; });
 	}
 	static void removeCard();
-	static cocos2d::CCNode* findCard();
 	static cocos2d::CCNode* findCardRemotely();
 	static void setNewSong();
 	static void constantShuffleModeNewSong();

@@ -10,6 +10,8 @@
   - There will not be shortcuts to open the Control Panel or Song List menus in this integration.
   - You can toggle this option off in the mod settings, but <cl>it will require</c> <co>a game restart</c>.
 - <co>Recategorized</c> all of the mod's settings so everything is a bit easier to navigate.
+- <co>Removed</c> [Better Touch Prio](mod:alk.better-touch-prio) dependency for song playback seeking controls/keyboard shortcuts ***ONLY FOR THE CONTROL PANEL***.
+  - This means you do not need Better Touch Prio loaded to control the current song's position when inside the Control Panel.
 ## v1.12.1
 *<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - Fix a really obscure crash with iOS JIT-less devices. (Hopefully, anyhow.)

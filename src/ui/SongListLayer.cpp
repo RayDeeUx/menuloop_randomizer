@@ -118,6 +118,13 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 	if (this->m_scrollBar) this->m_scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));
 	if (this->m_scrollShortcuts) this->m_scrollShortcuts->setPositionY(SongListLayer::determineYPosition(scrollLayer));
+
+	if (Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
+		geode::Loader::get()->queueInMainThread([this, contentLayer = scrollLayer->m_contentLayer]() {
+			if (!contentLayer || !contentLayer->getChildByTag(12192025)) return;
+			SongListLayer::scrollToCurrentSong();
+		});
+	}
 }
 
 void SongListLayer::updateSongCountAndFavoritesCount(SongManager& songManager) {
