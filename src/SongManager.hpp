@@ -124,6 +124,8 @@ class SongManager {
 	bool getYoutubeAndVLCKeyboardShortcutsSongList() const;
 	void setYoutubeAndVLCKeyboardShortcutsControlPanel(const bool);
 	bool getYoutubeAndVLCKeyboardShortcutsControlPanel() const;
+	void setOsu(const bool value);
+	bool getOsu() const;
 	unsigned long getHashedCurrentSong() const;
 
 	std::optional<eclipse::components::Label> eclipseSongNameLabel;
@@ -159,6 +161,7 @@ class SongManager {
 	bool m_vobecidedJota = false;
 	bool m_youtubeAndVLCKeyboardShortcutsSongList = false;
 	bool m_youtubeAndVLCKeyboardShortcutsControlPanel = false;
+	bool m_osuSetting = false;
 	int m_lastPosition = 0;
 	int m_towerRepeatCount = 0;
 	int m_incrementDecrementByMilliseconds = 0;

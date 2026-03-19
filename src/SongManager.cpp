@@ -375,6 +375,14 @@ bool SongManager::getYoutubeAndVLCKeyboardShortcutsControlPanel() const {
 	return m_youtubeAndVLCKeyboardShortcutsControlPanel;
 }
 
+void SongManager::setOsu(const bool value) {
+	m_osuSetting = value;
+}
+
+bool SongManager::getOsu() const {
+	return m_osuSetting;
+}
+
 unsigned long SongManager::getHashedCurrentSong() const {
 	return m_hashedCurrentSong;
 }

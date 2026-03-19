@@ -9,6 +9,7 @@
 #define CAN_SHOW_PLAYBACK_PROGRESS songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong())
 
 bool SongControlMenu::init() {
+// bool SongControlMenu::setup() {
 	if (!geode::Popup::init(300.f, 150.f, "GJ_square05.png")) return false;
 
 	this->setTitle("Menu Loop Randomizer - Control Panel");
@@ -17,7 +18,7 @@ bool SongControlMenu::init() {
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
 	const float idealWidth = layerSize.width * .95f;
 	const float centerStage = layerSize.width / 2.f;
-	CCLayer* mainLayer = this->m_mainLayer;
+	cocos2d::CCLayer* mainLayer = this->m_mainLayer;
 	mainLayer->setID("main-layer"_spr);
 
 	this->m_title->setPositionY(this->m_title->getPositionY() + 2.f);
@@ -102,6 +103,7 @@ bool SongControlMenu::init() {
 	this->m_headerLabl->setPosition({centerStage, 107.5f});
 
 	this->b = geode::NineSlice::create("square02b_001.png");
+	// this->b = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
 	this->b->ignoreAnchorPointForPosition(false);
 	this->b->setContentSize({250.f, 30.f});
 	this->b->setAnchorPoint({0.f, .5f});
@@ -109,8 +111,8 @@ bool SongControlMenu::init() {
 	this->b->setColor({0, 0, 0});
 	this->b->setOpacity(128);
 
-	// this->w = geode::NineSlice::create("square02b_001.png");
-	this->w = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
+	this->w = geode::NineSlice::create("square02b_001.png");
+	// this->w = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
 	this->w->setContentSize(this->m_mainLayer->getContentSize());
 	this->w->setPosition(this->w->getContentSize() / 2.f);
 	this->w->ignoreAnchorPointForPosition(false);
@@ -175,6 +177,8 @@ bool SongControlMenu::init() {
 	SongControlMenu::forceSharpCornerIllusion();
 	SongControlMenu::updateCurrentLabel();
 
+	this->m_osu = false;
+
 	/*
 	if (songManager.getSawbladeCustomSongsFolder()) {
 		cocos2d::CCLabelBMFont* customSongsFolderBottom = cocos2d::CCLabelBMFont::create("CUSTOM SONGS FOLDER BY SAWBLADE IS LOADED!!! BUGS REPORTS WILL BE IGNORED.", "chatFont.fnt");
@@ -238,6 +242,7 @@ bool SongControlMenu::init() {
 	// this->w->_scale9Image->setID("osu-darn-scale-9"_spr);
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
 	this->m_bgSprite->getBatchNode()->setID("the-less-darned-sprite-9"_spr);
+	// this->m_bgSprite->_scale9Image->setID("the-less-darned-sprite-9"_spr);
 
 	this->m_noElasticity = true;
 
@@ -247,6 +252,7 @@ bool SongControlMenu::init() {
 SongControlMenu* SongControlMenu::create() {
 	SongControlMenu* ret = new SongControlMenu();
 	if (ret->init()) {
+	// if (ret->initAnchored(300.f, 150.f, "GJ_square05.png")) {
 		ret->autorelease();
 		return ret;
 	}
@@ -279,10 +285,18 @@ void SongControlMenu::checkManagerFinished(float) {
 
 void SongControlMenu::forceSharpCornerIllusion() {
 	if (!this->b) return;
+	
 	this->b->getBottom()->setPositionX(0.f);
 	this->b->getBottom()->setScaleX(9.375f);
 	this->b->getBottomLeft()->setVisible(false);
 	this->b->getBottomRight()->setVisible(false);
+	
+	/*
+	this->b->_bottom->setPositionX(0.f);
+	this->b->_bottom->setScaleX(9.375f);
+	this->b->_bottomLeft->setVisible(false);
+	this->b->_bottomRight->setVisible(false);
+	*/
 
 	SongManager& songManager = SongManager::get();
 	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
@@ -337,42 +351,49 @@ void SongControlMenu::pressAndHoldScheduler(float dt) {
 	else m_time = 0;
 }
 
-void SongControlMenu::onShuffleButton(CCObject*) {
+void SongControlMenu::visualizerScheduler(float dt) {
+	FMODAudioEngine* fmod = FMODAudioEngine::get();
+	if (!this->m_audieoVisual || !fmod) return;
+	if (!fmod->m_metering) fmod->enableMetering();
+	this->m_audieoVisual->updateVisualizer(fmod->m_pulse1, 0.f, dt); // no idea how to fill in the second param lol
+}
+
+void SongControlMenu::onShuffleButton(cocos2d::CCObject*) {
 	SongControl::shuffleSong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onRegenButton(CCObject*) {
+void SongControlMenu::onRegenButton(cocos2d::CCObject*) {
 	SongControl::regenSong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onCopyButton(CCObject*) {
+void SongControlMenu::onCopyButton(cocos2d::CCObject*) {
 	SongControl::copySong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onBlacklistButton(CCObject*) {
+void SongControlMenu::onBlacklistButton(cocos2d::CCObject*) {
 	SongControl::blacklistSong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onFavoriteButton(CCObject*) {
+void SongControlMenu::onFavoriteButton(cocos2d::CCObject*) {
 	SongControl::favoriteSong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onHoldSongButton(CCObject*) {
+void SongControlMenu::onHoldSongButton(cocos2d::CCObject*) {
 	SongControl::holdSong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onPreviousButton(CCObject*) {
+void SongControlMenu::onPreviousButton(cocos2d::CCObject*) {
 	SongControl::previousSong();
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onPlaylistButton(CCObject*) {
+void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
 		FLAlertLayer* alert = FLAlertLayer::create("Hold on a sec!", "Menu Loop Randomizer is still calculating song lengths to set up the Song List menu. Hang tight, and try again later.", "I Understand");
 		alert->m_noElasticity = true;
@@ -384,7 +405,7 @@ void SongControlMenu::onPlaylistButton(CCObject*) {
 	SongListLayer::create()->show();
 }
 
-void SongControlMenu::onAddToPlylstBtn(CCObject*) {
+void SongControlMenu::onAddToPlylstBtn(cocos2d::CCObject*) {
 	SongManager& songManager = SongManager::get();
 	if (Utils::getBool("loadPlaylistFile") && !songManager.getPlaylistIsEmpty()) {
 		geode::log::info("tried adding current song to a playlist file. BOOOOOOOOOOOOO");
@@ -397,7 +418,7 @@ void SongControlMenu::onAddToPlylstBtn(CCObject*) {
 	SongControlMenu::updateCurrentLabel();
 }
 
-void SongControlMenu::onSettingsButton(CCObject*) {
+void SongControlMenu::onSettingsButton(cocos2d::CCObject*) {
 	geode::openSettingsPopup(geode::Mod::get());
 	if (this->m_infoMenu) this->m_infoMenu->setScale(0.f);
 	if (this->m_infoButton) {
@@ -407,11 +428,11 @@ void SongControlMenu::onSettingsButton(CCObject*) {
 	}
 }
 
-void SongControlMenu::onSkipBkwdButton(CCObject*) {
+void SongControlMenu::onSkipBkwdButton(cocos2d::CCObject*) {
 	SongControl::skipBackward();
 }
 
-void SongControlMenu::onSkipFwrdButton(CCObject*) {
+void SongControlMenu::onSkipFwrdButton(cocos2d::CCObject*) {
 	SongControl::skipForward();
 }
 
@@ -577,4 +598,5 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 	}
 	if (key == cocos2d::enumKeyCodes::KEY_Space) return;
 	return FLAlertLayer::keyDown(key, p1);
+	// return FLAlertLayer::keyDown(key);
 }

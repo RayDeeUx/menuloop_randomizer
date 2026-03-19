@@ -1,6 +1,7 @@
 #pragma once
 
 class SongControlMenu final : public geode::Popup {
+// class SongControlMenu final : public geode::Popup<> {
 protected:
 	cocos2d::CCLabelBMFont* m_smallLabel{};
 	cocos2d::CCLabelBMFont* m_otherLabel{};
@@ -17,12 +18,15 @@ protected:
 	CCMenuItemSpriteExtra* m_bkwdButton {};
 	geode::NineSlice* b                 {};
 	// cocos2d::extension::CCScale9Sprite*b{};
-	cocos2d::extension::CCScale9Sprite*w{};
+	geode::NineSlice* w                 {};
+	// cocos2d::extension::CCScale9Sprite*w{};
 	cocos2d::CCLayerColor* m_darkProgBar{};
 	cocos2d::CCLayerColor* m_currProgBar{};
 	cocos2d::CCClippingNode* m_clipNode {};
-	float m_time = 0;
+	FMODLevelVisualizer* m_audieoVisual {};
+	float m_time = 0.f;
 	bool init() override;
+	// bool setup() override;
 	void onShuffleButton(cocos2d::CCObject*);
 	void onCopyButton(cocos2d::CCObject*);
 	void onBlacklistButton(cocos2d::CCObject*);
@@ -37,6 +41,7 @@ protected:
 	void checkManagerFinished(float);
 	void checkDaSongPositions(float);
 	void pressAndHoldScheduler(float);
+	void visualizerScheduler(float);
 	void forceSharpCornerIllusion();
 	void forceSharpCornerIllusionScheduler(float);
 	void toggleMenuLayerVisibility();
