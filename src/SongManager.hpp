@@ -130,6 +130,7 @@ class SongManager {
 
 	std::optional<eclipse::components::Label> eclipseSongNameLabel;
 	std::optional<eclipse::components::Label> eclipseSongDurationLabel;
+	std::optional<eclipse::components::Label> eclipseSongProgressBarLabel;
 
   private:
 	SongManager();

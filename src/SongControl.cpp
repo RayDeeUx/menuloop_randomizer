@@ -13,7 +13,8 @@ namespace SongControl {
 			}
 		);
 	}
-	void previousSong(SongManager& songManager) {
+	void previousSong() {
+		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
 		
@@ -24,6 +25,8 @@ namespace SongControl {
 			if (Utils::getBool("enableNotification")) return Utils::newNotification("You're already playing the previous song! :)");
 			return FLAlertLayer::create("Menu Loop Randomizer", "You're already playing the previous song! <cl>:)</c>", "Close")->show();
 		}
+
+		if (FMODAudioEngine::get()->getActiveMusic(0) != songManager.getCurrentSong()) return;
 		
 		const std::string& previousSong = songManager.getPreviousSong();
 		
@@ -37,7 +40,8 @@ namespace SongControl {
 		GameManager::sharedState()->playMenuMusic();
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
-	void holdSong(SongManager& songManager) {
+	void holdSong() {
+		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
 		
@@ -51,6 +55,8 @@ namespace SongControl {
 			if (Utils::getBool("enableNotification")) return Utils::newNotification("You're already holding that song! :D");
 			return FLAlertLayer::create("Menu Loop Randomizer", "You're already holding that song! <cl>:D</c>", "Close")->show();
 		}
+
+		if (FMODAudioEngine::get()->getActiveMusic(0) != currentSong) return;
 		
 		songManager.setHeldSong(currentSong);
 		
@@ -66,7 +72,8 @@ namespace SongControl {
 		
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
-	void favoriteSong(SongManager& songManager) {
+	void favoriteSong() {
+		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
 
@@ -74,6 +81,7 @@ namespace SongControl {
 		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're trying to favorite your own <cy>override</c>. Double-check your settings again.");
 
 		const std::string& currentSong = songManager.getCurrentSong();
+		if (FMODAudioEngine::get()->getActiveMusic(0) != currentSong) return;
 
 		if (const std::vector<std::string>& favorites = songManager.getFavorites(); std::ranges::find(favorites.begin(), favorites.end(), currentSong) != favorites.end()) return Utils::newNotification("You've already favorited this song! :D");
 		if (const std::vector<std::string>& blacklist = songManager.getBlacklist(); std::ranges::find(blacklist.begin(), blacklist.end(), currentSong) != blacklist.end()) return SongControl::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
@@ -102,7 +110,8 @@ namespace SongControl {
 		if (!customSong.empty()) return Utils::newNotification(fmt::format("Favorited {}!", customSong));
 		if (Utils::songDataContainsSong(currentSong)) return Utils::newNotification(fmt::format("Favorited {}!", Utils::getSongDataOfCurrentSong().displayName));
 	}
-	void blacklistSong(SongManager& songManager) {
+	void blacklistSong() {
+		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
 
@@ -111,6 +120,8 @@ namespace SongControl {
 
 		const std::string& songBeingBlacklisted = songManager.getCurrentSong();
 		const std::filesystem::path& songBeingBlacklistedPath = Utils::toProblematicString(songBeingBlacklisted);
+
+		if (FMODAudioEngine::get()->getActiveMusic(0) != songBeingBlacklisted) return;
 
 		if (const std::vector<std::string>& blacklist = songManager.getBlacklist(); std::ranges::find(blacklist.begin(), blacklist.end(), songBeingBlacklisted) != blacklist.end()) return SongControl::woahThereBuddy("You've already blacklisted this song. Double-check your <cl>blacklist.txt</c> again.");
 		if (const std::vector<std::string>& favorites = songManager.getFavorites(); std::ranges::find(favorites.begin(), favorites.end(), songBeingBlacklisted) != favorites.end()) return SongControl::woahThereBuddy("You've already favorited this song! Double-check your <cl>favorites.txt</c> again.");
@@ -166,15 +177,18 @@ namespace SongControl {
 	}
 	void copySong() {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		if (FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
 		Utils::copyCurrentSongName();
 		geode::Notification::create("[MLR] Current song name copied!", geode::NotificationIcon::None, geode::Mod::get()->getSettingValue<double>("notificationTime"));
 	}
 	void regenSong() {
 		Utils::removeCard();
 		if (VANILLA_GD_MENU_LOOP_DISABLED || !Utils::getBool("enableNotification")) return;
+		if (FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
-	void shuffleSong(const SongManager& songManager) {
+	void shuffleSong() {
+		SongManager& songManager = SongManager::get();
 		Utils::removeCard();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
@@ -182,6 +196,8 @@ namespace SongControl {
 			geode::log::info("repopulating vector from shuffling song while playing original GD menuloop");
 			Utils::refreshTheVector();
 		}
+
+		if (FMODAudioEngine::get()->getActiveMusic(0) != songManager.getCurrentSong()) return;
 
 		Utils::setNewSong();
 
@@ -194,6 +210,9 @@ namespace SongControl {
 		if (songManager.isOriginalMenuLoop()) return SongControl::woahThereBuddy("There's nothing to add to your playlist! Double-check your config folder again.");
 		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're trying to add your own <cy>override</c> to your playlist. Double-check your settings again.");
 
+		const std::string& currentSong = songManager.getCurrentSong();
+		if (FMODAudioEngine::get()->getActiveMusic(0) != currentSong) return;
+
 		if (Utils::getBool("loadPlaylistFile") && !songManager.getPlaylistIsEmpty()) {
 			return geode::Notification::create(
 				"You've already loaded an MLR playlist file!",
@@ -201,7 +220,7 @@ namespace SongControl {
 			)->show();
 		}
 
-		const std::filesystem::path& songAsPath = Utils::toProblematicString(songManager.getCurrentSong());
+		const std::filesystem::path& songAsPath = Utils::toProblematicString(currentSong);
 		if (const geode::Result<int> result = geode::utils::numFromString<int>(Utils::toNormalizedString(songAsPath.stem())); result.isOk()) {
 			const int songID = result.unwrapOr(-1);
 			MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
@@ -247,8 +266,7 @@ namespace SongControl {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
-		const std::string& currSong = songManager.getCurrentSong();
-		if (fmod->getActiveMusic(0) != currSong) return;
+		if (fmod->getActiveMusic(0) != songManager.getCurrentSong()) return;
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 		const int lastPosition = songManager.getLastMenuLoopPosition();
@@ -274,8 +292,7 @@ namespace SongControl {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
-		const std::string& currSong = songManager.getCurrentSong();
-		if (fmod->getActiveMusic(0) != currSong) return;
+		if (fmod->getActiveMusic(0) != songManager.getCurrentSong()) return;
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 		const int lastPosition = songManager.getLastMenuLoopPosition();
@@ -303,8 +320,7 @@ namespace SongControl {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
-		const std::string& currSong = songManager.getCurrentSong();
-		if (fmod->getActiveMusic(0) != currSong) return;
+		if (fmod->getActiveMusic(0) != songManager.getCurrentSong()) return;
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 

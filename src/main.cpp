@@ -2,6 +2,7 @@
 #include "SongManager.hpp"
 #include "Utils.hpp"
 #include "Settings.hpp"
+#include "ui/SongListLayer.hpp"
 #include "ui/SongControlMenu.hpp"
 #include <Geode/loader/SettingV3.hpp>
 
@@ -278,27 +279,40 @@ class EclipsePlaybackProgressDummyNode final : public CCNode {
 public:
 	void playbackProgressScheduler(float) {
 		SongManager& sm = SongManager::get();
-		if (!sm.eclipseSongDurationLabel.has_value()) return;
+		if (!sm.eclipseSongDurationLabel.has_value() || !sm.eclipseSongProgressBarLabel.has_value()) return;
 
+		constexpr int progressBarWidth = 16;
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
-		const std::string& currSong = sm.getCurrentSong();
-		if (std::hash<std::string>{}(fmod->getActiveMusic(0)) != std::hash<std::string>{}(currSong)) return;
+		if (std::hash<std::string>{}(fmod->getActiveMusic(0)) != std::hash<std::string>{}(sm.getCurrentSong())) {
+			sm.eclipseSongDurationLabel.value().setText("Progress: [CURRENTLY PAUSED]");
+			sm.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:–<{}}]", "", progressBarWidth));
+			return;
+		}
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 		const int lastPosition = sm.getLastMenuLoopPosition();
 
-		SongManager::get().eclipseSongDurationLabel.value().setText(fmt::format("Progress: {}:{:02} / {}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60), ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
+		const int percent = std::clamp<int>((lastPosition * 100.f / fullLength * 1.f), 0, 100);
+		int completed = (percent * progressBarWidth * 1.f) / 100.f;
+		int remaining = progressBarWidth - completed;
+
+		sm.eclipseSongDurationLabel.value().setText(fmt::format("Progress: {}:{:02} / {}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60), ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
+		sm.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:=<{}}{:–<{}}]", "", completed, "", remaining));
 	}
 };
 
 $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
+		if (!Mod::get()->getSettingValue<bool>("eclipseIntegration")) return;
 		auto tab = MenuTab::find("Menu Loop Randomizer");
 
 		SongManager::get().eclipseSongNameLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Current song: [[Hold on, MLR is still loading things!]]"));
 		SongManager::get().eclipseSongDurationLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Progress: [[Hold on, MLR is still loading things!]]"));
+		SongManager::get().eclipseSongProgressBarLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("[[Hold on, MLR is still loading things!]]"));
 
 		GameManager::get()->schedule(schedule_selector(EclipsePlaybackProgressDummyNode::playbackProgressScheduler));
+
+		(void) tab.addLabel("\n");
 
 		(void) tab.addLabel("Song Selection");
 		tab.addButton("Shuffle Song", []() {
@@ -334,15 +348,27 @@ $on_mod(Loaded) {
 		(void) tab.addLabel("Other Controls");
 		tab.addButton("Favorite Song", []() {
 			SongControl::favoriteSong();
-		}).setDescription("");
+		});
 		tab.addButton("Blacklist Song", []() {
 			SongControl::blacklistSong();
-		}).setDescription("");
+		});
 		tab.addButton("Copy Song Name/ID", []() {
 			SongControl::copySong();
 		});
 		tab.addButton("New Notification", []() {
 			SongControl::regenSong();
+		});
+
+		(void) tab.addLabel("Shortcuts (Use them wisely!)");
+		tab.addButton("Open Control Panel", []() {
+			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || CCScene::get()->getChildByType<SongControlMenu>(0) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
+			if (SongListLayer* foo = CCScene::get()->getChildByType<SongListLayer>(0)) foo->keyBackClicked();
+			SongControlMenu::create()->show();
+		});
+		tab.addButton("Open Songs List", []() {
+			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || CCScene::get()->getChildByType<SongListLayer>(0) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
+			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0)) foo->keyBackClicked();
+			SongListLayer::create()->show();
 		});
 	});
 }

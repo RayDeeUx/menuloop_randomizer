@@ -7,13 +7,13 @@
 
 namespace SongControl {
 	void woahThereBuddy(const std::string& reason);
-	void previousSong(SongManager& songManager = SongManager::get());
-	void holdSong(SongManager& songManager = SongManager::get());
-	void favoriteSong(SongManager& songManager = SongManager::get());
-	void blacklistSong(SongManager& songManager = SongManager::get());
+	void previousSong();
+	void holdSong();
+	void favoriteSong();
+	void blacklistSong();
 	void copySong();
 	void regenSong();
-	void shuffleSong(const SongManager& songManager = SongManager::get());
+	void shuffleSong();
 	void addSongToPlaylist(const std::string& songPath = SongManager::get().getCurrentSong());
 	void skipBackward();
 	void skipForward();
