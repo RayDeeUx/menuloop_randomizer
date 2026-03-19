@@ -219,6 +219,11 @@ bool SongManager::songSizeIsBad() const {
 
 void SongManager::setCurrentSongDisplayName(const std::string& displayName) {
 	m_displayName = displayName;
+	geode::Loader::get()->queueInMainThread([]() {
+		if (SongManager::get().eclipseSongNameLabel.has_value() && Utils::songDataContainsSong(SongManager::get().getCurrentSong())) {
+			SongManager::get().eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getSongDataOfCurrentSong().fullDisplayNameForControlPanelAndSongList));
+		}
+	});
 }
 
 std::string SongManager::getCurrentSongDisplayName() {
@@ -330,16 +335,16 @@ bool SongManager::getShowPlaybackProgressAndControls() const {
 	return m_showPlaybackProgressAndControls;
 }
 
-void SongManager::setFinishedCalculatingSongLengths(const bool value) {
-	m_finishedCalculatingSongLengths = value;
-}
-
 void SongManager::setShowPlaybackControlsSongList(const bool value) {
 	m_showPlaybackControlsSongList = value;
 }
 
 bool SongManager::getShowPlaybackControlsSongList() const {
 	return m_showPlaybackControlsSongList;
+}
+
+void SongManager::setFinishedCalculatingSongLengths(const bool value) {
+	m_finishedCalculatingSongLengths = value;
 }
 
 bool SongManager::getFinishedCalculatingSongLengths() const {

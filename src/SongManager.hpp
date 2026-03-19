@@ -1,5 +1,8 @@
 #pragma once
 
+#define ECLIPSE_MODULES_HPP
+#include <eclipse.eclipse-menu/include/eclipse.hpp>
+
 enum class SongType {
 	Regular,
 	Favorited,
@@ -122,6 +125,9 @@ class SongManager {
 	void setYoutubeAndVLCKeyboardShortcutsControlPanel(const bool);
 	bool getYoutubeAndVLCKeyboardShortcutsControlPanel() const;
 	unsigned long getHashedCurrentSong() const;
+
+	std::optional<eclipse::components::Label> eclipseSongNameLabel;
+	std::optional<eclipse::components::Label> eclipseSongDurationLabel;
 
   private:
 	SongManager();

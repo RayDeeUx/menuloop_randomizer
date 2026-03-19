@@ -244,11 +244,11 @@ namespace SongControl {
 	}
 	void skipBackward() {
 		SongManager& songManager = SongManager::get();
-		if (!CAN_USE_PLAYBACK_CONTROLS || VANILLA_GD_MENU_LOOP_DISABLED) return;
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
 		const std::string& currSong = songManager.getCurrentSong();
-		if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
+		if (fmod->getActiveMusic(0) != currSong) return;
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 		const int lastPosition = songManager.getLastMenuLoopPosition();
@@ -271,11 +271,11 @@ namespace SongControl {
 	}
 	void skipForward() {
 		SongManager& songManager = SongManager::get();
-		if (!CAN_USE_PLAYBACK_CONTROLS || VANILLA_GD_MENU_LOOP_DISABLED) return;
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
 		const std::string& currSong = songManager.getCurrentSong();
-		if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
+		if (fmod->getActiveMusic(0) != currSong) return;
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 		const int lastPosition = songManager.getLastMenuLoopPosition();
@@ -300,11 +300,11 @@ namespace SongControl {
 	}
 	void setSongPercentage(const int percentage) {
 		SongManager& songManager = SongManager::get();
-		if (!songManager.getFinishedCalculatingSongLengths() || VANILLA_GD_MENU_LOOP_DISABLED) return;
+		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
 		const std::string& currSong = songManager.getCurrentSong();
-		if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
+		if (fmod->getActiveMusic(0) != currSong) return;
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 

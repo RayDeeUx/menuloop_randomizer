@@ -234,6 +234,135 @@
 			"default": false,
 			"enable-if": "!randomizeWhenExitingEditor"
 		},
+		"song-list-header": {
+			"name": "Song List Settings",
+			"description": "Settings for the Song List menu from Menu Loop Randomizer.",
+			"type": "title"
+		},
+		"showScrollingShortcuts": {
+			"name": "Show Scrolling Shortcuts",
+			"description": "Choose if you want scrolling shortcuts in the Song List menu.",
+			"type": "bool",
+			"default": true
+		},
+		"autoScrollToCurrentSong": {
+			"name": "Auto-Scroll to Current Song",
+			"description": "Choose if you want to automatically scroll to the current song when opening the Song List menu.",
+			"type": "bool",
+			"default": true
+		},
+		"alwaysAutoScrollToCurrentSong": {
+			"name": "Always Auto-Scroll to Current Song",
+			"description": "Choose if you always want to automatically scroll to the current song when doing anything in the Song List menu.",
+			"type": "bool",
+			"default": false,
+			"enable-if": "autoScrollToCurrentSong"
+		},
+		"showSearchBar": {
+			"name": "Show Search Bar",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SEARCH BAR WILL APPEAR.__***</c>\n\nChoose if you want to show the search bar in the Song List menu.",
+			"type": "bool",
+			"default": true,
+			"enable-if": "loaded:alk.better-touch-prio"
+		},
+		"compactModeScaleFactor": {
+			"name": "Compact Mode Scale Factor",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, COMPACT MODE CANNOT BE ENABLED.__***</c>\n\nChoose how much smaller each song entry in the Song List becomes when enabling Compact Mode. The higher this number, the smaller each song entry in the Song List becomes.",
+			"type": "float",
+			"default": 1.5,
+			"min": 1.5,
+			"max": 2.0,
+			"control": {
+				"input": true,
+				"slider": true,
+				"arrows": false,
+				"big-arrows": false,
+				"arrow-step": 0,
+				"big-arrow-step": 0,
+				"slider-step": 0.01
+			},
+			"enable-if": "loaded:alk.better-touch-prio"
+		},
+		"showSortSongOptions": {
+			"name": "Show Sorting Options",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SONG SORTING OPTIONS WILL APPEAR.__***</c>\n\nChoose if you want to show song sorting options in the Song List menu.",
+			"type": "bool",
+			"default": true,
+			"enable-if": "loaded:alk.better-touch-prio"
+		},
+		"showSortSongLength": {
+			"name": "Show Song Length Sorting Option (READ!)",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SONG SORTING OPTIONS WILL APPEAR.__***</c>\n\nChoose if you want the option to sort songs by their length in the Song List menu.\n\n<cy>Requires \"Show Sorting Options\" to be enabled.</c>",
+			"type": "bool",
+			"default": false,
+			"enable-if": "loaded:alk.better-touch-prio && showSortSongOptions"
+		},
+		"showExtraInfoLabel": {
+			"name": "Show Extra Song Info in Compact Mode",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO EXTRA LABELS WILL APPEAR.__***</c>\n\nChoose if you want to show extra information about a specific song when Compact Mode is enabled in the Song List menu.",
+			"type": "bool",
+			"default": true,
+			"enable-if": "loaded:alk.better-touch-prio"
+		},
+		"showPlaybackProgressControlsSongList": {
+			"name": "Show Playback Progress and Controls",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO CONTROLS WILL APPEAR.__***</c>\n\nChoose if you want to show playback controls for the currently playing song in the Song List menu.",
+			"type": "bool",
+			"default": true,
+			"enable-if": "loaded:alk.better-touch-prio"
+		},
+		"youtubeAndVLCKeyboardShortcutsSongList": {
+			"name": "YT/VLC/Spotify-like Hotkeys",
+			"description": "Choose if you want to use <cr>YT</c>/<c-FFA544>VLC</c>/<c-06CE91>Spotify</c>-like shortcuts to control playback progress or control song selection in the Song List menu.\n\n- <cr>Numrow/Numpad 0-9</c>: Control playback progress position. (0 = 0%, 1 = 10%, etc..., 9 = 90%.)\n- <cr>Shift + N</c>, <c-06CE91>Ctrl + S</c>, <c-FFA544>Command + Right Arrow</c> (macOS)/<c-FFA544>Ctrl + Right Arrow</c> (Windows): Shuffle song\n- <cr>Shift + P</c>, <c-FFA544>Command + Left Arrow</c> (macOS)/<c-FFA544>Ctrl + Left Arrow</c> (Windows): Play previous song (if available)\n- <c-06CE91>Command + R</c> (macOS)/<c-06CE91>Ctrl + R</c> (Windows): Restart current song\n- <c-06CE91>Cmd + H</c> (macOS)/<c-06CE91>Ctrl + H</c>, <c-06CE91>Cmd + K</c> (macOS)/<c-06CE91>Ctrl + K</c> (Windows): Switch to Control Panel\n- <c-06CE91>Shift + Ctrl + B</c> (macOS)/<c-06CE91>Shift + Alt + B</c> (Windows): Favorite current song\n- <c-06CE91>Shift + Cmd + J</c> (macOS)/<c-06CE91>Shift + Ctrl + J</c> (Windows): Scroll to current song",
+			"type": "bool",
+			"default": {
+				"win": true,
+				"mac": true,
+				"android": "false",
+				"ios": "false"
+			},
+			"platforms": [ "win", "mac" ]
+		},
+		"control-panel-header": {
+			"name": "Control Panel Settings",
+			"description": "Settings for the Control Panel from Menu Loop Randomizer.",
+			"type": "title"
+		},
+		"songIndicatorsInControlPanel": {
+			"name": "Song Indicators",
+			"description": "Apply the song indicators seen in the Song List menu into the Control Panel's song name text.\n\nAs a reminder, the song indicators are:\n- Gold = <cy>favorited</c>.\n- Green = <cg>current</c>.\n- Italics = NG/ML song stored in an unexpected place.\n- Dark gradients OR random letters/numbers = Jukebox/NONG, <c-ff0000>OR</c> someone else goofed up.\n\n<c-aaaaaa>For a number of reasons, the dark gradient and the green song name do not appear in the Control Panel.</c>",
+			"type": "bool",
+			"default": true
+		},
+		"showPlaybackProgressAndControls": {
+			"name": "Show Playback Progress and Controls",
+			"description": "Choose if you want to show playback controls and playback progress about the currently playing song in the Control Panel menu.",
+			"type": "bool",
+			"default": true
+		},
+		"youtubeAndVLCKeyboardShortcutsControlPanel": {
+			"name": "YT/VLC/Spotify-like Hotkeys",
+			"description": "Choose if you want to use <cr>YT</c>/<c-FFA544>VLC</c>/<c-06CE91>Spotify</c>-like shortcuts to control playback progress or control song selection in the Control Panel menu.\n\n- <cr>Numrow/Numpad 0-9</c>: Control playback progress position. (0 = 0%, 1 = 10%, etc..., 9 = 90%.)\n- <cr>Shift + N</c>, <c-06CE91>Ctrl + S</c>, <c-FFA544>Command + Right Arrow</c> (macOS)/<c-FFA544>Ctrl + Right Arrow</c> (Windows): Shuffle song\n- <cr>Shift + P</c>, <c-FFA544>Command + Left Arrow</c> (macOS)/<c-FFA544>Ctrl + Left Arrow</c> (Windows): Play previous song (if available)\n- <c-06CE91>Command + R</c> (macOS)/<c-06CE91>Ctrl + R</c> (Windows): Restart current song\n- <c-06CE91>Cmd + K</c> (macOS)/<c-06CE91>Ctrl + K</c> (Windows): Switch to Song List\n- <c-06CE91>Shift + Ctrl + B</c> (macOS)/<c-06CE91>Shift + Alt + B</c> (Windows): Favorite current song",
+			"type": "bool",
+			"default": {
+				"win": true,
+				"mac": true,
+				"android": "false",
+				"ios": "false"
+			},
+			"platforms": [ "win", "mac" ]
+		},
+		"osuLazerBootleg": {
+			"name": "\"welcome to osu!\" bootleg",
+			"description": "<c-ff66aa>welcome to osu!</c>\n\nPress  `O`  or  `Enter`  to make the Control Panel the only visible UI element on-screen, much like the <c-ff66aa>osu!</c> cookie logo seen in <c-ff66aa>osu!lazer</c>.",
+			"type": "bool",
+			"default": true
+		},
+		"misc-header": {
+			"name": "Miscellaneous Settings",
+			"description": "Other settings for Menu Loop Randomizer that needed a category.",
+			"type": "title"
+		},
 		"useMiniaudioForLength": {
 			"name": "Use Miniaudio to Find Song Length",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS OPTION DOES NOTHING.__***</c>\n\nChoose if you prefer Miniaudio over FMOD for finding the length of a song. If this option is disabled, FMOD will find the lengths of all of your songs instead. This means song length calculations are more precise, but take slightly longer to complete.\n\n<c-aaaaaa>*(Note that in some cases, FMOD may still be used to find the length of a song if Miniaudio fails to do so.)*</c>",
@@ -429,7 +558,18 @@
 		"community": "https://discord.gg/WqZBYdBWZW",
 		"homepage": "https://discord.com/channels/822510988409831486/1206371881222144020"
 	},
+	"dependencies": {
+		"eclipse.eclipse-menu": {
+			"version": "<=1.7.0",
+			"required": false,
+			"importance": "suggested"
+		}
+	},
 	"incompatibilities": {
-		"joseii.ventilla": ">=1.0.0"
+		"joseii.ventilla": {
+			"version": ">=1.0.0",
+			"breaking": false,
+			"importance": "conflicting"
+		}
 	}
 }

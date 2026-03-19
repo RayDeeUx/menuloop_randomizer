@@ -8,12 +8,12 @@ static const std::regex fileExtensionRegex = std::regex(R"(\.(?:mp3|ogg|oga|flac
 static const std::regex unsupportedCharRegex = std::regex(R"([^[\]+,. !@#$%^&*()'|`~•/:;<>=?\-\w\\])");
 
 PlayingCard* PlayingCard::create(const std::string& output) {
-	PlayingCard *ret = new PlayingCard();
+	PlayingCard* ret = new PlayingCard();
 	if (ret && ret->init(output)) {
 		ret->autorelease();
 		return ret;
 	}
-	CC_SAFE_DELETE(ret);
+	delete ret;
 	return nullptr;
 }
 

@@ -54,23 +54,16 @@ std::string Utils::getString(const std::string_view setting) {
 	return geode::Mod::get()->getSettingValue<std::string>(setting);
 }
 
-cocos2d::CCNode* Utils::findCard() {
-	if (!cocos2d::CCScene::get()) return nullptr;
-	return cocos2d::CCScene::get()->getChildByIDRecursive("now-playing"_spr);
-}
-
 cocos2d::CCNode* Utils::findCardRemotely() {
-	GameManager* gm = GameManager::get();
-	if (!gm) return nullptr;
-	MenuLayer* menuLayer = gm->m_menuLayer;
-	if (!menuLayer) return nullptr;
-	cocos2d::CCNode* card = menuLayer->getChildByIDRecursive("now-playing"_spr);
+	cocos2d::CCNode* card = nullptr;
+	if (!card && MenuLayer::get()) card = MenuLayer::get()->getChildByIDRecursive("now-playing"_spr);
+	if (!card && cocos2d::CCScene::get()) card = cocos2d::CCScene::get()->getChildByIDRecursive("now-playing"_spr);
 	if (!card) return nullptr;
 	return card;
 }
 
 void Utils::removeCard() {
-	if (cocos2d::CCNode* card = Utils::findCard()) card->removeMeAndCleanup();
+	if (cocos2d::CCNode* card = Utils::findCardRemotely()) card->removeMeAndCleanup();
 }
 
 void Utils::setNewSong() {
@@ -123,7 +116,7 @@ void Utils::constantShuffleModeNewSong() {
 
 // create notif card stuff
 void Utils::newNotification(const std::string& notifString, const bool checkSetting) {
-	if (!GameManager::get() || !GameManager::get()->m_menuLayer) return;
+	if (!cocos2d::CCScene::get()) return;
 	if (cocos2d::CCNode* oldCard = Utils::findCardRemotely()) oldCard->removeMeAndCleanup();
 	if (checkSetting && !Utils::getBool("enableNotification")) return;
 
@@ -134,19 +127,19 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 	card->position.y = screenSize.height;
 
 	const cocos2d::CCPoint defaultPos = card->position;
-	auto posx = defaultPos.x;
-	auto posy = defaultPos.y;
 
 	card->setPosition(defaultPos);
 	card->setZOrder(200);
 	card->setID("now-playing"_spr);
 
-	GameManager::get()->m_menuLayer->addChild(card);
+	if (MenuLayer::get()) MenuLayer::get()->addChild(card);
+	else cocos2d::CCScene::get()->addChild(card);
 
 	auto sequence = cocos2d::CCSequence::create(
-		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, {posx, posy - 24.0f}), 2.0f),
+		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, {defaultPos.x, defaultPos.y - 24.0f}), 2.0f),
 		cocos2d::CCDelayTime::create(geode::Mod::get()->getSettingValue<double>("notificationTime")),
-		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, {posx, posy}), 2.0f),
+		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, defaultPos), 2.0f),
+		cocos2d::CCRemoveSelf::create(),
 		nullptr
 	);
 	card->runAction(sequence);
