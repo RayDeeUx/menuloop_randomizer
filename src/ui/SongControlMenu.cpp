@@ -273,6 +273,10 @@ bool SongControlMenu::setup() {
 
 	this->m_noElasticity = true;
 
+	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get()) {
+		if (this->m_theTimeoutCorner) this->m_theTimeoutCorner->removeMeAndCleanup();
+	}
+
 	return true;
 }
 
@@ -588,7 +592,7 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 #endif
 	SongManager& songManager = SongManager::get();
-	if (songManager.getOsu() && (key == cocos2d::KEY_O || key == cocos2d::KEY_Enter)) {
+	if (songManager.getOsu() && (key == cocos2d::KEY_O || key == cocos2d::KEY_Enter) && MenuLayer::get() && cocos2d::CCScene::get() && cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) == MenuLayer::get()) {
 		SongControlMenu::toggleOsu();
 		return;
 	}

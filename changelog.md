@@ -2,12 +2,13 @@
 ## v1.12.2
 *<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - welcome to <c-ff66aa>osu!</c> <c-aaaaaa>(OK, not really.)</c>
+  - <co>***__This feature only works from the main menu.__***</c>
   - Inspired by <c-ff66aa>osu!lazer</c>, there is now a keyboard shortcut to make the Control Panel the only visible item on screen. Press `O` or `Enter` while inside the Control Panel for a demonstration.
   - <co>Like all other keyboard shortcuts in this mod, ***THESE KEYBINDS ARE*** ***__NOT__*** ***REBINDABLE.***</c>
   - While this was designed for desktop Geode users who want to use MLR as a music player by leaving GD running in the background withhout all the distractions from the MenuLayer, mobile users can try this out as well.
 - <cg>Added</c> limited Eclipse Menu integration.
-  - Shuffle/favorite/blacklist/backtrack songs from (almost) anywhere!
-  - There will not be shortcuts to open the Control Panel or Song List menus in this integration.
+  - View or control playback progress and shuffle, favorite, blacklist, and backtrack songs from (almost) anywhere!
+  - Shortcuts to open the Control Panel or Song List menus from this integration will only work if you are in the main menu.
   - You can toggle this option off in the mod settings, but <cl>it will require</c> <co>a game restart</c>.
 - <co>Recategorized</c> all of the mod's settings so everything is a bit easier to navigate.
 - <co>Removed</c> [Better Touch Prio](mod:alk.better-touch-prio) dependency for song playback seeking controls/keyboard shortcuts ***ONLY FOR THE CONTROL PANEL***.

@@ -410,6 +410,10 @@ bool SongListLayer::setup() {
 
 	if (Utils::getBool("autoScrollToCurrentSong") && !VANILLA_GD_MENU_LOOP_DISABLED && !songManager.isOverride()) SongListLayer::scrollToCurrentSong();
 
+	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get()) {
+		if (settingsMenu) settingsMenu->removeMeAndCleanup();
+	}
+
 	return true;
 }
 
