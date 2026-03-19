@@ -560,7 +560,7 @@
 	},
 	"dependencies": {
 		"eclipse.eclipse-menu": {
-			"version": "<=1.7.0",
+			"version": ">=1.7.0",
 			"required": false,
 			"importance": "suggested"
 		}
