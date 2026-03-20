@@ -275,6 +275,8 @@ $on_mod(Loaded) {
 using namespace eclipse;
 using namespace geode::prelude;
 
+class AndroidUI final : public CCNode {};
+
 class EclipsePlaybackProgressDummyNode final : public CCNode {
 public:
 	void playbackProgressScheduler(float) {
@@ -361,7 +363,8 @@ $on_mod(Loaded) {
 
 		(void) tab.addLabel("Shortcuts (Use them wisely!)");
 		tab.addButton("Open Control Panel", []() {
-			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || CCScene::get()->getChildByType<SongControlMenu>(0) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
+			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || (CCScene::get() && CCScene::get()->getChildByType<SongControlMenu>(0)) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
+			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
 			if (SongListLayer* foo = CCScene::get()->getChildByType<SongListLayer>(0); foo) {
 				#if GEODE_COMP_GD_VERSION == 22081
 				geode::Popup::CloseEvent(foo).send();
@@ -378,6 +381,7 @@ $on_mod(Loaded) {
 		});
 		tab.addButton("Open Songs List", []() {
 			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || !CCScene::get() || CCScene::get()->getChildByType<SongListLayer>(0) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
+			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
 			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
 				#if GEODE_COMP_GD_VERSION == 22081
 				geode::Popup::CloseEvent(foo).send();
@@ -394,6 +398,7 @@ $on_mod(Loaded) {
 		});
 		tab.addButton("Open Mod Settings (from main menu only!)", []() {
 			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || !CCScene::get() || !MenuLayer::get() || CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get()) return;
+			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
 			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
 				#if GEODE_COMP_GD_VERSION == 22081
 				geode::Popup::CloseEvent(foo).send();
@@ -431,5 +436,78 @@ $on_mod(Loaded) {
 		});
 
 		SongManager::get().eclipseIntegrationSuccessful = true;
+	});
+}
+
+#include "CategoryExt.hpp"
+
+$on_mod(Loaded) {
+	Loader::get()->queueInMainThread([]() {
+		if (!Mod::get()->getSettingValue<bool>("qolModIntegration")) return;
+		if (!SongManager::get().qolModIntegrationSuccessful) SongManager::get().qolModIntegrationSuccessful = true;
+		qolmod::ext::addCustomCategory({1, Mod::get()->getName(), "qolmod.png"_spr, Mod::get()->getID(), [](cocos2d::CCMenu* layer) {
+			if (!layer) return;
+			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
+				#if GEODE_COMP_GD_VERSION == 22081
+				geode::Popup::CloseEvent(foo).send();
+				foo->setKeypadEnabled(false);
+				foo->setTouchEnabled(false);
+				foo->removeFromParent();
+				#endif
+
+				#if GEODE_COMP_GD_VERSION == 22074
+				foo->keyBackClicked();
+				#endif
+			}
+			if (SongListLayer* bar = CCScene::get()->getChildByType<SongListLayer>(0); bar) {
+				#if GEODE_COMP_GD_VERSION == 22081
+				geode::Popup::CloseEvent(bar).send();
+				bar->setKeypadEnabled(false);
+				bar->setTouchEnabled(false);
+				bar->removeFromParent();
+				#endif
+
+				#if GEODE_COMP_GD_VERSION == 22074
+				bar->keyBackClicked();
+				#endif
+			}
+
+			if (!SongManager::get().getFinishedCalculatingSongLengths()) {
+				CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create("Menu Loop Randomizer is currently busy!", "bigFont.fnt");
+				dontMarrySvetlana->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
+
+				CCLabelBMFont* justDont = CCLabelBMFont::create("(Check back again in a bit.)", "chatFont.fnt");
+				justDont->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+				justDont->limitLabelWidth(layer->getContentWidth() * .5f, 1.f, .0001f);
+				justDont->setScale(.75f);
+
+				layer->addChildAtPosition(dontMarrySvetlana, geode::Anchor::Center, {0.f, 10.f});
+				layer->addChildAtPosition(justDont, geode::Anchor::Center, {0.f, -5.f});
+
+				return;
+			}
+
+			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || CCScene::get()->getChildByType<SongControlMenu>(0) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) {
+				CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create("Menu Loop Randomizer is currently not active!", "bigFont.fnt");
+				dontMarrySvetlana->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
+
+				CCLabelBMFont* justDont = CCLabelBMFont::create("(Might wanna get that checked out.)", "chatFont.fnt");
+				justDont->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+				justDont->limitLabelWidth(layer->getContentWidth() * .5f, 1.f, .0001f);
+				justDont->setScale(.75f);
+
+				layer->addChildAtPosition(dontMarrySvetlana, geode::Anchor::Center, {0.f, 10.f});
+				layer->addChildAtPosition(justDont, geode::Anchor::Center, {0.f, -5.f});
+
+				return;
+			}
+
+			SongManager::get().addingToQOLModRightNow = true;
+			SongControlMenu* iKnowItWouldntBeForLoveOrWhatever = SongControlMenu::create();
+			SongManager::get().addingToQOLModRightNow = false;
+
+			layer->addChildAtPosition(iKnowItWouldntBeForLoveOrWhatever, geode::Anchor::Center);
+			iKnowItWouldntBeForLoveOrWhatever->ignoreAnchorPointForPosition(false);
+		}});
 	});
 }

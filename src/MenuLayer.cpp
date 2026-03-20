@@ -37,7 +37,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 
 		const std::string& buttonMode = Utils::getString("buttonMode");
 		const bool qualifiedForNoButtonsEclipse = loader->isModLoaded("eclipse.eclipse-menu") && songManager.eclipseIntegrationSuccessful;
-		const bool qualifiedForNoButtonsQOLMod = loader->isModLoaded("thesillydoggo.qolmod") && songManager.qolModIntegrationSuccessful; // dummy line that returns false for now until thesilyldoggo adds her API into qolmod
+		const bool qualifiedForNoButtonsQOLMod = loader->isModLoaded("thesillydoggo.qolmod") && songManager.qolModIntegrationSuccessful;
 
 		if ((qualifiedForNoButtonsEclipse || qualifiedForNoButtonsQOLMod) && buttonMode == "No Buttons") return true;
 

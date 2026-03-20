@@ -320,13 +320,49 @@ bool SongControlMenu::setup() {
 	#endif
 
 	this->m_noElasticity = true;
+	this->m_isInQOLMod = songManager.addingToQOLModRightNow;
 
-	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get()) {
-		if (this->m_theTimeoutCorner) this->m_theTimeoutCorner->removeMeAndCleanup();
-		if (this->m_musicVolumeInput) this->m_musicVolumeInput->removeMeAndCleanup();
-		if (this->m_musVolLabl) this->m_musVolLabl->removeMeAndCleanup();
-		if (this->m_musicVolCntnr) this->m_musicVolCntnr->removeMeAndCleanup();
-		if (this->m_audieoVisual) this->m_audieoVisual->removeMeAndCleanup();
+	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get() || this->m_isInQOLMod) {
+		if (this->m_theTimeoutCorner) {
+			this->m_theTimeoutCorner->removeMeAndCleanup();
+			this->m_theTimeoutCorner = nullptr;
+		}
+		if (this->m_musicVolumeInput) {
+			this->m_musicVolumeInput->removeMeAndCleanup();
+			this->m_musicVolumeInput = nullptr;
+		}
+		if (this->m_musVolLabl) {
+			this->m_musVolLabl->removeMeAndCleanup();
+			this->m_musVolLabl = nullptr;
+		}
+		if (this->m_musicVolCntnr) {
+			this->m_musicVolCntnr->removeMeAndCleanup();
+			this->m_musicVolCntnr = nullptr;
+		}
+		if (this->m_audieoVisual) {
+			this->m_audieoVisual->removeMeAndCleanup();
+			this->m_audieoVisual = nullptr;
+		}
+	}
+
+	if (this->m_isInQOLMod) {
+		this->unschedule(schedule_selector(SongControlMenu::visualizerScheduler));
+		this->unschedule(schedule_selector(SongControlMenu::checkManagerFinished));
+		if (this->m_closeBtn) this->m_closeBtn->removeMeAndCleanup();
+		if (this->m_openSongListMenu->getChildByTag(20260105)) {
+			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->setEnabled(false);
+			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->setColor(cocos2d::ccColor3B{128, 128, 128});
+			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->m_pListener = nullptr;
+			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->m_animationEnabled = false;
+		}
+		if (this->m_otherLabel) {
+			this->m_otherLabel->setString("Hey there! You're currently viewing this menu inside QOLMod. Features are limited here, including the Song List, keybinds, and shortcuts.");
+		}
+		if (this->m_infoMenu) {
+			this->m_infoMenu->removeMeAndCleanup();
+			this->m_infoMenu = nullptr;
+		}
+		this->setOpacity(0);
 	}
 
 	return true;
@@ -352,6 +388,7 @@ void SongControlMenu::onExit() {
 }
 
 void SongControlMenu::onClose(cocos2d::CCObject* sender) {
+	if (this->m_isInQOLMod) return;
 	if (MenuLayer::get() && !MenuLayer::get()->isVisible() && this->m_osu) MenuLayer::get()->setVisible(true);
 	Popup::onClose(sender);
 }
@@ -374,17 +411,17 @@ void SongControlMenu::forceSharpCornerIllusion() {
 	if (!this->b) return;
 
 	#if GEODE_COMP_GD_VERSION == 22081
-	this->b->getBottom()->setPositionX(0.f);
-	this->b->getBottom()->setScaleX(9.375f);
-	this->b->getBottomLeft()->setVisible(false);
-	this->b->getBottomRight()->setVisible(false);
+	if (this->b->getBottom()) this->b->getBottom()->setPositionX(0.f);
+	if (this->b->getBottom()) this->b->getBottom()->setScaleX(9.375f);
+	if (this->b->getBottomLeft()) this->b->getBottomLeft()->setVisible(false);
+	if (this->b->getBottomRight()) this->b->getBottomRight()->setVisible(false);
 	#endif
 
 	#if GEODE_COMP_GD_VERSION == 22074
-	this->b->_bottom->setPositionX(0.f);
-	this->b->_bottom->setScaleX(9.375f);
-	this->b->_bottomLeft->setVisible(false);
-	this->b->_bottomRight->setVisible(false);
+	if (this->b->_bottom) this->b->_bottom->setPositionX(0.f);
+	if (this->b->_bottom) this->b->_bottom->setScaleX(9.375f);
+	if (this->b->_bottomLeft) this->b->_bottomLeft->setVisible(false);
+	if (this->b->_bottomRight) this->b->_bottomRight->setVisible(false);
 	#endif
 
 	SongManager& songManager = SongManager::get();
@@ -483,6 +520,7 @@ void SongControlMenu::onPreviousButton(cocos2d::CCObject*) {
 }
 
 void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
+	if (this->m_isInQOLMod) return;
 	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
 		FLAlertLayer* alert = FLAlertLayer::create("Hold on a sec!", "Menu Loop Randomizer is still calculating song lengths to set up the Song List menu. Hang tight, and try again later.", "I Understand");
 		alert->m_noElasticity = true;
@@ -601,19 +639,21 @@ void SongControlMenu::doTheRippleEffectFromOsuLazer() {
 }
 
 void SongControlMenu::toggleOsu() {
+	if (this->m_isInQOLMod) return;
+	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get()) return;
 	this->m_osu = !this->m_osu;
 	this->stopAllActions();
 	this->m_mainLayer->stopAllActions();
-	this->m_musVolLabl->stopAllActions();
+	if (this->m_musVolLabl) this->m_musVolLabl->stopAllActions();
 	#if GEODE_COMP_GD_VERSION < 22081
-	if (this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)) this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->stopAllActions();
+	if (this->m_musicVolumeInput && this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)) this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->stopAllActions();
 	#endif
 	#if GEODE_COMP_GD_VERSION > 22074
-	if (this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)) this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)->stopAllActions();
+	if (this->m_musicVolumeInput && this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)) this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)->stopAllActions();
 	#endif
-	if (this->m_musicVolumeInput->getInputNode()->m_textField) this->m_musicVolumeInput->getInputNode()->m_textField->stopAllActions();
-	if (this->m_musicVolumeInput->getInputNode()->m_textLabel) this->m_musicVolumeInput->getInputNode()->m_textLabel->stopAllActions();
-	if (this->m_musicVolumeInput->getInputNode()->m_cursor) this->m_musicVolumeInput->getInputNode()->m_cursor->stopAllActions();
+	if (this->m_musicVolumeInput && this->m_musicVolumeInput->getInputNode()->m_textField) this->m_musicVolumeInput->getInputNode()->m_textField->stopAllActions();
+	if (this->m_musicVolumeInput && this->m_musicVolumeInput->getInputNode()->m_textLabel) this->m_musicVolumeInput->getInputNode()->m_textLabel->stopAllActions();
+	if (this->m_musicVolumeInput && this->m_musicVolumeInput->getInputNode()->m_cursor) this->m_musicVolumeInput->getInputNode()->m_cursor->stopAllActions();
 	for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(this->m_audieoVisual->getChildByIndex(0)->m_pChildren)) {
 		if (!spriteChild) continue;
 		spriteChild->stopAllActions();
@@ -621,20 +661,20 @@ void SongControlMenu::toggleOsu() {
 	// easing types and easing values taken from https://github.com/ppy/osu/blob/master/osu.Game/Screens/Menu/ButtonSystem.cs#L476 and https://github.com/ppy/osu/blob/master/osu.Game/Screens/Menu/ButtonSystem.cs#L495 under the MIT license, but they're just silly numbers at the end of the day
 	if (this->m_osu) {
 		this->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
-		this->m_musVolLabl->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
+		if (this->m_musVolLabl) this->m_musVolLabl->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
 		for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(this->m_audieoVisual->getChildByIndex(0)->m_pChildren)) {
 			if (!spriteChild) continue;
 			spriteChild->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, spriteChild->getTag() < 100 ? 100 : 255)));
 		}
 		#if GEODE_COMP_GD_VERSION < 22081
-		if (this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)) this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
+		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)) this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
 		#endif
 		#if GEODE_COMP_GD_VERSION > 22074
-		if (this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)) this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
+		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)) this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
 		#endif
-		if (this->m_musicVolumeInput->getInputNode()->m_textField) this->m_musicVolumeInput->getInputNode()->m_textField->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
-		if (this->m_musicVolumeInput->getInputNode()->m_textLabel) this->m_musicVolumeInput->getInputNode()->m_textLabel->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
-		if (this->m_musicVolumeInput->getInputNode()->m_cursor) this->m_musicVolumeInput->getInputNode()->m_cursor->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
+		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getInputNode()->m_textField) this->m_musicVolumeInput->getInputNode()->m_textField->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
+		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getInputNode()->m_textLabel) this->m_musicVolumeInput->getInputNode()->m_textLabel->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
+		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getInputNode()->m_cursor) this->m_musicVolumeInput->getInputNode()->m_cursor->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
 		this->m_mainLayer->runAction(
 			cocos2d::CCSequence::create(
 				cocos2d::CCCallFunc::create(this, callfunc_selector(SongControlMenu::doTheRippleEffectFromOsuLazer)),
@@ -645,20 +685,20 @@ void SongControlMenu::toggleOsu() {
 		);
 	} else {
 		this->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 105), .5f));
-		this->m_musVolLabl->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
+		if (this->m_musVolLabl) this->m_musVolLabl->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
 		for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(this->m_audieoVisual->getChildByIndex(0)->m_pChildren)) {
 			if (!spriteChild) continue;
 			spriteChild->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
 		}
 		#if GEODE_COMP_GD_VERSION < 22081
-		if (this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)) this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
+		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)) this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
 		#endif
 		#if GEODE_COMP_GD_VERSION > 22074
-		if (this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)) this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
+		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)) this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
 		#endif
-		if (this->m_musicVolumeInput->getInputNode()->m_textField) this->m_musicVolumeInput->getInputNode()->m_textField->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
-		if (this->m_musicVolumeInput->getInputNode()->m_textLabel) this->m_musicVolumeInput->getInputNode()->m_textLabel->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
-		if (this->m_musicVolumeInput->getInputNode()->m_cursor) this->m_musicVolumeInput->getInputNode()->m_cursor->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
+		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getInputNode()->m_textField) this->m_musicVolumeInput->getInputNode()->m_textField->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
+		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getInputNode()->m_textLabel) this->m_musicVolumeInput->getInputNode()->m_textLabel->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
+		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getInputNode()->m_cursor) this->m_musicVolumeInput->getInputNode()->m_cursor->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
 		this->m_mainLayer->runAction(
 			cocos2d::CCSequence::create(
 				cocos2d::CCCallFunc::create(this, callfunc_selector(SongControlMenu::toggleMenuLayerVisibility)),
@@ -677,7 +717,7 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 #endif
 	SongManager& songManager = SongManager::get();
-	if (songManager.getOsu() && (key == cocos2d::KEY_O || key == cocos2d::KEY_Enter) && MenuLayer::get() && cocos2d::CCScene::get() && cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) == MenuLayer::get()) {
+	if (songManager.getOsu() && (key == cocos2d::KEY_O || key == cocos2d::KEY_Enter)) {
 		SongControlMenu::toggleOsu();
 		return;
 	}

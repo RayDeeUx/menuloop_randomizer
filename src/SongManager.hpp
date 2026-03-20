@@ -133,6 +133,7 @@ class SongManager {
 	std::optional<eclipse::components::Label> eclipseSongProgressBarLabel;
 	bool eclipseIntegrationSuccessful = false;
 	bool qolModIntegrationSuccessful = false;
+	bool addingToQOLModRightNow = false;
 
   private:
 	SongManager();
