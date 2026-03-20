@@ -36,6 +36,10 @@ protected:
 	cocos2d::CCLayerColor* m_currProgBar{};
 	cocos2d::CCClippingNode* m_clipNode {};
 	FMODLevelVisualizer* m_audieoVisual {};
+	geode::TextInput* m_musicVolumeInput{};
+	cocos2d::CCLabelBMFont* m_musVolLabl{};
+	cocos2d::CCNodeRGBA* m_musicVolCntnr{};
+	int m_originalVolume = 0;
 	float m_time = 0.f;
 	#if GEODE_COMP_GD_VERSION == 22081
 	bool init() override;

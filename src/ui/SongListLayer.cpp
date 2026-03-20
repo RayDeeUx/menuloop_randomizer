@@ -218,6 +218,17 @@ bool SongListLayer::setup() {
 		inputNode->setMaxLabelScale(.5f);
 		inputNode->setID("song-list-search-bar-input-node"_spr);
 
+		#if GEODE_COMP_GD_VERSION < 22081
+		this->m_searchBar->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->_scale9Image->setID("song-list-search-bar-batch-node"_spr);
+		this->m_searchBar->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->setID("song-list-search-bar-background"_spr);
+		#endif
+		#if GEODE_COMP_GD_VERSION > 22074
+		this->m_searchBar->getChildByType<geode::NineSlice>(0)->setID("song-list-search-bar-background"_spr);
+		#endif
+		inputNode->m_textField->setID("song-list-search-bar-input-node-text-field"_spr);
+		inputNode->m_textLabel->setID("song-list-search-bar-input-node-text-label"_spr);
+		inputNode->m_cursor->setID("song-list-search-bar-input-node-cursor"_spr);
+
 		CCLayerColor* searchBarDivider = CCLayerColor::create({0, 0, 0, 127});
 		searchBarDivider->setContentSize({350.f, .5f});
 		searchBarDivider->setAnchorPoint({0.f, 0.f});
