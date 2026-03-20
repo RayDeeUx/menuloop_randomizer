@@ -377,7 +377,7 @@ $on_mod(Loaded) {
 			SongControlMenu::create()->show();
 		});
 		tab.addButton("Open Songs List", []() {
-			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || CCScene::get()->getChildByType<SongListLayer>(0) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
+			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || !CCScene::get() || CCScene::get()->getChildByType<SongListLayer>(0) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
 			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
 				#if GEODE_COMP_GD_VERSION == 22081
 				geode::Popup::CloseEvent(foo).send();
@@ -392,5 +392,44 @@ $on_mod(Loaded) {
 			}
 			SongListLayer::create()->show();
 		});
+		tab.addButton("Open Mod Settings (from main menu only!)", []() {
+			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || !CCScene::get() || !MenuLayer::get() || CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get()) return;
+			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
+				#if GEODE_COMP_GD_VERSION == 22081
+				geode::Popup::CloseEvent(foo).send();
+				foo->setKeypadEnabled(false);
+				foo->setTouchEnabled(false);
+				foo->removeFromParent();
+				#endif
+
+				#if GEODE_COMP_GD_VERSION == 22074
+				foo->keyBackClicked();
+				#endif
+			}
+			if (SongListLayer* bar = CCScene::get()->getChildByType<SongListLayer>(0); bar) {
+				#if GEODE_COMP_GD_VERSION == 22081
+				geode::Popup::CloseEvent(bar).send();
+				bar->setKeypadEnabled(false);
+				bar->setTouchEnabled(false);
+				bar->removeFromParent();
+				#endif
+
+				#if GEODE_COMP_GD_VERSION == 22074
+				bar->keyBackClicked();
+				#endif
+			}
+
+			for (CCNode* node : CCArrayExt<CCNode*>(CCScene::get()->getChildren())) {
+				if (geode::cocos::getObjectName(node) != "ModSettingsPopup") continue;
+				if (!node->getChildByType<CCLayer>(0)) continue;
+
+				CCLabelBMFont* title = node->getChildByType<CCLayer>(0)->getChildByType<CCLabelBMFont>(0);
+				if (!title || static_cast<std::string>(title->getFntFile()) != "goldFont.fnt" || !geode::utils::string::endsWith(title->getString(), Mod::get()->getName())) continue;
+				return;
+			}
+			geode::openSettingsPopup(Mod::get());
+		});
+
+		SongManager::get().eclipseIntegrationSuccessful = true;
 	});
 }
