@@ -362,12 +362,34 @@ $on_mod(Loaded) {
 		(void) tab.addLabel("Shortcuts (Use them wisely!)");
 		tab.addButton("Open Control Panel", []() {
 			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || CCScene::get()->getChildByType<SongControlMenu>(0) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
-			if (SongListLayer* foo = CCScene::get()->getChildByType<SongListLayer>(0); foo && foo->m_closeBtn) foo->m_closeBtn->activate();
+			if (SongListLayer* foo = CCScene::get()->getChildByType<SongListLayer>(0); foo) {
+				#if GEODE_COMP_GD_VERSION == 22081
+				geode::Popup::CloseEvent(foo).send();
+				foo->setKeypadEnabled(false);
+				foo->setTouchEnabled(false);
+				foo->removeFromParent();
+				#endif
+
+				#if GEODE_COMP_GD_VERSION == 22074
+				foo->keyBackClicked();
+				#endif
+			}
 			SongControlMenu::create()->show();
 		});
 		tab.addButton("Open Songs List", []() {
 			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || CCScene::get()->getChildByType<SongListLayer>(0) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
-			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo && foo->m_closeBtn) foo->m_closeBtn->activate();
+			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
+				#if GEODE_COMP_GD_VERSION == 22081
+				geode::Popup::CloseEvent(foo).send();
+				foo->setKeypadEnabled(false);
+				foo->setTouchEnabled(false);
+				foo->removeFromParent();
+				#endif
+
+				#if GEODE_COMP_GD_VERSION == 22074
+				foo->keyBackClicked();
+				#endif
+			}
 			SongListLayer::create()->show();
 		});
 	});
