@@ -133,7 +133,7 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 	card->setID("now-playing"_spr);
 
 	if (MenuLayer::get()) MenuLayer::get()->addChild(card);
-	else cocos2d::CCScene::get()->addChild(card);
+	else if (checkSetting && Utils::getBool("showOutsideOfMainMenu")) cocos2d::CCScene::get()->addChild(card);
 
 	auto sequence = cocos2d::CCSequence::create(
 		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, {defaultPos.x, defaultPos.y - 24.0f}), 2.0f),

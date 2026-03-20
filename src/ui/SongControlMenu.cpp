@@ -552,13 +552,13 @@ void SongControlMenu::toggleOsu() {
 	this->m_osu = !this->m_osu;
 	this->stopAllActions();
 	this->m_mainLayer->stopAllActions();
-	for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(static_cast<cocos2d::CCSpriteBatchNode*>(this->m_audieoVisual->getChildByIndex(0))->m_pChildren)) {
+	for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(this->m_audieoVisual->getChildByIndex(0)->m_pChildren)) {
 		spriteChild->stopAllActions();
 	}
 	// easing types and easing values taken from https://github.com/ppy/osu/blob/master/osu.Game/Screens/Menu/ButtonSystem.cs#L476 and https://github.com/ppy/osu/blob/master/osu.Game/Screens/Menu/ButtonSystem.cs#L495 under the MIT license, but they're just silly numbers at the end of the day
 	if (this->m_osu) {
 		this->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
-		for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(static_cast<cocos2d::CCSpriteBatchNode*>(this->m_audieoVisual->getChildByIndex(0))->m_pChildren)) {
+		for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(this->m_audieoVisual->getChildByIndex(0)->m_pChildren)) {
 			spriteChild->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, spriteChild->getTag() < 100 ? 100 : 255)));
 		}
 		this->m_mainLayer->runAction(
@@ -571,7 +571,7 @@ void SongControlMenu::toggleOsu() {
 		);
 	} else {
 		this->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 105), .5f));
-		for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(static_cast<cocos2d::CCSpriteBatchNode*>(this->m_audieoVisual->getChildByIndex(0))->m_pChildren)) {
+		for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(this->m_audieoVisual->getChildByIndex(0)->m_pChildren)) {
 			spriteChild->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
 		}
 		this->m_mainLayer->runAction(

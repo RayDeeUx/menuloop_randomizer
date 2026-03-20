@@ -36,8 +36,12 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (loader->isModLoaded("colon.menu_loop_start_time")) songManager.setColonMenuLoopStartTime(loader->getLoadedMod("colon.menu_loop_start_time"));
 
 		const std::string& buttonMode = Utils::getString("buttonMode");
+		const bool qualifiedForNoButtonsEclipse = loader->isModLoaded("eclipse.eclipse-menu") && songManager.eclipseIntegrationSuccessful;
+		const bool qualifiedForNoButtonsQOLMod = loader->isModLoaded("thesillydoggo.qolmod") && songManager.qolModIntegrationSuccessful; // dummy line that returns false for now until thesilyldoggo adds her API into qolmod
 
-		if (buttonMode == "Minimal") {
+		if ((qualifiedForNoButtonsEclipse || qualifiedForNoButtonsQOLMod) && buttonMode == "No Buttons") return true;
+
+		if (buttonMode == "Minimal" || (!qualifiedForNoButtonsEclipse && !qualifiedForNoButtonsQOLMod)) {
 			Utils::addButton("controls", menu_selector(MenuLayerMLHook::onControlsButton), REST_OF_THE_OWL);
 			return true;
 		}
