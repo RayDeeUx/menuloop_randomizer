@@ -11,6 +11,10 @@
   - View or control playback progress and shuffle, favorite, blacklist, and backtrack songs from (almost) anywhere!
   - Shortcuts to open the Control Panel, Song List menu, or the mod's settings from this integration will only work under certain circumstances.
   - You can toggle this option off in the mod settings, but <cl>it will require</c> <co>a full game restart</c>.
+- <cg>Added</c> QOLMod integration.
+  - View or control playback progress and shuffle, favorite, blacklist, and backtrack songs from (almost) anywhere!
+  - No other shortcuts are available at the moment.
+  - You can toggle this option off in the mod settings, but <cl>it will require</c> <co>a full game restart</c>.
 - <cg>Added</c> new setting:  `Notifs: Show Outside of Main Menu`.
   - In light of the Eclipse Menu integration, notification cards from this menu can appear outside of the main menu now.
   - You can toggle this option off in the mod settings.

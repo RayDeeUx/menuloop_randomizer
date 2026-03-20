@@ -68,6 +68,7 @@ protected:
 	void doTheRippleEffectFromOsuLazer();
 public:
 	bool m_osu = false;
+	bool m_isInQOLMod = false;
 	static SongControlMenu* create();
 	void onRegenButton(cocos2d::CCObject*);
 	void updateCurrentLabel();
