@@ -708,7 +708,7 @@ void Utils::removeCardRemotely(cocos2d::CCNode* card) {
 }
 
 void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {
-	if (SongManager::get().isEclipse && SongManager::get().eclipseSongNameLabel.has_value() && SongManager::get().eclipseIntegrationSuccessful) SongManager::get().eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
+	if (SongManager::get().isEclipse && SongManager::get().eclipseSongNameLabel.has_value() && SongManager::get().eclipseIntegrationSuccessful) geode::Loader::get()->queueInMainThread([]() { SongManager::get().eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel())); });
 	if (SongManager::get().isQOLMod && SongManager::get().qolModIntegrationSuccessful && (cocos2d::CCScene::get()->getChildByType<AndroidUI>(0) && cocos2d::CCScene::get()->getChildByType<AndroidUI>(0)->getChildByIDRecursive("SongControlMenu"_spr))) {
 		if (SongControlMenu* svet = geode::cast::typeinfo_cast<SongControlMenu*>(cocos2d::CCScene::get()->getChildByType<AndroidUI>(0)->getChildByIDRecursive("SongControlMenu"_spr)); svet) geode::Loader::get()->queueInMainThread([svet] { svet->updateCurrentLabel(); });
 	}

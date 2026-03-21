@@ -275,9 +275,11 @@ $on_mod(Loaded) {
 using namespace eclipse;
 using namespace geode::prelude;
 
+#ifdef GEODE_IS_DESKTOP
 class EclipsePlaybackProgressDummyNode final : public CCNode {
 public:
-	void playbackProgressScheduler(float) {
+	void playbackProgressScheduler(float) { playbackProgress(); }
+	static void playbackProgress() {
 		SongManager& sm = SongManager::get();
 		if (!sm.eclipseSongDurationLabel.has_value() || !sm.eclipseSongProgressBarLabel.has_value()) return;
 
@@ -300,6 +302,7 @@ public:
 		sm.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:=<{}}{:–<{}}]", "", completed, "", remaining));
 	}
 };
+#endif
 
 $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
@@ -310,11 +313,10 @@ $on_mod(Loaded) {
 		SongManager::get().eclipseSongNameLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Current song: [[Hold on, MLR is still loading things!]]"));
 		SongManager::get().eclipseSongDurationLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Progress: [[Hold on, MLR is still loading things!]]"));
 		SongManager::get().eclipseSongProgressBarLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("[[Hold on, MLR is still loading things!]]"));
-		#endif
 
-		GameManager::get()->schedule(schedule_selector(EclipsePlaybackProgressDummyNode::playbackProgressScheduler));
+		EclipsePlaybackProgressDummyNode::playbackProgress();
+		GameManager::get()->schedule(schedule_selector(EclipsePlaybackProgressDummyNode::playbackProgressScheduler), .5f);
 
-		#ifdef GEODE_IS_DESKTOP
 		(void) tab.addLabel("\n");
 		#else
 		(void) tab.addLabel("[Song progess is not viewable here for mobile. Sorry!]");
