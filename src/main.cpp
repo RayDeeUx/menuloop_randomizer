@@ -275,8 +275,6 @@ $on_mod(Loaded) {
 using namespace eclipse;
 using namespace geode::prelude;
 
-class AndroidUI final : public CCNode {};
-
 class EclipsePlaybackProgressDummyNode final : public CCNode {
 public:
 	void playbackProgressScheduler(float) {
@@ -308,13 +306,19 @@ $on_mod(Loaded) {
 		if (!Mod::get()->getSettingValue<bool>("eclipseIntegration")) return;
 		auto tab = MenuTab::find("Menu Loop Randomizer");
 
+		#ifdef GEODE_IS_DESKTOP
 		SongManager::get().eclipseSongNameLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Current song: [[Hold on, MLR is still loading things!]]"));
 		SongManager::get().eclipseSongDurationLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Progress: [[Hold on, MLR is still loading things!]]"));
 		SongManager::get().eclipseSongProgressBarLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("[[Hold on, MLR is still loading things!]]"));
+		#endif
 
 		GameManager::get()->schedule(schedule_selector(EclipsePlaybackProgressDummyNode::playbackProgressScheduler));
 
+		#ifdef GEODE_IS_DESKTOP
 		(void) tab.addLabel("\n");
+		#else
+		(void) tab.addLabel("[Song progess is not viewable here for mobile. Sorry!]");
+		#endif
 
 		(void) tab.addLabel("Song Selection");
 		tab.addButton("Shuffle Song", []() {
@@ -436,6 +440,11 @@ $on_mod(Loaded) {
 		});
 
 		SongManager::get().eclipseIntegrationSuccessful = true;
+
+		// surely. surely this will work.
+		Loader::get()->queueInMainThread([]() {
+			SongManager::get().eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
+		});
 	});
 }
 

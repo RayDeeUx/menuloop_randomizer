@@ -35,9 +35,12 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		songManager.setUndefined0Alk1m123TouchPrio(loader->isModLoaded("alk.better-touch-prio"));
 		if (loader->isModLoaded("colon.menu_loop_start_time")) songManager.setColonMenuLoopStartTime(loader->getLoadedMod("colon.menu_loop_start_time"));
 
+		if (!songManager.isEclipse && loader->isModLoaded("eclipse.eclipse-menu")) songManager.isEclipse = true;
+		if (!songManager.isQOLMod && loader->isModLoaded("thesillydoggo.qolmod")) songManager.isQOLMod = true;
+
 		const std::string& buttonMode = Utils::getString("buttonMode");
-		const bool qualifiedForNoButtonsEclipse = loader->isModLoaded("eclipse.eclipse-menu") && songManager.eclipseIntegrationSuccessful;
-		const bool qualifiedForNoButtonsQOLMod = loader->isModLoaded("thesillydoggo.qolmod") && songManager.qolModIntegrationSuccessful;
+		const bool qualifiedForNoButtonsEclipse = songManager.isEclipse && songManager.eclipseIntegrationSuccessful;
+		const bool qualifiedForNoButtonsQOLMod = songManager.isQOLMod && songManager.qolModIntegrationSuccessful;
 
 		if ((qualifiedForNoButtonsEclipse || qualifiedForNoButtonsQOLMod) && buttonMode == "No Buttons") return true;
 
