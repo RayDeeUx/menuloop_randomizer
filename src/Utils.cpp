@@ -708,6 +708,10 @@ void Utils::removeCardRemotely(cocos2d::CCNode* card) {
 }
 
 void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {
+	if (SongManager::get().isEclipse && SongManager::get().eclipseSongNameLabel.has_value() && SongManager::get().eclipseIntegrationSuccessful) SongManager::get().eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
+	if (SongManager::get().isQOLMod && SongManager::get().qolModIntegrationSuccessful && (cocos2d::CCScene::get()->getChildByType<AndroidUI>(0) && cocos2d::CCScene::get()->getChildByType<AndroidUI>(0)->getChildByIDRecursive("SongControlMenu"_spr))) {
+		if (SongControlMenu* svet = geode::cast::typeinfo_cast<SongControlMenu*>(cocos2d::CCScene::get()->getChildByType<AndroidUI>(0)->getChildByIDRecursive("SongControlMenu"_spr)); svet) geode::Loader::get()->queueInMainThread([svet] { svet->updateCurrentLabel(); });
+	}
 	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
 	else if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); SongManager::get().getUndefined0Alk1m123TouchPrio() && sll && sll->m_searchBar) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(sll->m_searchBar->getInputNode(), false); });
 }
@@ -731,6 +735,10 @@ bool Utils::songDataContainsSong(const std::string_view song) {
 
 bool Utils::songDataContainsSongPath(const std::filesystem::path& song) {
 	return SongManager::get().getSongToSongDataEntries().contains(song);
+}
+
+std::string Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel() {
+	return (!SongManager::get().getFinishedCalculatingSongLengths() || !Utils::songDataContainsSong(SongManager::get().getCurrentSong())) ? SongManager::get().getCurrentSongDisplayName() : Utils::getSongDataOfCurrentSong().fullDisplayNameForControlPanelAndSongList;
 }
 
 CCMenuItemSpriteExtra* Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {

@@ -1,6 +1,8 @@
 #pragma once
 #include "SongManager.hpp"
 
+class AndroidUI final : public cocos2d::CCNode {}; // dummy class declaration for typeinfo_cast to access QOLMod's node
+
 class Utils {
   public:
 	static int randomIndex(int);
@@ -46,6 +48,7 @@ class Utils {
 	static SongData& getSongDataOfSongPath(const std::filesystem::path&);
 	static bool songDataContainsSong(const std::string_view);
 	static bool songDataContainsSongPath(const std::filesystem::path&);
+	static std::string getFullNameOfCurrentSongForIntegrationsAndControlPanel();
 	static CCMenuItemSpriteExtra* addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static CCMenuItemToggler* addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string_view nodeID, cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static void showMDPopup(const std::string_view title, const std::string& bodyText, const int tag, const std::string_view nodeID);
