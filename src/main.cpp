@@ -283,7 +283,26 @@ public:
 		SongManager& sm = SongManager::get();
 		if (!sm.eclipseSongDurationLabel.has_value() || !sm.eclipseSongProgressBarLabel.has_value()) return;
 
-		constexpr int progressBarWidth = 16;
+		if (sm.eclipseIsCocosStyle) {
+			if (sm.eclipseSongNameLabel.has_value()) sm.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
+			if (sm.isQOLMod && sm.qolModIntegrationSuccessful) {
+				sm.eclipseSongDurationLabel.value().setText("Please view/control song progress from QOLMod instead.");
+				GEODE_DESKTOP(sm.eclipseSongProgressBarLabel.value().setText("(Or switch to the ImGui menu style.)");)
+				GEODE_MOBILE(sm.eclipseSongProgressBarLabel.value().setText("(This is a non-negotiable solution.)");)
+			} else {
+				GEODE_DESKTOP(
+					sm.eclipseSongDurationLabel.value().setText("Switch to the ImGui menu style to view this progress.");
+					sm.eclipseSongProgressBarLabel.value().setText("(This is a non-negotiable solution.)");
+				)
+				GEODE_MOBILE(
+					sm.eclipseSongDurationLabel.value().setText("Feel free to scroll towards the bottom");
+					sm.eclipseSongProgressBarLabel.value().setText("and use the shortcuts from there instead.");
+				)
+			}
+			return;
+		}
+
+		constexpr int progressBarWidth = 20;
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
 		if (std::hash<std::string>{}(fmod->getActiveMusic(0)) != std::hash<std::string>{}(sm.getCurrentSong())) {
 			sm.eclipseSongDurationLabel.value().setText("Progress: [CURRENTLY PAUSED]");
@@ -299,7 +318,7 @@ public:
 		int remaining = progressBarWidth - completed;
 
 		sm.eclipseSongDurationLabel.value().setText(fmt::format("Progress: {}:{:02} / {}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60), ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
-		sm.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:=<{}}{:–<{}}]", "", completed, "", remaining));
+		sm.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:+<{}}{:-<{}}]", "", completed, "", remaining));
 	}
 };
 #endif
@@ -307,20 +326,23 @@ public:
 $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
 		if (!Mod::get()->getSettingValue<bool>("eclipseIntegration")) return;
+		listenForSettingChanges<std::string>("menu-style", [](const std::string& newMenuStyle) {
+			SongManager& sm = SongManager::get();
+			if (!sm.isEclipse || !sm.eclipseIntegrationSuccessful) return;
+			sm.eclipseIsCocosStyle = geode::utils::string::contains(geode::utils::string::toLower(newMenuStyle), "cocos");
+			// bit of a hack ngl but FUCK IT WE BALL
+			if (sm.eclipseSongNameLabel.has_value()) sm.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
+		}, geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu"));
 		auto tab = MenuTab::find("Menu Loop Randomizer");
 
-		#ifdef GEODE_IS_DESKTOP
 		SongManager::get().eclipseSongNameLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Current song: [[Hold on, MLR is still loading things!]]"));
 		SongManager::get().eclipseSongDurationLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Progress: [[Hold on, MLR is still loading things!]]"));
 		SongManager::get().eclipseSongProgressBarLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("[[Hold on, MLR is still loading things!]]"));
 
 		EclipsePlaybackProgressDummyNode::playbackProgress();
-		GameManager::get()->schedule(schedule_selector(EclipsePlaybackProgressDummyNode::playbackProgressScheduler), .5f);
+		GameManager::get()->schedule(schedule_selector(EclipsePlaybackProgressDummyNode::playbackProgressScheduler), .125f);
 
 		(void) tab.addLabel("\n");
-		#else
-		(void) tab.addLabel("[Song progess is not viewable here for mobile. Sorry!]");
-		#endif
 
 		(void) tab.addLabel("Song Selection");
 		tab.addButton("Shuffle Song", []() {
@@ -332,6 +354,7 @@ $on_mod(Loaded) {
 		tab.addButton("Hold Song (like Tetris)", []() {
 			SongControl::holdSong();
 		});
+		GEODE_MOBILE((void) tab.addLabel("\n");) // extra space to make scrolling easier for fat fingers on mobile
 
 		(void) tab.addLabel("Playback/Seeking");
 		tab.addButton("Seek Backward", []() {
@@ -352,6 +375,7 @@ $on_mod(Loaded) {
 		tab.addButton("Seek to 75%", []() {
 			SongControl::setSongPercentage(75);
 		});
+		GEODE_MOBILE((void) tab.addLabel("\n");) // extra space to make scrolling easier for fat fingers on mobile
 
 		(void) tab.addLabel("Other Controls");
 		tab.addButton("Favorite Song", []() {
@@ -366,6 +390,7 @@ $on_mod(Loaded) {
 		tab.addButton("New Notification", []() {
 			SongControl::regenSong();
 		});
+		GEODE_MOBILE((void) tab.addLabel("\n");) // extra space to make scrolling easier for fat fingers on mobile
 
 		(void) tab.addLabel("Shortcuts (Use them wisely!)");
 		tab.addButton("Open Control Panel", []() {
