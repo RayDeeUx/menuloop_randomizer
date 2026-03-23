@@ -136,6 +136,7 @@ class SongManager {
 	bool eclipseIntegrationSuccessful = false;
 	bool qolModIntegrationSuccessful = false;
 	bool addingToQOLModRightNow = false;
+	bool eclipseIsCocosStyle = false;
 
   private:
 	SongManager();
