@@ -324,14 +324,20 @@ public:
 $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
 		if (!Mod::get()->getSettingValue<bool>("eclipseIntegration")) return;
-		if (geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")) SongManager::get().eclipseIsCocosStyle = geode::utils::string::contains(geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")->getSettingValue<std::string>("menu-style"), "cocos");
+		if (geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")) SongManager::get().eclipseIsCocosStyle = geode::utils::string::contains(geode::utils::string::toLower(geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")->getSettingValue<std::string>("menu-style")), "cocos");
+
 		listenForSettingChanges<std::string>("menu-style", [](const std::string& newMenuStyle) {
 			SongManager& sm = SongManager::get();
 			if (!sm.isEclipse || !sm.eclipseIntegrationSuccessful) return;
 			sm.eclipseIsCocosStyle = geode::utils::string::contains(geode::utils::string::toLower(newMenuStyle), "cocos");
 			// bit of a hack ngl but FUCK IT WE BALL
-			if (sm.eclipseSongNameLabel.has_value()) sm.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
+			if (sm.eclipseSongNameLabel.has_value()) {
+				if (!sm.eclipseIsCocosStyle) sm.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
+				else sm.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
+			}
+
 		}, geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu"));
+
 		auto tab = MenuTab::find("Menu Loop Randomizer");
 
 		SongManager::get().eclipseSongNameLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Current song: [[Hold on, MLR is still loading things!]]"));
@@ -469,7 +475,9 @@ $on_mod(Loaded) {
 
 		// surely. surely this will work.
 		Loader::get()->queueInMainThread([]() {
-			if (SongManager::get().eclipseSongNameLabel.has_value()) SongManager::get().eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
+			SongManager& sm = SongManager::get();
+			if (!sm.eclipseIsCocosStyle) sm.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
+			else sm.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
 		});
 	});
 }
