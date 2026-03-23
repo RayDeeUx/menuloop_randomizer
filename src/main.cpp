@@ -445,7 +445,7 @@ $on_mod(Loaded) {
 
 		// surely. surely this will work.
 		Loader::get()->queueInMainThread([]() {
-			SongManager::get().eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
+			if (SongManager::get().eclipseSongNameLabel.has_value()) SongManager::get().eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
 		});
 	});
 }
