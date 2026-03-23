@@ -324,6 +324,7 @@ public:
 $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
 		if (!Mod::get()->getSettingValue<bool>("eclipseIntegration")) return;
+		if (geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")) SongManager::get().eclipseIsCocosStyle = geode::utils::string::contains(geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")->getSettingValue<std::string>("menu-style"), "cocos");
 		listenForSettingChanges<std::string>("menu-style", [](const std::string& newMenuStyle) {
 			SongManager& sm = SongManager::get();
 			if (!sm.isEclipse || !sm.eclipseIntegrationSuccessful) return;
