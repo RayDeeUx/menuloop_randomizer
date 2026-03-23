@@ -138,6 +138,8 @@ class SongManager {
 	bool addingToQOLModRightNow = false;
 	bool eclipseIsCocosStyle = false;
 
+	std::vector<std::pair<std::optional<eclipse::components::Label>, std::string>> dynamicEclipseIntegrationHeaders {};
+
   private:
 	SongManager();
 	SongManager(const SongManager&) = delete;

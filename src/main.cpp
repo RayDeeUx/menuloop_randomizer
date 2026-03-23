@@ -335,7 +335,10 @@ $on_mod(Loaded) {
 				if (!sm.eclipseIsCocosStyle) sm.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
 				else sm.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
 			}
-
+			for (std::pair<std::optional<eclipse::components::Label>, std::string>& labelStringPair : sm.dynamicEclipseIntegrationHeaders) {
+				if (!labelStringPair.first.has_value()) continue;
+				labelStringPair.first.value().setText(sm.eclipseIsCocosStyle ? fmt::format("{}\n", labelStringPair.second) : labelStringPair.second);
+			}
 		}, geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu"));
 
 		auto tab = MenuTab::find("Menu Loop Randomizer");
@@ -349,7 +352,7 @@ $on_mod(Loaded) {
 
 		(void) tab.addLabel("\n");
 
-		(void) tab.addLabel("Song Selection");
+		SongManager::get().dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Song Selection")), "Song Selection"});
 		tab.addButton("Shuffle Song", []() {
 			SongControl::shuffleSong();
 		});
@@ -359,9 +362,8 @@ $on_mod(Loaded) {
 		tab.addButton("Hold Song (like Tetris)", []() {
 			SongControl::holdSong();
 		});
-		GEODE_MOBILE((void) tab.addLabel("\n");) // extra space to make scrolling easier for fat fingers on mobile
 
-		(void) tab.addLabel("Playback/Seeking");
+		SongManager::get().dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Playback/Seeking")), "Playback/Seeking"});
 		tab.addButton("Seek Backward", []() {
 			SongControl::skipBackward();
 		});
@@ -380,9 +382,8 @@ $on_mod(Loaded) {
 		tab.addButton("Seek to 75%", []() {
 			SongControl::setSongPercentage(75);
 		});
-		GEODE_MOBILE((void) tab.addLabel("\n");) // extra space to make scrolling easier for fat fingers on mobile
 
-		(void) tab.addLabel("Other Controls");
+		SongManager::get().dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Other Controls")), "Other Controls"});
 		tab.addButton("Favorite Song", []() {
 			SongControl::favoriteSong();
 		});
@@ -395,9 +396,8 @@ $on_mod(Loaded) {
 		tab.addButton("New Notification", []() {
 			SongControl::regenSong();
 		});
-		GEODE_MOBILE((void) tab.addLabel("\n");) // extra space to make scrolling easier for fat fingers on mobile
 
-		(void) tab.addLabel("Shortcuts (Use them wisely!)");
+		SongManager::get().dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Shortcuts (Use them wisely!)")), "Shortcuts (Use them wisely!)"});
 		tab.addButton("Open Control Panel", []() {
 			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || (CCScene::get() && CCScene::get()->getChildByType<SongControlMenu>(0)) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
 			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
@@ -478,6 +478,10 @@ $on_mod(Loaded) {
 			SongManager& sm = SongManager::get();
 			if (!sm.eclipseIsCocosStyle) sm.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
 			else sm.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
+			for (std::pair<std::optional<eclipse::components::Label>, std::string>& labelStringPair : sm.dynamicEclipseIntegrationHeaders) {
+				if (!labelStringPair.first.has_value()) continue;
+				labelStringPair.first.value().setText(sm.eclipseIsCocosStyle ? fmt::format("{}\n", labelStringPair.second) : labelStringPair.second);
+			}
 		});
 	});
 }
