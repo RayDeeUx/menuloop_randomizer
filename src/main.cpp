@@ -275,7 +275,6 @@ $on_mod(Loaded) {
 using namespace eclipse;
 using namespace geode::prelude;
 
-#ifdef GEODE_IS_DESKTOP
 class EclipsePlaybackProgressDummyNode final : public CCNode {
 public:
 	void playbackProgressScheduler(float) { playbackProgress(); }
@@ -321,7 +320,6 @@ public:
 		sm.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:+<{}}{:-<{}}]", "", completed, "", remaining));
 	}
 };
-#endif
 
 $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
