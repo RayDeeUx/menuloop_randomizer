@@ -58,12 +58,6 @@ protected:
 	void onSettingsButton(cocos2d::CCObject*);
 	void onSkipBkwdButton(cocos2d::CCObject*);
 	void onSkipFwrdButton(cocos2d::CCObject*);
-	void checkManagerFinished(float);
-	void checkDaSongPositions(float);
-	void pressAndHoldScheduler(float);
-	void visualizerScheduler(float);
-	void forceSharpCornerIllusion();
-	void forceSharpCornerIllusionScheduler(float);
 	void toggleMenuLayerVisibility();
 	void doTheRippleEffectFromOsuLazer();
 public:
@@ -72,6 +66,12 @@ public:
 	static SongControlMenu* create();
 	void onRegenButton(cocos2d::CCObject*);
 	void updateCurrentLabel();
+	void checkManagerFinished(float);
+	void checkDaSongPositions(float);
+	void pressAndHoldScheduler(float);
+	void visualizerScheduler(float);
+	void forceSharpCornerIllusion();
+	void forceSharpCornerIllusionScheduler(float);
 	void onExit() override;
 	void toggleOsu();
 	void onClose(cocos2d::CCObject*) override;

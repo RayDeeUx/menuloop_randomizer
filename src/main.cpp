@@ -549,12 +549,30 @@ $on_mod(Loaded) {
 				return;
 			}
 
+			SongManager::get().songControlMenuForQOLMod = nullptr;
 			SongManager::get().addingToQOLModRightNow = true;
 			SongControlMenu* iKnowItWouldntBeForLoveOrWhatever = SongControlMenu::create();
+			iKnowItWouldntBeForLoveOrWhatever->show();
 			SongManager::get().addingToQOLModRightNow = false;
+			SongManager::get().songControlMenuForQOLMod = geode::Ref(iKnowItWouldntBeForLoveOrWhatever);
 
-			layer->addChildAtPosition(iKnowItWouldntBeForLoveOrWhatever, geode::Anchor::Center);
-			iKnowItWouldntBeForLoveOrWhatever->ignoreAnchorPointForPosition(false);
+			#if GEODE_COMP_GD_VERSION > 22074
+			iKnowItWouldntBeForLoveOrWhatever->setKeypadEnabled(false);
+			iKnowItWouldntBeForLoveOrWhatever->setTouchEnabled(false);
+			iKnowItWouldntBeForLoveOrWhatever->removeFromParent();
+			#endif
+
+			#if GEODE_COMP_GD_VERSION < 22081
+			iKnowItWouldntBeForLoveOrWhatever->setKeypadEnabled(false);
+			iKnowItWouldntBeForLoveOrWhatever->setTouchEnabled(false);
+			iKnowItWouldntBeForLoveOrWhatever->removeFromParentAndCleanup(true);
+			#endif
+
+			layer->addChildAtPosition(SongManager::get().songControlMenuForQOLMod, geode::Anchor::Center);
+			SongManager::get().songControlMenuForQOLMod->ignoreAnchorPointForPosition(false);
+			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
+			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::forceSharpCornerIllusionScheduler));
+			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
 		}});
 	});
 }

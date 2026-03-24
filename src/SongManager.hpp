@@ -139,6 +139,7 @@ class SongManager {
 	bool eclipseIsCocosStyle = false;
 
 	std::vector<std::pair<std::optional<eclipse::components::Label>, std::string>> dynamicEclipseIntegrationHeaders {};
+	geode::Ref<FLAlertLayer> songControlMenuForQOLMod = nullptr;
 
   private:
 	SongManager();
