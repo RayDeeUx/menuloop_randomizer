@@ -549,7 +549,7 @@ $on_mod(Loaded) {
 
 				CCLabelBMFont* justDont = CCLabelBMFont::create("(Might wanna get that checked out.)", "chatFont.fnt");
 				if (GJBaseGameLayer::get()) justDont->setString("(You're in a level right now. Try again later.)");
-				else if (!VANILLA_GD_MENU_LOOP_DISABLED && FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) justDont->setString("(This menu loops isn't from MLR. Go figure out why ON YOUR OWN.)");
+				else if (!VANILLA_GD_MENU_LOOP_DISABLED && FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) justDont->setString("(This menu loop isn't from MLR. Go figure out why ON YOUR OWN.)");
 				justDont->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 				justDont->limitLabelWidth(layer->getContentWidth() * .5f, 1.f, .0001f);
 				justDont->setScale(.75f);
