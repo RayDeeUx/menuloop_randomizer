@@ -16,11 +16,6 @@
 #define EMPTY_SEARCH_STRG m_searchBar->setString("", false);
 #define LIMIT_PLACEHOLDER SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
 
-#define SONG_SORTING_DISABLED !SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")
-#define SEARCH_BAR_DISABLED !SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSearchBar")
-#define SEARCH_BAR_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSearchBar")
-#define SONG_SORTING_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSortSongOptions")
-
 SongListLayer* SongListLayer::create() {
 	SongListLayer* ret = new SongListLayer();
 	#if GEODE_COMP_GD_VERSION == 22081
@@ -154,6 +149,7 @@ bool SongListLayer::setup() {
 
 	SongManager& songManager = SongManager::get();
 	SongListLayer::updateSongCountAndFavoritesCount(songManager);
+	this->m_isInQOLMod = songManager.addingToQOLModRightNow;
 
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
 	cocos2d::CCLayer* mainLayer = this->m_mainLayer;
@@ -421,15 +417,31 @@ bool SongListLayer::setup() {
 
 	if (Utils::getBool("autoScrollToCurrentSong") && !VANILLA_GD_MENU_LOOP_DISABLED && !songManager.isOverride()) SongListLayer::scrollToCurrentSong();
 
-	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get()) {
+	if (this->m_isInQOLMod || !MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get()) {
 		if (settingsMenu) settingsMenu->removeMeAndCleanup();
+	}
+
+	if (this->m_isInQOLMod) {
+		if (this->m_closeBtn) this->m_closeBtn->removeMeAndCleanup();
+		if (infoMenu) infoMenu->removeMeAndCleanup();
+		if (this->m_title) {
+			this->m_title->setPositionY(this->m_title->getPositionY() + 5.f);
+			cocos2d::CCLabelBMFont* neverInLifeHaveIBlushedRussiansDoNotDoThis = cocos2d::CCLabelBMFont::create("[You're currently viewing this menu inside QOLMod. Keybinds and shortcuts are disabled.]", "chatFont.fnt");
+			neverInLifeHaveIBlushedRussiansDoNotDoThis->limitLabelWidth(this->m_title->getScaledContentWidth(), 1.f, .0001f);
+			neverInLifeHaveIBlushedRussiansDoNotDoThis->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+			this->m_mainLayer->addChild(neverInLifeHaveIBlushedRussiansDoNotDoThis);
+			neverInLifeHaveIBlushedRussiansDoNotDoThis->setPosition(this->m_title->getPosition());
+			neverInLifeHaveIBlushedRussiansDoNotDoThis->setPositionY(neverInLifeHaveIBlushedRussiansDoNotDoThis->getPositionY() - 15.f);
+			neverInLifeHaveIBlushedRussiansDoNotDoThis->setID("qolmod-notice"_spr);
+		}
+		this->setOpacity(0);
 	}
 
 	return true;
 }
 
-void SongListLayer::searchSongs(const std::string& queryString) {
-	if (SONG_SORTING_DISABLED && SEARCH_BAR_DISABLED) return;
+void SongListLayer::searchSongs(const std::string& queryString, const bool checkSetting) {
+	if (checkSetting && SONG_SORTING_DISABLED && SEARCH_BAR_DISABLED) return;
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
 	if (!contentLayer || !contentLayer->getLayout()) return;
 	contentLayer->removeAllChildrenWithCleanup(true);
@@ -437,7 +449,7 @@ void SongListLayer::searchSongs(const std::string& queryString) {
 }
 
 void SongListLayer::onSettingsButton(cocos2d::CCObject*) {
-	this->onClose(nullptr);
+	if (!this->m_isInQOLMod) this->onClose(nullptr);
 	geode::openSettingsPopup(geode::Mod::get());
 }
 
@@ -454,6 +466,11 @@ void SongListLayer::onPreviousButton(cocos2d::CCObject*) {
 }
 
 void SongListLayer::onControlsButton(cocos2d::CCObject*) {
+	if (this->m_isInQOLMod && this->getParent() && SongManager::get().songControlMenuForQOLMod->getParent() && SongManager::get().songControlMenuForQOLMod->getParent() == this->getParent()) {
+		this->setScale(0.f);
+		SongManager::get().songControlMenuForQOLMod->setScale(1.f);
+		return;
+	}
 	this->onClose(nullptr);
 	SongControlMenu::create()->show();
 }
@@ -684,7 +701,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	// this is fine since searchbar swallows delete (macos)/backspace (all other platforms) key inputs first
 	if (SEARCH_BAR_DISABLED) {
 		// code taken directly from geode::Popup keyDown impl as of dec 19 2025
-		if (key == cocos2d::KEY_Escape) return this->onClose(nullptr);
+		if (key == cocos2d::KEY_Escape && !this->m_isInQOLMod) return this->onClose(nullptr);
 		if (key == cocos2d::KEY_Space) return;
 		#if GEODE_COMP_GD_VERSION == 22081
 		return FLAlertLayer::keyDown(key, p1);
@@ -695,9 +712,10 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	}
 	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 	if (key == cocos2d::KEY_Escape) {
-		if (!searchBar) return this->onClose(nullptr);
+		if (!searchBar && !this->m_isInQOLMod) return this->onClose(nullptr);
 		if (this->m_searchBar->getInputNode()->m_cursor->isVisible()) return this->m_searchBar->getInputNode()->onClickTrackNode(false);
-		return this->onClose(nullptr);
+		if (!this->m_isInQOLMod) return this->onClose(nullptr);
+		return;
 	}
 	if (!searchBar || (GET_SEARCH_STRING.empty() && searchBar->getTag() == -1)) return;
 	if (key == cocos2d::KEY_Delete || key == cocos2d::KEY_Backspace) EMPTY_SEARCH_STRG; // clear search query before re-populating

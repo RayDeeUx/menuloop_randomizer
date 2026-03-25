@@ -5,6 +5,11 @@
 
 #define SEARCH_BAR_NODE_ID "song-list-search-bar"_spr
 
+#define SONG_SORTING_DISABLED !SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")
+#define SEARCH_BAR_DISABLED !SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSearchBar")
+#define SEARCH_BAR_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSearchBar")
+#define SONG_SORTING_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSortSongOptions")
+
 #if GEODE_COMP_GD_VERSION == 22081
 class SongListLayer final : public geode::Popup {
 #endif
@@ -69,7 +74,7 @@ public:
 	void keyDown(const cocos2d::enumKeyCodes) override;
 	void keyUp(const cocos2d::enumKeyCodes) override;
 	#endif
-	void searchSongs(const std::string&);
+	void searchSongs(const std::string&, const bool checkSetting = true);
 
 	static std::string generateDisplayName(SongData&);
 	static bool tallEnough(geode::ScrollLayer*);
@@ -88,4 +93,5 @@ public:
 	void displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float);
 
 	geode::TextInput* m_searchBar {};
+	bool m_isInQOLMod = false;
 };
