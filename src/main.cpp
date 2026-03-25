@@ -579,29 +579,51 @@ $on_mod(Loaded) {
 			}
 
 			SongManager::get().songControlMenuForQOLMod = nullptr;
+			SongManager::get().songListLayerForQOLMod = nullptr;
 			SongManager::get().addingToQOLModRightNow = true;
 			SongControlMenu* iKnowItWouldntBeForLoveOrWhatever = SongControlMenu::create();
 			iKnowItWouldntBeForLoveOrWhatever->show();
+			SongListLayer* weCanFigureSomethingElseOutOK = SongListLayer::create();
+			weCanFigureSomethingElseOutOK->show();
 			SongManager::get().addingToQOLModRightNow = false;
+			SongManager::get().songListLayerForQOLMod = geode::Ref(weCanFigureSomethingElseOutOK);
 			SongManager::get().songControlMenuForQOLMod = geode::Ref(iKnowItWouldntBeForLoveOrWhatever);
 
 			#if GEODE_COMP_GD_VERSION > 22074
 			iKnowItWouldntBeForLoveOrWhatever->setKeypadEnabled(false);
 			iKnowItWouldntBeForLoveOrWhatever->setTouchEnabled(false);
 			iKnowItWouldntBeForLoveOrWhatever->removeFromParent();
+			weCanFigureSomethingElseOutOK->setKeypadEnabled(false);
+			weCanFigureSomethingElseOutOK->setTouchEnabled(false);
+			weCanFigureSomethingElseOutOK->removeFromParent();
 			#endif
 
 			#if GEODE_COMP_GD_VERSION < 22081
 			iKnowItWouldntBeForLoveOrWhatever->setKeypadEnabled(false);
 			iKnowItWouldntBeForLoveOrWhatever->setTouchEnabled(false);
 			iKnowItWouldntBeForLoveOrWhatever->removeFromParentAndCleanup(true);
+			weCanFigureSomethingElseOutOK->setKeypadEnabled(false);
+			weCanFigureSomethingElseOutOK->setTouchEnabled(false);
+			weCanFigureSomethingElseOutOK->removeFromParentAndCleanup(true);
 			#endif
 
 			layer->addChildAtPosition(SongManager::get().songControlMenuForQOLMod, geode::Anchor::Center);
+			layer->addChildAtPosition(SongManager::get().songListLayerForQOLMod, geode::Anchor::Center, {0.f, -25.f});
+
 			SongManager::get().songControlMenuForQOLMod->ignoreAnchorPointForPosition(false);
 			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
 			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::forceSharpCornerIllusionScheduler));
 			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
+
+			SongManager::get().songListLayerForQOLMod->ignoreAnchorPointForPosition(false);
+			SongManager::get().songListLayerForQOLMod->setScale(0.f);
+			if (SEARCH_BAR_ENABLED && SongManager::get().songListLayerForQOLMod.data() && typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()) && typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->m_searchBar) {
+				SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->m_searchBar->getInputNode());
+				SongManager::get().songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
+			}
+			SongManager::get().songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
+
+			if (typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())) typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->searchSongs("", false);
 		}});
 	});
 }
