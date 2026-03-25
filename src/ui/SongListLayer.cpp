@@ -449,7 +449,8 @@ void SongListLayer::searchSongs(const std::string& queryString, const bool check
 }
 
 void SongListLayer::onSettingsButton(cocos2d::CCObject*) {
-	if (!this->m_isInQOLMod) this->onClose(nullptr);
+	if (this->m_isInQOLMod) return;
+	this->onClose(nullptr);
 	geode::openSettingsPopup(geode::Mod::get());
 }
 
