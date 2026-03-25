@@ -141,6 +141,8 @@ class SongManager {
 	std::vector<std::pair<std::optional<eclipse::components::Label>, std::string>> dynamicEclipseIntegrationHeaders {};
 	geode::Ref<FLAlertLayer> songControlMenuForQOLMod = nullptr;
 	geode::Ref<FLAlertLayer> songListLayerForQOLMod = nullptr;
+	geode::Ref<CCTextInputNode> songListInputNodeForQOLMod = nullptr;
+	bool trackAndroidUI = false;
 
   private:
 	SongManager();

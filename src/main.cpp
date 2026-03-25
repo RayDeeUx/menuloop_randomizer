@@ -490,10 +490,29 @@ $on_mod(Loaded) {
 
 #include "CategoryExt.hpp"
 
+// i'm aware that this is VERY evil. however! there's this really stupid bug where i have to unfocus the search bar from SongListLayer and this was the most consistent solution.
+class QOLModAndroidUITrackerDummyNode final : public CCNode {
+public:
+	void trackAndroidUIScheduler(float) {
+		if (!SongManager::get().trackAndroidUI) return;
+		for (CCNode* child : cocos2d::CCScene::get()->getChildrenExt()) {
+			if (geode::cocos::getObjectName(child) == "AndroidUI") return;
+		}
+		SongManager::get().trackAndroidUI = false;
+		SongManager::get().songControlMenuForQOLMod = nullptr;
+		if (SongManager::get().songListInputNodeForQOLMod) {
+			SongManager::get().songListInputNodeForQOLMod->onClickTrackNode(false);
+			SongManager::get().songListInputNodeForQOLMod = nullptr;
+		}
+		SongManager::get().songListLayerForQOLMod = nullptr;
+	}
+};
+
 $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
 		if (!Mod::get()->getSettingValue<bool>("qolModIntegration")) return;
 		if (!SongManager::get().qolModIntegrationSuccessful) SongManager::get().qolModIntegrationSuccessful = true;
+		GameManager::get()->schedule(schedule_selector(QOLModAndroidUITrackerDummyNode::trackAndroidUIScheduler));
 		qolmod::ext::addCustomCategory({1, Mod::get()->getName(), "qolmod.png"_spr, Mod::get()->getID(), [](cocos2d::CCMenu* layer) {
 			if (!layer) return;
 			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
@@ -624,6 +643,8 @@ $on_mod(Loaded) {
 			SongManager::get().songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
 
 			if (typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())) typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->searchSongs("", false);
+
+			SongManager::get().trackAndroidUI = true;
 		}});
 	});
 }

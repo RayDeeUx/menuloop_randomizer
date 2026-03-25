@@ -230,6 +230,8 @@ bool SongListLayer::setup() {
 		searchBarDivider->setAnchorPoint({0.f, 0.f});
 		searchBarDivider->setID("song-list-search-divider"_spr);
 		searchBarMenu->addChild(searchBarDivider);
+
+		if (this->m_isInQOLMod) SongManager::get().songListInputNodeForQOLMod = geode::Ref(this->m_searchBar->getInputNode());
 	}
 
 	geode::ListBorders* listBorder = geode::ListBorders::create();
@@ -425,13 +427,13 @@ bool SongListLayer::setup() {
 		if (this->m_closeBtn) this->m_closeBtn->removeMeAndCleanup();
 		if (infoMenu) infoMenu->removeMeAndCleanup();
 		if (this->m_title) {
-			this->m_title->setPositionY(this->m_title->getPositionY() + 5.f);
-			cocos2d::CCLabelBMFont* neverInLifeHaveIBlushedRussiansDoNotDoThis = cocos2d::CCLabelBMFont::create("[You're currently viewing this menu inside QOLMod. Keybinds and shortcuts are disabled.]", "chatFont.fnt");
+			this->m_title->setPositionY(this->m_title->getPositionY() + 2.5f);
+			cocos2d::CCLabelBMFont* neverInLifeHaveIBlushedRussiansDoNotDoThis = cocos2d::CCLabelBMFont::create("[You're currently viewing this menu inside QOLMod. Keybinds, shortcuts, and mouse scrolling are disabled.]", "chatFont.fnt");
 			neverInLifeHaveIBlushedRussiansDoNotDoThis->limitLabelWidth(this->m_title->getScaledContentWidth(), 1.f, .0001f);
 			neverInLifeHaveIBlushedRussiansDoNotDoThis->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 			this->m_mainLayer->addChild(neverInLifeHaveIBlushedRussiansDoNotDoThis);
 			neverInLifeHaveIBlushedRussiansDoNotDoThis->setPosition(this->m_title->getPosition());
-			neverInLifeHaveIBlushedRussiansDoNotDoThis->setPositionY(neverInLifeHaveIBlushedRussiansDoNotDoThis->getPositionY() - 15.f);
+			neverInLifeHaveIBlushedRussiansDoNotDoThis->setPositionY(neverInLifeHaveIBlushedRussiansDoNotDoThis->getPositionY() - 12.5f);
 			neverInLifeHaveIBlushedRussiansDoNotDoThis->setID("qolmod-notice"_spr);
 		}
 		this->setOpacity(0);
