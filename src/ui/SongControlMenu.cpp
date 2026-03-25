@@ -518,6 +518,12 @@ void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 	if (this->m_isInQOLMod && this->getParent() && SongManager::get().songListLayerForQOLMod->getParent() && SongManager::get().songListLayerForQOLMod->getParent() == this->getParent()) {
 		this->setScale(0.f);
 		SongManager::get().songListLayerForQOLMod->setScale(0.7f);
+		if (Utils::getBool("autoScrollToCurrentSong")) {
+			geode::Loader::get()->queueInMainThread([contentLayer = static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->getContentLayer()]() {
+				if (!contentLayer || !contentLayer->getChildByTag(12192025)) return;
+				static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->scrollToCurrentSong();
+			});
+		}
 		return;
 	}
 	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
