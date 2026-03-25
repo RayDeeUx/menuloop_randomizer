@@ -519,11 +519,37 @@ $on_mod(Loaded) {
 				#endif
 			}
 
-			if (!SongManager::get().getFinishedCalculatingSongLengths()) {
-				CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create("Menu Loop Randomizer is currently busy!", "bigFont.fnt");
+			// if you're going to steal my source code then at least watch Heated Rivalry S1E6 to understand these variable name references, you cheap clankers and/or fuckwads --raydeeux
+			CCLabelBMFont* iHaveThisProblem = CCLabelBMFont::create("[If you're viewing this inside the QOLMod Discord server, whoever sent this has never learned how to read.]", "chatFont.fnt");
+			iHaveThisProblem->limitLabelWidth(layer->getContentWidth() * .65f, 1.f, .0001f);
+			iHaveThisProblem->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+			iHaveThisProblem->setScale(.4f);
+
+			CCLabelBMFont* iLikeWomenYesAndEverywhereIGoImSurroundedByBeautifulWomenAndTheyLoveMeAndTheseWomenTheyreSoSexyAndFun = CCLabelBMFont::create("Heads up! This menu is NOT native to QOLMod!!", "goldFont.fnt");
+			iLikeWomenYesAndEverywhereIGoImSurroundedByBeautifulWomenAndTheyLoveMeAndTheseWomenTheyreSoSexyAndFun->limitLabelWidth(layer->getContentWidth() * .85f, 1.f, .0001f);
+			iLikeWomenYesAndEverywhereIGoImSurroundedByBeautifulWomenAndTheyLoveMeAndTheseWomenTheyreSoSexyAndFun->setScale(.5f);
+
+			CCLabelBMFont* butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar = CCLabelBMFont::create("This menu comes from Menu Loop Randomizer!", "bigFont.fnt");
+			butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
+			butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar->setScale(.4f);
+
+			CCLabelBMFont* iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway = CCLabelBMFont::create("Any bugs from using this menu ***__MUST__*** be reported to RayDeeUx and ***__ONLY__*** RayDeeUx!!", "chatFont.fnt");
+			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->limitLabelWidth(layer->getContentWidth() * .65f, 1.f, .0001f);
+			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setScale(.45f);
+
+			layer->addChildAtPosition(iLikeWomenYesAndEverywhereIGoImSurroundedByBeautifulWomenAndTheyLoveMeAndTheseWomenTheyreSoSexyAndFun, geode::Anchor::Top, {0.f, -10.f});
+			layer->addChildAtPosition(butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar, geode::Anchor::Top, {0.f, -25.f});
+			layer->addChildAtPosition(iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway, geode::Anchor::Top, {0.f, -37.5f});
+			layer->addChildAtPosition(iHaveThisProblem, geode::Anchor::Top, {0.f, -45.f});
+
+			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) {
+				CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create("Menu Loop Randomizer is currently not active!", "bigFont.fnt");
 				dontMarrySvetlana->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
 
-				CCLabelBMFont* justDont = CCLabelBMFont::create("(Check back again in a bit.)", "chatFont.fnt");
+				CCLabelBMFont* justDont = CCLabelBMFont::create("(Might wanna get that checked out.)", "chatFont.fnt");
+				if (GJBaseGameLayer::get()) justDont->setString("(You're in a level right now. Try again later.)");
+				else if (FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) justDont->setString("(Your menu loops aren't matching up. Figure out why by yourself; I'm not a psychic.)");
 				justDont->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 				justDont->limitLabelWidth(layer->getContentWidth() * .5f, 1.f, .0001f);
 				justDont->setScale(.75f);
@@ -534,11 +560,11 @@ $on_mod(Loaded) {
 				return;
 			}
 
-			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || CCScene::get()->getChildByType<SongControlMenu>(0) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) {
-				CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create("Menu Loop Randomizer is currently not active!", "bigFont.fnt");
+			if (!SongManager::get().getFinishedCalculatingSongLengths()) {
+				CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create("Menu Loop Randomizer is currently busy!", "bigFont.fnt");
 				dontMarrySvetlana->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
 
-				CCLabelBMFont* justDont = CCLabelBMFont::create("(Might wanna get that checked out.)", "chatFont.fnt");
+				CCLabelBMFont* justDont = CCLabelBMFont::create("(Check back again in a bit.)", "chatFont.fnt");
 				justDont->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 				justDont->limitLabelWidth(layer->getContentWidth() * .5f, 1.f, .0001f);
 				justDont->setScale(.75f);
