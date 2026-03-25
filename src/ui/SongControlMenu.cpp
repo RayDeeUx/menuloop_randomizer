@@ -611,7 +611,8 @@ void SongControlMenu::updateCurrentLabel() {
 }
 
 void SongControlMenu::toggleMenuLayerVisibility() {
-	MenuLayer::get()->setVisible(!this->m_osu);
+	if (this->m_isInQOLMod) return;
+	if (MenuLayer::get()) MenuLayer::get()->setVisible(!this->m_osu);
 }
 
 void SongControlMenu::doTheRippleEffectFromOsuLazer() {
@@ -659,6 +660,7 @@ void SongControlMenu::toggleOsu() {
 		if (!spriteChild) continue;
 		spriteChild->stopAllActions();
 	}
+	this->m_musicVolumeInput->setEnabled(this->m_osu);
 	// easing types and easing values taken from https://github.com/ppy/osu/blob/master/osu.Game/Screens/Menu/ButtonSystem.cs#L476 and https://github.com/ppy/osu/blob/master/osu.Game/Screens/Menu/ButtonSystem.cs#L495 under the MIT license, but they're just silly numbers at the end of the day
 	if (this->m_osu) {
 		this->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
