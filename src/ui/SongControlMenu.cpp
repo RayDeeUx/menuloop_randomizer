@@ -382,10 +382,6 @@ SongControlMenu* SongControlMenu::create() {
 	return nullptr;
 }
 
-void SongControlMenu::onExit() {
-	Popup::onExit();
-}
-
 void SongControlMenu::onClose(cocos2d::CCObject* sender) {
 	if (this->m_isInQOLMod) return;
 	if (MenuLayer::get() && !MenuLayer::get()->isVisible() && this->m_osu) MenuLayer::get()->setVisible(true);

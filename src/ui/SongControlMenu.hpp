@@ -72,7 +72,6 @@ public:
 	void visualizerScheduler(float);
 	void forceSharpCornerIllusion();
 	void forceSharpCornerIllusionScheduler(float);
-	void onExit() override;
 	void toggleOsu();
 	void onClose(cocos2d::CCObject*) override;
 	#if GEODE_COMP_GD_VERSION == 22081
