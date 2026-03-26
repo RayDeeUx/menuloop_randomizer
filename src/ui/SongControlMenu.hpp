@@ -20,6 +20,7 @@ protected:
 	InfoAlertButton* m_infoButton       {};
 	CCMenuItemSpriteExtra* m_ffwdButton {};
 	CCMenuItemSpriteExtra* m_bkwdButton {};
+	CCMenuItemSpriteExtra* m_stngButton {};
 	#if GEODE_COMP_GD_VERSION == 22081
 	geode::NineSlice* b                 {};
 	#endif
@@ -40,6 +41,7 @@ protected:
 	cocos2d::CCLabelBMFont* m_musVolLabl{};
 	cocos2d::CCNodeRGBA* m_musicVolCntnr{};
 	int m_originalVolume = 0;
+	bool m_openStng = true;
 	float m_time = 0.f;
 	#if GEODE_COMP_GD_VERSION == 22081
 	bool init() override;
