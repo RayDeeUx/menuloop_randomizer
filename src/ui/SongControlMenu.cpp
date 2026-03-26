@@ -76,7 +76,7 @@ bool SongControlMenu::setup() {
 	this->m_mainLayer->addChild(m_infoMenu);
 
 	this->m_theTimeoutCorner = cocos2d::CCMenu::create();
-	Utils::addButton("settings", menu_selector(SongControlMenu::onSettingsButton), this->m_theTimeoutCorner, this);
+	this->m_stngButton = Utils::addButton("settings", menu_selector(SongControlMenu::onSettingsButton), this->m_theTimeoutCorner, this);
 	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 2.5f});
 	this->m_theTimeoutCorner->ignoreAnchorPointForPosition(false);
 	this->m_theTimeoutCorner->setContentSize({24.f, 24.f});
@@ -323,6 +323,7 @@ bool SongControlMenu::setup() {
 	this->m_isInQOLMod = songManager.addingToQOLModRightNow;
 
 	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get() || this->m_isInQOLMod) {
+		if (this->m_stngButton) this->m_stngButton = nullptr;
 		if (this->m_theTimeoutCorner) {
 			this->m_theTimeoutCorner->removeMeAndCleanup();
 			this->m_theTimeoutCorner = nullptr;
@@ -468,6 +469,11 @@ void SongControlMenu::pressAndHoldScheduler(float dt) {
 
 	if (this->m_ffwdButton->isSelected() && this->m_ffwdButton->isVisible() && this->m_ffwdButton->isEnabled() && this->m_ffwdButton->m_pfnSelector && this->m_ffwdButton->m_pListener) (this->m_ffwdButton->m_pListener->*this->m_ffwdButton->m_pfnSelector)(this->m_ffwdButton);
 	else if (this->m_bkwdButton->isSelected() && this->m_bkwdButton->isVisible() && this->m_bkwdButton->isEnabled() && this->m_bkwdButton->m_pfnSelector && this->m_bkwdButton->m_pListener) (this->m_bkwdButton->m_pListener->*this->m_bkwdButton->m_pfnSelector)(this->m_bkwdButton);
+	else if (this->m_stngButton && this->m_stngButton->isSelected() && this->m_stngButton->isVisible() && this->m_stngButton->isEnabled() && m_time < .6f) {
+		this->m_openStng = false;
+		this->toggleOsu();
+		this->m_stngButton->unselected();
+	}
 	else m_time = 0;
 }
 
@@ -550,6 +556,10 @@ void SongControlMenu::onAddToPlylstBtn(cocos2d::CCObject*) {
 }
 
 void SongControlMenu::onSettingsButton(cocos2d::CCObject*) {
+	if (!this->m_openStng) {
+		this->m_openStng = true;
+		return;
+	}
 	geode::openSettingsPopup(geode::Mod::get());
 	if (this->m_infoMenu) this->m_infoMenu->setScale(0.f);
 	if (this->m_infoButton) {

@@ -1,11 +1,12 @@
 # Menu Loop Randomizer Changelog
-## v1.12.2
-*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
+## v1.13.0
+*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from this update and features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - <cg>Added</c> "welcome to <c-ff66aa>osu!</c>" <c-aaaaaa>(OK, it's not really osu! but it's close enough.)</c>
   - <co>***__This feature only works from the main menu.__***</c>
   - Inspired by <c-ff66aa>osu!lazer</c>, there is now a keyboard shortcut to make the Control Panel the only visible item on screen. Press `O` or `Enter` while inside the Control Panel for a demonstration.
   - <co>Like all other keyboard shortcuts in this mod, ***THESE KEYBINDS ARE*** ***__NOT__*** ***REBINDABLE.***</c>
   - While this was designed for desktop Geode users who want to use MLR as a music player by leaving GD running in the background withhout all the distractions from the MenuLayer, mobile users can try this out as well.
+  - Mobile users can press-and-hold on the settings shortcut button as an alternative.
   - You can toggle this option off in the mod settings.
 - <cg>Added</c> Eclipse Menu integration.
   - View or control playback progress and shuffle, favorite, blacklist, and backtrack songs from (almost) anywhere!
