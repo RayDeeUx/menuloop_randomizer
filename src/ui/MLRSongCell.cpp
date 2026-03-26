@@ -1,4 +1,5 @@
 #include "MLRSongCell.hpp"
+#include "SongListLayer.hpp"
 #include "../SongControl.hpp"
 #include "../Utils.hpp"
 
@@ -178,6 +179,7 @@ void MLRSongCell::checkIfCurrentSong() const {
 	if (this->m_songData.isEmpty || !this->m_songNameLabel || !this->m_songNameLabel->getParent() || !this->m_menu) return;
 	const bool isCurrentSong = this->m_songData.hashedPath == SongManager::get().getHashedCurrentSong();
 
+	int originalTag = this->getTag();
 	geode::cocos::CCArrayExt<CCNode> childNodes = m_menu->getChildrenExt();
 	int numVisible = 0;
 	for (CCNode* node : childNodes) if (node && node->isVisible()) numVisible++;
@@ -213,6 +215,12 @@ void MLRSongCell::checkIfCurrentSong() const {
 	if (numVisible != newVisible && this->m_menu->getLayout()) {
 		this->m_menu->setContentWidth(std::clamp<float>(30.f / (36.f / this->getContentHeight()) * newVisible, 15.f, 30.f));
 		this->m_menu->updateLayout();
+	}
+
+	if (originalTag != this->getTag()) {
+		if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); sll && Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
+			sll->scrollToCurrentSong();
+		}
 	}
 }
 
