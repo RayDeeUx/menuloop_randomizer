@@ -16,9 +16,12 @@
   - View or control playback progress and shuffle, favorite, blacklist, and backtrack songs from (almost) anywhere!
   - No other shortcuts are available at the moment.
   - You can toggle this option off in the mod settings, but <cl>it will require</c> <co>a full game restart</c>.
-- <cg>Added</c> new setting:  `Notifs: Show Outside of Main Menu`.
+- <cg>Added</c> new setting:  `Notifs: Show Outside of Main Menu`  .
   - In light of the Eclipse Menu integration, notification cards from this menu can appear outside of the main menu now.
   - You can toggle this option off in the mod settings.
+- <cg>Added</c> new setting for the Song List:  `Always Auto-Scroll to Current Song`  .
+  - When changing songs, the Song List will automatically scroll to the entry of the currently playing song.
+  - <co>This setting is toggled off by default.</c> You can toggle this option on in the mod settings.
 - <co>Recategorized</c> all of the mod's settings so everything is a bit easier to navigate.
 - <co>Removed</c> [Better Touch Prio](mod:alk.better-touch-prio) dependency for song playback seeking controls/keyboard shortcuts ***ONLY FOR THE CONTROL PANEL***.
   - This means you do not need Better Touch Prio loaded to control the current song's position when inside the Control Panel.
