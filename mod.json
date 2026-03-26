@@ -260,7 +260,7 @@
 		},
 		"alwaysAutoScrollToCurrentSong": {
 			"name": "Always Auto-Scroll to Current Song",
-			"description": "Choose if you always want to automatically scroll to the current song when doing anything in the Song List menu.",
+			"description": "Choose if you always want to automatically scroll to the current song when doing anything in the Song List menu ***__AND__*** when changing songs.",
 			"type": "bool",
 			"default": false,
 			"enable-if": "autoScrollToCurrentSong"

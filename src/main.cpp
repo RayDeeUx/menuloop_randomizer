@@ -626,6 +626,12 @@ $on_mod(Loaded) {
 			weCanFigureSomethingElseOutOK->removeFromParentAndCleanup(true);
 			#endif
 
+			// so what you need to be doing is unregistering force prio since it isn't being used as a popup --alphalaneous --raydeeux
+			if (!SongManager::get().getUndefined0Alk1m123TouchPrio()) {
+				CCTouchDispatcher::get()->unregisterForcePrio(SongManager::get().songControlMenuForQOLMod);
+				CCTouchDispatcher::get()->unregisterForcePrio(SongManager::get().songListLayerForQOLMod);
+			}
+
 			layer->addChildAtPosition(SongManager::get().songControlMenuForQOLMod, geode::Anchor::Center);
 			layer->addChildAtPosition(SongManager::get().songListLayerForQOLMod, geode::Anchor::Center, {0.f, -25.f});
 
