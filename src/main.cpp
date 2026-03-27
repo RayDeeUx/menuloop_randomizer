@@ -325,7 +325,7 @@ $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
 		if (!Mod::get()->getSettingValue<bool>("eclipseIntegration")) return;
 		if (!geode::Loader::get()->isModInstalled("eclipse.eclipse-menu")) return;
-		if (geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")) SongManager::get().eclipseIsCocosStyle = geode::utils::string::contains(geode::utils::string::toLower(geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")->getSettingValue<std::string>("menu-style")), "cocos");
+		SongManager::get().eclipseIsCocosStyle = geode::utils::string::contains(geode::utils::string::toLower(geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")->getSettingValue<std::string>("menu-style")), "cocos");
 
 		listenForSettingChanges<std::string>("menu-style", [](const std::string& newMenuStyle) {
 			SongManager& sm = SongManager::get();
@@ -336,6 +336,7 @@ $on_mod(Loaded) {
 				if (!sm.eclipseIsCocosStyle) sm.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
 				else sm.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
 			}
+			// add newline if switching to cocos style so mobile users can fatfinger scroll properly
 			for (std::pair<std::optional<eclipse::components::Label>, std::string>& labelStringPair : sm.dynamicEclipseIntegrationHeaders) {
 				if (!labelStringPair.first.has_value()) continue;
 				labelStringPair.first.value().setText(sm.eclipseIsCocosStyle ? fmt::format("{}\n", labelStringPair.second) : labelStringPair.second);
@@ -481,6 +482,7 @@ $on_mod(Loaded) {
 			SongManager& sm = SongManager::get();
 			if (!sm.eclipseIsCocosStyle) sm.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
 			else sm.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
+			// add newline if switching to cocos style so mobile users can fatfinger scroll properly (repeating myself ! yayyyy)
 			for (std::pair<std::optional<eclipse::components::Label>, std::string>& labelStringPair : sm.dynamicEclipseIntegrationHeaders) {
 				if (!labelStringPair.first.has_value()) continue;
 				labelStringPair.first.value().setText(sm.eclipseIsCocosStyle ? fmt::format("{}\n", labelStringPair.second) : labelStringPair.second);
@@ -650,7 +652,10 @@ $on_mod(Loaded) {
 			}
 			SongManager::get().songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
 
-			if (typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())) typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->searchSongs("", false);
+			if (SongListLayer* foo = typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()); foo) {
+				foo->searchSongs("", false);
+				foo->m_searchBar->getInputNode()->onClickTrackNode(false);
+			}
 
 			SongManager::get().trackAndroidUI = true;
 		}});

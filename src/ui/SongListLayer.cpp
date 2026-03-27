@@ -470,6 +470,7 @@ void SongListLayer::onPreviousButton(cocos2d::CCObject*) {
 
 void SongListLayer::onControlsButton(cocos2d::CCObject*) {
 	if (this->m_isInQOLMod && this->getParent() && SongManager::get().songControlMenuForQOLMod->getParent() && SongManager::get().songControlMenuForQOLMod->getParent() == this->getParent()) {
+		if (this->m_searchBar && this->m_searchBar->getInputNode()) this->m_searchBar->getInputNode()->onClickTrackNode(false);
 		this->setScale(0.f);
 		SongManager::get().songControlMenuForQOLMod->setScale(1.f);
 		return;
