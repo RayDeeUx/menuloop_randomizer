@@ -522,11 +522,13 @@ void SongControlMenu::onPreviousButton(cocos2d::CCObject*) {
 void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 	if (this->m_isInQOLMod && this->getParent() && SongManager::get().songListLayerForQOLMod->getParent() && SongManager::get().songListLayerForQOLMod->getParent() == this->getParent()) {
 		this->setScale(0.f);
-		SongManager::get().songListLayerForQOLMod->setScale(0.7f);
+		SongManager::get().songListLayerForQOLMod->setScale(.7f);
+		SongListLayer* foo = static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data());
+		if (foo->m_searchBar && foo->m_searchBar->getInputNode()) foo->m_searchBar->getInputNode()->onClickTrackNode(false);
 		if (Utils::getBool("autoScrollToCurrentSong")) {
-			geode::Loader::get()->queueInMainThread([contentLayer = static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->getContentLayer()]() {
+			geode::Loader::get()->queueInMainThread([foo, contentLayer = foo->getContentLayer()]() {
 				if (!contentLayer || !contentLayer->getChildByTag(12192025)) return;
-				static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->scrollToCurrentSong();
+				foo->scrollToCurrentSong();
 			});
 		}
 		return;
