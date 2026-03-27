@@ -324,6 +324,7 @@ public:
 $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
 		if (!Mod::get()->getSettingValue<bool>("eclipseIntegration")) return;
+		if (!geode::Loader::get()->isModInstalled("eclipse.eclipse-menu")) return;
 		if (geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")) SongManager::get().eclipseIsCocosStyle = geode::utils::string::contains(geode::utils::string::toLower(geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")->getSettingValue<std::string>("menu-style")), "cocos");
 
 		listenForSettingChanges<std::string>("menu-style", [](const std::string& newMenuStyle) {
@@ -511,6 +512,7 @@ public:
 $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
 		if (!Mod::get()->getSettingValue<bool>("qolModIntegration")) return;
+		if (!geode::Loader::get()->isModInstalled("thesillydoggo.qolmod")) return;
 		if (!SongManager::get().qolModIntegrationSuccessful) SongManager::get().qolModIntegrationSuccessful = true;
 		GameManager::get()->schedule(schedule_selector(QOLModAndroidUITrackerDummyNode::trackAndroidUIScheduler));
 		qolmod::ext::addCustomCategory({1, Mod::get()->getName(), "qolmod.png"_spr, Mod::get()->getID(), [](cocos2d::CCMenu* layer) {
