@@ -564,10 +564,15 @@ $on_mod(Loaded) {
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setScale(.45f);
 
+			layer->addChildAtPosition(iHaveThisProblem, geode::Anchor::Top, {0.f, -45.f});
 			layer->addChildAtPosition(iLikeWomenYesAndEverywhereIGoImSurroundedByBeautifulWomenAndTheyLoveMeAndTheseWomenTheyreSoSexyAndFun, geode::Anchor::Top, {0.f, -10.f});
 			layer->addChildAtPosition(butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar, geode::Anchor::Top, {0.f, -25.f});
 			layer->addChildAtPosition(iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway, geode::Anchor::Top, {0.f, -37.5f});
-			layer->addChildAtPosition(iHaveThisProblem, geode::Anchor::Top, {0.f, -45.f});
+
+			iHaveThisProblem->setID("warning-footer-one"_spr);
+			iLikeWomenYesAndEverywhereIGoImSurroundedByBeautifulWomenAndTheyLoveMeAndTheseWomenTheyreSoSexyAndFun->setID("warning-gold-header"_spr);
+			butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar->setID("warning-sub-header"_spr);
+			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setID("warning-footer-two"_spr);
 
 			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) {
 				CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create("Menu Loop Randomizer is currently not active!", "bigFont.fnt");
@@ -583,6 +588,9 @@ $on_mod(Loaded) {
 				layer->addChildAtPosition(dontMarrySvetlana, geode::Anchor::Center, {0.f, 10.f});
 				layer->addChildAtPosition(justDont, geode::Anchor::Center, {0.f, -5.f});
 
+				dontMarrySvetlana->setID("mlr-not-active-warning"_spr);
+				justDont->setID("mlr-not-active-suggestion"_spr);
+
 				return;
 			}
 
@@ -597,6 +605,9 @@ $on_mod(Loaded) {
 
 				layer->addChildAtPosition(dontMarrySvetlana, geode::Anchor::Center, {0.f, 10.f});
 				layer->addChildAtPosition(justDont, geode::Anchor::Center, {0.f, -5.f});
+
+				dontMarrySvetlana->setID("mlr-not-active-warning"_spr);
+				justDont->setID("mlr-not-active-suggestion"_spr);
 
 				return;
 			}
@@ -645,14 +656,14 @@ $on_mod(Loaded) {
 			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
 
 			SongManager::get().songListLayerForQOLMod->ignoreAnchorPointForPosition(false);
-			SongManager::get().songListLayerForQOLMod->setScale(0.f);
-			if (SEARCH_BAR_ENABLED && SongManager::get().songListLayerForQOLMod.data() && typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()) && typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->m_searchBar) {
-				SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->m_searchBar->getInputNode());
+			SongManager::get().songListLayerForQOLMod->setScale(0.f); // look bro you think of a better way of hiding these sons of bitches because moving them off screen isnt doing it --raydeeux
+			if (SEARCH_BAR_ENABLED && SongManager::get().songListLayerForQOLMod.data() && static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()) && static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->m_searchBar) {
+				SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->m_searchBar->getInputNode());
 				SongManager::get().songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
 			}
 			SongManager::get().songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
 
-			if (SongListLayer* foo = typeinfo_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()); foo) {
+			if (SongListLayer* foo = static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()); foo) {
 				foo->searchSongs("", false);
 				foo->m_searchBar->getInputNode()->onClickTrackNode(false);
 			}
