@@ -714,7 +714,7 @@ void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {
 		else sm.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
 	});
 	if (SongManager::get().isQOLMod && SongManager::get().qolModIntegrationSuccessful && (cocos2d::CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().songControlMenuForQOLMod)) {
-		if (SongControlMenu* svet = geode::cast::typeinfo_cast<SongControlMenu*>(SongManager::get().songControlMenuForQOLMod.data()); svet) geode::Loader::get()->queueInMainThread([svet] { svet->updateCurrentLabel(); });
+		if (SongControlMenu* svet = static_cast<SongControlMenu*>(SongManager::get().songControlMenuForQOLMod.data()); svet) geode::Loader::get()->queueInMainThread([svet] { svet->updateCurrentLabel(); });
 	}
 	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
 	else if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); SongManager::get().getUndefined0Alk1m123TouchPrio() && sll && sll->m_searchBar) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(sll->m_searchBar->getInputNode(), false); });

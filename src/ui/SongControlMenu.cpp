@@ -58,8 +58,14 @@ bool SongControlMenu::setup() {
 			"Platform: <cl>{}</c>\n"
 			"Constant Shuffle Mode: <cl>{}</c>\n"
 			"Current playlist file: <cl>{}</c> (Loaded: <cl>{}</c>)\n\n"
+			#if GEODE_COMP_GD_VERSION < 22081
 			"<cy>Q: Why do I see overlapping elements?</c>\n"
 			"A: Install <cl>Happy Textures by Alphalaneous</c>.\n<c_>This is a non-negotiable solution.</c>\n\n"
+			#endif
+			#if GEODE_COMP_GD_VERSION > 22074
+			"<cy>Q: Why can I only go back one song?</c>\n"
+			"A: You're randomizing <co>menu loops</c>, not using a mini-VLC/mini-Spotify. Deal with it.\n<c_>This is a non-negotiable solution.</c>\n\n"
+			#endif
 			"<cy>Q: Add</c> <cl>[feature suggestion that makes this mod act like Spotify or EditorMusic, but with the menu loop]</c><cy>!</c>\n"
 			"A: <c_>No. Never.</c>",
 			Utils::getPlatform(),
