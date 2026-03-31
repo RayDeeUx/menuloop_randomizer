@@ -1,5 +1,5 @@
 {
-	"geode": "5.3.0",
+	"geode": "5.4.0",
 	"gd": {
 		"win": "2.2081",
 		"mac": "2.2081",
@@ -27,6 +27,11 @@
 			"description": "<cy>(Hopefully.)</c>\nThis setting does literally nothing new except being a button that acts as a shortcut to open the config directory for this mod (which is kind of important for using this mod properly, because this is where you will store menu loops), because the legendary developers in the Geode Team themselves forgot to add a shortcut button that would have done this exact same thing, and I have gotten far too many folks (rightfully) asking me to find the config directory when using some of my other mods, and I hate repeating the same things over and over again, and I don't know if the next major update for Geode will also repeat this mistake where HJfod forgets to include a config directory shortcut button, so this setting and this button are here for extra insurance, so please enjoy this extra button, I guess. Anyway, by the time you're finished reading this, your device should be finished with opening the config directory; press \"Aight\" to close this window.",
 			"type": "custom:configdir"
 		},
+		"song-fetching-storing-header": {
+			"name": "Song Fetching/Storing",
+			"description": "Choose where Menu Loop Randomizer fetches/stores its songs.",
+			"type": "title"
+		},
 		"useCustomSongs": {
 			"name": "Use Custom Songs Instead",
 			"description": "Use your own songs instead of those you have downloaded from Newgrounds or RobTop's Music Library.\n\n<cy>Find instructions in the mod info popup.</c>",
@@ -51,6 +56,11 @@
 				}
 			]
 		},
+		"song-selection-modes-header": {
+			"name": "Song Selection",
+			"description": "Choose how Menu Loop Randomizer finds songs to pick from.",
+			"type": "title"
+		},
 		"playlistMode": {
 			"name": "Constant Shuffle Mode",
 			"description": "<cl>Original idea by TheKevinner.</c> <cp>Formerly known as \"Playlist Mode\".</c>\n\nChange menu loops after a song is finished. Requires more than 1 song available to work.\n\n<cr>This feature is ***very*** unstable. It's best if you restart your game after toggling this setting.</c>\n\n<cy>Known issues (usually for non-Windows users):</c>\n<cy>- Songs may stop changing while/after viewing Geode UI, the Tower, the icon kit, or the shops.</c>\n<cy>- Constant Shuffle Mode disables loops from the Tower, all shops, and all vaults. (Not much of a loss; those loops get tiring after a while.)</c>\n<cy>- Constant Shuffle Mode may break when there is only one song for MLR to choose from.",
@@ -62,6 +72,11 @@
 			"description": "<cl>Original idea by HexCodesGMD.</c>\n\nIf enabled, this mod's most recently chosen menu loop will be the first loop you hear the next time you open Geometry Dash.",
 			"type": "bool",
 			"default": false
+		},
+		"button-management-header": {
+			"name": "Button Management",
+			"description": "Choose how (many) buttons from Menu Loop Randomizer are displayed.",
+			"type": "title"
 		},
 		"buttonMode": {
 			"name": "Button Mode",
@@ -129,19 +144,24 @@
 			"type": "bool",
 			"default": true
 		},
+		"notifications-header": {
+			"name": "Notifications",
+			"description": "Choose how (many) buttons from Menu Loop Randomizer are displayed.",
+			"type": "title"
+		},
 		"replaceUnsupportedChars": {
-			"name": "Notifs: Use '?' For Unsupported Characters",
+			"name": "Use '?' For Unsupported Characters",
 			"type": "bool",
 			"default": true
 		},
 		"enableNewNotification": {
-			"name": "Notifs: New Notif Button",
+			"name": "New Notif Button",
 			"description": "Enables the <cj>notification regeneration button</c> in the main menu.",
 			"type": "bool",
 			"default": true
 		},
 		"songFormatNGML": {
-			"name": "Notifs: Newgrounds/Music Library Song Name Format",
+			"name": "Newgrounds/Music Library Song Name Format",
 			"description": "Choose the format you prefer for \"Now Playing\" notifications (and as a fallback option for other menus from MLR).\n\n<cy>Only applies to Newgrounds/Music Library songs.</c>",
 			"type": "string",
 			"default": "Song Name, Artist, Song ID",
@@ -153,7 +173,7 @@
 			]
 		},
 		"removeSuffix": {
-			"name": "Notifs: Hide File Extension",
+			"name": "Hide File Extension",
 			"description": "Hides the file extension of the song being played.\n<cy>Only applies when using custom songs as the menu loop.</c>",
 			"type": "bool",
 			"default": true
@@ -165,7 +185,7 @@
 			"default": true
 		},
 		"customPrefix": {
-			"name": "Notifs: Prefix",
+			"name": "Prefix",
 			"description": "Set your prefix for the \"Now Playing\" notification here.\n\n<cy>To disable the prefix, set it to </c><cl>\"[Empty]\"</c><cy>.</c>",
 			"type": "string",
 			"default": "Now Playing",
@@ -180,7 +200,7 @@
 			]
 		},
 		"notificationTime": {
-			"name": "Notifs: Duration",
+			"name": "Duration",
 			"type": "float",
 			"default": 0.5,
 			"min": 0.1,
@@ -197,7 +217,7 @@
 			}
 		},
 		"notificationFont": {
-			"name": "Notifs: Font",
+			"name": "Font",
 			"description": "Choose the font the notification will use. Default is 17 for legacy purposes.\n\n<cj>0 for Pusab, -1 for Golden Pusab, and -2 for the font you see when viewing level comments.</c>\n<cy>To use font numbers greater than 0: refer to the level editor for the font each number corresponds to, subtract that number by 1, and then put it here.</c>",
 			"type": "int",
 			"default": 17,
@@ -212,6 +232,11 @@
 				"big-arrow-step": 5,
 				"slider-step": 1
 			}
+		},
+		"song-randomization-header": {
+			"name": "Song Randomization",
+			"description": "Choose how Menu Loop Randomizer selects a random song.",
+			"type": "title"
 		},
 		"randomizeWhenExitingLevel": {
 			"name": "Randomize Menu Loop on Level Exit",
@@ -414,108 +439,6 @@
 			},
 			"enable-if": "loaded:alk.better-touch-prio"
 		},
-		"showScrollingShortcuts": {
-			"name": "Song List: Show Scrolling Shortcuts",
-			"description": "Choose if you want scrolling shortcuts in the Song List menu.",
-			"type": "bool",
-			"default": true
-		},
-		"autoScrollToCurrentSong": {
-			"name": "Song List: Auto-Scroll to Current Song",
-			"description": "Choose if you want to automatically scrol to the current song in the Song List menu.",
-			"type": "bool",
-			"default": true
-		},
-		"showSearchBar": {
-			"name": "Song List: Show Search Bar",
-			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SEARCH BAR WILL APPEAR.__***</c>\n\nChoose if you want to show the search bar in the Song List menu.",
-			"type": "bool",
-			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio"
-		},
-		"compactModeScaleFactor": {
-			"name": "Song List: Compact Mode Scale Factor",
-			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, COMPACT MODE CANNOT BE ENABLED.__***</c>\n\nChoose how much smaller each song entry in the Song List becomes when enabling Compact Mode. The higher this number, the smaller each song entry in the Song List becomes.",
-			"type": "float",
-			"default": 1.5,
-			"min": 1.5,
-			"max": 2.0,
-			"control": {
-				"input": true,
-				"slider": true,
-				"arrows": false,
-				"big-arrows": false,
-				"arrow-step": 0,
-				"big-arrow-step": 0,
-				"slider-step": 0.01
-			},
-			"enable-if": "loaded:alk.better-touch-prio"
-		},
-		"showSortSongOptions": {
-			"name": "Song List: Show Sorting Options",
-			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SONG SORTING OPTIONS WILL APPEAR.__***</c>\n\nChoose if you want to show song sorting options in the Song List menu.",
-			"type": "bool",
-			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio"
-		},
-		"showSortSongLength": {
-			"name": "Song List: Show Song Length Sorting Option (READ!)",
-			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SONG SORTING OPTIONS WILL APPEAR.__***</c>\n\nChoose if you want the option to sort songs by their length in the Song List menu.\n\n<cy>Requires \"Song List: Show Sorting Options\" to be enabled.</c>",
-			"type": "bool",
-			"default": false,
-			"enable-if": "loaded:alk.better-touch-prio && showSortSongOptions"
-		},
-		"showExtraInfoLabel": {
-			"name": "Song List: Show Extra Song Info in Compact Mode",
-			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO EXTRA LABELS WILL APPEAR.__***</c>\n\nChoose if you want to show extra information about a specific song when Compact Mode is enabled in the Song List menu.",
-			"type": "bool",
-			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio"
-		},
-		"showPlaybackProgressControlsSongList": {
-			"name": "Song List: Show Playback Progress and Controls",
-			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO CONTROLS WILL APPEAR.__***</c>\n\nChoose if you want to show playback controls for the currently playing song in the Song List menu.",
-			"type": "bool",
-			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio"
-		},
-		"youtubeAndVLCKeyboardShortcutsSongList": {
-			"name": "Song List: YT/VLC/Spotify-like Hotkeys",
-			"description": "Choose if you want to use <cr>YT</c>/<c-FFA544>VLC</c>/<c-06CE91>Spotify</c>-like shortcuts to control playback progress or control song selection in the Song List menu.\n\n- <cr>Numrow/Numpad 0-9</c>: Control playback progress position. (0 = 0%, 1 = 10%, etc..., 9 = 90%.)\n- <cr>Shift + N</c>, <c-06CE91>Ctrl + S</c>, <c-FFA544>Command + Right Arrow</c> (macOS)/<c-FFA544>Ctrl + Right Arrow</c> (Windows): Shuffle song\n- <cr>Shift + P</c>, <c-FFA544>Command + Left Arrow</c> (macOS)/<c-FFA544>Ctrl + Left Arrow</c> (Windows): Play previous song (if available)\n- <c-06CE91>Command + R</c> (macOS)/<c-06CE91>Ctrl + R</c> (Windows): Restart current song\n- <c-06CE91>Cmd + H</c> (macOS)/<c-06CE91>Ctrl + H</c>, <c-06CE91>Cmd + K</c> (macOS)/<c-06CE91>Ctrl + K</c> (Windows): Switch to Control Panel\n- <c-06CE91>Shift + Ctrl + B</c> (macOS)/<c-06CE91>Shift + Alt + B</c> (Windows): Favorite current song\n- <c-06CE91>Shift + Cmd + J</c> (macOS)/<c-06CE91>Shift + Ctrl + J</c> (Windows): Scroll to current song",
-			"type": "bool",
-			"default": {
-				"win": true,
-				"mac": true,
-				"android": "false",
-				"ios": "false"
-			},
-			"platforms": [ "win", "mac" ]
-		},
-		"songIndicatorsInControlPanel": {
-			"name": "Control Panel: Song Indicators",
-			"description": "Apply the song indicators seen in the Song List menu into the Control Panel's song name text.\n\nAs a reminder, the song indicators are:\n- Gold = <cy>favorited</c>.\n- Green = <cg>current</c>.\n- Italics = NG/ML song stored in an unexpected place.\n- Dark gradients OR random letters/numbers = Jukebox/NONG, <c-ff0000>OR</c> someone else goofed up.\n\n<c-aaaaaa>For a number of reasons, the dark gradient and the green song name do not appear in the Control Panel.</c>",
-			"type": "bool",
-			"default": true
-		},
-		"showPlaybackProgressAndControls": {
-			"name": "Control Panel: Show Playback Progress and Controls",
-			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO CONTROLS OR PROGRESS BAR WILL APPEAR.__***</c>\n\nChoose if you want to show playback controls and playback progress about the currently playing song in the Control Panel menu.",
-			"type": "bool",
-			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio"
-		},
-		"youtubeAndVLCKeyboardShortcutsControlPanel": {
-			"name": "Control Panel: YT/VLC/Spotify-like Hotkeys",
-			"description": "Choose if you want to use <cr>YT</c>/<c-FFA544>VLC</c>/<c-06CE91>Spotify</c>-like shortcuts to control playback progress or control song selection in the Control Panel menu.\n\n- <cr>Numrow/Numpad 0-9</c>: Control playback progress position. (0 = 0%, 1 = 10%, etc..., 9 = 90%.)\n- <cr>Shift + N</c>, <c-06CE91>Ctrl + S</c>, <c-FFA544>Command + Right Arrow</c> (macOS)/<c-FFA544>Ctrl + Right Arrow</c> (Windows): Shuffle song\n- <cr>Shift + P</c>, <c-FFA544>Command + Left Arrow</c> (macOS)/<c-FFA544>Ctrl + Left Arrow</c> (Windows): Play previous song (if available)\n- <c-06CE91>Command + R</c> (macOS)/<c-06CE91>Ctrl + R</c> (Windows): Restart current song\n- <c-06CE91>Cmd + K</c> (macOS)/<c-06CE91>Ctrl + K</c> (Windows): Switch to Song List\n- <c-06CE91>Shift + Ctrl + B</c> (macOS)/<c-06CE91>Shift + Alt + B</c> (Windows): Favorite current song",
-			"type": "bool",
-			"default": {
-				"win": true,
-				"mac": true,
-				"android": "false",
-				"ios": "false"
-			},
-			"platforms": [ "win", "mac" ]
-		},
 		"specificSongOverride": {
 			"name": "Specific Menu Loop File Override",
 			"description": "In case you *hate* the randomizer elements from this mod.\n\n<cy>Leave this as blank to disable this option.</c>",
@@ -538,6 +461,11 @@
 					"description": "Audio files"
 				}
 			]
+		},
+		"advanced-header": {
+			"name": "Advanced Settings",
+			"description": "Advanced settings for Menu Loop Randomizer.",
+			"type": "title"
 		},
 		"dangerousBlacklisting": {
 			"name": "Dangerous Blacklisting",
