@@ -14,6 +14,7 @@
   - You can toggle this option off in the mod settings, but <cl>it will require</c> <co>a full game restart</c>.
 - <cg>Added</c> QOLMod integration.
   - View or control playback progress and shuffle, favorite, blacklist, and backtrack songs from (almost) anywhere!
+  - The Song List shortcut from the Control Panel has been disabled by default to prevent misdirected complaints about game freezes/lag. You can enable the Song List shortcut in the settings. 
   - No other shortcuts are available at the moment.
   - You can toggle this option off in the mod settings, but <cl>it will require</c> <co>a full game restart</c>.
 - <cg>Added</c> new setting:  `Notifs: Show Outside of Main Menu`  .

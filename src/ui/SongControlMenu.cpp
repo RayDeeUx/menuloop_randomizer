@@ -357,9 +357,11 @@ bool SongControlMenu::setup() {
 		this->unschedule(schedule_selector(SongControlMenu::visualizerScheduler));
 		this->unschedule(schedule_selector(SongControlMenu::checkManagerFinished));
 		if (this->m_closeBtn) this->m_closeBtn->removeMeAndCleanup();
-		if (this->m_openSongListMenu->getChildByTag(20260105)) {
-			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->setEnabled(true);
-			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->setColor(cocos2d::ccColor3B{255, 255, 255});
+		if (this->m_openSongListMenu->getChildByTag(20260105) && !Utils::getBool("qolModIntegrationSongList")) {
+			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->setEnabled(false);
+			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->setColor(cocos2d::ccColor3B{128, 128, 128});
+			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->m_pfnSelector = nullptr;
+			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->m_pListener = nullptr;
 		}
 		if (this->m_otherLabel) {
 			this->m_otherLabel->setString("Hey there! You're currently viewing this menu inside QOLMod. Features are limited here, including the Song List, keybinds, and shortcuts.");
@@ -527,7 +529,7 @@ void SongControlMenu::onPreviousButton(cocos2d::CCObject*) {
 }
 
 void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
-	if (this->m_isInQOLMod && this->getParent() && SongManager::get().songListLayerForQOLMod->getParent() && SongManager::get().songListLayerForQOLMod->getParent() == this->getParent()) {
+	if (Utils::getBool("qolModIntegrationSongList") && this->m_isInQOLMod && this->getParent() && SongManager::get().songListLayerForQOLMod->getParent() && SongManager::get().songListLayerForQOLMod->getParent() == this->getParent()) {
 		this->setScale(0.f);
 		SongManager::get().songListLayerForQOLMod->setScale(.7f);
 		SongListLayer* foo = static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data());
@@ -540,6 +542,7 @@ void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 		}
 		return;
 	}
+	if ((!Utils::getBool("qolModIntegrationSongList") && this->m_isInQOLMod) || !SongManager::get().songListLayerForQOLMod) return;
 	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
 		FLAlertLayer* alert = FLAlertLayer::create("Hold on a sec!", "Menu Loop Randomizer is still calculating song lengths to set up the Song List menu. Hang tight, and try again later.", "I Understand");
 		alert->m_noElasticity = true;

@@ -220,7 +220,7 @@ void MLRSongCell::checkIfCurrentSong() const {
 	if (originalTag != this->getTag()) {
 		if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); sll && Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
 			sll->scrollToCurrentSong();
-		} else if (SongManager::get().songListLayerForQOLMod && Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
+		} else if (Utils::getBool("qolModIntegrationSongList") && SongManager::get().songListLayerForQOLMod && Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
 			static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->scrollToCurrentSong();
 		}
 	}
