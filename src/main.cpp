@@ -673,7 +673,7 @@ $on_mod(Loaded) {
 
 				if (SongListLayer* foo = static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()); foo) {
 					foo->searchSongs("", false);
-					foo->m_searchBar->getInputNode()->onClickTrackNode(false);
+					if (foo && foo->m_searchBar && foo->m_searchBar->getInputNode()) foo->m_searchBar->getInputNode()->onClickTrackNode(false);
 				}
 			}
 
