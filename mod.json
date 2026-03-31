@@ -408,10 +408,11 @@
 			"default": true
 		},
 		"qolModIntegrationSongList": {
-			"name": "QOLMod Integration Includes Song List",
+			"name": "QOLMod Integration: Include Song List",
 			"description": "<cp>MAY BRIEFLY FREEZE DEVICES LOADING THOUSANDS OF SONGS FOR MENU LOOP RANDOMIZER.</c>\n\nOpen the Song List menu from QOLMod!\n\n<cl>QOLMod</c> is <co>REQUIRED</c> for this option to work.",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "qolModIntegration"
 		},
 		"useMiniaudioForLength": {
 			"name": "Use Miniaudio to Find Song Length",
