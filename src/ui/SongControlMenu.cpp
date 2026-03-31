@@ -365,7 +365,7 @@ bool SongControlMenu::setup() {
 		}
 		if (this->m_otherLabel) {
 			if (!Utils::getBool("qolModIntegrationSongList")) this->m_otherLabel->setString("Hey there! You're currently viewing this menu inside QOLMod. Features are limited here, including the Song List, keybinds, and shortcuts.");
-			else this->m_otherLabel->setString("Hey there! You're currently viewing this menu inside QOLMod. Features are limited here, including the keybinds, and shortcuts.");
+			else this->m_otherLabel->setString("Hey there! You're currently viewing this menu inside QOLMod. Features are limited here, including keybinds and shortcuts.");
 		}
 		if (this->m_infoMenu) {
 			this->m_infoMenu->removeMeAndCleanup();
