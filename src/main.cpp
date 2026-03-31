@@ -617,56 +617,73 @@ $on_mod(Loaded) {
 			SongManager::get().addingToQOLModRightNow = true;
 			SongControlMenu* iKnowItWouldntBeForLoveOrWhatever = SongControlMenu::create();
 			iKnowItWouldntBeForLoveOrWhatever->show();
-			SongListLayer* weCanFigureSomethingElseOutOK = SongListLayer::create();
-			weCanFigureSomethingElseOutOK->show();
+			SongListLayer* weCanFigureSomethingElseOutOK = nullptr;
+			if (Utils::getBool("qolModIntegrationSongList")) {
+				weCanFigureSomethingElseOutOK = SongListLayer::create();
+				weCanFigureSomethingElseOutOK->show();
+			}
 			SongManager::get().addingToQOLModRightNow = false;
-			SongManager::get().songListLayerForQOLMod = geode::Ref(weCanFigureSomethingElseOutOK);
+			if (Utils::getBool("qolModIntegrationSongList")) SongManager::get().songListLayerForQOLMod = geode::Ref(weCanFigureSomethingElseOutOK);
 			SongManager::get().songControlMenuForQOLMod = geode::Ref(iKnowItWouldntBeForLoveOrWhatever);
 
 			#if GEODE_COMP_GD_VERSION > 22074
 			iKnowItWouldntBeForLoveOrWhatever->setKeypadEnabled(false);
 			iKnowItWouldntBeForLoveOrWhatever->setTouchEnabled(false);
 			iKnowItWouldntBeForLoveOrWhatever->removeFromParent();
-			weCanFigureSomethingElseOutOK->setKeypadEnabled(false);
-			weCanFigureSomethingElseOutOK->setTouchEnabled(false);
-			weCanFigureSomethingElseOutOK->removeFromParent();
+			if (Utils::getBool("qolModIntegrationSongList") && weCanFigureSomethingElseOutOK) {
+				weCanFigureSomethingElseOutOK->setKeypadEnabled(false);
+				weCanFigureSomethingElseOutOK->setTouchEnabled(false);
+				weCanFigureSomethingElseOutOK->removeFromParent();
+			}
 			#endif
 
 			#if GEODE_COMP_GD_VERSION < 22081
 			iKnowItWouldntBeForLoveOrWhatever->setKeypadEnabled(false);
 			iKnowItWouldntBeForLoveOrWhatever->setTouchEnabled(false);
 			iKnowItWouldntBeForLoveOrWhatever->removeFromParentAndCleanup(true);
-			weCanFigureSomethingElseOutOK->setKeypadEnabled(false);
-			weCanFigureSomethingElseOutOK->setTouchEnabled(false);
-			weCanFigureSomethingElseOutOK->removeFromParentAndCleanup(true);
+			if (Utils::getBool("qolModIntegrationSongList") && weCanFigureSomethingElseOutOK) {
+				weCanFigureSomethingElseOutOK->setKeypadEnabled(false);
+				weCanFigureSomethingElseOutOK->setTouchEnabled(false);
+				weCanFigureSomethingElseOutOK->removeFromParentAndCleanup(true);
+			}
 			#endif
 
 			// so what you need to be doing is unregistering force prio since it isn't being used as a popup --alphalaneous --raydeeux
 			if (!SongManager::get().getUndefined0Alk1m123TouchPrio()) {
 				CCTouchDispatcher::get()->unregisterForcePrio(SongManager::get().songControlMenuForQOLMod);
-				CCTouchDispatcher::get()->unregisterForcePrio(SongManager::get().songListLayerForQOLMod);
+				if (Utils::getBool("qolModIntegrationSongList") && SongManager::get().songListLayerForQOLMod) CCTouchDispatcher::get()->unregisterForcePrio(SongManager::get().songListLayerForQOLMod);
 			}
 
 			layer->addChildAtPosition(SongManager::get().songControlMenuForQOLMod, geode::Anchor::Center);
-			layer->addChildAtPosition(SongManager::get().songListLayerForQOLMod, geode::Anchor::Center, {0.f, -25.f});
+			if (Utils::getBool("qolModIntegrationSongList") && SongManager::get().songListLayerForQOLMod) layer->addChildAtPosition(SongManager::get().songListLayerForQOLMod, geode::Anchor::Center, {0.f, -25.f});
 
 			SongManager::get().songControlMenuForQOLMod->ignoreAnchorPointForPosition(false);
 			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
 			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::forceSharpCornerIllusionScheduler));
 			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
 
-			SongManager::get().songListLayerForQOLMod->ignoreAnchorPointForPosition(false);
-			SongManager::get().songListLayerForQOLMod->setScale(0.f); // look bro you think of a better way of hiding these sons of bitches because moving them off screen isnt doing it --raydeeux
-			if (SEARCH_BAR_ENABLED && SongManager::get().songListLayerForQOLMod.data() && static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()) && static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->m_searchBar) {
-				SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->m_searchBar->getInputNode());
-				SongManager::get().songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
-			}
-			SongManager::get().songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
+			if (Utils::getBool("qolModIntegrationSongList") && SongManager::get().songListLayerForQOLMod) {
+				SongManager::get().songListLayerForQOLMod->ignoreAnchorPointForPosition(false);
+				SongManager::get().songListLayerForQOLMod->setScale(0.f); // look bro you think of a better way of hiding these sons of bitches because moving them off screen isnt doing it --raydeeux
+				if (SEARCH_BAR_ENABLED && SongManager::get().songListLayerForQOLMod.data() && static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()) && static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->m_searchBar) {
+					SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->m_searchBar->getInputNode());
+					SongManager::get().songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
+				}
+				SongManager::get().songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
 
-			if (SongListLayer* foo = static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()); foo) {
-				foo->searchSongs("", false);
-				foo->m_searchBar->getInputNode()->onClickTrackNode(false);
+				if (SongListLayer* foo = static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()); foo) {
+					foo->searchSongs("", false);
+					foo->m_searchBar->getInputNode()->onClickTrackNode(false);
+				}
 			}
+
+			CCMenuItemSpriteExtra* bar = geode::cocos::CCMenuItemExt::createSpriteExtraWithFilename("settings-btn-sprite.png"_spr, .25f, [](CCObject*) {
+				CCDirector::get()->getKeypadDispatcher()->dispatchKeypadMSG(ccKeypadMSGType::kTypeBackClicked);
+				geode::openSettingsPopup(Mod::get());
+			});
+
+			bar->setID("settings-shortcut-qolmod-integration"_spr);
+			layer->addChildAtPosition(bar, Anchor::BottomRight, {-10.f, 10.f});
 
 			SongManager::get().trackAndroidUI = true;
 		}});
