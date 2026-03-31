@@ -541,7 +541,7 @@ void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 		}
 		return;
 	}
-	if ((!Utils::getBool("qolModIntegrationSongList") && this->m_isInQOLMod) || !SongManager::get().songListLayerForQOLMod) return;
+	if ((!Utils::getBool("qolModIntegrationSongList") && this->m_isInQOLMod) || (this->m_isInQOLMod && !SongManager::get().songListLayerForQOLMod)) return;
 	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
 		FLAlertLayer* alert = FLAlertLayer::create("Hold on a sec!", "Menu Loop Randomizer is still calculating song lengths to set up the Song List menu. Hang tight, and try again later.", "I Understand");
 		alert->m_noElasticity = true;
