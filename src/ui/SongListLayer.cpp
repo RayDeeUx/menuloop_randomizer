@@ -428,7 +428,7 @@ bool SongListLayer::setup() {
 		if (infoMenu) infoMenu->removeMeAndCleanup();
 		if (this->m_title) {
 			this->m_title->setPositionY(this->m_title->getPositionY() + 2.5f);
-			cocos2d::CCLabelBMFont* neverInLifeHaveIBlushedRussiansDoNotDoThis = cocos2d::CCLabelBMFont::create("[You're currently viewing this menu inside QOLMod. Keybinds, shortcuts, and mouse scrolling are disabled.]", "chatFont.fnt");
+			cocos2d::CCLabelBMFont* neverInLifeHaveIBlushedRussiansDoNotDoThis = cocos2d::CCLabelBMFont::create("[You're currently viewing this menu inside QOLMod. Keybinds, shortcuts, and mouse wheel/trackpad scrolling are disabled.]", "chatFont.fnt");
 			neverInLifeHaveIBlushedRussiansDoNotDoThis->limitLabelWidth(this->m_title->getScaledContentWidth(), 1.f, .0001f);
 			neverInLifeHaveIBlushedRussiansDoNotDoThis->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 			this->m_mainLayer->addChild(neverInLifeHaveIBlushedRussiansDoNotDoThis);
