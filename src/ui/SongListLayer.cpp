@@ -152,7 +152,7 @@ bool SongListLayer::setup() {
 	this->m_isInQOLMod = songManager.addingToQOLModRightNow;
 
 	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
-	cocos2d::CCLayer* mainLayer = this->m_mainLayer;
+	CCLayer* mainLayer = this->m_mainLayer;
 	mainLayer->setID("main-layer"_spr);
 
 	this->m_scrollLayer = geode::ScrollLayer::create({356.f, 220.f});
@@ -450,25 +450,25 @@ void SongListLayer::searchSongs(const std::string& queryString, const bool check
 	SongListLayer::addSongsToScrollLayer(this->m_scrollLayer, SongManager::get(), queryString);
 }
 
-void SongListLayer::onSettingsButton(cocos2d::CCObject*) {
+void SongListLayer::onSettingsButton(CCObject*) {
 	if (this->m_isInQOLMod) return;
 	this->onClose(nullptr);
 	geode::openSettingsPopup(geode::Mod::get());
 }
 
-void SongListLayer::onShuffleButton(cocos2d::CCObject*) {
+void SongListLayer::onShuffleButton(CCObject*) {
 	SongControl::shuffleSong();
 }
 
-void SongListLayer::onCopyButton(cocos2d::CCObject*) {
+void SongListLayer::onCopyButton(CCObject*) {
 	SongControl::copySong();
 }
 
-void SongListLayer::onPreviousButton(cocos2d::CCObject*) {
+void SongListLayer::onPreviousButton(CCObject*) {
 	SongControl::previousSong();
 }
 
-void SongListLayer::onControlsButton(cocos2d::CCObject*) {
+void SongListLayer::onControlsButton(CCObject*) {
 	if (this->m_isInQOLMod && this->getParent() && SongManager::get().songControlMenuForQOLMod->getParent() && SongManager::get().songControlMenuForQOLMod->getParent() == this->getParent()) {
 		if (this->m_searchBar && this->m_searchBar->getInputNode()) this->m_searchBar->getInputNode()->onClickTrackNode(false);
 		this->setScale(0.f);
@@ -484,7 +484,7 @@ CCContentLayer* SongListLayer::getContentLayer() const {
 	return nullptr;
 }
 
-void SongListLayer::onScrollTopButton(cocos2d::CCObject*) {
+void SongListLayer::onScrollTopButton(CCObject*) {
 	if (!Utils::getBool("showScrollingShortcuts")) return;
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
 	if (!contentLayer || !this->m_scrollLayer || !SongListLayer::tallEnough(this->m_scrollLayer)) return; // cmon bruh it's in plain sight lol
@@ -504,54 +504,54 @@ void SongListLayer::scrollToCurrentSong() {
 	else contentLayer->setPositionY(desiredPosition);
 }
 
-void SongListLayer::onScrollCurButton(cocos2d::CCObject*) {
+void SongListLayer::onScrollCurButton(CCObject*) {
 	if (!Utils::getBool("showScrollingShortcuts")) return;
 	SongListLayer::scrollToCurrentSong();
 }
 
-void SongListLayer::onScrollBtmButton(cocos2d::CCObject*) {
+void SongListLayer::onScrollBtmButton(CCObject*) {
 	if (!Utils::getBool("showScrollingShortcuts") || !this->m_scrollLayer) return;
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
 	if (!contentLayer || !SongListLayer::tallEnough(this->m_scrollLayer)) return; // cmon bruh it's in plain sight lol
 	contentLayer->setPositionY(0.f);
 }
 
-void SongListLayer::onCompactModeToggle(cocos2d::CCObject*) {
+void SongListLayer::onCompactModeToggle(CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::toggleSavedValueAndSearch("songListCompactMode");
 }
 
-void SongListLayer::onFavoritesOnlyToggle(cocos2d::CCObject*) {
+void SongListLayer::onFavoritesOnlyToggle(CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::toggleSavedValueAndSearch("songListFavoritesOnlyMode");
 }
 
-void SongListLayer::onSortReverseToggle(cocos2d::CCObject*) {
+void SongListLayer::onSortReverseToggle(CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::toggleSavedValueAndSearch("songListReverseSort");
 }
 
-void SongListLayer::onSortABCToggle(cocos2d::CCObject*) {
+void SongListLayer::onSortABCToggle(CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortAlphabetically");
 }
 
-void SongListLayer::onSortDateToggle(cocos2d::CCObject*) {
+void SongListLayer::onSortDateToggle(CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortDateAdded");
 }
 
-void SongListLayer::onSortLengthToggle(cocos2d::CCObject*) {
+void SongListLayer::onSortLengthToggle(CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortSongLength");
 }
 
-void SongListLayer::onSortSizeToggle(cocos2d::CCObject*) {
+void SongListLayer::onSortSizeToggle(CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileSize");
 }
 
-void SongListLayer::onSortExtnToggle(cocos2d::CCObject*) {
+void SongListLayer::onSortExtnToggle(CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileExtn");
 }
@@ -620,7 +620,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	if (songManager.getYoutubeAndVLCKeyboardShortcutsSongList()) {
 		const bool isCmd = GEODE_MACOS(cckd->getCommandKeyPressed()) GEODE_WINDOWS(false);
 		const bool isAlt = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(cckd->getAltKeyPressed());
-		if (!Utils::getBool("youtubeAndVLCKeyboardShortcutsSongListNoNumrow") && key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine)) {
+		if (!Utils::getBool("youtubeAndVLCKeyboardShortcutsSongListNoNumrow") && (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine)) {
 			if (!isShift && !isCmd && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
 			if (isShift && (windowsCtrl || macOSCtrl)) {
 				if (key == cocos2d::KEY_One && this->m_songListCompactMode) this->m_songListCompactMode->activate();
@@ -633,7 +633,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 				if (key == cocos2d::KEY_Eight && this->m_songListSortFileExtn) this->m_songListSortFileExtn->activate();
 			}
 		}
-		if (!Utils::getBool("youtubeAndVLCKeyboardShortcutsSongListNoNumpad") && key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9)) {
+		if (!Utils::getBool("youtubeAndVLCKeyboardShortcutsSongListNoNumpad") && (key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9)) {
 			if (!isShift && !macOSCtrl && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
 			if (isShift && (windowsCtrl || macOSCtrl)) {
 				if (key == cocos2d::KEY_NumPad1 && this->m_songListCompactMode) this->m_songListCompactMode->activate();
