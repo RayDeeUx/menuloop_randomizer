@@ -9,8 +9,9 @@ void iHateHookingMultipleThingsToGetSomethingDone() {
 	if (Utils::getBool("randomizeWhenExitingEditor")) {
 		SongManager::get().pickRandomSong();
 		if (SongManager::get().eclipseIntegrationSuccessful || SongManager::get().qolModIntegrationSuccessful) Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
+	} else {
+		SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
 	}
-	else SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
 }
 
 class $modify(MenuLoopEPLHook, EditorPauseLayer) {
