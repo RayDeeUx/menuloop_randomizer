@@ -355,6 +355,18 @@
 			},
 			"platforms": [ "win", "mac" ]
 		},
+		"youtubeAndVLCKeyboardShortcutsSongListNoNumrow": {
+			"name": "Don't Use Numrow for Hotkeys",
+			"description": "Ignore numrow presses for YT/VLC/Spotify-like hotkeys in the Song List menu.",
+			"type": "bool",
+			"default": false
+		},
+		"youtubeAndVLCKeyboardShortcutsSongListNoNumpad": {
+			"name": "Don't Use Numpad for Hotkeys",
+			"description": "Ignore numpad presses for YT/VLC/Spotify-like hotkeys in the Song List menu.",
+			"type": "bool",
+			"default": false
+		},
 		"control-panel-header": {
 			"name": "Control Panel Settings",
 			"description": "Settings for the Control Panel from Menu Loop Randomizer.",
@@ -383,6 +395,18 @@
 				"ios": "false"
 			},
 			"platforms": [ "win", "mac" ]
+		},
+		"youtubeAndVLCKeyboardShortcutsControlPanelNoNumrow": {
+			"name": "Don't Use Numrow for Hotkeys",
+			"description": "Ignore numrow presses for YT/VLC/Spotify-like hotkeys in the Control Panel menu.",
+			"type": "bool",
+			"default": false
+		},
+		"youtubeAndVLCKeyboardShortcutsControlPanelNoNumpad": {
+			"name": "Don't Use Numpad for Hotkeys",
+			"description": "Ignore numpad presses for YT/VLC/Spotify-like hotkeys in the Control Panel menu.",
+			"type": "bool",
+			"default": false
 		},
 		"osuLazerBootleg": {
 			"name": "\"welcome to osu!\" bootleg",
