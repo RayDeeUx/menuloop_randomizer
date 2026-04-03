@@ -620,7 +620,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	if (songManager.getYoutubeAndVLCKeyboardShortcutsSongList()) {
 		const bool isCmd = GEODE_MACOS(cckd->getCommandKeyPressed()) GEODE_WINDOWS(false);
 		const bool isAlt = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(cckd->getAltKeyPressed());
-		if (!Utils::getBool("youtubeAndVLCKeyboardShortcutsSongListNoNumrow") && key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine)) {
+		if (!Utils::getBool("youtubeAndVLCKeyboardShortcutsSongListNoNumrow") && (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine)) {
 			if (!isShift && !isCmd && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
 			if (isShift && (windowsCtrl || macOSCtrl)) {
 				if (key == cocos2d::KEY_One && this->m_songListCompactMode) this->m_songListCompactMode->activate();
@@ -633,7 +633,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 				if (key == cocos2d::KEY_Eight && this->m_songListSortFileExtn) this->m_songListSortFileExtn->activate();
 			}
 		}
-		if (!Utils::getBool("youtubeAndVLCKeyboardShortcutsSongListNoNumpad") && key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9)) {
+		if (!Utils::getBool("youtubeAndVLCKeyboardShortcutsSongListNoNumpad") && (key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9)) {
 			if (!isShift && !macOSCtrl && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
 			if (isShift && (windowsCtrl || macOSCtrl)) {
 				if (key == cocos2d::KEY_NumPad1 && this->m_songListCompactMode) this->m_songListCompactMode->activate();
