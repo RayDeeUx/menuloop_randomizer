@@ -1,4 +1,7 @@
 # Menu Loop Randomizer Changelog
+## v1.13.1
+*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from this update and features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
+- Added toggles for numrow and numpad detection for Shortcuts/Hotkeys in either the Control Panel and Song List menus.
 ## v1.13.0
 *<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from this update and features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - <cg>Added</c> "welcome to <c-ff66aa>osu!</c>" <c-aaaaaa>(OK, it's not really osu! but it's close enough.)</c>
