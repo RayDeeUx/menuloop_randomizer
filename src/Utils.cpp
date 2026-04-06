@@ -694,7 +694,10 @@ std::string Utils::toNormalizedString(const std::filesystem::path& path) {
 }
 
 std::filesystem::path Utils::toProblematicString(const std::string_view path) {
-	return std::filesystem::path(path);
+	return std::filesystem::path(
+		reinterpret_cast<const char8_t*>(path.data()),
+		reinterpret_cast<const char8_t*>(path.data() + path.size())
+	);
 }
 
 void Utils::fadeOutCardRemotely(cocos2d::CCNode* card) {
