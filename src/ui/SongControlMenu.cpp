@@ -154,14 +154,16 @@ bool SongControlMenu::setup() {
 	this->m_increDecreMenu = incrementDecrementMenu;
 	// DONT ADD this->m_increDecreMenu AS A CHILD -- SongControlMenu::updateCurrentLabel() HANDLES THAT!
 
-	cocos2d::CCLabelBMFont* currentPosition = cocos2d::CCLabelBMFont::create("PLACEHOLDER", "chatFont.fnt");
-	currentPosition->setAnchorPoint({0.f, 0.f});
-	this->m_currTimeLb = currentPosition;
+	this->m_currTimeLb = cocos2d::CCLabelBMFont::create("PLACEHOLDER", "chatFont.fnt");
+	this->m_currTimeLb->setAnchorPoint({0.f, 0.f});
 	// DONT ADD this->m_currTimeLb AS A CHILD -- SongControlMenu::updateCurrentLabel() HANDLES THAT!
 
-	cocos2d::CCLabelBMFont* totalLength = cocos2d::CCLabelBMFont::create("PLACEHOLDER", "chatFont.fnt");
-	totalLength->setAnchorPoint({1.f, 0.f});
-	this->m_totlTimeLb = totalLength;
+	this->m_remnTimeLb = cocos2d::CCLabelBMFont::create("PLACEHOLDER", "chatFont.fnt");
+	this->m_remnTimeLb->setAnchorPoint({.5f, 0.f});
+	// DONT ADD this->m_remnTimeLb AS A CHILD -- SongControlMenu::updateCurrentLabel() HANDLES THAT!
+
+	this->m_totlTimeLb = cocos2d::CCLabelBMFont::create("PLACEHOLDER", "chatFont.fnt");
+	this->m_totlTimeLb->setAnchorPoint({1.f, 0.f});
 	// DONT ADD this->m_totlTimeLb AS A CHILD -- SongControlMenu::updateCurrentLabel() HANDLES THAT!
 
 	cocos2d::CCLayerColor* currProgBar = cocos2d::CCLayerColor::create({200, 200, 200, 255});
@@ -302,6 +304,7 @@ bool SongControlMenu::setup() {
 	this->m_smallLabel->setID("current-song-label"_spr);
 	this->m_currTimeLb->setID("current-time-label"_spr);
 	this->m_headerLabl->setID("current-song-header"_spr);
+	this->m_remnTimeLb->setID("remaining-time-label"_spr);
 	this->m_increDecreMenu->setID("incdec-time-menu"_spr);
 	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
 	this->m_openSongListMenu->setID("song-list-menu"_spr);
@@ -445,6 +448,7 @@ void SongControlMenu::checkDaSongPositions(float) {
 	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
 
 	if (this->m_currTimeLb) this->m_currTimeLb->setVisible(canShowPlaybackProgress);
+	if (this->m_remnTimeLb) this->m_remnTimeLb->setVisible(canShowPlaybackProgress);
 	if (this->m_totlTimeLb) this->m_totlTimeLb->setVisible(canShowPlaybackProgress);
 	if (this->m_currProgBar) this->m_currProgBar->setVisible(canShowPlaybackProgress);
 	if (this->m_darkProgBar) this->m_darkProgBar->setVisible(canShowPlaybackProgress);
@@ -452,7 +456,7 @@ void SongControlMenu::checkDaSongPositions(float) {
 	if (this->m_clipNode) this->m_clipNode->setVisible(canShowPlaybackProgress);
 
 	if (!canShowPlaybackProgress) return;
-	if (!this->m_currTimeLb || !this->m_totlTimeLb || !this->m_currProgBar || !this->m_darkProgBar) return;
+	if (!this->m_currTimeLb || !this->m_remnTimeLb || !this->m_totlTimeLb || !this->m_currProgBar || !this->m_darkProgBar) return;
 
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
@@ -460,8 +464,11 @@ void SongControlMenu::checkDaSongPositions(float) {
 
 	const int fullLength = fmod->getMusicLengthMS(0);
 	const int lastPosition = songManager.getLastMenuLoopPosition();
+	const int remainingAsMillis = fullLength - lastPosition;
+	const int remainingAsSeconds = remainingAsMillis / 1000;
 
 	this->m_currTimeLb->setString(fmt::format("{}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60)).c_str());
+	this->m_remnTimeLb->setString(fmt::format("-{}:{:02}", remainingAsSeconds / 60, remainingAsSeconds % 60).c_str());
 	this->m_totlTimeLb->setString(fmt::format("{}:{:02}", ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
 
 	this->m_currProgBar->setContentWidth(std::clamp<float>((1.f * lastPosition) / (1.f * std::max<int>(fullLength, fmod->getMusicLengthMS(0))), 0.f, 1.f) * this->m_darkProgBar->getContentWidth());
@@ -598,9 +605,11 @@ void SongControlMenu::updateCurrentLabel() {
 		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center, {0.f, 3.5f});
 		this->b->addChildAtPosition(this->m_increDecreMenu, geode::Anchor::Center);
 		this->b->addChildAtPosition(this->m_currTimeLb, geode::Anchor::BottomLeft, {27.5f, 6.f});
+		this->b->addChildAtPosition(this->m_remnTimeLb, geode::Anchor::Bottom, {0.f, 6.f});
 		this->b->addChildAtPosition(this->m_totlTimeLb, geode::Anchor::BottomRight, {-27.5f, 6.f});
 		this->b->addChildAtPosition(this->m_clipNode, geode::Anchor::BottomLeft);
 		this->m_currTimeLb->setScale(.35f);
+		this->m_remnTimeLb->setScale(.35f);
 		this->m_totlTimeLb->setScale(.35f);
 		this->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
 		this->schedule(schedule_selector(SongControlMenu::forceSharpCornerIllusionScheduler));
@@ -610,6 +619,7 @@ void SongControlMenu::updateCurrentLabel() {
 	} else this->m_smallLabel->setString(currentSong.c_str(), "chatFont.fnt");
 	this->m_smallLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_currTimeLb->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+	this->m_remnTimeLb->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_totlTimeLb->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	if (!this->m_headerLabl) return;
 	if (songManager.isOverride()) this->m_headerLabl->setString("Current Song (Custom Override):");

@@ -6,7 +6,7 @@
 		"ios": "2.2081",
 		"android": "2.2081"
 	},
-	"version": "v1.13.1",
+	"version": "v1.13.2",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developers": [
@@ -509,6 +509,13 @@
 			"description": "<cl>Original idea by RighteousRyan.</c>\n\nSearch for songs within subdirectories.\n\n<c_>This is an EXPERIMENTAL setting. By enabling this, you will hold yourself responsible for any issues/lag/damages/crashes that happen with this setting enabled. You also agree that this setting was added despite the developer's (RayDeeUx's) lack of personal belief/confidence that this feature belongs in MLR.</c>",
 			"type": "bool",
 			"default": false
+		},
+		"melowodyMode": {
+			"name": "(DANGEROUS) Alternate String to Path Conversion",
+			"description": "<cl>Contributed by</c> <c-797979>mel</c><c-ffc272>owo</c><c-414141>dy</c><cl>.</c>\n\n<cp>FOR WINDOWS DEVICES ONLY.</c>\n\nUse a different method of converting raw strings to filesystem paths.\n\n<c_>This is an EXPERIMENTAL setting. By enabling this, you will hold yourself responsible for any issues/lag/damages/crashes that happen with this setting enabled. You also agree that this setting was added despite general lack of personal belief/confidence that this feature belongs in MLR from various members of Geode Team.</c>",
+			"type": "bool",
+			"default": false,
+			"platforms": ["win"]
 		},
 		"advancedLogs": {
 			"name": "Advanced Logging",

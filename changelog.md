@@ -1,10 +1,16 @@
 # Menu Loop Randomizer Changelog
+*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from various updates and features related to bugfixes from various updates) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are here to stay for as long as the boiling point of water is 100 degrees Celsius, and most definitely longer.</c>*
+
+<mod:alk.better-touch-prio>
+
+## v1.13.2
+- Added a duration display for the amount of time remaining in a song.
+- Added an alternate string-to-path conversion toggle <co>for Windows devices ***__ONLY__***</c>.
+  - This feature was contributed by <c-797979>mel</c><c-ffc272>owo</c><c-414141>dy</c>, and exists for any Windows users who might find it useful.
 ## v1.13.1
-*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from this update and features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - Added toggles for numrow and numpad detection for Shortcuts/Hotkeys in either the Control Panel and Song List menus.
 - Fixed an issue where song names in the Eclipse Menu integration would not update when randomizing songs on level exit.
 ## v1.13.0
-*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from this update and features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - <cg>Added</c> "welcome to <c-ff66aa>osu!</c>" <c-aaaaaa>(OK, it's not really osu! but it's close enough.)</c>
   - <co>***__This feature only works from the main menu.__***</c>
   - Inspired by <c-ff66aa>osu!lazer</c>, there is now a keyboard shortcut to make the Control Panel the only visible item on screen. Press `O` or `Enter` while inside the Control Panel for a demonstration.
@@ -31,10 +37,8 @@
 - <co>Removed</c> [Better Touch Prio](mod:alk.better-touch-prio) dependency for song playback seeking controls/keyboard shortcuts ***ONLY FOR THE CONTROL PANEL***.
   - This means you do not need Better Touch Prio loaded to control the current song's position when inside the Control Panel.
 ## v1.12.1
-*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - Fix a really obscure crash with iOS JIT-less devices. (Hopefully, anyhow.)
 ## v1.12.0
-*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from this update and features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - Port to Geode v5.0.0-beta.1 and GD 2.2081.
 - <cg>Added</c> playback increment/decrement controls and playback progress to both the Control Panel and the Song List menus.
   - You can toggle this option off for either menu in the mod settings.
@@ -81,13 +85,11 @@
   - Future iterations of this "fix" will require loading Jukebox as a dependency, as both Menu Loop Randomizer and Jukebox rely on the same information for separate reasons.
   - <c-ff0000>Please don't use this changelog item (and future changelog items) as a justification to harass any of the developers of the Jukebox mod, *especially* if you don't know what's going on beneath the hood in either mod.</c>
 ## v1.11.3, v1.11.4, and v1.11.5
-*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features related to bugfixes in this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - Fix massive oversights.
 - Reduce log spam when Advanced Logs are enabled.
 - Fix a visual error when trying to favorite a song twice.
 - Fix changes not being reflected in the Song List menu when favoriting/blacklisting a song.
 ## v1.11.2
-*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from this update) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are still here to stay.</c>*
 - Added the <cj>File Extension sorting option</c> to the Song List.
   - Sort files based on their file extension alphabetically.
   - [Better Touch Prio](mod:alk.better-touch-prio) is <cl>requ</c><cj>ired</c> to use this <cj>sorting</c> option in the Song List menu.
@@ -114,7 +116,6 @@
 - Hotfix.
 ## v1.11.0
 ***__This is a really lengthy changelog; be sure to read everything!__***
-*(Changelog items/subitems containing <cl>blue</c> or <cj>cyan</c> text indicates that [Better Touch Prio](mod:alk.better-touch-prio) is required to use that feature. These decisions will not be reverted anytime soon.)*
 - <cg>Added</c> `Continue Menu Loop on Level Exit` and `Continue Menu Loop on Editor Exit` (suggested by [Myron472/GlydeR](https://github.com/Myron472) and [Abagur900](https://github.com/Abagur900)).
   - <c-ff0000>***__READ:__*** **__These two toggles will__** ***__ONLY__*** **__work if you disable [Colon's Menu Loop Start Time mod](mod:colon.menu_loop_start_time)!!!__** [You can either disable it through its mod settings or through Geode's buttons, either is fine.]</c>
   - These toggles are mutually exclusive with their corresponding `Randomize Menu Loop on Level Exit` and `Randomize Menu Loop on Editor Exit` toggles.
