@@ -129,11 +129,13 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 	const cocos2d::CCPoint defaultPos = card->position;
 
 	card->setPosition(defaultPos);
-	card->setZOrder(200);
+	// card->setZOrder(200); // this should've been removed a long time ago
 	card->setID("now-playing"_spr);
 
 	if (MenuLayer::get()) MenuLayer::get()->addChild(card);
 	else if (checkSetting && Utils::getBool("showOutsideOfMainMenu")) cocos2d::CCScene::get()->addChild(card);
+
+	if (cocos2d::CCScene* parent = geode::cast::typeinfo_cast<cocos2d::CCScene*>(card->getParent())) card->setZOrder(parent->getHighestChildZ() + 1);
 
 	auto sequence = cocos2d::CCSequence::create(
 		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, {defaultPos.x, defaultPos.y - 24.0f}), 2.0f),
