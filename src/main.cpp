@@ -265,6 +265,14 @@ $on_mod(Loaded) {
 	listenForSettingChanges<bool>("advancedLogs", [](const bool newAdvancedLogs) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
 	});
+	ButtonSettingPressedEventV3(Mod::get(), "housekeeping-buttons").listen([](const auto btn) {
+		if (btn == "config-dir-button") {
+			file::openFolder(Mod::get()->getConfigDir());
+		}
+		if (btn == "reload-songs-button" && !(VANILLA_GD_MENU_LOOP_DISABLED || SongManager::get().isOverride() || GJBaseGameLayer::get())) {
+			Utils::resetSongManagerRefreshVectorSetNewSongBecause("configdir-button pressed");
+		}
+	}).leak();
 }
 
 #define ECLIPSE_MODULES_HPP
