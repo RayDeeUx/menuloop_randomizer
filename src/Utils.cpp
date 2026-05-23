@@ -753,6 +753,17 @@ std::string Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel() {
 	return (!SongManager::get().getFinishedCalculatingSongLengths() || !Utils::songDataContainsSong(SongManager::get().getCurrentSong())) ? SongManager::get().getCurrentSongDisplayName() : Utils::getSongDataOfCurrentSong().fullDisplayNameForControlPanelAndSongList;
 }
 
+void Utils::rememberLastMenuLoop() {
+	SongManager& songManager = SongManager::get();
+	std::string currentSong = songManager.getCurrentSong();
+
+	geode::log::info("Game close detected. Most recent songManager song: {}", currentSong);
+	if (songManager.isOverride()) return geode::log::info("however this is an override, so do not save it");
+
+	geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", currentSong);
+	geode::Mod::get()->setSavedValue<std::filesystem::path>("lastMenuLoopPath", Utils::toProblematicString(currentSong));
+}
+
 CCMenuItemSpriteExtra* Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
 	if (!menu || !target || name.empty()) return nullptr;
 
