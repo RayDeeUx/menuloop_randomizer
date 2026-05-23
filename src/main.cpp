@@ -266,11 +266,22 @@ $on_mod(Loaded) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
 	});
 	ButtonSettingPressedEventV3(Mod::get(), "housekeeping-buttons").listen([](const auto btn) {
+		// jeremy culhane get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head
+		if (GJBaseGameLayer::get() || (std::hash<std::string>{}(FMODAudioEngine::get()->getActiveMusic(0)) != std::hash<std::string>{}(SongManager::get().getCurrentSong()))) {
+			Notification::create("What are we doing? What's going on?", NotificationIcon::Error, .75f)->show();
+			return ListenerResult::Propagate;
+		}
 		if (btn == "config-dir-button") {
 			file::openFolder(Mod::get()->getConfigDir());
+			return ListenerResult::Propagate;
 		}
-		if (btn == "reload-songs-button" && !(VANILLA_GD_MENU_LOOP_DISABLED || SongManager::get().isOverride() || GJBaseGameLayer::get())) {
+		if (SongManager::get().isOverride()) {
+			Notification::create("No reloading songs when an override is active. That's the rule. That's the goal now.", NotificationIcon::Warning, .75f)->show();
+			return ListenerResult::Propagate;
+		}
+		if (btn == "reload-songs-button") {
 			Utils::resetSongManagerRefreshVectorSetNewSongBecause("configdir-button pressed");
+			return ListenerResult::Propagate;
 		}
 	}).leak();
 }
