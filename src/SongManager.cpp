@@ -381,3 +381,7 @@ bool SongManager::getOsu() const {
 unsigned long SongManager::getHashedCurrentSong() const {
 	return m_hashedCurrentSong;
 }
+
+bool SongManager::isCurrentMenuLoopBeingPlayed() const {
+	return std::hash<std::string>{}(FMODAudioEngine::get()->getActiveMusic(0)) == m_hashedCurrentSong;
+}

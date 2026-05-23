@@ -127,6 +127,7 @@ class SongManager {
 	void setOsu(const bool value);
 	bool getOsu() const;
 	unsigned long getHashedCurrentSong() const;
+	bool isCurrentMenuLoopBeingPlayed() const;
 
 	std::optional<eclipse::components::Label> eclipseSongNameLabel {};
 	std::optional<eclipse::components::Label> eclipseSongDurationLabel {};

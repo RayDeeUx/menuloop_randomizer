@@ -267,7 +267,8 @@ $on_mod(Loaded) {
 	});
 	ButtonSettingPressedEventV3(Mod::get(), "housekeeping-buttons").listen([](const auto btn) {
 		// jeremy culhane get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head
-		if (GJBaseGameLayer::get() || (std::hash<std::string>{}(FMODAudioEngine::get()->getActiveMusic(0)) != std::hash<std::string>{}(SongManager::get().getCurrentSong()))) {
+		SongManager& sm = SongManager::get();
+		if (GJBaseGameLayer::get() || !sm.isCurrentMenuLoopBeingPlayed() || !sm.getFinishedCalculatingSongLengths()) {
 			Notification::create("What are we doing? What's going on?", NotificationIcon::Error, .75f)->show();
 			return ListenerResult::Propagate;
 		}
@@ -275,14 +276,15 @@ $on_mod(Loaded) {
 			file::openFolder(Mod::get()->getConfigDir());
 			return ListenerResult::Propagate;
 		}
-		if (SongManager::get().isOverride()) {
-			Notification::create("No reloading songs when an override is active. That's the rule. That's the goal now.", NotificationIcon::Warning, .75f)->show();
+		if (sm.isOverride()) {
+			Notification::create("No reloading songs when an override is active.\nThat's the rule. That's the goal now.", NotificationIcon::Warning, .75f)->show();
 			return ListenerResult::Propagate;
 		}
 		if (btn == "reload-songs-button") {
 			Utils::resetSongManagerRefreshVectorSetNewSongBecause("configdir-button pressed");
 			return ListenerResult::Propagate;
 		}
+		return ListenerResult::Propagate;
 	}).leak();
 }
 
@@ -322,7 +324,7 @@ public:
 
 		constexpr int progressBarWidth = 20;
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
-		if (std::hash<std::string>{}(fmod->getActiveMusic(0)) != std::hash<std::string>{}(sm.getCurrentSong())) {
+		if (!sm.isCurrentMenuLoopBeingPlayed()) {
 			sm.eclipseSongDurationLabel.value().setText("Progress: [CURRENTLY PAUSED]");
 			sm.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:–<{}}]", "", progressBarWidth));
 			return;
@@ -364,9 +366,9 @@ $on_mod(Loaded) {
 
 		auto tab = MenuTab::find("Menu Loop Randomizer");
 
-		(void) tab.addLabel("=== THIS AREA IS NOT OWNED BY ECLIPSE ===");
-		(void) tab.addLabel("== BUGS FROM HERE MUST GO TO RAYDEEUX ==");
-		(void) tab.addLabel("= THIS SHOULD BE COMMON SENSE BY NOW =");
+		(void) tab.addLabel("= THIS IS NOT OWNED BY ECLIPSE =");
+		(void) tab.addLabel("== BUG REPORTS GO TO RAYDEEUX ==");
+		(void) tab.addLabel("= THIS SHOULD BE COMMON SENSE =");
 		(void) tab.addLabel("\n");
 
 		SongManager::get().eclipseSongNameLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Current song: [[Hold on, MLR is still loading things!]]"));
