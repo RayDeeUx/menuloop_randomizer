@@ -56,6 +56,31 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 #define EMPTY_SEARCH_STRG m_searchBar->setString("", false);
 #define LIMIT_PLACEHOLDER SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
 
+using Comparator = bool(*)(MLRSongCell*, MLRSongCell*, bool);
+
+#ifdef GEODE_IS_DESKTOP
+static constexpr SongListLayer::KeycodeToToggler numrowToToggler = {
+	{ cocos2d::KEY_One, &SongListLayer::m_songListCompactMode },
+	{ cocos2d::KEY_Two, &SongListLayer::m_songListFavoritesOnlyMode },
+	{ cocos2d::KEY_Three, &SongListLayer::m_songListReverseSort },
+	{ cocos2d::KEY_Four, &SongListLayer::m_songListSortAlphabetically },
+	{ cocos2d::KEY_Five, &SongListLayer::m_songListSortDateAdded },
+	{ cocos2d::KEY_Six, &SongListLayer::m_songListSortSongLength },
+	{ cocos2d::KEY_Seven, &SongListLayer::m_songListSortFileSize },
+	{ cocos2d::KEY_Eight, &SongListLayer::m_songListSortFileExtn }
+};
+static constexpr SongListLayer::KeycodeToToggler numpadToToggler = {
+	{ cocos2d::KEY_NumPad1, &SongListLayer::m_songListCompactMode },
+	{ cocos2d::KEY_NumPad2, &SongListLayer::m_songListFavoritesOnlyMode },
+	{ cocos2d::KEY_NumPad3, &SongListLayer::m_songListReverseSort },
+	{ cocos2d::KEY_NumPad4, &SongListLayer::m_songListSortAlphabetically },
+	{ cocos2d::KEY_NumPad5, &SongListLayer::m_songListSortDateAdded },
+	{ cocos2d::KEY_NumPad6, &SongListLayer::m_songListSortSongLength },
+	{ cocos2d::KEY_NumPad7, &SongListLayer::m_songListSortFileSize },
+	{ cocos2d::KEY_NumPad8, &SongListLayer::m_songListSortFileExtn }
+};
+#endif
+
 SongListLayer* SongListLayer::create() {
 	SongListLayer* ret = new SongListLayer();
 	#if GEODE_COMP_GD_VERSION > 22074
@@ -107,25 +132,21 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	}
 
 	if (SONG_SORTING_ENABLED) {
+		Comparator comparator = nullptr;
 		if (SAVED("songListSortAlphabetically")) {
-			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
-				return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
-			});
+			comparator = &SongListLayer::caseInsensitiveAlphabetical;
 		} else if (SAVED("songListSortFileSize")) {
-			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
-				return SongListLayer::fileSize(a, b, reverse);
-			});
+			comparator = &SongListLayer::fileSize;
 		} else if (SAVED("songListSortFileExtn")) {
-			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
-				return SongListLayer::fileExtn(a, b, reverse);
-			});
+			comparator = &SongListLayer::fileExtn;
 		} else if (SAVED("songListSortDateAdded")) {
-			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
-				return SongListLayer::dateAdded(a, b, reverse);
-			});
+			comparator = &SongListLayer::dateAdded;
 		} else if (SAVED("songListSortSongLength")) {
-			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse](MLRSongCell* a, MLRSongCell* b) {
-				return SongListLayer::songLength(a, b, reverse);
+			comparator = &SongListLayer::songLength;
+		}
+		if (comparator) {
+			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse, comparator](MLRSongCell* a, MLRSongCell* b) {
+				return comparator(a, b, reverse);
 			});
 		} else if (reverse) {
 			std::reverse(cellsToAdd.begin(), cellsToAdd.end());
@@ -633,6 +654,17 @@ void SongListLayer::checkPosition(const float) {
 	else if (contentLayer->getPositionY() < m_tallestPoint) contentLayer->setPositionY(m_tallestPoint);
 }
 
+#ifdef GEODE_IS_DESKTOP
+void SongListLayer::searchArray(const int key, SongListLayer::KeycodeToToggler keycodeArray) {
+	for (const auto& [k, member] : keycodeArray) {
+		if (key == k && this->*member) {
+			(this->*member)->activate();
+			break;
+		}
+	}
+}
+#endif
+
 #if GEODE_COMP_GD_VERSION > 22074
 void SongListLayer::keyUp(const cocos2d::enumKeyCodes key, double p1) {
 #endif
@@ -664,27 +696,13 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		if (!Utils::getBool("youtubeAndVLCKeyboardShortcutsSongListNoNumrow") && (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine)) {
 			if (!isShift && !isCmd && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
 			if (isShift && (windowsCtrl || macOSCtrl)) {
-				if (key == cocos2d::KEY_One && this->m_songListCompactMode) this->m_songListCompactMode->activate();
-				if (key == cocos2d::KEY_Two && this->m_songListFavoritesOnlyMode) this->m_songListFavoritesOnlyMode->activate();
-				if (key == cocos2d::KEY_Three && this->m_songListReverseSort) this->m_songListReverseSort->activate();
-				if (key == cocos2d::KEY_Four && this->m_songListSortAlphabetically) this->m_songListSortAlphabetically->activate();
-				if (key == cocos2d::KEY_Five && this->m_songListSortDateAdded) this->m_songListSortDateAdded->activate();
-				if (key == cocos2d::KEY_Six && this->m_songListSortSongLength) this->m_songListSortSongLength->activate();
-				if (key == cocos2d::KEY_Seven && this->m_songListSortFileSize) this->m_songListSortFileSize->activate();
-				if (key == cocos2d::KEY_Eight && this->m_songListSortFileExtn) this->m_songListSortFileExtn->activate();
+				SongListLayer::searchArray(key, numrowToToggler);
 			}
 		}
 		if (!Utils::getBool("youtubeAndVLCKeyboardShortcutsSongListNoNumpad") && (key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9)) {
 			if (!isShift && !macOSCtrl && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
 			if (isShift && (windowsCtrl || macOSCtrl)) {
-				if (key == cocos2d::KEY_NumPad1 && this->m_songListCompactMode) this->m_songListCompactMode->activate();
-				if (key == cocos2d::KEY_NumPad2 && this->m_songListFavoritesOnlyMode) this->m_songListFavoritesOnlyMode->activate();
-				if (key == cocos2d::KEY_NumPad3 && this->m_songListReverseSort) this->m_songListReverseSort->activate();
-				if (key == cocos2d::KEY_NumPad4 && this->m_songListSortAlphabetically) this->m_songListSortAlphabetically->activate();
-				if (key == cocos2d::KEY_NumPad5 && this->m_songListSortDateAdded) this->m_songListSortDateAdded->activate();
-				if (key == cocos2d::KEY_NumPad6 && this->m_songListSortSongLength) this->m_songListSortSongLength->activate();
-				if (key == cocos2d::KEY_NumPad7 && this->m_songListSortFileSize) this->m_songListSortFileSize->activate();
-				if (key == cocos2d::KEY_NumPad8 && this->m_songListSortFileExtn) this->m_songListSortFileExtn->activate();
+				SongListLayer::searchArray(key, numpadToToggler);
 			}
 		}
 		if ((windowsCtrl || isCmd) && key == cocos2d::KEY_R) {

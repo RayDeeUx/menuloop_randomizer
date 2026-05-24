@@ -56,7 +56,7 @@ class SongListLayer final : public geode::Popup {
 #if GEODE_COMP_GD_VERSION < 22081
 class SongListLayer final : public geode::Popup<> {
 #endif
-protected:
+public:
 	CCMenuItemToggler* m_songListCompactMode {};
 	CCMenuItemToggler* m_songListFavoritesOnlyMode {};
 	CCMenuItemToggler* m_songListReverseSort {};
@@ -131,6 +131,11 @@ public:
 	static unsigned int getLength(const std::string& path, const bool reverse);
 
 	void displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float);
+
+	#ifdef GEODE_IS_DESKTOP
+	using KeycodeToToggler = std::initializer_list<std::pair<int, CCMenuItemToggler* SongListLayer::*>>;
+	void searchArray(const int key, KeycodeToToggler keycodeArray);
+	#endif
 
 	geode::TextInput* m_searchBar {};
 	bool m_isInQOLMod = false;
