@@ -5,12 +5,13 @@
 using namespace geode::prelude;
 
 void iHateHookingMultipleThingsToGetSomethingDone() {
-	SongManager::get().setPauseSongPositionTracking(true);
+	SongManager& songManager = SongManager::get();
+	songManager.setPauseSongPositionTracking(true);
 	if (Utils::getBool("randomizeWhenExitingEditor")) {
-		SongManager::get().pickRandomSong();
-		if (SongManager::get().eclipseIntegrationSuccessful || SongManager::get().qolModIntegrationSuccessful) Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
+		songManager.pickRandomSong();
+		if (songManager.eclipseIntegrationSuccessful || songManager.qolModIntegrationSuccessful) Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 	} else {
-		SongManager::get().setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
+		songManager.setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
 	}
 }
 

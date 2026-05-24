@@ -101,13 +101,13 @@ void Utils::constantShuffleModeNewSong() {
 	// else geode::log::info("no current song found, probably");
 	songManager.pickRandomSong();
 	Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
-	if (SongManager::get().getAdvancedLogs()) geode::log::info("is it over?");
+	if (songManager.getAdvancedLogs()) geode::log::info("is it over?");
 	if (songManager.getCalledOnce() || !Utils::getBool("saveSongOnGameClose")) {
-		if (SongManager::get().getAdvancedLogs()) geode::log::info("playing song as normal");
+		if (songManager.getAdvancedLogs()) geode::log::info("playing song as normal");
 		if (!songManager.isOverride()) geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", songManager.getCurrentSong());
 	} else if (songManager.isOverride()) {
 		const std::string& song = songManager.getOverrideSong();
-		if (SongManager::get().getAdvancedLogs()) geode::log::info("playing song from override: {}", song);
+		if (songManager.getAdvancedLogs()) geode::log::info("playing song from override: {}", song);
 		songManager.setCurrentSong(song);
 	}
 	GameManager::sharedState()->playMenuMusic();
@@ -256,14 +256,15 @@ std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo, const bool
 }
 
 void Utils::copyCurrentSongName() {
-	std::string currentSongName = SongManager::get().getCurrentSong();
+	SongManager& songManager = SongManager::get();
+	std::string currentSongName = songManager.getCurrentSong();
 	std::smatch match;
 	std::smatch geodeMatch;
 	std::smatch jukeboxMatch;
 	std::string result = "";
 	currentSongName = std::regex_replace(currentSongName, std::regex(R"(com\.geode\.launcher\/)"), ""); // android is cring, original is [ "com\.geode\.launcher\/" ]
 	currentSongName = fmt::format("/{}", currentSongName); // adding an extra slash to get it working on all possible paths. this is because combo burst does some stuff under the hood i am too scared to look at and i don't want to define more regex than necessary.
-	if (SongManager::get().getAdvancedLogs()) geode::log::info("path after: {}", currentSongName);
+	if (songManager.getAdvancedLogs()) geode::log::info("path after: {}", currentSongName);
 	if (currentSongName.find("geode") != std::string::npos && (currentSongName.find("mods") != std::string::npos || currentSongName.find("config") != std::string::npos)) {
 		if (std::regex_search(currentSongName, geodeMatch, m_geodeAudioRegex)) {
 			result = geodeMatch[geodeMatch.size() - 2].str();
@@ -316,13 +317,13 @@ void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
 			continue;
 		}
 		if (std::ranges::find(blacklist, songPath) != blacklist.end()) {
-			if (SongManager::get().getAdvancedLogs()) geode::log::info("song {} is in blacklist.", songPath);
+			if (songManager.getAdvancedLogs()) geode::log::info("song {} is in blacklist.", songPath);
 			continue;
 		}
 
-		if (SongManager::get().getAdvancedLogs()) geode::log::info("loading song on line {} of playlistFile {}", lineCount, playlistFile.filename());
+		if (songManager.getAdvancedLogs()) geode::log::info("loading song on line {} of playlistFile {}", lineCount, playlistFile.filename());
 		songManager.addSong(playlistFileLineModified);
-		if (SongManager::get().getAdvancedLogs()) geode::log::info("adding song from line {} of playlistFile {}", lineCount, songPath);
+		if (songManager.getAdvancedLogs()) geode::log::info("adding song from line {} of playlistFile {}", lineCount, songPath);
 		if (std::ranges::find(favorites, songPath) != favorites.end()) {
 			songManager.addSong(playlistFileLineModified);
 			geode::log::info("adding song from line {} of playlistFile {} ***AGAIN because favorited***", lineCount, songPath);
@@ -402,7 +403,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 
 			if (std::ranges::find(songManagerBlacklist, songPath) != songManagerBlacklist.end() || isInTextBlacklist) continue;
 
-			if (SongManager::get().getAdvancedLogs()) geode::log::info("Adding custom song: {}", Utils::toNormalizedString(filePath.filename()));
+			if (songManager.getAdvancedLogs()) geode::log::info("Adding custom song: {}", Utils::toNormalizedString(filePath.filename()));
 			songManager.addSong(songPath);
 
 			bool isInTextFavorites = false;
@@ -415,7 +416,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 
 			if (std::ranges::find(songManagerFavorites, songPath) != songManagerFavorites.end() || isInTextFavorites) {
 				songManager.addSong(songPath);
-				if (SongManager::get().getAdvancedLogs()) geode::log::info("Adding FAVORITE custom song: {}", Utils::toNormalizedString(filePath.filename()));
+				if (songManager.getAdvancedLogs()) geode::log::info("Adding FAVORITE custom song: {}", Utils::toNormalizedString(filePath.filename()));
 			}
 		}
 	} else {
@@ -451,7 +452,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 
 			if (std::ranges::find(songManagerBlacklist.begin(), songManagerBlacklist.end(), songPath) != songManagerBlacklist.end() || isInTextBlacklist || (qualifiedForOGMenuBlacklist && song->m_songID == 584131)) continue; // apply hardcode blacklist 584131 onto self in light of BS edge case caught by hiimjustin001: https://discord.com/channels/911701438269386882/911702535373475870/1289021323279990795
 
-			if (SongManager::get().getAdvancedLogs()) geode::log::info("Adding Newgrounds/Music Library song: {}", songPath);
+			if (songManager.getAdvancedLogs()) geode::log::info("Adding Newgrounds/Music Library song: {}", songPath);
 			songManager.addSong(songPath);
 
 			bool isInTextFavorites = false;
@@ -464,7 +465,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 
 			if (std::ranges::find(songManagerFavorites.begin(), songManagerFavorites.end(), songPath) != songManagerFavorites.end() || isInTextFavorites) {
 				songManager.addSong(songPath);
-				if (SongManager::get().getAdvancedLogs()) geode::log::info("Adding FAVORITE Newgrounds/Music Library song: {}", Utils::toNormalizedString(songPath));
+				if (songManager.getAdvancedLogs()) geode::log::info("Adding FAVORITE Newgrounds/Music Library song: {}", Utils::toNormalizedString(songPath));
 			}
 		}
 	}
@@ -536,14 +537,15 @@ void Utils::popualteSongToSongDataMap() {
 	songManager.setFinishedCalculatingSongLengths(false);
 	if (songManager.getUndefined0Alk1m123TouchPrio()) {
 		std::thread([]() {
-			for (const std::string_view song : SongManager::get().getSongs()) {
-				const auto iterator = SongManager::get().getSongToSongDataEntries().find(Utils::toProblematicString(song));
-				if (iterator == SongManager::get().getSongToSongDataEntries().end()) continue;
+			SongManager& songManagerThreaded = SongManager::get();
+			for (const std::string_view song : songManagerThreaded.getSongs()) {
+				const auto iterator = songManagerThreaded.getSongToSongDataEntries().find(Utils::toProblematicString(song));
+				if (iterator == songManagerThreaded.getSongToSongDataEntries().end()) continue;
 				auto& [unused, songData] = *iterator;
 				songData.songLength = SongListLayer::getLength(std::string(song), std::numeric_limits<unsigned int>::max());
 				songData.extraInfoText = fmt::format("{} | {:.2f} sec | {:.2f} MB | {}", songData.fileExtension, songData.songLength / 1000.f, songData.songFileSize / 1000000.f, songData.dateTimeText).c_str();
 			}
-			SongManager::get().setFinishedCalculatingSongLengths(true);
+			songManagerThreaded.setFinishedCalculatingSongLengths(true);
 	   }).detach();
 	} else songManager.setFinishedCalculatingSongLengths(true);
 }
@@ -578,7 +580,7 @@ std::vector<std::string> Utils::parseFavoritesFile(const std::filesystem::path& 
 		favoritesVector.push_back(favoriteStringModified);
 		songManager.addToFavorites(favoriteStringModified);
 	}
-	if (SongManager::get().getAdvancedLogs()) geode::log::info("Finished storing favorites. size: {}", favoritesVector.size());
+	if (songManager.getAdvancedLogs()) geode::log::info("Finished storing favorites. size: {}", favoritesVector.size());
 	return favoritesVector;
 }
 
@@ -614,9 +616,9 @@ void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_vie
 		if they're ng songs also push the path bc we're going to use getPathForSong
 		--elnexreal
 	*/
-	if (SongManager::get().getAdvancedLogs()) geode::log::info("repopulating vector from setting {} change", reasonUsuallySettingName);
+	if (songManager.getAdvancedLogs()) geode::log::info("repopulating vector from setting {} change", reasonUsuallySettingName);
 	Utils::refreshTheVector();
-	if (SongManager::get().getAdvancedLogs()) geode::log::info("finished refreshing the vector");
+	if (songManager.getAdvancedLogs()) geode::log::info("finished refreshing the vector");
 
 	// change the song when you click apply, stoi will not like custom names. --elnexreal
 
@@ -718,13 +720,14 @@ void Utils::removeCardRemotely(cocos2d::CCNode* card) {
 }
 
 void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {
+	SongManager& songManager = SongManager::get();
 	if (SongManager::get().isEclipse && SongManager::get().eclipseSongNameLabel.has_value() && SongManager::get().eclipseIntegrationSuccessful) geode::Loader::get()->queueInMainThread([]() {
-		SongManager& sm = SongManager::get();
-		if (!sm.eclipseIsCocosStyle) sm.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
-		else sm.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
+		SongManager& songManagerLambda = SongManager::get();
+		if (!songManagerLambda.eclipseIsCocosStyle) songManagerLambda.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
+		else songManagerLambda.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
 	});
-	if (SongManager::get().isQOLMod && SongManager::get().qolModIntegrationSuccessful && (cocos2d::CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().songControlMenuForQOLMod)) {
-		if (SongControlMenu* svet = static_cast<SongControlMenu*>(SongManager::get().songControlMenuForQOLMod.data()); svet) geode::Loader::get()->queueInMainThread([svet] { svet->updateCurrentLabel(); });
+	if (songManager.isQOLMod && songManager.qolModIntegrationSuccessful && (cocos2d::CCScene::get()->getChildByType<AndroidUI>(0) && songManager.songControlMenuForQOLMod)) {
+		if (SongControlMenu* svet = static_cast<SongControlMenu*>(songManager.songControlMenuForQOLMod.data()); svet) geode::Loader::get()->queueInMainThread([svet] { svet->updateCurrentLabel(); });
 	}
 	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
 	else if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); SongManager::get().getUndefined0Alk1m123TouchPrio() && sll && sll->m_searchBar) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(sll->m_searchBar->getInputNode(), false); });

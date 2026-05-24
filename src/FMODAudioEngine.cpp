@@ -10,17 +10,34 @@ float stupidAccmulatorTooLazyToPutElsewhere = 0;
 
 class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void stopAllMusic(bool p0) {
-		if (!GJBaseGameLayer::get()) SongManager::get().setPauseSongPositionTracking(true);
+	SongManager& songManager = SongManager::get();
+		if (!GJBaseGameLayer::get() && !Utils::currentFMODSongIsNotCurrentSongManagerSong()) {
+			if (songManager.getAdvancedLogs()) log::info("stopping song position tracking on the menu loop as its playback is about to be stopped.");
+			songManager.setPauseSongPositionTracking(true);
+		}
 		FMODAudioEngine::stopAllMusic(p0);
 	}
+	// playmusic calls loadmusic, so set songmanager var ig
 	void playMusic(gd::string path, bool shouldLoop, float fadeInTime, int channel) {
-		if (!GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && !Utils::givenFMODPathIsNotCurrentSongManagerSong(path)) fadeInTime = 0.f; // replace 0.f with setting
+		SongManager& songManager = SongManager::get();
+		if (!GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && !Utils::givenFMODPathIsNotCurrentSongManagerSong(path)) {
+			if (songManager.getAdvancedLogs()) log::info("setting fade time to whatever was declared in settings, path: {}", path);
+			songManager.setInsidePlayMusic(true);
+			fadeInTime = 0.f; // replace 0.f with setting that defaults to 0.5f
+		} else if (songManager.getAdvancedLogs()) {
+			log::info("path was {} which is NOT the current menu loop path, so fade time remains as {}", path, fadeInTime);
+		}
 		FMODAudioEngine::playMusic(path, shouldLoop, fadeInTime, channel);
+		if (songManager.getInsidePlayMusic()) songManager.setInsidePlayMusic(false);
 	}
 	void loadMusic(gd::string path, float speed, float unknown, float volume, bool shouldLoop, int musicID, int channelID, bool dontReset) {
-		if (!GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::givenFMODPathIsNotCurrentSongManagerSong(path)) {
-			SongManager::get().setPauseSongPositionTracking(true);
-			SongManager::get().setShouldRestoreMenuLoopPoint(true); // replace with setting
+		SongManager& songManager = SongManager::get();
+		if (songManager.getInsidePlayMusic() && !GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::givenFMODPathIsNotCurrentSongManagerSong(path)) {
+			songManager.setPauseSongPositionTracking(true);
+			songManager.setShouldRestoreMenuLoopPoint(true); // replace with setting
+			if (songManager.getAdvancedLogs()) log::info("path was {} which is NOT the current menu loop path. no menu loop point restoration", path);
+		} else if (songManager.getAdvancedLogs()) {
+			log::info("preparing to restore menu loop by using older starting point, path: {}", path); // TODO FIX THIS SINCE IT FALSE DETECTS SONGS FROM LEVELS (GJBGL NOT YET INIT'D)
 		}
 		FMODAudioEngine::loadMusic(path, speed, unknown, volume, shouldLoop, musicID, channelID, dontReset);
 	}
@@ -32,7 +49,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 			return;
 		}
 
-		if (SongManager::get().getAdvancedLogs()) stupidAccmulatorTooLazyToPutElsewhere += dt;
+		if (songManager.getAdvancedLogs()) stupidAccmulatorTooLazyToPutElsewhere += dt;
 		else if (stupidAccmulatorTooLazyToPutElsewhere != 0) stupidAccmulatorTooLazyToPutElsewhere = 0;
 
 		constexpr int channelNumber = 0;
@@ -43,7 +60,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		const bool isSongManagerSong = activeSong == songManagerSong;
 		// should call SongManager::get().isCurrentMenuLoopBeingPlayed() here but names are needed for logs
 		if (!isSongManagerSong) {
-			if (!SongManager::get().getAdvancedLogs()) return;
+			if (!songManager.getAdvancedLogs()) return;
 			if (stupidAccmulatorTooLazyToPutElsewhere < SECS_BETWEEN_LOGS) return;
 			log::info("activeSong: {}", activeSong);
 			log::info("songManagerSong: {}", songManagerSong);
@@ -67,7 +84,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		menuLoopChannelProbably->isPlaying(&isPlaying);
 		sound->getLength(&length, 1);
 
-		if (SongManager::get().getAdvancedLogs() && stupidAccmulatorTooLazyToPutElsewhere > SECS_BETWEEN_LOGS) {
+		if (songManager.getAdvancedLogs() && stupidAccmulatorTooLazyToPutElsewhere > SECS_BETWEEN_LOGS) {
 			log::info("============= [MLR CONSTANT SHUFFLE TRACKER LOGS] =============");
 			log::info("isSongManagerSong: {}", isSongManagerSong);
 			log::info("position: {}", position);

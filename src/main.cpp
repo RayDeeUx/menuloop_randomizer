@@ -74,7 +74,7 @@ $on_mod(Loaded) {
 		}
 	}
 
-	if (SongManager::get().getAdvancedLogs()) geode::log::info("repopulating vector from on_mod(Loaded)");
+	if (songManager.getAdvancedLogs()) geode::log::info("repopulating vector from on_mod(Loaded)");
 	Utils::refreshTheVector();
 
 	const std::string& override = Utils::toNormalizedString(Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride"));
@@ -87,10 +87,10 @@ $on_mod(Loaded) {
 	const bool loopExists = std::filesystem::exists(Utils::toProblematicString(lastMenuLoop)) || std::filesystem::exists(lastMenuLoopPath);
 	log::info("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\nlast menu loop as path: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}\noverride: {}", lastMenuLoop, lastMenuLoopPath, saveSongOnGameClose, loopExists, override);
 	if (!override.empty() && Utils::isSupportedFile(override)) {
-		if (SongManager::get().getAdvancedLogs()) log::info("setting songManager's current song to overridden song from settings");
+		if (songManager.getAdvancedLogs()) log::info("setting songManager's current song to overridden song from settings");
 		songManager.setCurrentSongToOverride();
 	} else if (!lastMenuLoop.empty() && Utils::isSupportedFile(lastMenuLoop) && loopExists && saveSongOnGameClose) {
-		if (SongManager::get().getAdvancedLogs()) log::info("setting songManager's current song to saved song from on_mod(Loaded)");
+		if (songManager.getAdvancedLogs()) log::info("setting songManager's current song to saved song from on_mod(Loaded)");
 		songManager.setCurrentSongToSavedSong();
 	} else {
 		log::info("randomizing songManager's current song through on_mod(Loaded)");
@@ -151,6 +151,7 @@ $on_mod(Loaded) {
 	});
 	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](const std::filesystem::path& specificSongOverride) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		SongManager& songManager = SongManager::get();
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		const std::string& overrideString = Utils::toNormalizedString(specificSongOverride);
 		songManager.setOverride(overrideString);
@@ -159,7 +160,7 @@ $on_mod(Loaded) {
 			geode::log::info("repopulating vector from removing override");
 			Utils::refreshTheVector();
 			if (Utils::isSupportedFile(Mod::get()->getSavedValue<std::string>("lastMenuLoop")) && Utils::getBool("saveSongOnGameClose") && !originalOverrideWasEmpty) {
-				if (SongManager::get().getAdvancedLogs()) log::info("setting songManager's current song to saved song from settings change");
+				if (songManager.getAdvancedLogs()) log::info("setting songManager's current song to saved song from settings change");
 				songManager.setCurrentSongToSavedSong();
 			} else Utils::setNewSong();
 		}
@@ -223,18 +224,21 @@ $on_mod(Loaded) {
 		Utils::showMDPopup("Song List Extra Info Label", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "search-bar-song-sorting");
 	});
 	listenForSettingChanges<bool>("showPlaybackProgressAndControls", [](const bool showPlaybackProgressAndControls) {
-		SongManager::get().setShowPlaybackProgressAndControls(showPlaybackProgressAndControls);
-		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressAndControls) return;
+		SongManager& songManager = SongManager::get();
+		songManager.setShowPlaybackProgressAndControls(showPlaybackProgressAndControls);
+		if (songManager.getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressAndControls) return;
 		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "show-playback-progress-controls");
 	});
 	listenForSettingChanges<bool>("showPlaybackProgressControlsSongList", [](const bool showPlaybackProgressControlsSongList) {
-		SongManager::get().setShowPlaybackControlsSongList(showPlaybackProgressControlsSongList);
-		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressControlsSongList) return;
+		SongManager& songManager = SongManager::get();
+		songManager.setShowPlaybackControlsSongList(showPlaybackProgressControlsSongList);
+		if (songManager.getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressControlsSongList) return;
 		Utils::showMDPopup("Song List Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "show-playback-progress-controls");
 	});
 	listenForSettingChanges<int64_t>("incrementDecrementByMilliseconds", [](const int64_t incrementDecrementByMilliseconds) {
-		SongManager::get().setIncrementDecrementByMilliseconds(incrementDecrementByMilliseconds);
-		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) return;
+		SongManager& songManager = SongManager::get();
+		songManager.setIncrementDecrementByMilliseconds(incrementDecrementByMilliseconds);
+		if (songManager.getUndefined0Alk1m123TouchPrio()) return;
 		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "playback-progress-incrdecr-amt");
 	});
 	listenForSettingChanges<bool>("songIndicatorsInControlPanel", [](const bool) {
@@ -267,8 +271,8 @@ $on_mod(Loaded) {
 	});
 	ButtonSettingPressedEventV3(Mod::get(), "housekeeping-buttons").listen([](const auto btn) {
 		// jeremy culhane get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head
-		SongManager& sm = SongManager::get();
-		if (GJBaseGameLayer::get() || !sm.isCurrentMenuLoopBeingPlayed() || !sm.getFinishedCalculatingSongLengths()) {
+		SongManager& songManager = SongManager::get();
+		if (GJBaseGameLayer::get() || !songManager.isCurrentMenuLoopBeingPlayed() || !songManager.getFinishedCalculatingSongLengths()) {
 			Notification::create("What are we doing? What's going on?", NotificationIcon::Error, .75f)->show();
 			return ListenerResult::Propagate;
 		}
@@ -276,7 +280,7 @@ $on_mod(Loaded) {
 			file::openFolder(Mod::get()->getConfigDir());
 			return ListenerResult::Propagate;
 		}
-		if (sm.isOverride()) {
+		if (songManager.isOverride()) {
 			Notification::create("No reloading songs when an override is active.\nThat's the rule. That's the goal now.", NotificationIcon::Warning, .75f)->show();
 			return ListenerResult::Propagate;
 		}
@@ -304,23 +308,23 @@ class EclipsePlaybackProgressDummyNode final : public CCNode {
 public:
 	void playbackProgressScheduler(float) { playbackProgress(); }
 	static void playbackProgress() {
-		SongManager& sm = SongManager::get();
-		if (!sm.eclipseSongDurationLabel.has_value() || !sm.eclipseSongProgressBarLabel.has_value()) return;
+		SongManager& songManager = SongManager::get();
+		if (!songManager.eclipseSongDurationLabel.has_value() || !songManager.eclipseSongProgressBarLabel.has_value()) return;
 
-		if (sm.eclipseIsCocosStyle) {
-			if (sm.eclipseSongNameLabel.has_value()) sm.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
-			if (sm.isQOLMod && sm.qolModIntegrationSuccessful) {
-				sm.eclipseSongDurationLabel.value().setText("Please view/control song progress from QOLMod instead.");
-				GEODE_DESKTOP(sm.eclipseSongProgressBarLabel.value().setText("(Or switch to the ImGui menu style.)");)
-				GEODE_MOBILE(sm.eclipseSongProgressBarLabel.value().setText("(This is a non-negotiable solution.)");)
+		if (songManager.eclipseIsCocosStyle) {
+			if (songManager.eclipseSongNameLabel.has_value()) songManager.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
+			if (songManager.isQOLMod && songManager.qolModIntegrationSuccessful) {
+				songManager.eclipseSongDurationLabel.value().setText("Please view/control song progress from QOLMod instead.");
+				GEODE_DESKTOP(songManager.eclipseSongProgressBarLabel.value().setText("(Or switch to the ImGui menu style.)");)
+				GEODE_MOBILE(songManager.eclipseSongProgressBarLabel.value().setText("(This is a non-negotiable solution.)");)
 			} else {
 				GEODE_DESKTOP(
-					sm.eclipseSongDurationLabel.value().setText("Switch to the ImGui menu style to view this progress.");
-					sm.eclipseSongProgressBarLabel.value().setText("(This is a non-negotiable solution.)");
+					songManager.eclipseSongDurationLabel.value().setText("Switch to the ImGui menu style to view this progress.");
+					songManager.eclipseSongProgressBarLabel.value().setText("(This is a non-negotiable solution.)");
 				)
 				GEODE_MOBILE(
-					sm.eclipseSongDurationLabel.value().setText("Feel free to scroll towards the bottom");
-					sm.eclipseSongProgressBarLabel.value().setText("and use the shortcuts from there instead.");
+					songManager.eclipseSongDurationLabel.value().setText("Feel free to scroll towards the bottom");
+					songManager.eclipseSongProgressBarLabel.value().setText("and use the shortcuts from there instead.");
 				)
 			}
 			return;
@@ -328,21 +332,21 @@ public:
 
 		constexpr int progressBarWidth = 20;
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
-		if (!sm.isCurrentMenuLoopBeingPlayed()) {
-			sm.eclipseSongDurationLabel.value().setText("Progress: [CURRENTLY PAUSED]");
-			sm.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:–<{}}]", "", progressBarWidth));
+		if (!songManager.isCurrentMenuLoopBeingPlayed()) {
+			songManager.eclipseSongDurationLabel.value().setText("Progress: [CURRENTLY PAUSED]");
+			songManager.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:–<{}}]", "", progressBarWidth));
 			return;
 		}
 
 		const int fullLength = fmod->getMusicLengthMS(0);
-		const int lastPosition = sm.getLastMenuLoopPosition();
+		const int lastPosition = songManager.getLastMenuLoopPosition();
 
 		const int percent = std::clamp<int>((lastPosition * 100.f / fullLength * 1.f), 0, 100);
 		int completed = (percent * progressBarWidth * 1.f) / 100.f;
 		int remaining = progressBarWidth - completed;
 
-		sm.eclipseSongDurationLabel.value().setText(fmt::format("Progress: {}:{:02} / {}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60), ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
-		sm.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:+<{}}{:-<{}}]", "", completed, "", remaining));
+		songManager.eclipseSongDurationLabel.value().setText(fmt::format("Progress: {}:{:02} / {}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60), ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
+		songManager.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:+<{}}{:-<{}}]", "", completed, "", remaining));
 	}
 };
 
@@ -350,21 +354,22 @@ $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
 		if (!Mod::get()->getSettingValue<bool>("eclipseIntegration")) return;
 		if (!geode::Loader::get()->isModInstalled("eclipse.eclipse-menu")) return;
-		SongManager::get().eclipseIsCocosStyle = geode::utils::string::contains(geode::utils::string::toLower(geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")->getSettingValue<std::string>("menu-style")), "cocos");
+		SongManager& songManager = SongManager::get();
+		songManager.eclipseIsCocosStyle = geode::utils::string::contains(geode::utils::string::toLower(geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu")->getSettingValue<std::string>("menu-style")), "cocos");
 
 		listenForSettingChanges<std::string>("menu-style", [](const std::string& newMenuStyle) {
-			SongManager& sm = SongManager::get();
-			if (!sm.isEclipse || !sm.eclipseIntegrationSuccessful) return;
-			sm.eclipseIsCocosStyle = geode::utils::string::contains(geode::utils::string::toLower(newMenuStyle), "cocos");
+			SongManager& songManagerEclipseListenerLambda = SongManager::get();
+			if (!songManagerEclipseListenerLambda.isEclipse || !songManagerEclipseListenerLambda.eclipseIntegrationSuccessful) return;
+			songManagerEclipseListenerLambda.eclipseIsCocosStyle = geode::utils::string::contains(geode::utils::string::toLower(newMenuStyle), "cocos");
 			// bit of a hack ngl but FUCK IT WE BALL
-			if (sm.eclipseSongNameLabel.has_value()) {
-				if (!sm.eclipseIsCocosStyle) sm.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
-				else sm.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
+			if (songManagerEclipseListenerLambda.eclipseSongNameLabel.has_value()) {
+				if (!songManagerEclipseListenerLambda.eclipseIsCocosStyle) songManagerEclipseListenerLambda.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
+				else songManagerEclipseListenerLambda.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
 			}
 			// add newline if switching to cocos style so mobile users can fatfinger scroll properly
-			for (std::pair<std::optional<eclipse::components::Label>, std::string>& labelStringPair : sm.dynamicEclipseIntegrationHeaders) {
+			for (std::pair<std::optional<eclipse::components::Label>, std::string>& labelStringPair : songManagerEclipseListenerLambda.dynamicEclipseIntegrationHeaders) {
 				if (!labelStringPair.first.has_value()) continue;
-				labelStringPair.first.value().setText(sm.eclipseIsCocosStyle ? fmt::format("{}\n", labelStringPair.second) : labelStringPair.second);
+				labelStringPair.first.value().setText(songManagerEclipseListenerLambda.eclipseIsCocosStyle ? fmt::format("{}\n", labelStringPair.second) : labelStringPair.second);
 			}
 		}, geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu"));
 
@@ -375,16 +380,16 @@ $on_mod(Loaded) {
 		(void) tab.addLabel("= THIS SHOULD BE COMMON SENSE =");
 		(void) tab.addLabel("\n");
 
-		SongManager::get().eclipseSongNameLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Current song: [[Hold on, MLR is still loading things!]]"));
-		SongManager::get().eclipseSongDurationLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Progress: [[Hold on, MLR is still loading things!]]"));
-		SongManager::get().eclipseSongProgressBarLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("[[Hold on, MLR is still loading things!]]"));
+		songManager.eclipseSongNameLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Current song: [[Hold on, MLR is still loading things!]]"));
+		songManager.eclipseSongDurationLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Progress: [[Hold on, MLR is still loading things!]]"));
+		songManager.eclipseSongProgressBarLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("[[Hold on, MLR is still loading things!]]"));
 
 		EclipsePlaybackProgressDummyNode::playbackProgress();
 		GameManager::get()->schedule(schedule_selector(EclipsePlaybackProgressDummyNode::playbackProgressScheduler), .125f);
 
 		(void) tab.addLabel("\n");
 
-		SongManager::get().dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Song Selection")), "Song Selection"});
+		songManager.dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Song Selection")), "Song Selection"});
 		tab.addButton("Shuffle Song", []() {
 			SongControl::shuffleSong();
 		});
@@ -395,7 +400,7 @@ $on_mod(Loaded) {
 			SongControl::holdSong();
 		});
 
-		SongManager::get().dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Playback/Seeking")), "Playback/Seeking"});
+		songManager.dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Playback/Seeking")), "Playback/Seeking"});
 		tab.addButton("Seek Backward", []() {
 			SongControl::skipBackward();
 		});
@@ -415,7 +420,7 @@ $on_mod(Loaded) {
 			SongControl::setSongPercentage(75);
 		});
 
-		SongManager::get().dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Other Controls")), "Other Controls"});
+		songManager.dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Other Controls")), "Other Controls"});
 		tab.addButton("Favorite Song", []() {
 			SongControl::favoriteSong();
 		});
@@ -429,7 +434,7 @@ $on_mod(Loaded) {
 			SongControl::regenSong();
 		});
 
-		SongManager::get().dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Shortcuts (Use them wisely!)")), "Shortcuts (Use them wisely!)"});
+		songManager.dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Shortcuts (Use them wisely!)")), "Shortcuts (Use them wisely!)"});
 		tab.addButton("Open Control Panel", []() {
 			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || (CCScene::get() && CCScene::get()->getChildByType<SongControlMenu>(0)) || Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
@@ -505,17 +510,17 @@ $on_mod(Loaded) {
 			geode::openSettingsPopup(Mod::get());
 		});
 
-		SongManager::get().eclipseIntegrationSuccessful = true;
+		songManager.eclipseIntegrationSuccessful = true;
 
 		// surely. surely this will work.
 		Loader::get()->queueInMainThread([]() {
-			SongManager& sm = SongManager::get();
-			if (!sm.eclipseIsCocosStyle) sm.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
-			else sm.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
+			SongManager& songManager = SongManager::get();
+			if (!songManager.eclipseIsCocosStyle) songManager.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
+			else songManager.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
 			// add newline if switching to cocos style so mobile users can fatfinger scroll properly (repeating myself ! yayyyy)
-			for (std::pair<std::optional<eclipse::components::Label>, std::string>& labelStringPair : sm.dynamicEclipseIntegrationHeaders) {
+			for (std::pair<std::optional<eclipse::components::Label>, std::string>& labelStringPair : songManager.dynamicEclipseIntegrationHeaders) {
 				if (!labelStringPair.first.has_value()) continue;
-				labelStringPair.first.value().setText(sm.eclipseIsCocosStyle ? fmt::format("{}\n", labelStringPair.second) : labelStringPair.second);
+				labelStringPair.first.value().setText(songManager.eclipseIsCocosStyle ? fmt::format("{}\n", labelStringPair.second) : labelStringPair.second);
 			}
 		});
 	});
@@ -527,17 +532,18 @@ $on_mod(Loaded) {
 class QOLModAndroidUITrackerDummyNode final : public CCNode {
 public:
 	void trackAndroidUIScheduler(float) {
-		if (!SongManager::get().trackAndroidUI) return;
+		SongManager& songManager = SongManager::get();
+		if (!songManager.trackAndroidUI) return;
 		for (CCNode* child : cocos2d::CCScene::get()->getChildrenExt()) {
 			if (geode::cocos::getObjectName(child) == "AndroidUI") return;
 		}
-		SongManager::get().trackAndroidUI = false;
-		SongManager::get().songControlMenuForQOLMod = nullptr;
-		if (SongManager::get().songListInputNodeForQOLMod) {
-			SongManager::get().songListInputNodeForQOLMod->onClickTrackNode(false);
-			SongManager::get().songListInputNodeForQOLMod = nullptr;
+		songManager.trackAndroidUI = false;
+		songManager.songControlMenuForQOLMod = nullptr;
+		if (songManager.songListInputNodeForQOLMod) {
+			songManager.songListInputNodeForQOLMod->onClickTrackNode(false);
+			songManager.songListInputNodeForQOLMod = nullptr;
 		}
-		SongManager::get().songListLayerForQOLMod = nullptr;
+		songManager.songListLayerForQOLMod = nullptr;
 	}
 };
 
@@ -545,10 +551,12 @@ $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
 		if (!Mod::get()->getSettingValue<bool>("qolModIntegration")) return;
 		if (!geode::Loader::get()->isModInstalled("thesillydoggo.qolmod")) return;
-		if (!SongManager::get().qolModIntegrationSuccessful) SongManager::get().qolModIntegrationSuccessful = true;
+		SongManager& songManagerNonLambda = SongManager::get();
+		if (!songManagerNonLambda.qolModIntegrationSuccessful) songManagerNonLambda.qolModIntegrationSuccessful = true;
 		GameManager::get()->schedule(schedule_selector(QOLModAndroidUITrackerDummyNode::trackAndroidUIScheduler));
 		qolmod::ext::addCustomCategory({1, Mod::get()->getName(), "qolmod.png"_spr, Mod::get()->getID(), [](cocos2d::CCMenu* layer) {
 			if (!layer) return;
+			SongManager& songManager = SongManager::get();
 			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
 				if (foo->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
 				#if GEODE_COMP_GD_VERSION == 22081
@@ -624,7 +632,7 @@ $on_mod(Loaded) {
 				return;
 			}
 
-			if (!SongManager::get().getFinishedCalculatingSongLengths()) {
+			if (!songManager.getFinishedCalculatingSongLengths()) {
 				CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create("Menu Loop Randomizer is currently busy!", "bigFont.fnt");
 				dontMarrySvetlana->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
 
@@ -642,9 +650,9 @@ $on_mod(Loaded) {
 				return;
 			}
 
-			SongManager::get().songControlMenuForQOLMod = nullptr;
-			SongManager::get().songListLayerForQOLMod = nullptr;
-			SongManager::get().addingToQOLModRightNow = true;
+			songManager.songControlMenuForQOLMod = nullptr;
+			songManager.songListLayerForQOLMod = nullptr;
+			songManager.addingToQOLModRightNow = true;
 			SongControlMenu* iKnowItWouldntBeForLoveOrWhatever = SongControlMenu::create();
 			iKnowItWouldntBeForLoveOrWhatever->show();
 			SongListLayer* weCanFigureSomethingElseOutOK = nullptr;
@@ -652,9 +660,9 @@ $on_mod(Loaded) {
 				weCanFigureSomethingElseOutOK = SongListLayer::create();
 				weCanFigureSomethingElseOutOK->show();
 			}
-			SongManager::get().addingToQOLModRightNow = false;
-			if (Utils::getBool("qolModIntegrationSongList")) SongManager::get().songListLayerForQOLMod = geode::Ref(weCanFigureSomethingElseOutOK);
-			SongManager::get().songControlMenuForQOLMod = geode::Ref(iKnowItWouldntBeForLoveOrWhatever);
+			songManager.addingToQOLModRightNow = false;
+			if (Utils::getBool("qolModIntegrationSongList")) songManager.songListLayerForQOLMod = geode::Ref(weCanFigureSomethingElseOutOK);
+			songManager.songControlMenuForQOLMod = geode::Ref(iKnowItWouldntBeForLoveOrWhatever);
 
 			#if GEODE_COMP_GD_VERSION > 22074
 			iKnowItWouldntBeForLoveOrWhatever->setKeypadEnabled(false);
@@ -679,29 +687,29 @@ $on_mod(Loaded) {
 			#endif
 
 			// so what you need to be doing is unregistering force prio since it isn't being used as a popup --alphalaneous --raydeeux
-			if (!SongManager::get().getUndefined0Alk1m123TouchPrio()) {
-				CCTouchDispatcher::get()->unregisterForcePrio(SongManager::get().songControlMenuForQOLMod);
-				if (Utils::getBool("qolModIntegrationSongList") && SongManager::get().songListLayerForQOLMod) CCTouchDispatcher::get()->unregisterForcePrio(SongManager::get().songListLayerForQOLMod);
+			if (!songManager.getUndefined0Alk1m123TouchPrio()) {
+				CCTouchDispatcher::get()->unregisterForcePrio(songManager.songControlMenuForQOLMod);
+				if (Utils::getBool("qolModIntegrationSongList") && songManager.songListLayerForQOLMod) CCTouchDispatcher::get()->unregisterForcePrio(songManager.songListLayerForQOLMod);
 			}
 
-			layer->addChildAtPosition(SongManager::get().songControlMenuForQOLMod, geode::Anchor::Center);
-			if (Utils::getBool("qolModIntegrationSongList") && SongManager::get().songListLayerForQOLMod) layer->addChildAtPosition(SongManager::get().songListLayerForQOLMod, geode::Anchor::Center, {0.f, -25.f});
+			layer->addChildAtPosition(songManager.songControlMenuForQOLMod, geode::Anchor::Center);
+			if (Utils::getBool("qolModIntegrationSongList") && songManager.songListLayerForQOLMod) layer->addChildAtPosition(songManager.songListLayerForQOLMod, geode::Anchor::Center, {0.f, -25.f});
 
-			SongManager::get().songControlMenuForQOLMod->ignoreAnchorPointForPosition(false);
-			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
-			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::forceSharpCornerIllusionScheduler));
-			SongManager::get().songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
+			songManager.songControlMenuForQOLMod->ignoreAnchorPointForPosition(false);
+			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
+			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::forceSharpCornerIllusionScheduler));
+			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
 
-			if (Utils::getBool("qolModIntegrationSongList") && SongManager::get().songListLayerForQOLMod) {
-				SongManager::get().songListLayerForQOLMod->ignoreAnchorPointForPosition(false);
-				SongManager::get().songListLayerForQOLMod->setScale(0.f); // look bro you think of a better way of hiding these sons of bitches because moving them off screen isnt doing it --raydeeux
-				if (SEARCH_BAR_ENABLED && SongManager::get().songListLayerForQOLMod.data() && static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()) && static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->m_searchBar) {
-					SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->m_searchBar->getInputNode());
-					SongManager::get().songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
+			if (Utils::getBool("qolModIntegrationSongList") && songManager.songListLayerForQOLMod) {
+				songManager.songListLayerForQOLMod->ignoreAnchorPointForPosition(false);
+				songManager.songListLayerForQOLMod->setScale(0.f); // look bro you think of a better way of hiding these sons of bitches because moving them off screen isnt doing it --raydeeux
+				if (SEARCH_BAR_ENABLED && songManager.songListLayerForQOLMod.data() && static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data()) && static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data())->m_searchBar) {
+					SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data())->m_searchBar->getInputNode());
+					songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
 				}
-				SongManager::get().songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
+				songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
 
-				if (SongListLayer* foo = static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data()); foo) {
+				if (SongListLayer* foo = static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data()); foo) {
 					foo->searchSongs("", false);
 					if (foo && foo->m_searchBar && foo->m_searchBar->getInputNode()) foo->m_searchBar->getInputNode()->onClickTrackNode(false);
 				}
@@ -715,7 +723,7 @@ $on_mod(Loaded) {
 			bar->setID("settings-shortcut-qolmod-integration"_spr);
 			layer->addChildAtPosition(bar, Anchor::BottomRight, {-10.f, 10.f});
 
-			SongManager::get().trackAndroidUI = true;
+			songManager.trackAndroidUI = true;
 		}});
 	});
 }

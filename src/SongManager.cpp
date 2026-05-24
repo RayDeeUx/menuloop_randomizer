@@ -378,6 +378,14 @@ bool SongManager::getOsu() const {
 	return m_osuSetting;
 }
 
+void SongManager::setInsidePlayMusic(const bool value) {
+	m_insidePlayMusic = value;
+}
+
+bool SongManager::getInsidePlayMusic() const {
+	return m_insidePlayMusic;
+}
+
 unsigned long SongManager::getHashedCurrentSong() const {
 	return m_hashedCurrentSong;
 }

@@ -50,7 +50,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 		if (SEARCH_BAR_ENABLED && !queryString.empty()) {
 			const bool contains = geode::utils::string::contains(geode::utils::string::toLower(songData.fullDisplayNameForControlPanelAndSongList), geode::utils::string::toLower(queryString));
-			if (SongManager::get().getAdvancedLogs()) {
+			if (songManager.getAdvancedLogs()) {
 				geode::log::info("songData.fullDisplayNameForControlPanelAndSongList: {}", songData.fullDisplayNameForControlPanelAndSongList);
 				geode::log::info("queryString: {}", queryString);
 				geode::log::info("contains: {}", contains);
@@ -231,7 +231,7 @@ bool SongListLayer::setup() {
 		searchBarDivider->setID("song-list-search-divider"_spr);
 		searchBarMenu->addChild(searchBarDivider);
 
-		if (this->m_isInQOLMod) SongManager::get().songListInputNodeForQOLMod = geode::Ref(this->m_searchBar->getInputNode());
+		if (this->m_isInQOLMod) songManager.songListInputNodeForQOLMod = geode::Ref(this->m_searchBar->getInputNode());
 	}
 
 	geode::ListBorders* listBorder = geode::ListBorders::create();
@@ -469,10 +469,11 @@ void SongListLayer::onPreviousButton(CCObject*) {
 }
 
 void SongListLayer::onControlsButton(CCObject*) {
-	if (this->m_isInQOLMod && this->getParent() && SongManager::get().songControlMenuForQOLMod->getParent() && SongManager::get().songControlMenuForQOLMod->getParent() == this->getParent()) {
+	SongManager& songManager = SongManager::get();
+	if (this->m_isInQOLMod && this->getParent() && songManager.songControlMenuForQOLMod->getParent() && songManager.songControlMenuForQOLMod->getParent() == this->getParent()) {
 		if (this->m_searchBar && this->m_searchBar->getInputNode()) this->m_searchBar->getInputNode()->onClickTrackNode(false);
 		this->setScale(0.f);
-		SongManager::get().songControlMenuForQOLMod->setScale(1.f);
+		songManager.songControlMenuForQOLMod->setScale(1.f);
 		return;
 	}
 	this->onClose(nullptr);

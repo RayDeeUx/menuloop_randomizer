@@ -536,10 +536,11 @@ void SongControlMenu::onPreviousButton(cocos2d::CCObject*) {
 }
 
 void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
-	if (Utils::getBool("qolModIntegrationSongList") && this->m_isInQOLMod && this->getParent() && SongManager::get().songListLayerForQOLMod->getParent() && SongManager::get().songListLayerForQOLMod->getParent() == this->getParent()) {
+	SongManager& songManager = SongManager::get();
+	if (Utils::getBool("qolModIntegrationSongList") && this->m_isInQOLMod && this->getParent() && songManager.songListLayerForQOLMod->getParent() && songManager.songListLayerForQOLMod->getParent() == this->getParent()) {
 		this->setScale(0.f);
-		SongManager::get().songListLayerForQOLMod->setScale(.7f);
-		SongListLayer* foo = static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data());
+		songManager.songListLayerForQOLMod->setScale(.7f);
+		SongListLayer* foo = static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data());
 		if (foo->m_searchBar && foo->m_searchBar->getInputNode()) foo->m_searchBar->getInputNode()->onClickTrackNode(false);
 		if (Utils::getBool("autoScrollToCurrentSong")) {
 			geode::Loader::get()->queueInMainThread([foo, contentLayer = foo->getContentLayer()]() {
@@ -549,8 +550,8 @@ void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 		}
 		return;
 	}
-	if ((!Utils::getBool("qolModIntegrationSongList") && this->m_isInQOLMod) || (this->m_isInQOLMod && !SongManager::get().songListLayerForQOLMod)) return;
-	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
+	if ((!Utils::getBool("qolModIntegrationSongList") && this->m_isInQOLMod) || (this->m_isInQOLMod && !songManager.songListLayerForQOLMod)) return;
+	if (!songManager.getFinishedCalculatingSongLengths()) {
 		FLAlertLayer* alert = FLAlertLayer::create("Hold on a sec!", "Menu Loop Randomizer is still calculating song lengths to set up the Song List menu. Hang tight, and try again later.", "I Understand");
 		alert->m_noElasticity = true;
 		alert->show();

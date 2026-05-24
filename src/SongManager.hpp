@@ -126,6 +126,8 @@ class SongManager {
 	bool getYoutubeAndVLCKeyboardShortcutsControlPanel() const;
 	void setOsu(const bool value);
 	bool getOsu() const;
+	void setInsidePlayMusic(const bool value);
+	bool getInsidePlayMusic() const;
 	unsigned long getHashedCurrentSong() const;
 	bool isCurrentMenuLoopBeingPlayed() const;
 
@@ -176,6 +178,7 @@ class SongManager {
 	bool m_youtubeAndVLCKeyboardShortcutsSongList = false;
 	bool m_youtubeAndVLCKeyboardShortcutsControlPanel = false;
 	bool m_osuSetting = false;
+	bool m_insidePlayMusic = false;
 	int m_lastPosition = 0;
 	int m_towerRepeatCount = 0;
 	int m_incrementDecrementByMilliseconds = 0;

@@ -177,7 +177,9 @@ void MLRSongCell::updateProgressBar() const {
 
 void MLRSongCell::checkIfCurrentSong() const {
 	if (this->m_songData.isEmpty || !this->m_songNameLabel || !this->m_songNameLabel->getParent() || !this->m_menu) return;
-	const bool isCurrentSong = this->m_songData.hashedPath == SongManager::get().getHashedCurrentSong();
+
+	SongManager& songManager = SongManager::get();
+	const bool isCurrentSong = this->m_songData.hashedPath == songManager.getHashedCurrentSong();
 
 	int originalTag = this->getTag();
 	geode::cocos::CCArrayExt<CCNode> childNodes = m_menu->getChildrenExt();
@@ -220,8 +222,8 @@ void MLRSongCell::checkIfCurrentSong() const {
 	if (originalTag != this->getTag()) {
 		if (SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0); sll && Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
 			sll->scrollToCurrentSong();
-		} else if (Utils::getBool("qolModIntegrationSongList") && SongManager::get().songListLayerForQOLMod && Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
-			static_cast<SongListLayer*>(SongManager::get().songListLayerForQOLMod.data())->scrollToCurrentSong();
+		} else if (Utils::getBool("qolModIntegrationSongList") && songManager.songListLayerForQOLMod && Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
+			static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data())->scrollToCurrentSong();
 		}
 	}
 }
