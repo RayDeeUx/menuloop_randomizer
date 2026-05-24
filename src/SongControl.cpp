@@ -26,7 +26,7 @@ namespace SongControl {
 			return FLAlertLayer::create("Menu Loop Randomizer", "You're already playing the previous song! <cl>:)</c>", "Close")->show();
 		}
 
-		if (FMODAudioEngine::get()->getActiveMusic(0) != songManager.getCurrentSong()) return;
+		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 		
 		const std::string& previousSong = songManager.getPreviousSong();
 		
@@ -177,14 +177,14 @@ namespace SongControl {
 	}
 	void copySong() {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-		if (FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
+		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 		Utils::copyCurrentSongName();
 		geode::Notification::create("[MLR] Current song name copied!", geode::NotificationIcon::None, geode::Mod::get()->getSettingValue<double>("notificationTime"));
 	}
 	void regenSong() {
 		Utils::removeCard();
 		if (VANILLA_GD_MENU_LOOP_DISABLED || !Utils::getBool("enableNotification")) return;
-		if (FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
+		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 	void shuffleSong() {
@@ -197,7 +197,7 @@ namespace SongControl {
 			Utils::refreshTheVector();
 		}
 
-		if (FMODAudioEngine::get()->getActiveMusic(0) != songManager.getCurrentSong()) return;
+		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 
 		Utils::setNewSong();
 
@@ -266,7 +266,7 @@ namespace SongControl {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
-		if (fmod->getActiveMusic(0) != songManager.getCurrentSong()) return;
+		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 		const int lastPosition = songManager.getLastMenuLoopPosition();
@@ -292,7 +292,7 @@ namespace SongControl {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
-		if (fmod->getActiveMusic(0) != songManager.getCurrentSong()) return;
+		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 		const int lastPosition = songManager.getLastMenuLoopPosition();
@@ -320,7 +320,7 @@ namespace SongControl {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
-		if (fmod->getActiveMusic(0) != songManager.getCurrentSong()) return;
+		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 

@@ -49,6 +49,8 @@ class Utils {
 	static bool songDataContainsSong(const std::string_view);
 	static bool songDataContainsSongPath(const std::filesystem::path&);
 	static std::string getFullNameOfCurrentSongForIntegrationsAndControlPanel();
+	static bool currentFMODSongIsNotCurrentSongManagerSong();
+	static bool givenFMODPathIsNotCurrentSongManagerSong(gd::string);
 	static void rememberLastMenuLoop();
 	static CCMenuItemSpriteExtra* addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static CCMenuItemToggler* addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string_view nodeID, cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);

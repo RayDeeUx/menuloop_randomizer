@@ -431,7 +431,7 @@ $on_mod(Loaded) {
 
 		SongManager::get().dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Shortcuts (Use them wisely!)")), "Shortcuts (Use them wisely!)"});
 		tab.addButton("Open Control Panel", []() {
-			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || (CCScene::get() && CCScene::get()->getChildByType<SongControlMenu>(0)) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
+			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || (CCScene::get() && CCScene::get()->getChildByType<SongControlMenu>(0)) || Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
 			if (SongListLayer* foo = CCScene::get()->getChildByType<SongListLayer>(0); foo) {
 				#if GEODE_COMP_GD_VERSION == 22081
@@ -448,7 +448,7 @@ $on_mod(Loaded) {
 			SongControlMenu::create()->show();
 		});
 		tab.addButton("Open Songs List", []() {
-			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || !CCScene::get() || CCScene::get()->getChildByType<SongListLayer>(0) || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) return;
+			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || !CCScene::get() || CCScene::get()->getChildByType<SongListLayer>(0) || Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
 			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
 				if (foo->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
@@ -604,13 +604,13 @@ $on_mod(Loaded) {
 			butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar->setID("warning-sub-header"_spr);
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setID("warning-footer-two"_spr);
 
-			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) {
+			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || Utils::currentFMODSongIsNotCurrentSongManagerSong()) {
 				CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create("Menu Loop Randomizer is currently not active!", "bigFont.fnt");
 				dontMarrySvetlana->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
 
 				CCLabelBMFont* justDont = CCLabelBMFont::create("(Might wanna get that checked out.)", "chatFont.fnt");
 				if (GJBaseGameLayer::get()) justDont->setString("(You're in a level right now. Try again later.)");
-				else if (!VANILLA_GD_MENU_LOOP_DISABLED && FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong()) justDont->setString("(This menu loop isn't from MLR. Go figure out why ON YOUR OWN.)");
+				else if (!VANILLA_GD_MENU_LOOP_DISABLED && Utils::currentFMODSongIsNotCurrentSongManagerSong()) justDont->setString("(This menu loop isn't from MLR. Go figure out why ON YOUR OWN.)");
 				justDont->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 				justDont->limitLabelWidth(layer->getContentWidth() * .5f, 1.f, .0001f);
 				justDont->setScale(.75f);

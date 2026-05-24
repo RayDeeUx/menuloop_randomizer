@@ -755,6 +755,14 @@ std::string Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel() {
 	return (!SongManager::get().getFinishedCalculatingSongLengths() || !Utils::songDataContainsSong(SongManager::get().getCurrentSong())) ? SongManager::get().getCurrentSongDisplayName() : Utils::getSongDataOfCurrentSong().fullDisplayNameForControlPanelAndSongList;
 }
 
+bool Utils::currentFMODSongIsNotCurrentSongManagerSong() {
+	return FMODAudioEngine::get()->getActiveMusic(0) != SongManager::get().getCurrentSong();
+}
+
+bool Utils::givenFMODPathIsNotCurrentSongManagerSong(gd::string path) {
+	return static_cast<std::string>(path) != SongManager::get().getCurrentSong();
+}
+
 void Utils::rememberLastMenuLoop() {
 	SongManager& songManager = SongManager::get();
 	std::string currentSong = songManager.getCurrentSong();

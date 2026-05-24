@@ -13,6 +13,17 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		if (!GJBaseGameLayer::get()) SongManager::get().setPauseSongPositionTracking(true);
 		FMODAudioEngine::stopAllMusic(p0);
 	}
+	void playMusic(gd::string path, bool shouldLoop, float fadeInTime, int channel) {
+		if (!GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && !Utils::givenFMODPathIsNotCurrentSongManagerSong(path)) fadeInTime = 0.f; // replace 0.f with setting
+		FMODAudioEngine::playMusic(path, shouldLoop, fadeInTime, channel);
+	}
+	void loadMusic(gd::string path, float speed, float unknown, float volume, bool shouldLoop, int musicID, int channelID, bool dontReset) {
+		if (!GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::givenFMODPathIsNotCurrentSongManagerSong(path)) {
+			SongManager::get().setPauseSongPositionTracking(true);
+			SongManager::get().setShouldRestoreMenuLoopPoint(true); // replace with setting
+		}
+		FMODAudioEngine::loadMusic(path, speed, unknown, volume, shouldLoop, musicID, channelID, dontReset);
+	}
 	void update(float dt) {
 		FMODAudioEngine::update(dt);
 		SongManager& songManager = SongManager::get();
@@ -30,6 +41,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		const auto activeSong = FMODAudioEngine::get()->getActiveMusic(channelNumber);
 		const auto songManagerSong = songManager.getCurrentSong();
 		const bool isSongManagerSong = activeSong == songManagerSong;
+		// should call SongManager::get().isCurrentMenuLoopBeingPlayed() here but names are needed for logs
 		if (!isSongManagerSong) {
 			if (!SongManager::get().getAdvancedLogs()) return;
 			if (stupidAccmulatorTooLazyToPutElsewhere < SECS_BETWEEN_LOGS) return;
