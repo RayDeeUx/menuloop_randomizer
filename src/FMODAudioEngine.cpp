@@ -32,10 +32,10 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	}
 	void loadMusic(gd::string path, float speed, float unknown, float volume, bool shouldLoop, int musicID, int channelID, bool dontReset) {
 		SongManager& songManager = SongManager::get();
-		if (songManager.getInsidePlayMusic() && !GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::givenFMODPathIsNotCurrentSongManagerSong(path)) {
+		if (!songManager.getInsidePlayMusic() && !GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::givenFMODPathIsNotCurrentSongManagerSong(path)) {
 			songManager.setPauseSongPositionTracking(true);
 			songManager.setShouldRestoreMenuLoopPoint(true); // replace with setting
-			if (songManager.getAdvancedLogs()) log::info("path was {} which is NOT the current menu loop path. no menu loop point restoration", path);
+			if (songManager.getAdvancedLogs()) log::info("path was {} which is NOT the current menu loop path. restored point should be {} ms", path, songManager.getLastMenuLoopPosition());
 		} else if (songManager.getAdvancedLogs()) {
 			log::info("preparing to restore menu loop by using older starting point, path: {}", path); // TODO FIX THIS SINCE IT FALSE DETECTS SONGS FROM LEVELS (GJBGL NOT YET INIT'D)
 		}
