@@ -8,13 +8,13 @@
 #define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
 #define CAN_SHOW_PLAYBACK_PROGRESS songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong())
 
-#if GEODE_COMP_GD_VERSION == 22081
+#if GEODE_COMP_GD_VERSION > 22074
 bool SongControlMenu::init() {
 #endif
-#if GEODE_COMP_GD_VERSION == 22074
+#if GEODE_COMP_GD_VERSION < 22081
 bool SongControlMenu::setup() {
 #endif
-	#if GEODE_COMP_GD_VERSION == 22081
+	#if GEODE_COMP_GD_VERSION > 22074
 	if (!geode::Popup::init(300.f, 150.f, "GJ_square05.png")) return false;
 	#endif
 
@@ -114,10 +114,10 @@ bool SongControlMenu::setup() {
 	this->m_headerLabl->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_headerLabl->setPosition({centerStage, 107.5f});
 
-	#if GEODE_COMP_GD_VERSION == 22081
+	#if GEODE_COMP_GD_VERSION > 22074
 	this->b = geode::NineSlice::create("square02b_001.png");
 	#endif
-	#if GEODE_COMP_GD_VERSION == 22074
+	#if GEODE_COMP_GD_VERSION < 22081
 	this->b = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
 	#endif
 	this->b->ignoreAnchorPointForPosition(false);
@@ -127,10 +127,10 @@ bool SongControlMenu::setup() {
 	this->b->setColor({0, 0, 0});
 	this->b->setOpacity(128);
 
-	#if GEODE_COMP_GD_VERSION == 22081
+	#if GEODE_COMP_GD_VERSION > 22074
 	this->w = geode::NineSlice::create("square02b_001.png");
 	#endif
-	#if GEODE_COMP_GD_VERSION == 22074
+	#if GEODE_COMP_GD_VERSION < 22081
 	this->w = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
 	#endif
 	this->w->setContentSize(this->m_mainLayer->getContentSize());
@@ -308,23 +308,23 @@ bool SongControlMenu::setup() {
 	this->m_increDecreMenu->setID("incdec-time-menu"_spr);
 	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
 	this->m_openSongListMenu->setID("song-list-menu"_spr);
-	#if GEODE_COMP_GD_VERSION == 22081
+	#if GEODE_COMP_GD_VERSION > 22074
 	this->b->getBatchNode()->setID("the-darn-scale-9"_spr);
 	#endif
-	#if GEODE_COMP_GD_VERSION == 22074
+	#if GEODE_COMP_GD_VERSION < 22081
 	this->b->_scale9Image->setID("the-darn-scale-9"_spr);
 	#endif
-	#if GEODE_COMP_GD_VERSION == 22081
+	#if GEODE_COMP_GD_VERSION > 22074
 	this->w->getBatchNode()->setID("osu-darn-scale-9"_spr);
 	#endif
-	#if GEODE_COMP_GD_VERSION == 22074
+	#if GEODE_COMP_GD_VERSION < 22081
 	this->w->_scale9Image->setID("osu-darn-scale-9"_spr);
 	#endif
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
-	#if GEODE_COMP_GD_VERSION == 22081
+	#if GEODE_COMP_GD_VERSION > 22074
 	this->m_bgSprite->getBatchNode()->setID("the-less-darned-sprite-9"_spr);
 	#endif
-	#if GEODE_COMP_GD_VERSION == 22074
+	#if GEODE_COMP_GD_VERSION < 22081
 	this->m_bgSprite->_scale9Image->setID("the-less-darned-sprite-9"_spr);
 	#endif
 
@@ -381,10 +381,10 @@ bool SongControlMenu::setup() {
 
 SongControlMenu* SongControlMenu::create() {
 	SongControlMenu* ret = new SongControlMenu();
-	#if GEODE_COMP_GD_VERSION == 22081
+	#if GEODE_COMP_GD_VERSION > 22074
 	if (ret->init()) {
 	#endif
-	#if GEODE_COMP_GD_VERSION == 22074
+	#if GEODE_COMP_GD_VERSION < 22081
 	if (ret->initAnchored(300.f, 150.f, "GJ_square05.png")) {
 	#endif
 		ret->autorelease();
@@ -417,14 +417,14 @@ void SongControlMenu::checkManagerFinished(float) {
 void SongControlMenu::forceSharpCornerIllusion() {
 	if (!this->b) return;
 
-	#if GEODE_COMP_GD_VERSION == 22081
+	#if GEODE_COMP_GD_VERSION > 22074
 	if (this->b->getBottom()) this->b->getBottom()->setPositionX(0.f);
 	if (this->b->getBottom()) this->b->getBottom()->setScaleX(9.375f);
 	if (this->b->getBottomLeft()) this->b->getBottomLeft()->setVisible(false);
 	if (this->b->getBottomRight()) this->b->getBottomRight()->setVisible(false);
 	#endif
 
-	#if GEODE_COMP_GD_VERSION == 22074
+	#if GEODE_COMP_GD_VERSION < 22081
 	if (this->b->_bottom) this->b->_bottom->setPositionX(0.f);
 	if (this->b->_bottom) this->b->_bottom->setScaleX(9.375f);
 	if (this->b->_bottomLeft) this->b->_bottomLeft->setVisible(false);
@@ -749,10 +749,10 @@ void SongControlMenu::toggleOsu() {
 	}
 }
 
-#if GEODE_COMP_GD_VERSION == 22081
+#if GEODE_COMP_GD_VERSION > 22074
 void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 #endif
-#if GEODE_COMP_GD_VERSION == 22074
+#if GEODE_COMP_GD_VERSION < 22081
 void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 #endif
 	SongManager& songManager = SongManager::get();
@@ -800,10 +800,10 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 		return this->onClose(nullptr);
 	}
 	if (key == cocos2d::enumKeyCodes::KEY_Space) return;
-	#if GEODE_COMP_GD_VERSION == 22081
+	#if GEODE_COMP_GD_VERSION > 22074
 	return FLAlertLayer::keyDown(key, p1);
 	#endif
-	#if GEODE_COMP_GD_VERSION == 22074
+	#if GEODE_COMP_GD_VERSION < 22081
 	return FLAlertLayer::keyDown(key);
 	#endif
 }

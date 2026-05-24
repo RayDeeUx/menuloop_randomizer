@@ -439,14 +439,14 @@ $on_mod(Loaded) {
 			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || (CCScene::get() && CCScene::get()->getChildByType<SongControlMenu>(0)) || Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
 			if (SongListLayer* foo = CCScene::get()->getChildByType<SongListLayer>(0); foo) {
-				#if GEODE_COMP_GD_VERSION == 22081
+				#if GEODE_COMP_GD_VERSION > 22074
 				geode::Popup::CloseEvent(foo).send();
 				foo->setKeypadEnabled(false);
 				foo->setTouchEnabled(false);
 				foo->removeFromParent();
 				#endif
 
-				#if GEODE_COMP_GD_VERSION == 22074
+				#if GEODE_COMP_GD_VERSION < 22081
 				foo->keyBackClicked();
 				#endif
 			}
@@ -457,14 +457,14 @@ $on_mod(Loaded) {
 			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
 			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
 				if (foo->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
-				#if GEODE_COMP_GD_VERSION == 22081
+				#if GEODE_COMP_GD_VERSION > 22074
 				geode::Popup::CloseEvent(foo).send();
 				foo->setKeypadEnabled(false);
 				foo->setTouchEnabled(false);
 				foo->removeFromParent();
 				#endif
 
-				#if GEODE_COMP_GD_VERSION == 22074
+				#if GEODE_COMP_GD_VERSION < 22081
 				foo->keyBackClicked();
 				#endif
 			}
@@ -475,26 +475,26 @@ $on_mod(Loaded) {
 			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
 			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
 				if (foo->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
-				#if GEODE_COMP_GD_VERSION == 22081
+				#if GEODE_COMP_GD_VERSION > 22074
 				geode::Popup::CloseEvent(foo).send();
 				foo->setKeypadEnabled(false);
 				foo->setTouchEnabled(false);
 				foo->removeFromParent();
 				#endif
 
-				#if GEODE_COMP_GD_VERSION == 22074
+				#if GEODE_COMP_GD_VERSION < 22081
 				foo->keyBackClicked();
 				#endif
 			}
 			if (SongListLayer* bar = CCScene::get()->getChildByType<SongListLayer>(0); bar) {
-				#if GEODE_COMP_GD_VERSION == 22081
+				#if GEODE_COMP_GD_VERSION > 22074
 				geode::Popup::CloseEvent(bar).send();
 				bar->setKeypadEnabled(false);
 				bar->setTouchEnabled(false);
 				bar->removeFromParent();
 				#endif
 
-				#if GEODE_COMP_GD_VERSION == 22074
+				#if GEODE_COMP_GD_VERSION < 22081
 				bar->keyBackClicked();
 				#endif
 			}
@@ -559,26 +559,26 @@ $on_mod(Loaded) {
 			SongManager& songManager = SongManager::get();
 			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
 				if (foo->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
-				#if GEODE_COMP_GD_VERSION == 22081
+				#if GEODE_COMP_GD_VERSION > 22074
 				geode::Popup::CloseEvent(foo).send();
 				foo->setKeypadEnabled(false);
 				foo->setTouchEnabled(false);
 				foo->removeFromParent();
 				#endif
 
-				#if GEODE_COMP_GD_VERSION == 22074
+				#if GEODE_COMP_GD_VERSION < 22081
 				foo->keyBackClicked();
 				#endif
 			}
 			if (SongListLayer* bar = CCScene::get()->getChildByType<SongListLayer>(0); bar) {
-				#if GEODE_COMP_GD_VERSION == 22081
+				#if GEODE_COMP_GD_VERSION > 22074
 				geode::Popup::CloseEvent(bar).send();
 				bar->setKeypadEnabled(false);
 				bar->setTouchEnabled(false);
 				bar->removeFromParent();
 				#endif
 
-				#if GEODE_COMP_GD_VERSION == 22074
+				#if GEODE_COMP_GD_VERSION < 22081
 				bar->keyBackClicked();
 				#endif
 			}
