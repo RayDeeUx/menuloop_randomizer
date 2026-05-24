@@ -20,10 +20,10 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	// playmusic calls loadmusic, so set songmanager var ig
 	void playMusic(gd::string path, bool shouldLoop, float fadeInTime, int channel) {
 		SongManager& songManager = SongManager::get();
-		if (!GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && !Utils::givenFMODPathIsNotCurrentSongManagerSong(path)) {
+		if (!GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && !Utils::givenFMODPathIsNotCurrentSongManagerSong(path) && shouldLoop && fadeInTime == 1.f && channel == 0) {
 			if (songManager.getAdvancedLogs()) log::info("setting fade time to whatever was declared in settings, path: {}", path);
-			songManager.setInsidePlayMusic(true);
-			fadeInTime = 0.f; // replace 0.f with setting that defaults to 0.5f
+			songManager.setInsidePlayMusic(true); // might as well kill two birds with one stone
+			fadeInTime = std::clamp<float>(Mod::get()->getSettingValue<float>("fadeInTime"), 0.f, 60.f);
 		} else if (songManager.getAdvancedLogs()) {
 			log::info("path was {} which is NOT the current menu loop path, so fade time remains as {}", path, fadeInTime);
 		}
@@ -33,11 +33,11 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 	void loadMusic(gd::string path, float speed, float unknown, float volume, bool shouldLoop, int musicID, int channelID, bool dontReset) {
 		SongManager& songManager = SongManager::get();
 		if (!songManager.getInsidePlayMusic() && !GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::givenFMODPathIsNotCurrentSongManagerSong(path)) {
-			songManager.setPauseSongPositionTracking(true);
-			songManager.setShouldRestoreMenuLoopPoint(true); // replace with setting
+			songManager.setPauseSongPositionTracking(true); // while not necessary when gjbgl is being init'd, still necessary for menu loops from other mods
+			songManager.setShouldRestoreMenuLoopPoint(Mod::get()->getSettingValue<bool>("restoreWhenInterrupted")); // replace with setting
 			if (songManager.getAdvancedLogs()) log::info("path was {} which is NOT the current menu loop path. restored point should be {} ms", path, songManager.getLastMenuLoopPosition());
 		} else if (songManager.getAdvancedLogs()) {
-			log::info("preparing to restore menu loop by using older starting point, path: {}", path); // TODO FIX THIS SINCE IT FALSE DETECTS SONGS FROM LEVELS (GJBGL NOT YET INIT'D)
+			log::info("preparing to restore menu loop by using older starting point, path: {}", path);
 		}
 		FMODAudioEngine::loadMusic(path, speed, unknown, volume, shouldLoop, musicID, channelID, dontReset);
 	}

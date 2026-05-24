@@ -36,7 +36,7 @@
 		},
 		"tutorial": {
 			"type": "info",
-			"description": "For the closest thing to a tutorial for using this mod, please watch this YouTube video by Colours Gaming: <cl>https://youtu.be/J2_UwVsgjHs&t=60s</c>. (Grab your pencil and paper for this one!) <c_>This tutorial is far from the expected or intended way to use this mod, but is a good reference point for those who are too lazy to scroll down this settings menu.</c>",
+			"description": "For the closest thing to a tutorial for using this mod, please watch this YouTube video by Colours Gaming: <cl>https://youtu.be/J2_UwVsgjHs&t=60s</c>. (Grab your pencil and paper for this one!) <c_>This tutorial is far from the expected/intended way to use this mod, but is a good reference point nontheless.</c>",
 			"color": "#00FFFF"
 		},
 		"configdir": {
@@ -282,6 +282,34 @@
 			"type": "bool",
 			"default": false,
 			"enable-if": "!randomizeWhenExitingEditor"
+		},
+		"misc-playback-header": {
+			"name": "Misc. Playback Settings",
+			"description": "Settings for Menu Loop Randomizer's playback options that didn't belong elsewhere.",
+			"type": "title"
+		},
+		"restoreWhenInterrupted": {
+			"name": "Continue Menu Loop After Interruption",
+			"description": "<cp>***__THIS SETTING IS IGNORED IF COLON'S \"MENU LOOP START TIME\" MOD IS LOADED AND ENABLED.__***</c>\n<c-cccccc>Based on previous mod features naggingly suggested by Myron472/GlydeR and Abagur900.</c>\n\nContinue the song from where you left off when the menu loop is restored. Useful for when visiting other menus with custom menu loops.\n\n<cy>Please see the \"Continue Menu Loop on Level Exit\" and \"Continue Menu Loop on Editor Exit\" settings as well, as this setting is not designed for those usecases.</c>",
+			"type": "bool",
+			"default": false
+		},
+		"fadeInTime": {
+			"name": "Menu Loop Fade In Duration",
+			"description": "Adjust the fade in duration of the menu loop. To \"disable\" this setting, use the default value of 1.0.",
+			"type": "float",
+			"default": 1.0,
+			"min": 0.0,
+			"max": 60.0,
+			"control": {
+				"input": true,
+				"slider": true,
+				"arrows": false,
+				"big-arrows": false,
+				"arrow-step": 0,
+				"big-arrow-step": 0,
+				"slider-step": 0.01
+			}
 		},
 		"song-list-header": {
 			"name": "Song List Settings",
