@@ -3,6 +3,11 @@
 
 <mod:alk.better-touch-prio>
 
+## v1.13.3
+- Added an option to restore menu loop position if it was interrupted by another menu loop (such as visiting any Shopkeeper, any Vaults, or The Tower).
+  - This option is disabled by default, and is pretty experimental.
+- Added an option to change the fade in duration for menu loops.
+  - To disable this option, use the default value of  `1.0`  .
 ## v1.13.2
 - Added a duration display for the amount of time remaining in a song.
 - Added an alternate string-to-path conversion toggle <co>for Windows devices ***__ONLY__***</c>.
