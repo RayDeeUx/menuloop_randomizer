@@ -441,7 +441,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 				}
 			}
 
-			if (std::ranges::find(songManagerBlacklist, songPath) != songManagerBlacklist.end() || isInTextBlacklist) continue;
+			if (isInTextBlacklist || std::ranges::find(songManagerBlacklist, songPath) != songManagerBlacklist.end()) continue;
 
 			if (songManager.getAdvancedLogs()) geode::log::info("Adding custom song: {}", Utils::toNormalizedString(filePath.filename()));
 			songManager.addSong(songPath);
@@ -454,7 +454,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 				}
 			}
 
-			if (std::ranges::find(songManagerFavorites, songPath) != songManagerFavorites.end() || isInTextFavorites) {
+			if (isInTextFavorites || std::ranges::find(songManagerFavorites, songPath) != songManagerFavorites.end()) {
 				songManager.addSong(songPath);
 				if (songManager.getAdvancedLogs()) geode::log::info("Adding FAVORITE custom song: {}", Utils::toNormalizedString(filePath.filename()));
 			}
