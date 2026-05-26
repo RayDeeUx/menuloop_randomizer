@@ -47,8 +47,8 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 
 #define SONG_SORTING_DISABLED !SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSortSongOptions")
 #define SEARCH_BAR_DISABLED !SongManager::get().getUndefined0Alk1m123TouchPrio() || !Utils::getBool("showSearchBar")
-#define SEARCH_BAR_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSearchBar")
-#define SONG_SORTING_ENABLED songManager.getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSortSongOptions")
+#define SEARCH_BAR_ENABLED SongManager::get().getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSearchBar")
+#define SONG_SORTING_ENABLED SongManager::get().getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSortSongOptions")
 
 #if GEODE_COMP_GD_VERSION > 22074
 class SongListLayer final : public geode::Popup {

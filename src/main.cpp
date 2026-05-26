@@ -48,8 +48,6 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 
 using namespace geode::prelude;
 
-SongManager& songManager = SongManager::get();
-const std::filesystem::path& configDir = Mod::get()->getConfigDir();
 bool originalOverrideWasEmpty = false;
 
 /* CHANGE THIS LATER */ #define VOBECIDED_JOTA Loader::get()->getInstalledMod("jotabelike.foobarbaz")
@@ -58,6 +56,7 @@ bool originalOverrideWasEmpty = false;
 #define USE_BETTER_TOUCH_PRIO_DAMMIT "# <c-ff0000>***__Please install \"Better Touch Prio\" to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but nothing more will happen unless if you install the \"Better Touch Prio\" mod.</c>"
 
 $on_mod(Loaded) {
+	SongManager& songManager = SongManager::get();
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 	songManager.setOsu(Mod::get()->getSettingValue<bool>("osuLazerBootleg"));
 	songManager.setConstantShuffleMode();
@@ -76,11 +75,11 @@ $on_mod(Loaded) {
 	/* CHANGE THIS LATER */ // songManager.setVobecidedJota(VOBECIDED_JOTA && (VOBECIDED_JOTA->isOrWillBeEnabled() || VOBECIDED_JOTA->shouldLoad()));
 	/* REMOVE THIS LATER */ songManager.setVobecidedJota(false);
 	songManager.setUndefined0Alk1m123TouchPrio(BTP && (BTP->isOrWillBeEnabled() || BTP->shouldLoad()) && !BTP->hasUnresolvedDependencies() && !BTP->hasUnresolvedIncompatibilities());
-	if (!std::filesystem::exists(configDir / "playlistOne.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistOne.txt");
-	if (!std::filesystem::exists(configDir / "playlistTwo.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistTwo.txt");
-	if (!std::filesystem::exists(configDir / "playlistThree.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistThree.txt");
+	if (!std::filesystem::exists(Mod::get()->getConfigDir() / "playlistOne.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", Mod::get()->getConfigDir() / "playlistOne.txt");
+	if (!std::filesystem::exists(Mod::get()->getConfigDir() / "playlistTwo.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", Mod::get()->getConfigDir() / "playlistTwo.txt");
+	if (!std::filesystem::exists(Mod::get()->getConfigDir() / "playlistThree.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", Mod::get()->getConfigDir() / "playlistThree.txt");
 
-	auto blacklistTxt = configDir / R"(blacklist.txt)";
+	auto blacklistTxt = Mod::get()->getConfigDir() / R"(blacklist.txt)";
 	if (!std::filesystem::exists(blacklistTxt)) {
 		const std::string& blacklistFileIntro = R"(# Welcome to the Menu Loop Randomizer song blacklist!
 # Each line that doesn't start with a "#" will be treated as a blacklisted song file.
@@ -97,7 +96,7 @@ $on_mod(Loaded) {
 		}
 	}
 
-	auto favoriteTxt = configDir / R"(favorites.txt)";
+	auto favoriteTxt = Mod::get()->getConfigDir() / R"(favorites.txt)";
 	if (!std::filesystem::exists(favoriteTxt)) {
 		const std::string& favoritesFileIntro = R"(# Welcome to the Menu Loop Randomizer favorites list!
 # Each line that doesn't start with a "#" will be treated as a favorited song file.
@@ -153,8 +152,8 @@ $on_mod(Loaded) {
 		Mod::get()->setSavedValue<bool>("songListSortFileExtn", false);
 	}
 
-	if (!std::filesystem::exists(configDir / R"(store_your_disabled_menuloops_here)")) {
-		std::filesystem::create_directory(configDir / R"(store_your_disabled_menuloops_here)");
+	if (!std::filesystem::exists(Mod::get()->getConfigDir() / R"(store_your_disabled_menuloops_here)")) {
+		std::filesystem::create_directory(Mod::get()->getConfigDir() / R"(store_your_disabled_menuloops_here)");
 	}
 	listenForSettingChanges<bool>("useCustomSongs", [](const bool) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("useCustomSongs");
@@ -293,6 +292,7 @@ $on_mod(Loaded) {
 	});
 	#endif
 	listenForSettingChanges<bool>("osuLazerBootleg", [](const bool osuLazerBootlegNew) {
+		SongManager& songManager = SongManager::get();
 		if (osuLazerBootlegNew || !CCScene::get()) {
 			songManager.setOsu(osuLazerBootlegNew);
 			return;
