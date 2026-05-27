@@ -349,7 +349,8 @@ public:
 	enum ShortcutType {
 		ModSettings,
 		ControlPanel,
-		SongList
+		SongList,
+		PlaybackRelated
 	};
 	void playbackProgressScheduler(float) { playbackProgress(); }
 	static void playbackProgress() {
@@ -447,7 +448,7 @@ public:
 			reason = "[MLR] You already have the Song List open!";
 		}
 		if (fails) {
-			Notification::create(reason, NotificationIcon::Warning, 1.f)->show();
+			Notification::create(reason, NotificationIcon::Warning, .5f)->show();
 		}
 		return fails;
 	}
@@ -490,46 +491,59 @@ $on_mod(Loaded) {
 
 		addHeader("Song Selection");
 		tab.addButton("Shuffle Song", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::shuffleSong();
 		});
 		tab.addButton("Previous Song (Go back once)", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::previousSong();
 		});
 		tab.addButton("Hold Song (like Tetris)", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::holdSong();
 		});
 
 		addHeader("Playback/Seeking");
 		tab.addButton("Seek Backward", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::skipBackward();
 		});
 		tab.addButton("Seek Forward", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::skipForward();
 		});
 		tab.addButton("Seek to 0%", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::setSongPercentage(0);
 		});
 		tab.addButton("Seek to 25%", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::setSongPercentage(25);
 		});
 		tab.addButton("Seek to 50%", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::setSongPercentage(50);
 		});
 		tab.addButton("Seek to 75%", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::setSongPercentage(75);
 		});
 
 		addHeader("Other Controls");
 		tab.addButton("Favorite Song", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::favoriteSong();
 		});
 		tab.addButton("Blacklist Song", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::blacklistSong();
 		});
 		tab.addButton("Copy Song Name/ID", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::copySong();
 		});
 		tab.addButton("New Notification", []() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
 			SongControl::regenSong();
 		});
 
