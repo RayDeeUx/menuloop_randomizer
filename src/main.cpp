@@ -393,8 +393,12 @@ public:
 		SongManager& songManager = SongManager::get();
 		for (std::pair<std::optional<eclipse::components::Label>, std::string>& labelStringPair : songManager.dynamicEclipseIntegrationHeaders) {
 			if (!labelStringPair.first.has_value()) continue;
-			labelStringPair.first.value().setText(songManager.eclipseIsCocosStyle ? fmt::format("{}\n", labelStringPair.second) : labelStringPair.second);
+			labelStringPair.first.value().setText(songManager.eclipseIsCocosStyle ? fmt::format("\n=== {} ===\n", labelStringPair.second) : labelStringPair.second);
 		}
+	}
+	static void updateCurrentSongLabel() {
+		SongManager& songManager = SongManager::get();
+		songManager.eclipseSongNameLabel.value().setText(!songManager.eclipseIsCocosStyle ? fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()) : "Song progress is unavailable in this menu style!");
 	}
 };
 
@@ -409,10 +413,7 @@ $on_mod(Loaded) {
 			SongManager& songManagerEclipseListenerLambda = SongManager::get();
 			if (!songManagerEclipseListenerLambda.isEclipse || !songManagerEclipseListenerLambda.eclipseIntegrationSuccessful) return;
 			songManagerEclipseListenerLambda.eclipseIsCocosStyle = geode::utils::string::contains(geode::utils::string::toLower(newMenuStyle), "cocos");
-			// bit of a hack ngl but FUCK IT WE BALL
-			if (songManagerEclipseListenerLambda.eclipseSongNameLabel.has_value()) {
-				songManagerEclipseListenerLambda.eclipseSongNameLabel.value().setText(!songManagerEclipseListenerLambda.eclipseIsCocosStyle ? fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()) : "Song progress is unavailable in this menu style!");
-			}
+			EclipsePlaybackProgressDummyNode::updateCurrentSongLabel();
 			EclipsePlaybackProgressDummyNode::applyNewLinesToHeaders();
 		}, geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu"));
 
@@ -561,10 +562,7 @@ $on_mod(Loaded) {
 
 		// surely. surely this will work.
 		Loader::get()->queueInMainThread([]() {
-			SongManager& songManager = SongManager::get();
-			if (!songManager.eclipseIsCocosStyle) songManager.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
-			else songManager.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
-			// add newline if switching to cocos style so mobile users can fatfinger scroll properly (repeating myself ! yayyyy)
+			EclipsePlaybackProgressDummyNode::updateCurrentSongLabel();
 			EclipsePlaybackProgressDummyNode::applyNewLinesToHeaders();
 		});
 	});
