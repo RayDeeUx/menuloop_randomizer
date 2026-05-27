@@ -346,6 +346,11 @@ using namespace geode::prelude;
 
 class EclipsePlaybackProgressDummyNode final : public CCNode {
 public:
+	enum ShortcutType {
+		ModSettings,
+		ControlPanel,
+		SongList
+	};
 	void playbackProgressScheduler(float) { playbackProgress(); }
 	static void playbackProgress() {
 		SongManager& songManager = SongManager::get();
@@ -399,6 +404,52 @@ public:
 	static void updateCurrentSongLabel() {
 		SongManager& songManager = SongManager::get();
 		songManager.eclipseSongNameLabel.value().setText(!songManager.eclipseIsCocosStyle ? fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()) : "Song progress is unavailable in this menu style!");
+	}
+	static bool failsBasicSanityCheck(const ShortcutType shortcut) {
+		bool fails = false;
+		std::string reason;
+		if (GJBaseGameLayer::get()) {
+			fails = true;
+			reason = "[MLR] Exit the level first!";
+		} else if (shortcut != ModSettings && Utils::currentFMODSongIsNotCurrentSongManagerSong()) {
+			fails = true;
+			reason = "[MLR] Another menu loop is active!";
+		} else if (VANILLA_GD_MENU_LOOP_DISABLED) {
+			fails = true;
+			reason = "[MLR] You've disabled the menu loop!";
+		} else if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) {
+			fails = true;
+			switch (shortcut) {
+				default: reason = "[MLR] Check this through QOLMod instead!"; break;
+				case ControlPanel: reason = "[MLR] Check the Control Panel through QOLMod instead!"; break;
+				case SongList: reason = Utils::getBool("qolModIntegrationSongList") ? "[MLR] Check the Song List through QOLMod instead!" : "[MLR] Close QOLMod first!"; break;
+				case ModSettings: reason = "[MLR] Open the mod settings through QOLMod instead!"; break;
+			}
+		} else if (shortcut == ModSettings && (!CCScene::get() || !MenuLayer::get() || CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get())) {
+			fails = true;
+			reason = "[MLR] Go to the main menu first!";
+		} else if (shortcut == ModSettings) {
+			for (CCNode* node : CCArrayExt<CCNode*>(CCScene::get()->getChildren())) {
+				if (fails) break;
+				if (node->getTag() != 20260527 || geode::cocos::getObjectName(node) != "ModSettingsPopup" || !node->getChildByType<CCLayer>(0)) continue;
+
+				CCLabelBMFont* title = node->getChildByType<CCLayer>(0)->getChildByType<CCLabelBMFont>(0);
+				if (!title || static_cast<std::string>(title->getFntFile()) != "goldFont.fnt" || !geode::utils::string::endsWith(title->getString(), Mod::get()->getName())) continue;
+
+				fails = true;
+				reason = "[MLR] You already have the Mod Settings open!";
+			}
+		} else if (shortcut == ControlPanel && CCScene::get() && CCScene::get()->getChildByType<SongControlMenu>(0)) {
+			fails = true;
+			reason = "[MLR] You already have the Control Panel open!";
+		} else if (shortcut == SongList && CCScene::get() && CCScene::get()->getChildByType<SongListLayer>(0)) {
+			fails = true;
+			reason = "[MLR] You already have the Song List open!";
+		}
+		if (fails) {
+			Notification::create(reason, NotificationIcon::Warning, 1.f)->show();
+		}
+		return fails;
 	}
 };
 
@@ -484,8 +535,7 @@ $on_mod(Loaded) {
 
 		addHeader("Shortcuts (Use them wisely!)");
 		tab.addButton("Open Control Panel", []() {
-			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || (CCScene::get() && CCScene::get()->getChildByType<SongControlMenu>(0)) || Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
-			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::ControlPanel)) return;
 			if (SongListLayer* foo = CCScene::get()->getChildByType<SongListLayer>(0); foo) {
 				#if GEODE_COMP_GD_VERSION > 22074
 				geode::Popup::CloseEvent(foo).send();
@@ -501,8 +551,7 @@ $on_mod(Loaded) {
 			SongControlMenu::create()->show();
 		});
 		tab.addButton("Open Songs List", []() {
-			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || !CCScene::get() || CCScene::get()->getChildByType<SongListLayer>(0) || Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
-			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::SongList)) return;
 			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
 				if (foo->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
 				#if GEODE_COMP_GD_VERSION > 22074
@@ -519,8 +568,7 @@ $on_mod(Loaded) {
 			SongListLayer::create()->show();
 		});
 		tab.addButton("Open Mod Settings (from main menu only!)", []() {
-			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || !CCScene::get() || !MenuLayer::get() || CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get()) return;
-			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::ModSettings)) return;
 			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
 				if (foo->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
 				#if GEODE_COMP_GD_VERSION > 22074
@@ -546,16 +594,8 @@ $on_mod(Loaded) {
 				bar->keyBackClicked();
 				#endif
 			}
-
-			for (CCNode* node : CCArrayExt<CCNode*>(CCScene::get()->getChildren())) {
-				if (geode::cocos::getObjectName(node) != "ModSettingsPopup") continue;
-				if (!node->getChildByType<CCLayer>(0)) continue;
-
-				CCLabelBMFont* title = node->getChildByType<CCLayer>(0)->getChildByType<CCLabelBMFont>(0);
-				if (!title || static_cast<std::string>(title->getFntFile()) != "goldFont.fnt" || !geode::utils::string::endsWith(title->getString(), Mod::get()->getName())) continue;
-				return;
-			}
-			geode::openSettingsPopup(Mod::get());
+			geode::Popup* popup = geode::openSettingsPopup(Mod::get(), false);
+			popup->setTag(20260527);
 		});
 
 		songManager.eclipseIntegrationSuccessful = true;
@@ -759,7 +799,8 @@ $on_mod(Loaded) {
 
 			CCMenuItemSpriteExtra* bar = geode::cocos::CCMenuItemExt::createSpriteExtraWithFilename("settings-btn-sprite.png"_spr, .25f, [](CCObject*) {
 				CCDirector::get()->getKeypadDispatcher()->dispatchKeypadMSG(ccKeypadMSGType::kTypeBackClicked);
-				geode::openSettingsPopup(Mod::get());
+				geode::Popup* popup = geode::openSettingsPopup(Mod::get(), false);
+				popup->setTag(20260527);
 			});
 
 			bar->setID("settings-shortcut-qolmod-integration"_spr);
