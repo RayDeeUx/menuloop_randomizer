@@ -388,6 +388,14 @@ public:
 		songManager.eclipseSongDurationLabel.value().setText(fmt::format("Progress: {}:{:02} / {}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60), ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
 		songManager.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:+<{}}{:-<{}}]", "", completed, "", remaining));
 	}
+	static void applyNewLinesToHeaders() {
+		// add newline if switching to cocos style so mobile users can fatfinger scroll properly
+		SongManager& songManager = SongManager::get();
+		for (std::pair<std::optional<eclipse::components::Label>, std::string>& labelStringPair : songManager.dynamicEclipseIntegrationHeaders) {
+			if (!labelStringPair.first.has_value()) continue;
+			labelStringPair.first.value().setText(songManager.eclipseIsCocosStyle ? fmt::format("{}\n", labelStringPair.second) : labelStringPair.second);
+		}
+	}
 };
 
 $on_mod(Loaded) {
@@ -403,14 +411,9 @@ $on_mod(Loaded) {
 			songManagerEclipseListenerLambda.eclipseIsCocosStyle = geode::utils::string::contains(geode::utils::string::toLower(newMenuStyle), "cocos");
 			// bit of a hack ngl but FUCK IT WE BALL
 			if (songManagerEclipseListenerLambda.eclipseSongNameLabel.has_value()) {
-				if (!songManagerEclipseListenerLambda.eclipseIsCocosStyle) songManagerEclipseListenerLambda.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
-				else songManagerEclipseListenerLambda.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
+				songManagerEclipseListenerLambda.eclipseSongNameLabel.value().setText(!songManagerEclipseListenerLambda.eclipseIsCocosStyle ? fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()) : "Song progress is unavailable in this menu style!");
 			}
-			// add newline if switching to cocos style so mobile users can fatfinger scroll properly
-			for (std::pair<std::optional<eclipse::components::Label>, std::string>& labelStringPair : songManagerEclipseListenerLambda.dynamicEclipseIntegrationHeaders) {
-				if (!labelStringPair.first.has_value()) continue;
-				labelStringPair.first.value().setText(songManagerEclipseListenerLambda.eclipseIsCocosStyle ? fmt::format("{}\n", labelStringPair.second) : labelStringPair.second);
-			}
+			EclipsePlaybackProgressDummyNode::applyNewLinesToHeaders();
 		}, geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu"));
 
 		auto tab = MenuTab::find("Menu Loop Randomizer");
@@ -429,7 +432,11 @@ $on_mod(Loaded) {
 
 		(void) tab.addLabel("\n");
 
-		songManager.dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Song Selection")), "Song Selection"});
+		std::function addHeader = [&](const std::string& t) {
+			songManager.dynamicEclipseIntegrationHeaders.emplace_back(std::make_optional(tab.addLabel(t)), t);
+		};
+
+		addHeader("Song Selection");
 		tab.addButton("Shuffle Song", []() {
 			SongControl::shuffleSong();
 		});
@@ -440,7 +447,7 @@ $on_mod(Loaded) {
 			SongControl::holdSong();
 		});
 
-		songManager.dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Playback/Seeking")), "Playback/Seeking"});
+		addHeader("Playback/Seeking");
 		tab.addButton("Seek Backward", []() {
 			SongControl::skipBackward();
 		});
@@ -460,7 +467,7 @@ $on_mod(Loaded) {
 			SongControl::setSongPercentage(75);
 		});
 
-		songManager.dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Other Controls")), "Other Controls"});
+		addHeader("Other Controls");
 		tab.addButton("Favorite Song", []() {
 			SongControl::favoriteSong();
 		});
@@ -474,7 +481,7 @@ $on_mod(Loaded) {
 			SongControl::regenSong();
 		});
 
-		songManager.dynamicEclipseIntegrationHeaders.push_back(std::pair<std::optional<eclipse::components::Label>, std::string>{std::make_optional<eclipse::components::Label>(tab.addLabel("Shortcuts (Use them wisely!)")), "Shortcuts (Use them wisely!)"});
+		addHeader("Shortcuts (Use them wisely!)");
 		tab.addButton("Open Control Panel", []() {
 			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || (CCScene::get() && CCScene::get()->getChildByType<SongControlMenu>(0)) || Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 			if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && SongManager::get().qolModIntegrationSuccessful) return;
@@ -558,10 +565,7 @@ $on_mod(Loaded) {
 			if (!songManager.eclipseIsCocosStyle) songManager.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
 			else songManager.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
 			// add newline if switching to cocos style so mobile users can fatfinger scroll properly (repeating myself ! yayyyy)
-			for (std::pair<std::optional<eclipse::components::Label>, std::string>& labelStringPair : songManager.dynamicEclipseIntegrationHeaders) {
-				if (!labelStringPair.first.has_value()) continue;
-				labelStringPair.first.value().setText(songManager.eclipseIsCocosStyle ? fmt::format("{}\n", labelStringPair.second) : labelStringPair.second);
-			}
+			EclipsePlaybackProgressDummyNode::applyNewLinesToHeaders();
 		});
 	});
 }
