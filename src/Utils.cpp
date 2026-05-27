@@ -587,7 +587,9 @@ void Utils::popualteSongToSongDataMap() {
 			}
 			songManagerThreaded.setFinishedCalculatingSongLengths(true);
 	   }).detach();
-	} else songManager.setFinishedCalculatingSongLengths(true);
+	} else {
+		songManager.setFinishedCalculatingSongLengths(true);
+	}
 }
 
 std::vector<std::string> Utils::parseBlacklistFile(const std::filesystem::path& blacklistFilePath) {
