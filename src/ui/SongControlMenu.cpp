@@ -529,8 +529,8 @@ void SongControlMenu::pressAndHoldScheduler(float dt) {
 		this->m_openStng = false;
 		this->toggleOsu();
 		this->m_stngButton->unselected();
-	}
-	else m_time = 0;
+		m_time = 0.f;
+	} else m_time = 0.f;
 }
 
 void SongControlMenu::visualizerScheduler(float dt) {
@@ -620,7 +620,8 @@ void SongControlMenu::onSettingsButton(cocos2d::CCObject*) {
 		this->m_openStng = true;
 		return;
 	}
-	geode::openSettingsPopup(geode::Mod::get());
+	geode::Popup* popup = geode::openSettingsPopup(geode::Mod::get(), false);
+	popup->setTag(20260527);
 	if (this->m_infoMenu) this->m_infoMenu->setScale(0.f);
 	if (this->m_infoButton) {
 		this->m_infoButton->setScale(0.f);

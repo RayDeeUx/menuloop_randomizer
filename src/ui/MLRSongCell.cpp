@@ -306,8 +306,8 @@ void MLRSongCell::pressAndHoldScheduler(float dt) {
 	if (m_time < .5f) return;
 
 	if (ffwd->isSelected() && ffwd->m_pListener && ffwd->m_pfnSelector) (ffwd->m_pListener->*ffwd->m_pfnSelector)(ffwd);
-	else if (bkwd->isSelected()&& bkwd->m_pListener && bkwd->m_pfnSelector) (bkwd->m_pListener->*bkwd->m_pfnSelector)(bkwd);
-	else m_time = 0;
+	else if (bkwd->isSelected() && bkwd->m_pListener && bkwd->m_pfnSelector) (bkwd->m_pListener->*bkwd->m_pfnSelector)(bkwd);
+	else m_time = 0.f;
 }
 
 
