@@ -181,9 +181,10 @@ class SongManager {
 	bool addingToQOLModRightNow = false;
 	bool eclipseIsCocosStyle = false;
 
+	// they're stored as refs to flalertlayers because i dont want to include more headers
 	std::vector<std::pair<std::optional<eclipse::components::Label>, std::string>> dynamicEclipseIntegrationHeaders {};
-	geode::Ref<FLAlertLayer> songControlMenuForQOLMod = nullptr;
-	geode::Ref<FLAlertLayer> songListLayerForQOLMod = nullptr;
+	geode::Ref<FLAlertLayer> songControlMenuForQOLMod = nullptr; // canonically a SongControlMenu
+	geode::Ref<FLAlertLayer> songListLayerForQOLMod = nullptr; // canonically a SongListLayer
 	geode::Ref<CCTextInputNode> songListInputNodeForQOLMod = nullptr;
 	bool trackAndroidUI = false;
 

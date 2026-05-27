@@ -415,9 +415,9 @@ $on_mod(Loaded) {
 
 		auto tab = MenuTab::find("Menu Loop Randomizer");
 
-		(void) tab.addLabel("= THIS IS NOT OWNED BY ECLIPSE =");
-		(void) tab.addLabel("== BUG REPORTS GO TO RAYDEEUX ==");
-		(void) tab.addLabel("= THIS SHOULD BE COMMON SENSE =");
+		(void) tab.addLabel("= AN ECLIPSE MENU INTEGRATION =");
+		(void) tab.addLabel("== FROM MENU LOOP RANDOMIZER ==");
+		(void) tab.addLabel("= SEND BUG REPORT TO RAYDEEUX =");
 		(void) tab.addLabel("\n");
 
 		songManager.eclipseSongNameLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Current song: [[Hold on, MLR is still loading things!]]"));
