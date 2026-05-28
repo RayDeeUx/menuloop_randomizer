@@ -494,7 +494,7 @@ void SongControlMenu::checkDaSongPositions(float) {
 
 void SongControlMenu::pressAndHoldScheduler(float dt) {
 	m_time += dt;
-	if (!this->m_ffwdButton || !this->m_bkwdButton) {
+	if (!this->m_ffwdButton || !this->m_bkwdButton || !this->m_stngButton) {
 		m_time = 0.f;
 		return;
 	}
@@ -503,7 +503,7 @@ void SongControlMenu::pressAndHoldScheduler(float dt) {
 
 	if (this->m_ffwdButton->isSelected() && this->m_ffwdButton->isVisible() && this->m_ffwdButton->isEnabled() && this->m_ffwdButton->m_pfnSelector && this->m_ffwdButton->m_pListener) (this->m_ffwdButton->m_pListener->*this->m_ffwdButton->m_pfnSelector)(this->m_ffwdButton);
 	else if (this->m_bkwdButton->isSelected() && this->m_bkwdButton->isVisible() && this->m_bkwdButton->isEnabled() && this->m_bkwdButton->m_pfnSelector && this->m_bkwdButton->m_pListener) (this->m_bkwdButton->m_pListener->*this->m_bkwdButton->m_pfnSelector)(this->m_bkwdButton);
-	else if (this->m_stngButton && this->m_stngButton->isSelected() && this->m_stngButton->isVisible() && this->m_stngButton->isEnabled() && m_time < .6f) {
+	else if (this->m_stngButton && this->m_stngButton->isSelected() && this->m_stngButton->isVisible() && this->m_stngButton->isEnabled()) {
 		this->m_openStng = false;
 		this->toggleOsu();
 		this->m_stngButton->unselected();
@@ -603,14 +603,6 @@ void SongControlMenu::onSettingsButton(cocos2d::CCObject*) {
 	popup->addOnExitCallback([info = this->m_infoButton]() {
 		if (info) info->m_description = static_cast<std::string>(SongControlMenu::generateInfoAlertButtonDescription());
 	});
-	/*
-	if (this->m_infoMenu) this->m_infoMenu->setScale(0.f);
-	if (this->m_infoButton) {
-		this->m_infoButton->setScale(0.f);
-		this->m_infoButton->setEnabled(false);
-		this->m_infoButton->m_pfnSelector = nullptr;
-	}
-	*/
 }
 
 void SongControlMenu::onSkipBkwdButton(cocos2d::CCObject*) {
