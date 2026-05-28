@@ -543,15 +543,6 @@ static const std::vector<EclipsePlaybackProgressDummyNode::ButtonDef> otherContr
 	{"New Notification", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
 		SongControl::regenSong();
 	}},
-	{"Shuffle Song", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
-		SongControl::shuffleSong();
-	}},
-	{"Previous Song", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
-		SongControl::previousSong();
-	}},
-	{"Hold Song", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
-		SongControl::holdSong();
-	}}
 };
 
 static const std::vector<EclipsePlaybackProgressDummyNode::ButtonDef> miscShortcuts = {
