@@ -48,7 +48,7 @@ namespace SongControl {
 			"Never Mind", "Open Mod Settings",
 			[](FLAlertLayer*, bool openConfig) {
 				if (!openConfig) return;
-				openSettingsPopup(geode::Mod::get());
+				Utils::createSettingsPopup();
 			}
 		);
 	}
