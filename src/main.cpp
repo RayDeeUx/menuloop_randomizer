@@ -336,6 +336,39 @@ $on_game(Exiting) {
 	Utils::rememberLastMenuLoop();
 }
 
+class ModMenuIntegrationClass final {
+public:
+	static void closeSongListLayer() {
+		SongListLayer* foo = CCScene::get()->getChildByType<SongListLayer>(0);
+		if (!foo) return;
+		#if GEODE_COMP_GD_VERSION > 22074
+		geode::Popup::CloseEvent(foo).send();
+		foo->setKeypadEnabled(false);
+		foo->setTouchEnabled(false);
+		foo->removeFromParent();
+		#endif
+
+		#if GEODE_COMP_GD_VERSION < 22081
+		foo->keyBackClicked();
+		#endif
+	}
+	static void closeSongControlMenu() {
+		SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0);
+		if (!foo) return;
+		if (foo->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
+		#if GEODE_COMP_GD_VERSION > 22074
+		geode::Popup::CloseEvent(foo).send();
+		foo->setKeypadEnabled(false);
+		foo->setTouchEnabled(false);
+		foo->removeFromParent();
+		#endif
+
+		#if GEODE_COMP_GD_VERSION < 22081
+		foo->keyBackClicked();
+		#endif
+	}
+};
+
 #define ECLIPSE_MODULES_HPP
 #include <eclipse.eclipse-menu/include/eclipse.hpp>
 #include "SongControl.hpp"
@@ -549,64 +582,18 @@ $on_mod(Loaded) {
 		addHeader("Shortcuts (Use them wisely!)");
 		tab.addButton("Open Control Panel", []() {
 			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::ControlPanel)) return;
-			if (SongListLayer* foo = CCScene::get()->getChildByType<SongListLayer>(0); foo) {
-				#if GEODE_COMP_GD_VERSION > 22074
-				geode::Popup::CloseEvent(foo).send();
-				foo->setKeypadEnabled(false);
-				foo->setTouchEnabled(false);
-				foo->removeFromParent();
-				#endif
-
-				#if GEODE_COMP_GD_VERSION < 22081
-				foo->keyBackClicked();
-				#endif
-			}
+			ModMenuIntegrationClass::closeSongListLayer();
 			SongControlMenu::create()->show();
 		});
 		tab.addButton("Open Songs List", []() {
 			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::SongList)) return;
-			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
-				if (foo->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
-				#if GEODE_COMP_GD_VERSION > 22074
-				geode::Popup::CloseEvent(foo).send();
-				foo->setKeypadEnabled(false);
-				foo->setTouchEnabled(false);
-				foo->removeFromParent();
-				#endif
-
-				#if GEODE_COMP_GD_VERSION < 22081
-				foo->keyBackClicked();
-				#endif
-			}
+			ModMenuIntegrationClass::closeSongControlMenu();
 			SongListLayer::create()->show();
 		});
 		tab.addButton("Open Mod Settings (from main menu only!)", []() {
 			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::ModSettings)) return;
-			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
-				if (foo->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
-				#if GEODE_COMP_GD_VERSION > 22074
-				geode::Popup::CloseEvent(foo).send();
-				foo->setKeypadEnabled(false);
-				foo->setTouchEnabled(false);
-				foo->removeFromParent();
-				#endif
-
-				#if GEODE_COMP_GD_VERSION < 22081
-				foo->keyBackClicked();
-				#endif
-			}
-			if (SongListLayer* bar = CCScene::get()->getChildByType<SongListLayer>(0); bar) {
-				#if GEODE_COMP_GD_VERSION > 22074
-				geode::Popup::CloseEvent(bar).send();
-				bar->setKeypadEnabled(false);
-				bar->setTouchEnabled(false);
-				bar->removeFromParent();
-				#endif
-
-				#if GEODE_COMP_GD_VERSION < 22081
-				bar->keyBackClicked();
-				#endif
-			}
+			ModMenuIntegrationClass::closeSongControlMenu();
+			ModMenuIntegrationClass::closeSongListLayer();
 			Utils::createSettingsPopup();
 		});
 
@@ -651,31 +638,8 @@ $on_mod(Loaded) {
 		qolmod::ext::addCustomCategory({1, Mod::get()->getName(), "qolmod.png"_spr, Mod::get()->getID(), [](cocos2d::CCMenu* layer) {
 			if (!layer) return;
 			SongManager& songManager = SongManager::get();
-			if (SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0); foo) {
-				if (foo->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
-				#if GEODE_COMP_GD_VERSION > 22074
-				geode::Popup::CloseEvent(foo).send();
-				foo->setKeypadEnabled(false);
-				foo->setTouchEnabled(false);
-				foo->removeFromParent();
-				#endif
-
-				#if GEODE_COMP_GD_VERSION < 22081
-				foo->keyBackClicked();
-				#endif
-			}
-			if (SongListLayer* bar = CCScene::get()->getChildByType<SongListLayer>(0); bar) {
-				#if GEODE_COMP_GD_VERSION > 22074
-				geode::Popup::CloseEvent(bar).send();
-				bar->setKeypadEnabled(false);
-				bar->setTouchEnabled(false);
-				bar->removeFromParent();
-				#endif
-
-				#if GEODE_COMP_GD_VERSION < 22081
-				bar->keyBackClicked();
-				#endif
-			}
+			ModMenuIntegrationClass::closeSongControlMenu();
+			ModMenuIntegrationClass::closeSongListLayer();
 
 			// if you're going to steal my source code then at least watch Heated Rivalry S1E6 to understand these variable name references, you cheap clankers and/or fuckwads --raydeeux
 			CCLabelBMFont* iHaveThisProblem = CCLabelBMFont::create("[If you're viewing this inside the QOLMod Discord server, whoever sent this has never learned how to read.]", "chatFont.fnt");
@@ -758,27 +722,24 @@ $on_mod(Loaded) {
 			if (Utils::getBool("qolModIntegrationSongList")) songManager.songListLayerForQOLMod = geode::Ref(weCanFigureSomethingElseOutOK);
 			songManager.songControlMenuForQOLMod = geode::Ref(iKnowItWouldntBeForLoveOrWhatever);
 
+			iKnowItWouldntBeForLoveOrWhatever->setKeypadEnabled(false);
+			iKnowItWouldntBeForLoveOrWhatever->setTouchEnabled(false);
 			#if GEODE_COMP_GD_VERSION > 22074
-			iKnowItWouldntBeForLoveOrWhatever->setKeypadEnabled(false);
-			iKnowItWouldntBeForLoveOrWhatever->setTouchEnabled(false);
 			iKnowItWouldntBeForLoveOrWhatever->removeFromParent();
-			if (Utils::getBool("qolModIntegrationSongList") && weCanFigureSomethingElseOutOK) {
-				weCanFigureSomethingElseOutOK->setKeypadEnabled(false);
-				weCanFigureSomethingElseOutOK->setTouchEnabled(false);
-				weCanFigureSomethingElseOutOK->removeFromParent();
-			}
 			#endif
-
 			#if GEODE_COMP_GD_VERSION < 22081
-			iKnowItWouldntBeForLoveOrWhatever->setKeypadEnabled(false);
-			iKnowItWouldntBeForLoveOrWhatever->setTouchEnabled(false);
 			iKnowItWouldntBeForLoveOrWhatever->removeFromParentAndCleanup(true);
+			#endif
 			if (Utils::getBool("qolModIntegrationSongList") && weCanFigureSomethingElseOutOK) {
 				weCanFigureSomethingElseOutOK->setKeypadEnabled(false);
 				weCanFigureSomethingElseOutOK->setTouchEnabled(false);
+				#if GEODE_COMP_GD_VERSION > 22074
+				weCanFigureSomethingElseOutOK->removeFromParent();
+				#endif
+				#if GEODE_COMP_GD_VERSION < 22081
 				weCanFigureSomethingElseOutOK->removeFromParentAndCleanup(true);
+				#endif
 			}
-			#endif
 
 			// so what you need to be doing is unregistering force prio since it isn't being used as a popup --alphalaneous --raydeeux
 			if (!songManager.getUndefined0Alk1m123TouchPrio()) {
