@@ -520,7 +520,8 @@ void SongListLayer::searchSongs(const std::string& queryString, const bool check
 void SongListLayer::onSettingsButton(CCObject*) {
 	if (this->m_isInQOLMod) return;
 	this->onClose(nullptr);
-	geode::openSettingsPopup(geode::Mod::get());
+	geode::Popup* popup = geode::openSettingsPopup(geode::Mod::get(), false);
+	popup->setTag(20260527);
 }
 
 void SongListLayer::onShuffleButton(CCObject*) {
@@ -646,16 +647,14 @@ void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_
 	SongListLayer::handleMutuallyExclusiveSortToggle(this->m_songListSortFileExtn, "songListSortFileExtn", savedValueKey, originalSavedValue);
 	// SongListLayer::handleMutuallyExclusiveSortToggle(this->m_songListSortBeatsPerMinute, "songListSortBeatsPerMinute", savedValueKey, originalSavedValue);
 	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
-	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
-	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
+	SongListLayer::searchSongs(!GET_SEARCH_BAR_NODE ? "" : GET_SEARCH_STRING);
 }
 
 void SongListLayer::toggleSavedValueAndSearch(const std::string_view savedValueKey) {
 	if (SONG_SORTING_DISABLED) return;
 	const bool originalSavedValue = SAVED(savedValueKey);
 	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
-	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
-	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
+	SongListLayer::searchSongs(!GET_SEARCH_BAR_NODE ? "" : GET_SEARCH_STRING);
 }
 
 void SongListLayer::checkPosition(const float) {
