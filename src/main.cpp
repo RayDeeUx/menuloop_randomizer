@@ -384,6 +384,11 @@ public:
 		SongList,
 		PlaybackRelated
 	};
+	struct ButtonDef {
+		std::string label;
+		EclipsePlaybackProgressDummyNode::ShortcutType type;
+		std::function<void()> action;
+	};
 	void playbackProgressScheduler(float) { playbackProgress(); }
 	static void playbackProgress() {
 		SongManager& songManager = SongManager::get();
@@ -484,6 +489,85 @@ public:
 		}
 		return fails;
 	}
+	static void addButtonWithCheck(eclipse::MenuTab& tab, EclipsePlaybackProgressDummyNode::ButtonDef button) {
+		tab.addButton(button.label, [type = button.type, action = std::move(button.action)]() {
+			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(type)) return;
+			action();
+		});
+	}
+};
+
+static const std::vector<EclipsePlaybackProgressDummyNode::ButtonDef> songSelectionShortcuts = {
+	{"Shuffle Song", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::shuffleSong();
+	}},
+	{"Previous Song (Go back once)", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::previousSong();
+	}},
+	{"Hold Song (like Tetris)", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::holdSong();
+	}},
+};
+
+static const std::vector<EclipsePlaybackProgressDummyNode::ButtonDef> playbackSeekingShortcuts = {
+	{"Seek Backward", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::skipBackward();
+	}},
+	{"Seek Forward", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::skipForward();
+	}},
+	{"Seek to 0%", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::setSongPercentage(0);
+	}},
+	{"Seek to 25%", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::setSongPercentage(25);
+	}},
+	{"Seek to 50%", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::setSongPercentage(50);
+	}},
+	{"Seek to 75%", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::setSongPercentage(75);
+	}}
+};
+
+static const std::vector<EclipsePlaybackProgressDummyNode::ButtonDef> otherControlsShortcuts = {
+	{"Favorite Song", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::favoriteSong();
+	}},
+	{"Blacklist Song", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::blacklistSong();
+	}},
+	{"Copy Song Name/ID", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::copySong();
+	}},
+	{"New Notification", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::regenSong();
+	}},
+	{"Shuffle Song", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::shuffleSong();
+	}},
+	{"Previous Song", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::previousSong();
+	}},
+	{"Hold Song", EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated, [] {
+		SongControl::holdSong();
+	}}
+};
+
+static const std::vector<EclipsePlaybackProgressDummyNode::ButtonDef> miscShortcuts = {
+	{"Open Control Panel", EclipsePlaybackProgressDummyNode::ShortcutType::ControlPanel, [] {
+		 ModMenuIntegrationClass::closeSongListLayer();
+		 SongControlMenu::create()->show();
+	}},
+	{"Open Songs List", EclipsePlaybackProgressDummyNode::ShortcutType::SongList, [] {
+		 ModMenuIntegrationClass::closeSongControlMenu();
+		 SongListLayer::create()->show();
+	}},
+	{"Open Mod Settings", EclipsePlaybackProgressDummyNode::ShortcutType::ModSettings, [] {
+		 ModMenuIntegrationClass::closeSongControlMenu();
+		 ModMenuIntegrationClass::closeSongListLayer();
+		 Utils::createSettingsPopup();
+	}}
 };
 
 $on_mod(Loaded) {
@@ -522,80 +606,24 @@ $on_mod(Loaded) {
 		};
 
 		addHeader("Song Selection");
-		tab.addButton("Shuffle Song", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::shuffleSong();
-		});
-		tab.addButton("Previous Song (Go back once)", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::previousSong();
-		});
-		tab.addButton("Hold Song (like Tetris)", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::holdSong();
-		});
+		for (EclipsePlaybackProgressDummyNode::ButtonDef button : songSelectionShortcuts) {
+			EclipsePlaybackProgressDummyNode::addButtonWithCheck(tab, button);
+		}
 
 		addHeader("Playback/Seeking");
-		tab.addButton("Seek Backward", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::skipBackward();
-		});
-		tab.addButton("Seek Forward", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::skipForward();
-		});
-		tab.addButton("Seek to 0%", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::setSongPercentage(0);
-		});
-		tab.addButton("Seek to 25%", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::setSongPercentage(25);
-		});
-		tab.addButton("Seek to 50%", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::setSongPercentage(50);
-		});
-		tab.addButton("Seek to 75%", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::setSongPercentage(75);
-		});
+		for (EclipsePlaybackProgressDummyNode::ButtonDef button : playbackSeekingShortcuts) {
+			EclipsePlaybackProgressDummyNode::addButtonWithCheck(tab, button);
+		}
 
 		addHeader("Other Controls");
-		tab.addButton("Favorite Song", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::favoriteSong();
-		});
-		tab.addButton("Blacklist Song", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::blacklistSong();
-		});
-		tab.addButton("Copy Song Name/ID", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::copySong();
-		});
-		tab.addButton("New Notification", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::PlaybackRelated)) return;
-			SongControl::regenSong();
-		});
+		for (EclipsePlaybackProgressDummyNode::ButtonDef button : otherControlsShortcuts) {
+			EclipsePlaybackProgressDummyNode::addButtonWithCheck(tab, button);
+		}
 
 		addHeader("Shortcuts (Use them wisely!)");
-		tab.addButton("Open Control Panel", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::ControlPanel)) return;
-			ModMenuIntegrationClass::closeSongListLayer();
-			SongControlMenu::create()->show();
-		});
-		tab.addButton("Open Songs List", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::SongList)) return;
-			ModMenuIntegrationClass::closeSongControlMenu();
-			SongListLayer::create()->show();
-		});
-		tab.addButton("Open Mod Settings (from main menu only!)", []() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(EclipsePlaybackProgressDummyNode::ShortcutType::ModSettings)) return;
-			ModMenuIntegrationClass::closeSongControlMenu();
-			ModMenuIntegrationClass::closeSongListLayer();
-			Utils::createSettingsPopup();
-		});
+		for (EclipsePlaybackProgressDummyNode::ButtonDef button : miscShortcuts) {
+			EclipsePlaybackProgressDummyNode::addButtonWithCheck(tab, button);
+		}
 
 		songManager.eclipseIntegrationSuccessful = true;
 
@@ -625,6 +653,21 @@ public:
 			songManager.songListInputNodeForQOLMod = nullptr;
 		}
 		songManager.songListLayerForQOLMod = nullptr;
+	}
+	static void setWarning(CCNode* layer, const std::string& mainText, const std::string& subText) {
+		CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create(mainText.c_str(), "bigFont.fnt");
+		dontMarrySvetlana->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
+
+		CCLabelBMFont* justDont = CCLabelBMFont::create(subText.c_str(), "chatFont.fnt");
+		justDont->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+		justDont->limitLabelWidth(layer->getContentWidth() * .5f, 1.f, .0001f);
+		justDont->setScale(.75f);
+
+		layer->addChildAtPosition(dontMarrySvetlana, geode::Anchor::Center, {0.f, 10.f});
+		layer->addChildAtPosition(justDont, geode::Anchor::Center, {0.f, -5.f});
+
+		dontMarrySvetlana->setID("mlr-not-active-warning"_spr);
+		justDont->setID("mlr-not-active-suggestion"_spr);
 	}
 };
 
@@ -671,40 +714,16 @@ $on_mod(Loaded) {
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setID("warning-footer-two"_spr);
 
 			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || Utils::currentFMODSongIsNotCurrentSongManagerSong()) {
-				CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create("Menu Loop Randomizer is currently not active!", "bigFont.fnt");
-				dontMarrySvetlana->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
+				std::string cringe = "(Might wanna get that checked out.)";
+				if (GJBaseGameLayer::get()) cringe = "(You're in a level right now. Try again later.)";
+				else if (!VANILLA_GD_MENU_LOOP_DISABLED && Utils::currentFMODSongIsNotCurrentSongManagerSong()) cringe = "(This menu loop isn't from MLR. Go figure out why ON YOUR OWN.)";
 
-				CCLabelBMFont* justDont = CCLabelBMFont::create("(Might wanna get that checked out.)", "chatFont.fnt");
-				if (GJBaseGameLayer::get()) justDont->setString("(You're in a level right now. Try again later.)");
-				else if (!VANILLA_GD_MENU_LOOP_DISABLED && Utils::currentFMODSongIsNotCurrentSongManagerSong()) justDont->setString("(This menu loop isn't from MLR. Go figure out why ON YOUR OWN.)");
-				justDont->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
-				justDont->limitLabelWidth(layer->getContentWidth() * .5f, 1.f, .0001f);
-				justDont->setScale(.75f);
-
-				layer->addChildAtPosition(dontMarrySvetlana, geode::Anchor::Center, {0.f, 10.f});
-				layer->addChildAtPosition(justDont, geode::Anchor::Center, {0.f, -5.f});
-
-				dontMarrySvetlana->setID("mlr-not-active-warning"_spr);
-				justDont->setID("mlr-not-active-suggestion"_spr);
-
+				QOLModAndroidUITrackerDummyNode::setWarning(layer, "Menu Loop Randomizer is currently not active!", cringe);
 				return;
 			}
 
 			if (!songManager.getFinishedCalculatingSongLengths()) {
-				CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create("Menu Loop Randomizer is currently busy!", "bigFont.fnt");
-				dontMarrySvetlana->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
-
-				CCLabelBMFont* justDont = CCLabelBMFont::create("(Check back again in a bit.)", "chatFont.fnt");
-				justDont->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
-				justDont->limitLabelWidth(layer->getContentWidth() * .5f, 1.f, .0001f);
-				justDont->setScale(.75f);
-
-				layer->addChildAtPosition(dontMarrySvetlana, geode::Anchor::Center, {0.f, 10.f});
-				layer->addChildAtPosition(justDont, geode::Anchor::Center, {0.f, -5.f});
-
-				dontMarrySvetlana->setID("mlr-not-active-warning"_spr);
-				justDont->setID("mlr-not-active-suggestion"_spr);
-
+				QOLModAndroidUITrackerDummyNode::setWarning(layer, "Menu Loop Randomizer is currently busy!", "(Check back again in a bit.)");
 				return;
 			}
 
