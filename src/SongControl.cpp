@@ -311,17 +311,18 @@ namespace SongControl {
 		const int lastPosition = songManager.getLastMenuLoopPosition();
 
 		songManager.setPauseSongPositionTracking(true);
+		FMOD::Channel* menuChannel = fmod->getActiveMusicChannel(0);
 		int newPosition = 0;
 		if ((lastPosition - INCREMENT_DECREMENT_AMOUNT) < 0) {
 			if (songManager.getConstantShuffleMode()) {
-				fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
+				menuChannel->setPosition(newPosition, FMOD_TIMEUNIT_MS);
 			} else if (fullLength > 0 && fullLength < std::numeric_limits<unsigned int>::max()) {
 				newPosition = ((((lastPosition % fullLength) + fullLength) % fullLength) - (INCREMENT_DECREMENT_AMOUNT % fullLength) + fullLength) % fullLength;
-				fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
+				menuChannel->setPosition(newPosition, FMOD_TIMEUNIT_MS);
 			}
 		} else {
 			newPosition = lastPosition - INCREMENT_DECREMENT_AMOUNT;
-			fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
+			menuChannel->setPosition(newPosition, FMOD_TIMEUNIT_MS);
 		}
 		songManager.setLastMenuLoopPosition(newPosition);
 		songManager.setPauseSongPositionTracking(false);
@@ -337,6 +338,7 @@ namespace SongControl {
 		const int lastPosition = songManager.getLastMenuLoopPosition();
 
 		songManager.setPauseSongPositionTracking(true);
+		FMOD::Channel* menuChannel = fmod->getActiveMusicChannel(0);
 		int newPosition = 0;
 		if ((lastPosition + INCREMENT_DECREMENT_AMOUNT) > fullLength) {
 			if (songManager.getConstantShuffleMode()) {
@@ -345,11 +347,11 @@ namespace SongControl {
 				songManager.setPauseSongPositionTracking(false);
 			} else if (fullLength > 0 && fullLength < std::numeric_limits<unsigned int>::max()) {
 				newPosition = ((((lastPosition % fullLength) + fullLength) % fullLength) + (INCREMENT_DECREMENT_AMOUNT % fullLength)) % fullLength;
-				fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
+				menuChannel->setPosition(newPosition, FMOD_TIMEUNIT_MS);
 			}
 		} else {
 			newPosition = lastPosition + INCREMENT_DECREMENT_AMOUNT;
-			fmod->getActiveMusicChannel(0)->setPosition(newPosition, FMOD_TIMEUNIT_MS);
+			menuChannel->setPosition(newPosition, FMOD_TIMEUNIT_MS);
 		}
 		songManager.setLastMenuLoopPosition(newPosition);
 		songManager.setPauseSongPositionTracking(false);
