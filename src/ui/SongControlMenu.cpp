@@ -38,7 +38,6 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 ```
 */
 
-#include <Geode/ui/GeodeUI.hpp>
 #include "SongControlMenu.hpp"
 #include "SongListLayer.hpp"
 #include "../Utils.hpp"
@@ -598,11 +597,7 @@ void SongControlMenu::onSettingsButton(cocos2d::CCObject*) {
 		this->m_openStng = true;
 		return;
 	}
-	geode::Popup* popup = geode::openSettingsPopup(geode::Mod::get(), false);
-	popup->setTag(20260527);
-	popup->addOnExitCallback([info = this->m_infoButton]() {
-		if (info) info->m_description = static_cast<std::string>(SongControlMenu::generateInfoAlertButtonDescription());
-	});
+	Utils::createSettingsPopup();
 }
 
 void SongControlMenu::onSkipBkwdButton(cocos2d::CCObject*) {

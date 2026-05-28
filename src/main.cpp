@@ -338,7 +338,6 @@ $on_game(Exiting) {
 
 #define ECLIPSE_MODULES_HPP
 #include <eclipse.eclipse-menu/include/eclipse.hpp>
-#include <Geode/ui/GeodeUI.hpp>
 #include "SongControl.hpp"
 
 using namespace eclipse;
@@ -608,8 +607,7 @@ $on_mod(Loaded) {
 				bar->keyBackClicked();
 				#endif
 			}
-			geode::Popup* popup = geode::openSettingsPopup(Mod::get(), false);
-			popup->setTag(20260527);
+			Utils::createSettingsPopup();
 		});
 
 		songManager.eclipseIntegrationSuccessful = true;
@@ -813,8 +811,7 @@ $on_mod(Loaded) {
 
 			CCMenuItemSpriteExtra* bar = geode::cocos::CCMenuItemExt::createSpriteExtraWithFilename("settings-btn-sprite.png"_spr, .25f, [](CCObject*) {
 				CCDirector::get()->getKeypadDispatcher()->dispatchKeypadMSG(ccKeypadMSGType::kTypeBackClicked);
-				geode::Popup* popup = geode::openSettingsPopup(Mod::get(), false);
-				popup->setTag(20260527);
+				Utils::createSettingsPopup();
 			});
 
 			bar->setID("settings-shortcut-qolmod-integration"_spr);

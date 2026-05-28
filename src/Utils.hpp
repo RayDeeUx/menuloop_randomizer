@@ -40,6 +40,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 
 #pragma once
 #include "SongManager.hpp"
+#include <Geode/ui/GeodeUI.hpp>
 
 class AndroidUI final : public cocos2d::CCNode {}; // dummy class declaration for typeinfo_cast to access QOLMod's node
 
@@ -95,6 +96,7 @@ class Utils {
 	static CCMenuItemSpriteExtra* addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static CCMenuItemToggler* addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string_view nodeID, cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static void showMDPopup(const std::string_view title, const std::string& bodyText, const int tag, const std::string_view nodeID);
+	static void createSettingsPopup();
 	static bool notFavoritesNorBlacklist(const std::filesystem::path&);
 	static std::string getPlatform();
 	static std::string generatePlatformWarning();

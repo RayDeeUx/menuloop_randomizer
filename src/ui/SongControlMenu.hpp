@@ -58,7 +58,6 @@ protected:
 	cocos2d::CCMenu* m_openSongListMenu {};
 	cocos2d::CCMenu* m_infoMenu         {};
 	cocos2d::CCMenu* m_increDecreMenu   {};
-	InfoAlertButton* m_infoButton       {};
 	CCMenuItemSpriteExtra* m_ffwdButton {};
 	CCMenuItemSpriteExtra* m_bkwdButton {};
 	CCMenuItemSpriteExtra* m_stngButton {};
@@ -106,6 +105,7 @@ protected:
 public:
 	bool m_osu = false;
 	bool m_isInQOLMod = false;
+	InfoAlertButton* m_infoButton {};
 	static SongControlMenu* create();
 	void onRegenButton(cocos2d::CCObject*);
 	void updateCurrentLabel();

@@ -38,7 +38,6 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 ```
 */
 
-#include <Geode/ui/GeodeUI.hpp>
 #include "SongListLayer.hpp"
 #include "MLRSongCell.hpp"
 #include "SongControlMenu.hpp"
@@ -520,8 +519,7 @@ void SongListLayer::searchSongs(const std::string& queryString, const bool check
 void SongListLayer::onSettingsButton(CCObject*) {
 	if (this->m_isInQOLMod) return;
 	this->onClose(nullptr);
-	geode::Popup* popup = geode::openSettingsPopup(geode::Mod::get(), false);
-	popup->setTag(20260527);
+	Utils::createSettingsPopup();
 }
 
 void SongListLayer::onShuffleButton(CCObject*) {
