@@ -122,6 +122,8 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 	void onAddToPlylstBtn(CCObject*) { SongControl::addSongToPlaylist(SongManager::get().getCurrentSong()); }
 	void onSongListButton(CCObject*) {
 		if (!SongManager::get().getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy! Please wait.");
+		if (Utils::getString("buttonMode") == "Classic") return;
+		if (CCScene::get()->getChildByType<SongListLayer>(0)) return;
 		SongListLayer::create()->show();
 	}
 	void onControlsButton(CCObject*) {
