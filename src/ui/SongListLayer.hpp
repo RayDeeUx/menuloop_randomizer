@@ -65,6 +65,7 @@ public:
  	CCMenuItemToggler* m_songListSortSongLength {};
 	CCMenuItemToggler* m_songListSortFileSize {};
 	CCMenuItemToggler* m_songListSortFileExtn {};
+	CCMenuItemToggler* m_songListSortBeatsPerMinute {};
 	cocos2d::CCMenu* m_scrollShortcuts {};
 	cocos2d::CCMenu* m_viewFiltersMenu {};
 	geode::ScrollLayer* m_scrollLayer {};
@@ -99,6 +100,7 @@ public:
 	void onSortLengthToggle(cocos2d::CCObject*);
 	void onSortSizeToggle(cocos2d::CCObject*);
 	void onSortExtnToggle(cocos2d::CCObject*);
+	void onSortBPMToggle(cocos2d::CCObject*);
 
 	static void handleMutuallyExclusiveSortToggle(CCMenuItemToggler* toggle, const std::string_view savedValueKeyToMatch, const std::string_view savedValueKey, const bool originalSavedValue);
 	void disableAllSortFiltersThenToggleThenSearch(const std::string_view);
@@ -126,6 +128,7 @@ public:
 	static bool fileExtn(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool dateAdded(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool songLength(MLRSongCell* a, MLRSongCell* b, bool reverse);
+	static bool songBPM(MLRSongCell* a, MLRSongCell* b, bool reverse);
 
 	static unsigned int useFMODToGetLength(const std::string& path, const unsigned int extreme);
 	static unsigned int getLength(const std::string& path, const bool reverse);

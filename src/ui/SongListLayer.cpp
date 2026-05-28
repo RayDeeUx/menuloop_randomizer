@@ -55,6 +55,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 #define GET_SEARCH_STRING m_searchBar->getString()
 #define EMPTY_SEARCH_STRG m_searchBar->setString("", false);
 #define LIMIT_PLACEHOLDER SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
+#define NO_PLAYLIST_AND_NO_CUSTOM_SONGS SongManager::get().getPlaylistIsEmpty() && !Utils::getBool("useCustomSongs")
 
 using Comparator = bool(*)(MLRSongCell*, MLRSongCell*, bool);
 
@@ -67,7 +68,8 @@ static constexpr SongListLayer::KeycodeToToggler numrowToToggler = {
 	{ cocos2d::KEY_Five, &SongListLayer::m_songListSortDateAdded },
 	{ cocos2d::KEY_Six, &SongListLayer::m_songListSortSongLength },
 	{ cocos2d::KEY_Seven, &SongListLayer::m_songListSortFileSize },
-	{ cocos2d::KEY_Eight, &SongListLayer::m_songListSortFileExtn }
+	{ cocos2d::KEY_Eight, &SongListLayer::m_songListSortFileExtn },
+	// { cocos2d::KEY_Nine, &SongListLayer::m_songListSortBeatsPerMinute }
 };
 static constexpr SongListLayer::KeycodeToToggler numpadToToggler = {
 	{ cocos2d::KEY_NumPad1, &SongListLayer::m_songListCompactMode },
@@ -77,7 +79,8 @@ static constexpr SongListLayer::KeycodeToToggler numpadToToggler = {
 	{ cocos2d::KEY_NumPad5, &SongListLayer::m_songListSortDateAdded },
 	{ cocos2d::KEY_NumPad6, &SongListLayer::m_songListSortSongLength },
 	{ cocos2d::KEY_NumPad7, &SongListLayer::m_songListSortFileSize },
-	{ cocos2d::KEY_NumPad8, &SongListLayer::m_songListSortFileExtn }
+	{ cocos2d::KEY_NumPad8, &SongListLayer::m_songListSortFileExtn },
+	// { cocos2d::KEY_NumPad9, &SongListLayer::m_songListSortBeatsPerMinute }
 };
 #endif
 
@@ -143,6 +146,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			comparator = &SongListLayer::dateAdded;
 		} else if (SAVED("songListSortSongLength")) {
 			comparator = &SongListLayer::songLength;
+		} else if (NO_PLAYLIST_AND_NO_CUSTOM_SONGS && SAVED("songListSortBeatsPerMinute")) {
+			// comparator = &SongListLayer::songBPM;
 		}
 		if (comparator) {
 			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse, comparator](MLRSongCell* a, MLRSongCell* b) {
@@ -339,6 +344,7 @@ bool SongListLayer::setup() {
 		if (Utils::getBool("showSortSongLength")) this->m_songListSortSongLength = Utils::addViewModeToggle(SAVED("songListSortSongLength"), "length.png"_spr, "song-length", menu_selector(SongListLayer::onSortLengthToggle), this->m_viewFiltersMenu, this);
 		this->m_songListSortFileSize = Utils::addViewModeToggle(SAVED("songListSortFileSize"), "size.png"_spr, "song-size", menu_selector(SongListLayer::onSortSizeToggle), this->m_viewFiltersMenu, this);
 		this->m_songListSortFileExtn = Utils::addViewModeToggle(SAVED("songListSortFileExtn"), "xtension.png"_spr, "file-extension", menu_selector(SongListLayer::onSortExtnToggle), this->m_viewFiltersMenu, this);
+		// if (NO_PLAYLIST_AND_NO_CUSTOM_SONGS) this->m_songListSortBeatsPerMinute = Utils::addViewModeToggle(SAVED("songListSortBeatsPerMinute"), "metronomes.png"_spr, "song-bpm", menu_selector(SongListLayer::onSortBPMToggle), this->m_viewFiltersMenu, this);
 
 		this->m_viewFiltersMenu->setContentHeight(240.f);
 		this->m_viewFiltersMenu->ignoreAnchorPointForPosition(false);
@@ -618,6 +624,11 @@ void SongListLayer::onSortExtnToggle(CCObject*) {
 	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortFileExtn");
 }
 
+void SongListLayer::onSortBPMToggle(CCObject*) {
+	if (SONG_SORTING_DISABLED) return;
+	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortBeatsPerMinute");
+}
+
 void SongListLayer::handleMutuallyExclusiveSortToggle(CCMenuItemToggler* toggle, const std::string_view savedValueKeyToMatch, const std::string_view savedValueKey, const bool originalSavedValue) {
 	geode::Mod::get()->setSavedValue<bool>(savedValueKeyToMatch, false);
 	if (!toggle) return;
@@ -633,6 +644,7 @@ void SongListLayer::disableAllSortFiltersThenToggleThenSearch(const std::string_
 	SongListLayer::handleMutuallyExclusiveSortToggle(this->m_songListSortSongLength, "songListSortSongLength", savedValueKey, originalSavedValue);
 	SongListLayer::handleMutuallyExclusiveSortToggle(this->m_songListSortFileSize, "songListSortFileSize", savedValueKey, originalSavedValue);
 	SongListLayer::handleMutuallyExclusiveSortToggle(this->m_songListSortFileExtn, "songListSortFileExtn", savedValueKey, originalSavedValue);
+	// SongListLayer::handleMutuallyExclusiveSortToggle(this->m_songListSortBeatsPerMinute, "songListSortBeatsPerMinute", savedValueKey, originalSavedValue);
 	geode::Mod::get()->setSavedValue<bool>(savedValueKey, !originalSavedValue);
 	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 	SongListLayer::searchSongs(!searchBar ? "" : GET_SEARCH_STRING);
@@ -900,6 +912,18 @@ bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool revers
 	}
 	if (a->m_songData.songLength < b->m_songData.songLength) return !reverse;
 	if (a->m_songData.songLength > b->m_songData.songLength) return reverse;
+	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
+}
+
+bool SongListLayer::songBPM(MLRSongCell* a, MLRSongCell* b, const bool reverse) {
+	if (SONG_SORTING_DISABLED || !(NO_PLAYLIST_AND_NO_CUSTOM_SONGS)) return false;
+	if (a->m_songData.bpm == -1 || b->m_songData.bpm == -1) {
+		if (a->m_songData.bpm == -1 && b->m_songData.bpm == -1) return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
+		if (a->m_songData.bpm == -1) return reverse;
+		if (b->m_songData.bpm == -1) return !reverse;
+	}
+	if (a->m_songData.bpm < b->m_songData.bpm) return !reverse;
+	if (a->m_songData.bpm > b->m_songData.bpm) return reverse;
 	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
 }
 

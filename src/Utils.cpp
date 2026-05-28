@@ -381,6 +381,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 	// impl playlist files
 	const std::filesystem::path& playlistFile = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
 	songManager.setPlaylistFileName();
+	songManager.setPlaylistIsEmpty(true);
 	if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") && std::filesystem::exists(playlistFile) && playlistFile.extension() == ".txt") {
 		bool isPlaylistEmpty = true;
 		std::ifstream playlistFileStream(playlistFile);
