@@ -897,8 +897,8 @@ void Utils::showMDPopup(const std::string_view title, const std::string& bodyTex
 void Utils::createSettingsPopup() {
 	geode::Popup* popup = geode::openSettingsPopup(geode::Mod::get(), false);
 	popup->setTag(20260527);
-	if (!cocos2d::CCScene::get() || !cocos2d::CCScene::get()->getChildByType<SongControlMenu*>(0)) return;
-	popup->addOnExitCallback([info = cocos2d::CCScene::get()->getChildByType<SongControlMenu*>(0)->m_infoButton]() {
+	if (!cocos2d::CCScene::get() || !cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0)) return;
+	popup->addOnExitCallback([info = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0)->m_infoButton]() {
 		if (info) info->m_description = static_cast<std::string>(SongControlMenu::generateInfoAlertButtonDescription());
 	});
 }
