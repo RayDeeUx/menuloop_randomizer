@@ -65,7 +65,7 @@ public:
  	CCMenuItemToggler* m_songListSortSongLength {};
 	CCMenuItemToggler* m_songListSortFileSize {};
 	CCMenuItemToggler* m_songListSortFileExtn {};
-	CCMenuItemToggler* m_songListSortBeatsPerMinute {};
+	// CCMenuItemToggler* m_songListSortBeatsPerMinute {};
 	cocos2d::CCMenu* m_scrollShortcuts {};
 	cocos2d::CCMenu* m_viewFiltersMenu {};
 	geode::ScrollLayer* m_scrollLayer {};

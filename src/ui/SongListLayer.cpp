@@ -146,9 +146,9 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 			comparator = &SongListLayer::dateAdded;
 		} else if (SAVED("songListSortSongLength")) {
 			comparator = &SongListLayer::songLength;
-		} else if (NO_PLAYLIST_AND_NO_CUSTOM_SONGS && SAVED("songListSortBeatsPerMinute")) {
+		} // else if (NO_PLAYLIST_AND_NO_CUSTOM_SONGS && SAVED("songListSortBeatsPerMinute")) {
 			// comparator = &SongListLayer::songBPM;
-		}
+		// }
 		if (comparator) {
 			std::sort(cellsToAdd.begin(), cellsToAdd.end(), [reverse, comparator](MLRSongCell* a, MLRSongCell* b) {
 				return comparator(a, b, reverse);
@@ -626,7 +626,7 @@ void SongListLayer::onSortExtnToggle(CCObject*) {
 
 void SongListLayer::onSortBPMToggle(CCObject*) {
 	if (SONG_SORTING_DISABLED) return;
-	SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortBeatsPerMinute");
+	// SongListLayer::disableAllSortFiltersThenToggleThenSearch("songListSortBeatsPerMinute");
 }
 
 void SongListLayer::handleMutuallyExclusiveSortToggle(CCMenuItemToggler* toggle, const std::string_view savedValueKeyToMatch, const std::string_view savedValueKey, const bool originalSavedValue) {
