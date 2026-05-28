@@ -489,6 +489,9 @@ public:
 		}
 		return fails;
 	}
+	static void addDynamicHeader(eclipse::MenuTab& tab, const std::string& headerText) {
+		SongManager::get().dynamicEclipseIntegrationHeaders.emplace_back(std::make_optional(tab.addLabel(headerText)), headerText);
+	}
 	static void addButtonWithCheck(eclipse::MenuTab& tab, EclipsePlaybackProgressDummyNode::ButtonDef button) {
 		tab.addButton(button.label, [type = button.type, action = std::move(button.action)]() {
 			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(type)) return;
@@ -561,6 +564,13 @@ static const std::vector<EclipsePlaybackProgressDummyNode::ButtonDef> miscShortc
 	}}
 };
 
+static const std::array<std::pair<std::string, std::vector<EclipsePlaybackProgressDummyNode::ButtonDef>>,4 > headerToVector = {{
+	{"Song Selection", songSelectionShortcuts},
+	{"Playback/Seeking", playbackSeekingShortcuts},
+	{"Other Controls", otherControlsShortcuts},
+	{"Shortcuts (Use them wisely!)", miscShortcuts}
+}};
+
 $on_mod(Loaded) {
 	Loader::get()->queueInMainThread([]() {
 		if (!Mod::get()->getSettingValue<bool>("eclipseIntegration")) return;
@@ -592,28 +602,11 @@ $on_mod(Loaded) {
 
 		(void) tab.addLabel("\n");
 
-		std::function addHeader = [&](const std::string& t) {
-			songManager.dynamicEclipseIntegrationHeaders.emplace_back(std::make_optional(tab.addLabel(t)), t);
-		};
-
-		addHeader("Song Selection");
-		for (EclipsePlaybackProgressDummyNode::ButtonDef button : songSelectionShortcuts) {
-			EclipsePlaybackProgressDummyNode::addButtonWithCheck(tab, button);
-		}
-
-		addHeader("Playback/Seeking");
-		for (EclipsePlaybackProgressDummyNode::ButtonDef button : playbackSeekingShortcuts) {
-			EclipsePlaybackProgressDummyNode::addButtonWithCheck(tab, button);
-		}
-
-		addHeader("Other Controls");
-		for (EclipsePlaybackProgressDummyNode::ButtonDef button : otherControlsShortcuts) {
-			EclipsePlaybackProgressDummyNode::addButtonWithCheck(tab, button);
-		}
-
-		addHeader("Shortcuts (Use them wisely!)");
-		for (EclipsePlaybackProgressDummyNode::ButtonDef button : miscShortcuts) {
-			EclipsePlaybackProgressDummyNode::addButtonWithCheck(tab, button);
+		for (const auto& [header, vector] : headerToVector) {
+			EclipsePlaybackProgressDummyNode::addDynamicHeader(tab, header);
+			for (EclipsePlaybackProgressDummyNode::ButtonDef button : vector) {
+				EclipsePlaybackProgressDummyNode::addButtonWithCheck(tab, button);
+			}
 		}
 
 		songManager.eclipseIntegrationSuccessful = true;
