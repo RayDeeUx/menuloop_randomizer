@@ -92,29 +92,7 @@ bool SongControlMenu::setup() {
 	this->m_infoMenu = cocos2d::CCMenu::create();
 	this->m_infoMenu->setLayout(geode::RowLayout::create()->setAutoScale(false)->setAxis(geode::Axis::Row)->setGap(.0f));
 	this->m_infoMenu->setContentSize({24.f * .75f, 23.f * .75f});
-	this->m_infoButton = InfoAlertButton::create(
-		"Menu Loop Randomizer - Debug/FAQ",
-		fmt::format(
-			"Platform: <cl>{}</c>\n"
-			"Constant Shuffle Mode: <cl>{}</c>\n"
-			"Current playlist file: <cl>{}</c> (Loaded: <cl>{}</c>)\n\n"
-			#if GEODE_COMP_GD_VERSION < 22081
-			"<cy>Q: Why do I see overlapping elements?</c>\n"
-			"A: Install <cl>Happy Textures by Alphalaneous</c>.\n<c_>This is a non-negotiable solution.</c>\n\n"
-			#endif
-			#if GEODE_COMP_GD_VERSION > 22074
-			"<cy>Q: Why can I only go back one song?</c>\n"
-			"A: You're randomizing <co>menu loops</c>, not using a mini-VLC/mini-Spotify. Deal with it.\n<c_>This is a non-negotiable solution.</c>\n\n"
-			#endif
-			"<cy>Q: Add</c> <cl>[feature suggestion that makes this mod act like Spotify or EditorMusic, but with the menu loop]</c><cy>!</c>\n"
-			"A: <c_>No. Never.</c>",
-			Utils::getPlatform(),
-			songManager.getConstantShuffleMode() ? "ON" : "OFF",
-			songManager.getPlaylistFileName(),
-			Utils::getBool("loadPlaylistFile") ? "True" : "False"
-		),
-		.75f
-	);
+	this->m_infoButton = InfoAlertButton::create("Menu Loop Randomizer - Debug/FAQ", SongControlMenu::generateInfoAlertButtonDescription(), .75f);
 	this->m_infoMenu->addChildAtPosition(this->m_infoButton, geode::Anchor::Center);
 	this->m_infoMenu->setPosition({layerSize - 3.f});
 	this->m_infoMenu->setID("control-panel-info-menu"_spr);
@@ -622,12 +600,17 @@ void SongControlMenu::onSettingsButton(cocos2d::CCObject*) {
 	}
 	geode::Popup* popup = geode::openSettingsPopup(geode::Mod::get(), false);
 	popup->setTag(20260527);
+	popup->addOnExitCallback([info = this->m_infoButton]() {
+		if (info) info->m_description = static_cast<std::string>(SongControlMenu::generateInfoAlertButtonDescription());
+	});
+	/*
 	if (this->m_infoMenu) this->m_infoMenu->setScale(0.f);
 	if (this->m_infoButton) {
 		this->m_infoButton->setScale(0.f);
 		this->m_infoButton->setEnabled(false);
 		this->m_infoButton->m_pfnSelector = nullptr;
 	}
+	*/
 }
 
 void SongControlMenu::onSkipBkwdButton(cocos2d::CCObject*) {
@@ -788,6 +771,28 @@ void SongControlMenu::toggleOsu() {
 			)
 		);
 	}
+}
+
+std::string SongControlMenu::generateInfoAlertButtonDescription() {
+	return fmt::format(
+		"Platform: <cl>{}</c>\n"
+		"Constant Shuffle Mode: <cl>{}</c>\n"
+		"Current playlist file: <cl>{}</c> (Loaded: <cl>{}</c>)\n\n"
+		#if GEODE_COMP_GD_VERSION < 22081
+		"<cy>Q: Why do I see overlapping elements?</c>\n"
+		"A: Install <cl>Happy Textures by Alphalaneous</c>.\n<c_>This is a non-negotiable solution.</c>\n\n"
+		#endif
+		#if GEODE_COMP_GD_VERSION > 22074
+		"<cy>Q: Why can I only go back one song?</c>\n"
+		"A: You're randomizing <co>menu loops</c>, not using a mini-VLC/mini-Spotify. Deal with it.\n<c_>This is a non-negotiable solution.</c>\n\n"
+		#endif
+		"<cy>Q: Add</c> <cl>[feature suggestion that makes this mod act like Spotify or EditorMusic, but with the menu loop]</c><cy>!</c>\n"
+		"A: <c_>No. Never.</c>",
+		Utils::getPlatform(),
+		SongManager::get().getConstantShuffleMode() ? "ON" : "OFF",
+		SongManager::get().getPlaylistFileName(),
+		Utils::getBool("loadPlaylistFile") ? "True" : "False"
+	);
 }
 
 #if GEODE_COMP_GD_VERSION > 22074

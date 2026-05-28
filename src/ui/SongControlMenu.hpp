@@ -116,6 +116,7 @@ public:
 	void forceSharpCornerIllusion();
 	void forceSharpCornerIllusionScheduler(float);
 	void toggleOsu();
+	static std::string generateInfoAlertButtonDescription();
 	void onClose(cocos2d::CCObject*) override;
 	#if GEODE_COMP_GD_VERSION > 22074
 	void keyDown(cocos2d::enumKeyCodes key, double p1) override;
