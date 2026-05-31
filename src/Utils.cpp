@@ -265,8 +265,9 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 
 bool Utils::adjustSongInfoIfJukeboxReplacedIt(SongInfoObject* songInfo) {
 	bool shouldReplaceDisplayName = false;
+	std::error_code ea;
 	const std::filesystem::path& targetPath = geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songInfo->m_songID);
-	if (!std::filesystem::exists(targetPath)) return shouldReplaceDisplayName;
+	if (!std::filesystem::exists(targetPath, ea)) return shouldReplaceDisplayName;
 	auto parsed = geode::utils::file::readJson(targetPath);
 	if (parsed.isOk() && parsed.unwrap().contains("default") && parsed.unwrap().get("default").isOk()) {
 		auto fooBar = parsed.unwrap().get("default").unwrap().get("name");
@@ -339,6 +340,7 @@ void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
 	std::ifstream playlistFileStream(playlistFile);
 	std::string playlistFileLineString;
 	int lineCount = -1;
+	std::error_code ea;
 	while (std::getline(playlistFileStream, playlistFileLineString)) {
 		lineCount++;
 		if (playlistFileLineString.starts_with('#') || playlistFileLineString.empty()) continue;
@@ -346,7 +348,7 @@ void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
 		if (playlistFileLineModified.ends_with(" [MLR] #")) {
 			playlistFileLineModified = playlistFileLineModified.substr(0, playlistFileLineModified.find(" # [MLR] Song: "));
 		}
-		if (!std::filesystem::exists(Utils::toProblematicString(playlistFileLineModified))) {
+		if (!std::filesystem::exists(Utils::toProblematicString(playlistFileLineModified), ea)) {
 			geode::log::info("unable to find song on line {} of playlistFile {}", lineCount, playlistFile.filename());
 			continue;
 		}
@@ -378,11 +380,11 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 
 	SongManager& songManager = SongManager::get();
 
-	// impl playlist files
+	std::error_code ea;
 	const std::filesystem::path& playlistFile = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
 	songManager.setPlaylistFileName();
 	songManager.setPlaylistIsEmpty(true);
-	if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") && std::filesystem::exists(playlistFile) && playlistFile.extension() == ".txt") {
+	if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") && std::filesystem::exists(playlistFile, ea) && Utils::toNormalizedString(playlistFile.extension()) == ".txt") {
 		bool isPlaylistEmpty = true;
 		std::ifstream playlistFileStream(playlistFile);
 		std::string playlistFileLineString;
@@ -405,10 +407,10 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 		--elnex
 	*/
 
-	std::error_code ea, eb;
+	std::error_code eb, ec;
 	const std::vector<std::string>& songManagerBlacklist = songManager.getBlacklist();
 	const std::filesystem::path& blacklistPath = configDir / R"(blacklist.txt)";
-	const bool blacklistPathExists = std::filesystem::exists(blacklistPath, ea);
+	const bool blacklistPathExists = std::filesystem::exists(blacklistPath, eb);
 
 	if (blacklistPathExists && textFileBlacklist.empty()) {
 		textFileBlacklist = Utils::parseBlacklistFile(blacklistPath);
@@ -416,21 +418,22 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 
 	const std::vector<std::string>& songManagerFavorites = songManager.getFavorites();
 	const std::filesystem::path& favoritePath = configDir / R"(favorites.txt)";
-	const bool favoritePathExists = std::filesystem::exists(favoritePath, eb);
+	const bool favoritePathExists = std::filesystem::exists(favoritePath, ec);
 
 	if (favoritePathExists && textFileFavorites.empty()) {
 		textFileFavorites = Utils::parseFavoritesFile(favoritePath);
 	}
 
 	if (customSongs) {
-		for (const auto& file : std::filesystem::directory_iterator(configDir)) {
-			if (std::filesystem::is_directory(file) && Utils::getBool("searchDeeper")) {
+		std::error_code ec, ed, ee;
+		for (const auto& file : std::filesystem::directory_iterator(configDir, ec)) {
+			if (std::filesystem::is_directory(file, ed) && Utils::getBool("searchDeeper")) {
 				Utils::populateVector(customSongs, file, textFileBlacklist, textFileFavorites);
 				continue;
 			}
-			if (!std::filesystem::exists(file)) continue;
+			if (!std::filesystem::exists(file, ee)) continue;
 
-			const auto& filePath = file.path();
+			const std::filesystem::path& filePath = file.path();
 			const std::string& songPath = Utils::toNormalizedString(filePath);
 			if (!Utils::isSupportedFile(songPath)) continue;
 
@@ -529,6 +532,7 @@ void Utils::popualteSongToSongDataMap() {
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	const std::string& dummyJukeboxPath = Utils::toNormalizedString(geode::dirs::getModsSaveDir() / "fleym.nongd" / "nongs");
 	const std::string& hypotheticalPathWhereMDMSongsAreStored = Utils::toNormalizedString(Utils::toProblematicString(mdm->pathForSong(593059)).parent_path()); // this song ID in particular is banned from newgrounds
+	std::error_code ea;
 
 	for (const std::string_view song : songManager.getSongs()) {
 		SongType songType = SongType::Regular;
@@ -560,7 +564,7 @@ void Utils::popualteSongToSongDataMap() {
 			.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), dummyJukeboxPath),
 			.isEmpty = false
 		};
-		if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID)) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
+		if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID), ea) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
 			songData.displayName = Utils::getFormattedNGMLSongName(songInfoObject, false);
 			songData.songID = songInfoObject->m_songID;
 			songData.bpm = songInfoObject->m_BPM;
@@ -932,7 +936,8 @@ std::string Utils::generatePlatformWarning() {
 }
 
 void Utils::writeToFile(const std::string& toWriteToFile, const std::filesystem::path& fileForWriting) {
-	if (!std::filesystem::exists(fileForWriting) && Utils::notFavoritesNorBlacklist(fileForWriting)) {
+	std::error_code ea, eb;
+	if (!std::filesystem::exists(fileForWriting, ea) && Utils::notFavoritesNorBlacklist(fileForWriting)) {
 		const std::string& platformWarning = Utils::generatePlatformWarning();
 		const std::string& playlistSpecificIntro = fmt::format(R"(# Welcome to a Menu Loop Randomizer playlist file!
 # This playlist is named "{}".
@@ -963,15 +968,15 @@ void Utils::writeToFile(const std::string& toWriteToFile, const std::filesystem:
 # BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED. ALL FILE PATHS ARE SPECIFIC TO YOUR DEVICE ***__ONLY__***. DO ***__NOT__*** DELETE THESE LINES!!!!!!!!!!
 # {}
 # BUGS/CRASHES FROM FAILING TO FOLLOW THIS BASIC INSTRUCTION WILL BE IGNORED. ALL FILE PATHS ARE SPECIFIC TO YOUR DEVICE ***__ONLY__***. DO ***__NOT__*** DELETE THESE LINES!!!!!!!!!!
-# --RayDeeUx)", fileForWriting.filename(),
+# --RayDeeUx)", Utils::toNormalizedString(fileForWriting.filename()),
 platformWarning, platformWarning,
 platformWarning, platformWarning,
 platformWarning, platformWarning,
 platformWarning, platformWarning,
 platformWarning, platformWarning);
-		auto result = geode::utils::file::writeString(fileForWriting, playlistSpecificIntro);
+		geode::Result<> result = geode::utils::file::writeString(fileForWriting, playlistSpecificIntro);
 		if (result.isErr()) return geode::log::error("Error writing to {}", fileForWriting);
-	} else if (!std::filesystem::exists(fileForWriting)) return geode::log::info("error finding {}!", fileForWriting);
+	} else if (!std::filesystem::exists(fileForWriting, eb)) return geode::log::info("error finding {}!", fileForWriting);
 	std::ofstream fileOutput;
 	fileOutput.open(fileForWriting, std::ios_base::app);
 	if (geode::utils::string::endsWith(toWriteToFile, " [MLR] #") && SongManager::get().getSawbladeCustomSongsFolder()) {

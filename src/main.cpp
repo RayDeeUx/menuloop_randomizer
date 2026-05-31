@@ -57,6 +57,7 @@ bool originalOverrideWasEmpty = false;
 
 $on_mod(Loaded) {
 	SongManager& songManager = SongManager::get();
+	std::error_code ea, eb, ec, ed, ee;
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 	songManager.setOsu(Mod::get()->getSettingValue<bool>("osuLazerBootleg"));
 	songManager.setConstantShuffleMode();
@@ -75,12 +76,12 @@ $on_mod(Loaded) {
 	/* CHANGE THIS LATER */ // songManager.setVobecidedJota(VOBECIDED_JOTA && (VOBECIDED_JOTA->isOrWillBeEnabled() || VOBECIDED_JOTA->shouldLoad()));
 	/* REMOVE THIS LATER */ songManager.setVobecidedJota(false);
 	songManager.setUndefined0Alk1m123TouchPrio(BTP && (BTP->isOrWillBeEnabled() || BTP->shouldLoad()) && !BTP->hasUnresolvedDependencies() && !BTP->hasUnresolvedIncompatibilities());
-	if (!std::filesystem::exists(Mod::get()->getConfigDir() / "playlistOne.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", Mod::get()->getConfigDir() / "playlistOne.txt");
-	if (!std::filesystem::exists(Mod::get()->getConfigDir() / "playlistTwo.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", Mod::get()->getConfigDir() / "playlistTwo.txt");
-	if (!std::filesystem::exists(Mod::get()->getConfigDir() / "playlistThree.txt")) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", Mod::get()->getConfigDir() / "playlistThree.txt");
+	if (!std::filesystem::exists(Mod::get()->getConfigDir() / "playlistOne.txt", ea)) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", Mod::get()->getConfigDir() / "playlistOne.txt");
+	if (!std::filesystem::exists(Mod::get()->getConfigDir() / "playlistTwo.txt", eb)) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", Mod::get()->getConfigDir() / "playlistTwo.txt");
+	if (!std::filesystem::exists(Mod::get()->getConfigDir() / "playlistThree.txt", ec)) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", Mod::get()->getConfigDir() / "playlistThree.txt");
 
-	auto blacklistTxt = Mod::get()->getConfigDir() / R"(blacklist.txt)";
-	if (!std::filesystem::exists(blacklistTxt)) {
+	const std::filesystem::path& blacklistTxt = Mod::get()->getConfigDir() / R"(blacklist.txt)";
+	if (!std::filesystem::exists(blacklistTxt, ed)) {
 		const std::string& blacklistFileIntro = R"(# Welcome to the Menu Loop Randomizer song blacklist!
 # Each line that doesn't start with a "#" will be treated as a blacklisted song file.
 # All lines that start with a "#" are ignored. This means you can un-blacklist a song by adding "#" next to it.
@@ -90,14 +91,14 @@ $on_mod(Loaded) {
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # --RayDeeUx)";
-		auto result = utils::file::writeString(blacklistTxt, blacklistFileIntro);
+		geode::Result result = utils::file::writeString(blacklistTxt, blacklistFileIntro);
 		if (result.isErr()) {
 			log::error("Error writing to blacklist.txt");
 		}
 	}
 
-	auto favoriteTxt = Mod::get()->getConfigDir() / R"(favorites.txt)";
-	if (!std::filesystem::exists(favoriteTxt)) {
+	const std::filesystem::path& favoriteTxt = Mod::get()->getConfigDir() / R"(favorites.txt)";
+	if (!std::filesystem::exists(favoriteTxt, ee)) {
 		const std::string& favoritesFileIntro = R"(# Welcome to the Menu Loop Randomizer favorites list!
 # Each line that doesn't start with a "#" will be treated as a favorited song file.
 # All lines that start with a "#" are ignored. This means you can un-favorite a song by adding "#" next to it.
@@ -107,7 +108,7 @@ $on_mod(Loaded) {
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # --RayDeeUx)";
-		auto result = utils::file::writeString(favoriteTxt, favoritesFileIntro);
+		geode::Result<> result = utils::file::writeString(favoriteTxt, favoritesFileIntro);
 		if (result.isErr()) {
 			log::error("Error writing to favorites.txt");
 		}
@@ -123,8 +124,8 @@ $on_mod(Loaded) {
 	const std::string& lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 	const std::filesystem::path& lastMenuLoopPath = Mod::get()->getSavedValue<std::filesystem::path>("lastMenuLoopPath");
 	const bool saveSongOnGameClose = Utils::getBool("saveSongOnGameClose");
-	std::error_code ea, eb;
-	const bool loopExists = std::filesystem::exists(Utils::toProblematicString(lastMenuLoop), ea) || std::filesystem::exists(lastMenuLoopPath, eb);
+	std::error_code ef, eg;
+	const bool loopExists = std::filesystem::exists(Utils::toProblematicString(lastMenuLoop), ef) || std::filesystem::exists(lastMenuLoopPath, eg);
 	log::info("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\nlast menu loop as path: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}\noverride: {}", lastMenuLoop, lastMenuLoopPath, saveSongOnGameClose, loopExists, override);
 	if (!override.empty() && Utils::isSupportedFile(override)) {
 		if (songManager.getAdvancedLogs()) log::info("setting songManager's current song to overridden song from settings");
@@ -134,7 +135,7 @@ $on_mod(Loaded) {
 		songManager.setCurrentSongToSavedSong();
 	} else {
 		log::info("randomizing songManager's current song through on_mod(Loaded)");
-		if (ea || eb) log::info("there was an error fetching for an override and last remembered menu loop in the filesystem. below were the values:\noverride: {}\nlastMenuLoop: {}", override, lastMenuLoop);
+		if (ef || eg) log::info("there was an error fetching for an override and last remembered menu loop in the filesystem. below were the values:\noverride: {}\nlastMenuLoop: {}", override, lastMenuLoop);
 		songManager.pickRandomSong();
 	}
 	Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs();
@@ -154,8 +155,9 @@ $on_mod(Loaded) {
 		Mod::get()->setSavedValue<bool>("songListSortFileExtn", false);
 	}
 
-	if (!std::filesystem::exists(Mod::get()->getConfigDir() / R"(store_your_disabled_menuloops_here)")) {
-		std::filesystem::create_directory(Mod::get()->getConfigDir() / R"(store_your_disabled_menuloops_here)");
+	std::error_code eh, ei;
+	if (!std::filesystem::exists(Mod::get()->getConfigDir() / R"(store_your_disabled_menuloops_here)", eh)) {
+		std::filesystem::create_directory(Mod::get()->getConfigDir() / R"(store_your_disabled_menuloops_here)", ei);
 	}
 	listenForSettingChanges<bool>("useCustomSongs", [](const bool) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("useCustomSongs");
@@ -178,31 +180,31 @@ $on_mod(Loaded) {
 		Utils::showMDPopup("Playlist Files", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", 7302025, "playlist-files");
 	});
 	listenForSettingChanges<bool>("playlistMode", [](const bool constantShuffleMode) {
-		SongManager& songManager = SongManager::get();
-		songManager.setConstantShuffleMode();
-		if (songManager.isOriginalMenuLoop()) return;
+		SongManager& songManagerLambda = SongManager::get();
+		songManagerLambda.setConstantShuffleMode();
+		if (songManagerLambda.isOriginalMenuLoop()) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 		if (constantShuffleMode) {
 			GameManager::sharedState()->playMenuMusic();
-			return ConstantShuffleModeWarning::create(songManager.getGeodify())->show();
+			return ConstantShuffleModeWarning::create(songManagerLambda.getGeodify())->show();
 		}
 		GameManager::sharedState()->playMenuMusic();
 	});
 	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](const std::filesystem::path& specificSongOverride) {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-		SongManager& songManager = SongManager::get();
+		SongManager& songManagerLambda = SongManager::get();
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		const std::string& overrideString = Utils::toNormalizedString(specificSongOverride);
-		songManager.setOverride(overrideString);
+		songManagerLambda.setOverride(overrideString);
 		if (!Utils::isSupportedFile(overrideString) && overrideString.empty()) {
-			songManager.clearSongs();
+			songManagerLambda.clearSongs();
 			geode::log::info("repopulating vector from removing override");
 			Utils::refreshTheVector();
 			if (Utils::isSupportedFile(Mod::get()->getSavedValue<std::string>("lastMenuLoop")) && Utils::getBool("saveSongOnGameClose") && !originalOverrideWasEmpty) {
-				if (songManager.getAdvancedLogs()) log::info("setting songManager's current song to saved song from settings change");
-				songManager.setCurrentSongToSavedSong();
+				if (songManagerLambda.getAdvancedLogs()) log::info("setting songManager's current song to saved song from settings change");
+				songManagerLambda.setCurrentSongToSavedSong();
 			} else Utils::setNewSong();
 		}
 		geode::Loader::get()->queueInMainThread([] { Utils::queueUpdateFrontfacingLabelsInSCMAndSLL(); });
@@ -212,6 +214,7 @@ $on_mod(Loaded) {
 	listenForSettingChanges<bool>("dangerousBlacklisting", [](const bool dangerousBlacklisting) {
 		if (!dangerousBlacklisting) return;
 		log::info("=============== WARNING: USER HAS ENABLED `dangerousBlacklisting` SETTING ===============");
+		// this is consensual gamemanager playerid access, aktimoose and i discussed this in private
 		if (GameManager::get()->m_playerUserID.value() == 925143 || GameManager::get()->m_playerUserID.value() == 7247326) return log::info("never mind, it's just aktimoose the beta tester. don't show the alert");
 		Utils::showMDPopup("Blacklisting", "<c-ff0000>This is an experimental setting. You agree to hold yourself responsible for any issues that happen when this setting is enabled.</c>", 7302025, "dangerous-blacklisting");
 	});
@@ -294,19 +297,19 @@ $on_mod(Loaded) {
 	});
 	#endif
 	listenForSettingChanges<bool>("osuLazerBootleg", [](const bool osuLazerBootlegNew) {
-		SongManager& songManager = SongManager::get();
+		SongManager& songManagerLambda = SongManager::get();
 		if (osuLazerBootlegNew || !CCScene::get()) {
-			songManager.setOsu(osuLazerBootlegNew);
+			songManagerLambda.setOsu(osuLazerBootlegNew);
 			return;
 		}
 		SongControlMenu* scm = CCScene::get()->getChildByType<SongControlMenu>(0);
 		if (!scm || !scm->m_osu) {
-			songManager.setOsu(osuLazerBootlegNew);
+			songManagerLambda.setOsu(osuLazerBootlegNew);
 			return;
 		}
 		if (MenuLayer::get() && !MenuLayer::get()->isVisible() && scm->m_osu) MenuLayer::get()->setVisible(true);
 		scm->toggleOsu();
-		songManager.setOsu(osuLazerBootlegNew);
+		songManagerLambda.setOsu(osuLazerBootlegNew);
 	});
 	listenForSettingChanges<bool>("advancedLogs", [](const bool newAdvancedLogs) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
