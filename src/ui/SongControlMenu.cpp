@@ -269,7 +269,7 @@ bool SongControlMenu::setup() {
 	this->m_mainLayer->addChild(osuTogglerMenu);
 
 	this->m_osuLazrLbl = osu;
-	this->m_osuLazrLbl->limitLabelWidth(this->m_osuToggler->getContentWidth() * .75f, .75f, .0001f);
+	this->m_osuLazrLbl->setScale(.5f);
 
 	cbs->setID("osu-toggler-sprite"_spr);
 	osuTogglerMenu->setID("osu-toggler-menu"_spr);
@@ -710,10 +710,7 @@ void SongControlMenu::toggleOsu() {
 	if (this->m_isInQOLMod) return;
 	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get()) return;
 	this->m_osu = !this->m_osu;
-	if (this->m_osuLazrLbl && this->m_osuToggler) {
-		this->m_osuLazrLbl->setString(this->m_osu ? "osu!" : "osu?");
-		this->m_osuLazrLbl->limitLabelWidth(this->m_osuToggler->getContentWidth() * .75f, .75f, .0001f);
-	}
+	if (this->m_osuLazrLbl) this->m_osuLazrLbl->setString(this->m_osu ? "osu!" : "osu?");
 	this->stopAllActions();
 	this->m_mainLayer->stopAllActions();
 	if (this->m_musVolLabl) this->m_musVolLabl->stopAllActions();
