@@ -403,17 +403,10 @@ public:
 			if (songManager.eclipseSongNameLabel.has_value()) songManager.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
 			if (songManager.isQOLMod && songManager.qolModIntegrationSuccessful) {
 				songManager.eclipseSongDurationLabel.value().setText("Please view/control song progress from QOLMod instead.");
-				GEODE_DESKTOP(songManager.eclipseSongProgressBarLabel.value().setText("(Or switch to the ImGui menu style.)");)
-				GEODE_MOBILE(songManager.eclipseSongProgressBarLabel.value().setText("(This is a non-negotiable solution.)");)
+				songManager.eclipseSongProgressBarLabel.value().setText(GEODE_DESKTOP("(Or switch to the ImGui menu style.)") GEODE_MOBILE("(This is a non-negotiable solution.)"));
 			} else {
-				GEODE_DESKTOP(
-					songManager.eclipseSongDurationLabel.value().setText("Switch to the ImGui menu style to view this progress.");
-					songManager.eclipseSongProgressBarLabel.value().setText("(This is a non-negotiable solution.)");
-				)
-				GEODE_MOBILE(
-					songManager.eclipseSongDurationLabel.value().setText("Feel free to scroll towards the bottom");
-					songManager.eclipseSongProgressBarLabel.value().setText("and use the shortcuts from there instead.");
-				)
+				songManager.eclipseSongDurationLabel.value().setText(GEODE_DESKTOP("Switch to the ImGui menu style to view this progress.") GEODE_MOBILE("Feel free to scroll towards the bottom"));
+				songManager.eclipseSongProgressBarLabel.value().setText(GEODE_DESKTOP("(This is a non-negotiable solution.)") GEODE_MOBILE("and use the shortcuts from there instead."));
 			}
 			return;
 		}
@@ -719,6 +712,7 @@ $on_mod(Loaded) {
 			const bool qolModIntegrationSongList = Utils::getBool("qolModIntegrationSongList");
 			songManager.songControlMenuForQOLMod = nullptr;
 			songManager.songListLayerForQOLMod = nullptr;
+
 			songManager.addingToQOLModRightNow = true;
 			SongControlMenu* iKnowItWouldntBeForLoveOrWhatever = SongControlMenu::create();
 			iKnowItWouldntBeForLoveOrWhatever->show();
@@ -728,6 +722,7 @@ $on_mod(Loaded) {
 				weCanFigureSomethingElseOutOK->show();
 			}
 			songManager.addingToQOLModRightNow = false;
+
 			if (qolModIntegrationSongList) songManager.songListLayerForQOLMod = geode::Ref(weCanFigureSomethingElseOutOK);
 			songManager.songControlMenuForQOLMod = geode::Ref(iKnowItWouldntBeForLoveOrWhatever);
 
