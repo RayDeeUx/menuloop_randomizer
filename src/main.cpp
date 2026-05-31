@@ -123,7 +123,8 @@ $on_mod(Loaded) {
 	const std::string& lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
 	const std::filesystem::path& lastMenuLoopPath = Mod::get()->getSavedValue<std::filesystem::path>("lastMenuLoopPath");
 	const bool saveSongOnGameClose = Utils::getBool("saveSongOnGameClose");
-	const bool loopExists = std::filesystem::exists(Utils::toProblematicString(lastMenuLoop)) || std::filesystem::exists(lastMenuLoopPath);
+	std::error_code ea, eb;
+	const bool loopExists = std::filesystem::exists(Utils::toProblematicString(lastMenuLoop), ea) || std::filesystem::exists(lastMenuLoopPath, eb);
 	log::info("\n=== 'REMEMBER LAST MENU LOOP' DEBUG INFO ===\nlast menu loop: {}\nlast menu loop as path: {}\n'saveSongOnGameClose' setting: {}\nloopExists: {}\noverride: {}", lastMenuLoop, lastMenuLoopPath, saveSongOnGameClose, loopExists, override);
 	if (!override.empty() && Utils::isSupportedFile(override)) {
 		if (songManager.getAdvancedLogs()) log::info("setting songManager's current song to overridden song from settings");
@@ -133,6 +134,7 @@ $on_mod(Loaded) {
 		songManager.setCurrentSongToSavedSong();
 	} else {
 		log::info("randomizing songManager's current song through on_mod(Loaded)");
+		if (ea || eb) log::info("there was an error fetching for an override and last remembered menu loop in the filesystem. below were the values:\noverride: {}\nlastMenuLoop: {}", override, lastMenuLoop);
 		songManager.pickRandomSong();
 	}
 	Utils::composeAndSetCurrentSongDisplayNameOnlyOnLoadOrWhenBlacklistingSongs();

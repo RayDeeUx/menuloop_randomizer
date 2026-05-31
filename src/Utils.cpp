@@ -405,9 +405,10 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 		--elnex
 	*/
 
+	std::error_code ea, eb;
 	const std::vector<std::string>& songManagerBlacklist = songManager.getBlacklist();
 	const std::filesystem::path& blacklistPath = configDir / R"(blacklist.txt)";
-	const bool blacklistPathExists = std::filesystem::exists(blacklistPath);
+	const bool blacklistPathExists = std::filesystem::exists(blacklistPath, ea);
 
 	if (blacklistPathExists && textFileBlacklist.empty()) {
 		textFileBlacklist = Utils::parseBlacklistFile(blacklistPath);
@@ -415,7 +416,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 
 	const std::vector<std::string>& songManagerFavorites = songManager.getFavorites();
 	const std::filesystem::path& favoritePath = configDir / R"(favorites.txt)";
-	const bool favoritePathExists = std::filesystem::exists(favoritePath);
+	const bool favoritePathExists = std::filesystem::exists(favoritePath, eb);
 
 	if (favoritePathExists && textFileFavorites.empty()) {
 		textFileFavorites = Utils::parseFavoritesFile(favoritePath);

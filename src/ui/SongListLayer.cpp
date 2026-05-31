@@ -864,7 +864,7 @@ bool SongListLayer::fileSize(MLRSongCell* a, MLRSongCell* b, const bool reverse)
 	const std::uintmax_t fileSizeB = b->m_songData.songFileSize;
 	if (fileSizeA < fileSizeB) return !reverse;
 	if (fileSizeA > fileSizeB) return reverse;
-	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
+	return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
 }
 
 bool SongListLayer::fileExtn(MLRSongCell* a, MLRSongCell* b, const bool reverse) {
@@ -892,11 +892,12 @@ bool SongListLayer::dateAdded(MLRSongCell* a, MLRSongCell* b, const bool reverse
 	auto tb = std::filesystem::last_write_time(Utils::toProblematicString(b->m_songData.actualFilePath), eb);
 	if (ea || eb) {
 		if (ea && eb) return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
-		if (ea) return true;
-		if (eb) return false;
+		if (ea) return reverse;
+		if (eb) return !reverse;
 	}
-	if (reverse) return tb < ta;
-	return ta < tb;
+	if (tb < ta) return !reverse;
+	if (ta < tb) return reverse;
+	return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
 }
 
 bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool reverse) {
@@ -909,7 +910,7 @@ bool SongListLayer::songLength(MLRSongCell* a, MLRSongCell* b, const bool revers
 	}
 	if (a->m_songData.songLength < b->m_songData.songLength) return !reverse;
 	if (a->m_songData.songLength > b->m_songData.songLength) return reverse;
-	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
+	return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
 }
 
 bool SongListLayer::songBPM(MLRSongCell* a, MLRSongCell* b, const bool reverse) {
@@ -921,7 +922,7 @@ bool SongListLayer::songBPM(MLRSongCell* a, MLRSongCell* b, const bool reverse) 
 	}
 	if (a->m_songData.bpm < b->m_songData.bpm) return !reverse;
 	if (a->m_songData.bpm > b->m_songData.bpm) return reverse;
-	return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
+	return SongListLayer::caseInsensitiveAlphabetical(a, b, reverse);
 }
 
 unsigned int SongListLayer::useFMODToGetLength(const std::string& path, const unsigned int extreme) {
