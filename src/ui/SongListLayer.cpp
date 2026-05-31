@@ -362,7 +362,7 @@ bool SongListLayer::setup() {
 		"Dark gradients OR random letters/numbers = Jukebox/NONG, <c_>OR</c> someone else goofed up.\n"
 		"Controls: <cl>shuffle</c>, <cl>copy name</c>, <cl>previous song</c>, <cl>control panel</c>.\n\n"
 		"<cy>Q: Make this mod act more closely to Spotify!</c>\n"
-		"A: <c_>No. Never. Spotify's UI/UX sets BAD precedents.</c>\n\n"
+		"A: <c_>No. Never. This mod will NOT mimic Spotify.</c>\n\n"
 		"<cy>Q: Where is the search bar/song sorting menu?</c>\n"
 		"A: <cg>Install \"Better Touch Prio\" by alk1m123; check your settings.</c>",
 		.75f

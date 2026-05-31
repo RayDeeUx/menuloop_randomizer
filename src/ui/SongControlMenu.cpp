@@ -163,12 +163,11 @@ bool SongControlMenu::setup() {
 
 	this->schedule(schedule_selector(SongControlMenu::checkManagerFinished));
 
-	cocos2d::CCMenu* incrementDecrementMenu = cocos2d::CCMenu::create();
-	incrementDecrementMenu->setContentWidth(240.f);
-	this->m_ffwdButton = Utils::addButton("skip-bkwd", menu_selector(SongControlMenu::onSkipBkwdButton), incrementDecrementMenu, this, true);
-	this->m_bkwdButton = Utils::addButton("skip-fwrd", menu_selector(SongControlMenu::onSkipFwrdButton), incrementDecrementMenu, this, true);
-	incrementDecrementMenu->setLayout(geode::RowLayout::create()->setAutoScale(true)->setGap(1000.f)->setDefaultScaleLimits(.0001f, 1.f));
-	this->m_increDecreMenu = incrementDecrementMenu;
+	this->m_increDecreMenu = cocos2d::CCMenu::create();
+	this->m_increDecreMenu->setContentWidth(240.f);
+	this->m_ffwdButton = Utils::addButton("skip-bkwd", menu_selector(SongControlMenu::onSkipBkwdButton), this->m_increDecreMenu, this, true);
+	this->m_bkwdButton = Utils::addButton("skip-fwrd", menu_selector(SongControlMenu::onSkipFwrdButton), this->m_increDecreMenu, this, true);
+	this->m_increDecreMenu->setLayout(geode::RowLayout::create()->setAutoScale(true)->setGap(1000.f)->setDefaultScaleLimits(.0001f, 1.f));
 	// DONT ADD this->m_increDecreMenu AS A CHILD -- SongControlMenu::updateCurrentLabel() HANDLES THAT!
 
 	this->m_currTimeLb = cocos2d::CCLabelBMFont::create("PLACEHOLDER", "chatFont.fnt");
@@ -183,22 +182,19 @@ bool SongControlMenu::setup() {
 	this->m_totlTimeLb->setAnchorPoint({1.f, 0.f});
 	// DONT ADD this->m_totlTimeLb AS A CHILD -- SongControlMenu::updateCurrentLabel() HANDLES THAT!
 
-	cocos2d::CCLayerColor* currProgBar = cocos2d::CCLayerColor::create({200, 200, 200, 255});
-	currProgBar->setContentSize({0.f, 2.5f});
-	currProgBar->setAnchorPoint({0.f, 0.f});
-	this->m_currProgBar = currProgBar;
+	this->m_currProgBar = cocos2d::CCLayerColor::create({200, 200, 200, 255});
+	this->m_currProgBar->setContentSize({0.f, 2.5f});
+	this->m_currProgBar->setAnchorPoint({0.f, 0.f});
 
-	cocos2d::CCLayerColor* darkProgBar = cocos2d::CCLayerColor::create({10, 10, 10, 255});
-	darkProgBar->setContentSize({this->b->getContentWidth(), 2.5f});
-	darkProgBar->setAnchorPoint({0.f, 0.f});
-	darkProgBar->addChild(currProgBar);
-	this->m_darkProgBar = darkProgBar;
+	this->m_darkProgBar = cocos2d::CCLayerColor::create({10, 10, 10, 255});
+	this->m_darkProgBar->setContentSize({this->b->getContentWidth(), 2.5f});
+	this->m_darkProgBar->setAnchorPoint({0.f, 0.f});
+	this->m_darkProgBar->addChild(this->m_currProgBar);
 
-	cocos2d::CCClippingNode* clippingNode = cocos2d::CCClippingNode::create(darkProgBar);
-	clippingNode->setContentSize(darkProgBar->getContentSize());
-	clippingNode->setAnchorPoint({0.f, 0.f});
-	clippingNode->addChild(darkProgBar);
-	this->m_clipNode = clippingNode;
+	this->m_clipNode = cocos2d::CCClippingNode::create(this->m_darkProgBar);
+	this->m_clipNode->setContentSize(this->m_darkProgBar->getContentSize());
+	this->m_clipNode->setAnchorPoint({0.f, 0.f});
+	this->m_clipNode->addChild(this->m_darkProgBar);
 
 	this->m_audieoVisual = FMODLevelVisualizer::create();
 	this->m_audieoVisual->setID("budget-audio-visualizer-inspired-by-osu-first"_spr);
@@ -259,6 +255,26 @@ bool SongControlMenu::setup() {
 	this->m_musicVolCntnr->setLayout(geode::RowLayout::create()->setAxisReverse(true));
 	this->m_musicVolCntnr->setID("music-volume-container"_spr);
 	this->m_mainLayer->addChild(this->m_musicVolCntnr);
+
+	cocos2d::CCLabelBMFont* osu = cocos2d::CCLabelBMFont::create("osu?", "chatFont.fnt");
+	geode::CircleButtonSprite* cbs = geode::CircleButtonSprite::create(osu, geode::CircleBaseColor::Pink, geode::CircleBaseSize::Tiny);
+	this->m_osuToggler = CCMenuItemSpriteExtra::create(cbs, this, menu_selector(SongControlMenu::toggleOsuReal));
+
+	cocos2d::CCMenu* osuTogglerMenu = cocos2d::CCMenu::create();
+	osuTogglerMenu->setPosition({285.f, -10.f});
+	osuTogglerMenu->setContentSize(this->m_osuToggler->getContentSize());
+	osuTogglerMenu->addChild(this->m_osuToggler);
+	osuTogglerMenu->setScale(.75f);
+	this->m_osuToggler->setPosition(osuTogglerMenu->getContentSize() / 2.f);
+	this->m_mainLayer->addChild(osuTogglerMenu);
+
+	this->m_osuLazrLbl = osu;
+	this->m_osuLazrLbl->limitLabelWidth(this->m_osuToggler->getContentWidth() * .75f, .75f, .0001f);
+
+	cbs->setID("osu-toggler-sprite"_spr);
+	osuTogglerMenu->setID("osu-toggler-menu"_spr);
+	this->m_osuLazrLbl->setID("osu-toggler-label"_spr);
+	this->m_osuToggler->setID("osu-toggler-button"_spr);
 
 	this->schedule(schedule_selector(SongControlMenu::visualizerScheduler));
 
@@ -349,7 +365,10 @@ bool SongControlMenu::setup() {
 	this->m_isInQOLMod = songManager.addingToQOLModRightNow;
 
 	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get() || this->m_isInQOLMod) {
-		if (this->m_stngButton) this->m_stngButton = nullptr;
+		if (this->m_stngButton) {
+			this->m_stngButton->removeMeAndCleanup();
+			this->m_stngButton = nullptr;
+		}
 		if (this->m_theTimeoutCorner) {
 			this->m_theTimeoutCorner->removeMeAndCleanup();
 			this->m_theTimeoutCorner = nullptr;
@@ -370,6 +389,10 @@ bool SongControlMenu::setup() {
 			this->m_audieoVisual->removeMeAndCleanup();
 			this->m_audieoVisual = nullptr;
 		}
+		if (this->m_osuToggler) {
+			this->m_osuToggler->removeMeAndCleanup();
+			this->m_osuToggler = nullptr;
+		}
 	}
 
 	if (this->m_isInQOLMod) {
@@ -383,8 +406,8 @@ bool SongControlMenu::setup() {
 			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->m_pListener = nullptr;
 		}
 		if (this->m_otherLabel) {
-			if (!Utils::getBool("qolModIntegrationSongList")) this->m_otherLabel->setString("Hey there! You're currently viewing this menu inside QOLMod. Features are limited here, including the Song List, keybinds, and shortcuts.");
-			else this->m_otherLabel->setString("Hey there! You're currently viewing this menu inside QOLMod. Features are limited here, including keybinds and shortcuts.");
+			if (!Utils::getBool("qolModIntegrationSongList")) this->m_otherLabel->setString("Hey there! You're currently viewing this menu inside QOLMod. Keybinds, shortcuts, and the Song List are unavailable.");
+			else this->m_otherLabel->setString("Hey there! You're currently viewing this menu inside QOLMod. Keybinds and shortcuts are unavailable.");
 		}
 		if (this->m_infoMenu) {
 			this->m_infoMenu->removeMeAndCleanup();
@@ -493,7 +516,7 @@ void SongControlMenu::checkDaSongPositions(float) {
 
 void SongControlMenu::pressAndHoldScheduler(float dt) {
 	m_time += dt;
-	if (!this->m_ffwdButton || !this->m_bkwdButton || !this->m_stngButton) {
+	if (!this->m_ffwdButton || !this->m_bkwdButton) {
 		m_time = 0.f;
 		return;
 	}
@@ -502,12 +525,7 @@ void SongControlMenu::pressAndHoldScheduler(float dt) {
 
 	if (this->m_ffwdButton->isSelected() && this->m_ffwdButton->isVisible() && this->m_ffwdButton->isEnabled() && this->m_ffwdButton->m_pfnSelector && this->m_ffwdButton->m_pListener) (this->m_ffwdButton->m_pListener->*this->m_ffwdButton->m_pfnSelector)(this->m_ffwdButton);
 	else if (this->m_bkwdButton->isSelected() && this->m_bkwdButton->isVisible() && this->m_bkwdButton->isEnabled() && this->m_bkwdButton->m_pfnSelector && this->m_bkwdButton->m_pListener) (this->m_bkwdButton->m_pListener->*this->m_bkwdButton->m_pfnSelector)(this->m_bkwdButton);
-	else if (this->m_stngButton && this->m_stngButton->isSelected() && this->m_stngButton->isVisible() && this->m_stngButton->isEnabled()) {
-		this->m_openStng = false;
-		this->toggleOsu();
-		this->m_stngButton->unselected();
-		m_time = 0.f;
-	} else m_time = 0.f;
+	else m_time = 0.f;
 }
 
 void SongControlMenu::visualizerScheduler(float dt) {
@@ -593,10 +611,6 @@ void SongControlMenu::onAddToPlylstBtn(cocos2d::CCObject*) {
 }
 
 void SongControlMenu::onSettingsButton(cocos2d::CCObject*) {
-	if (!this->m_openStng) {
-		this->m_openStng = true;
-		return;
-	}
 	Utils::createSettingsPopup();
 }
 
@@ -606,6 +620,11 @@ void SongControlMenu::onSkipBkwdButton(cocos2d::CCObject*) {
 
 void SongControlMenu::onSkipFwrdButton(cocos2d::CCObject*) {
 	SongControl::skipForward();
+}
+
+void SongControlMenu::toggleOsuReal(cocos2d::CCObject*) {
+	if (this->m_isInQOLMod) return;
+	SongControlMenu::toggleOsu();
 }
 
 void SongControlMenu::updateCurrentLabel() {
@@ -691,6 +710,10 @@ void SongControlMenu::toggleOsu() {
 	if (this->m_isInQOLMod) return;
 	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get()) return;
 	this->m_osu = !this->m_osu;
+	if (this->m_osuLazrLbl && this->m_osuToggler) {
+		this->m_osuLazrLbl->setString(this->m_osu ? "osu!" : "osu?");
+		this->m_osuLazrLbl->limitLabelWidth(this->m_osuToggler->getContentWidth() * .75f, .75f, .0001f);
+	}
 	this->stopAllActions();
 	this->m_mainLayer->stopAllActions();
 	if (this->m_musVolLabl) this->m_musVolLabl->stopAllActions();

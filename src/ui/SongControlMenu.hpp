@@ -61,6 +61,7 @@ protected:
 	CCMenuItemSpriteExtra* m_ffwdButton {};
 	CCMenuItemSpriteExtra* m_bkwdButton {};
 	CCMenuItemSpriteExtra* m_stngButton {};
+	CCMenuItemSpriteExtra* m_osuToggler {};
 	#if GEODE_COMP_GD_VERSION > 22074
 	geode::NineSlice* b                 {};
 	#endif
@@ -79,9 +80,9 @@ protected:
 	FMODLevelVisualizer* m_audieoVisual {};
 	geode::TextInput* m_musicVolumeInput{};
 	cocos2d::CCLabelBMFont* m_musVolLabl{};
+	cocos2d::CCLabelBMFont* m_osuLazrLbl{};
 	cocos2d::CCNodeRGBA* m_musicVolCntnr{};
 	int m_originalVolume = 0;
-	bool m_openStng = true;
 	float m_time = 0.f;
 	#if GEODE_COMP_GD_VERSION > 22074
 	bool init() override;
@@ -108,6 +109,7 @@ public:
 	InfoAlertButton* m_infoButton {};
 	static SongControlMenu* create();
 	void onRegenButton(cocos2d::CCObject*);
+	void toggleOsuReal(cocos2d::CCObject*);
 	void updateCurrentLabel();
 	void checkManagerFinished(float);
 	void checkDaSongPositions(float);
