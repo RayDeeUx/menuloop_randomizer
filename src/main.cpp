@@ -747,22 +747,19 @@ $on_mod(Loaded) {
 			}
 
 			// so what you need to be doing is unregistering force prio since it isn't being used as a popup --alphalaneous --raydeeux
-			if (!songManager.getUndefined0Alk1m123TouchPrio()) {
-				CCTouchDispatcher::get()->unregisterForcePrio(songManager.songControlMenuForQOLMod);
-				if (qolModIntegrationSongList && songManager.songListLayerForQOLMod) CCTouchDispatcher::get()->unregisterForcePrio(songManager.songListLayerForQOLMod);
-			}
-
+			if (!songManager.getUndefined0Alk1m123TouchPrio()) CCTouchDispatcher::get()->unregisterForcePrio(songManager.songControlMenuForQOLMod);
 			layer->addChildAtPosition(songManager.songControlMenuForQOLMod, geode::Anchor::Center);
-			if (qolModIntegrationSongList && songManager.songListLayerForQOLMod) layer->addChildAtPosition(songManager.songListLayerForQOLMod, geode::Anchor::Center, {0.f, -25.f});
-
 			songManager.songControlMenuForQOLMod->ignoreAnchorPointForPosition(false);
 			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
 			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::forceSharpCornerIllusionScheduler));
 			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
 
 			if (qolModIntegrationSongList && songManager.songListLayerForQOLMod) {
+				if (!songManager.getUndefined0Alk1m123TouchPrio()) CCTouchDispatcher::get()->unregisterForcePrio(songManager.songListLayerForQOLMod);
+				layer->addChildAtPosition(songManager.songListLayerForQOLMod, geode::Anchor::Center, {0.f, -25.f});
 				songManager.songListLayerForQOLMod->ignoreAnchorPointForPosition(false);
 				songManager.songListLayerForQOLMod->setScale(0.f); // look bro you think of a better way of hiding these sons of bitches because moving them off screen isnt doing it --raydeeux
+
 				if (SEARCH_BAR_ENABLED && songManager.songListLayerForQOLMod.data() && static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data()) && static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data())->m_searchBar) {
 					SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data())->m_searchBar->getInputNode());
 					songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);

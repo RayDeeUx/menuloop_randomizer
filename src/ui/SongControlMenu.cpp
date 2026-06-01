@@ -389,9 +389,21 @@ bool SongControlMenu::setup() {
 			this->m_audieoVisual->removeMeAndCleanup();
 			this->m_audieoVisual = nullptr;
 		}
+		if (this->m_osuLazrLbl) {
+			this->m_osuLazrLbl->removeMeAndCleanup();
+			this->m_osuLazrLbl = nullptr;
+		}
+		if (cbs) {
+			cbs->removeMeAndCleanup();
+			cbs = nullptr;
+		}
 		if (this->m_osuToggler) {
 			this->m_osuToggler->removeMeAndCleanup();
 			this->m_osuToggler = nullptr;
+		}
+		if (osuTogglerMenu) {
+			osuTogglerMenu->removeMeAndCleanup();
+			osuTogglerMenu = nullptr;
 		}
 	}
 
