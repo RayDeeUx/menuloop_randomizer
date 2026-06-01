@@ -439,6 +439,7 @@ public:
 	}
 	static void updateCurrentSongLabel() {
 		SongManager& songManager = SongManager::get();
+		if (!songManager.eclipseSongNameLabel.has_value()) return;
 		songManager.eclipseSongNameLabel.value().setText(!songManager.eclipseIsCocosStyle ? fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()) : "Song progress is unavailable in this menu style!");
 	}
 	static bool failsBasicSanityCheck(const ShortcutType shortcut) {
