@@ -365,46 +365,21 @@ bool SongControlMenu::setup() {
 	this->m_isInQOLMod = songManager.addingToQOLModRightNow;
 
 	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get() || this->m_isInQOLMod) {
-		if (this->m_stngButton) {
-			this->m_stngButton->removeMeAndCleanup();
-			this->m_stngButton = nullptr;
-		}
-		if (this->m_theTimeoutCorner) {
-			this->m_theTimeoutCorner->removeMeAndCleanup();
-			this->m_theTimeoutCorner = nullptr;
-		}
-		if (this->m_musicVolumeInput) {
-			this->m_musicVolumeInput->removeMeAndCleanup();
-			this->m_musicVolumeInput = nullptr;
-		}
-		if (this->m_musVolLabl) {
-			this->m_musVolLabl->removeMeAndCleanup();
-			this->m_musVolLabl = nullptr;
-		}
-		if (this->m_musicVolCntnr) {
-			this->m_musicVolCntnr->removeMeAndCleanup();
-			this->m_musicVolCntnr = nullptr;
-		}
-		if (this->m_audieoVisual) {
-			this->m_audieoVisual->removeMeAndCleanup();
-			this->m_audieoVisual = nullptr;
-		}
-		if (this->m_osuLazrLbl) {
-			this->m_osuLazrLbl->removeMeAndCleanup();
-			this->m_osuLazrLbl = nullptr;
-		}
-		if (cbs) {
-			cbs->removeMeAndCleanup();
-			cbs = nullptr;
-		}
-		if (this->m_osuToggler) {
-			this->m_osuToggler->removeMeAndCleanup();
-			this->m_osuToggler = nullptr;
-		}
-		if (osuTogglerMenu) {
-			osuTogglerMenu->removeMeAndCleanup();
-			osuTogglerMenu = nullptr;
-		}
+		auto remove = [](auto& ptr) {
+			if (!ptr) return;
+			ptr->removeMeAndCleanup();
+			ptr = nullptr;
+		};
+		remove(this->m_stngButton);
+		remove(this->m_theTimeoutCorner);
+		remove(this->m_musicVolumeInput);
+		remove(this->m_musVolLabl);
+		remove(this->m_musicVolCntnr);
+		remove(this->m_audieoVisual);
+		remove(this->m_osuLazrLbl);
+		remove(cbs);
+		remove(this->m_osuToggler);
+		remove(osuTogglerMenu);
 	}
 
 	if (this->m_isInQOLMod) {
@@ -412,14 +387,14 @@ bool SongControlMenu::setup() {
 		this->unschedule(schedule_selector(SongControlMenu::checkManagerFinished));
 		if (this->m_closeBtn) this->m_closeBtn->removeMeAndCleanup();
 		if (this->m_openSongListMenu->getChildByTag(20260105) && !Utils::getBool("qolModIntegrationSongList")) {
-			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->setEnabled(false);
-			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->setColor(cocos2d::ccColor3B{128, 128, 128});
-			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->m_pfnSelector = nullptr;
-			static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105))->m_pListener = nullptr;
+			CCMenuItemSpriteExtra* mise = static_cast<CCMenuItemSpriteExtra*>(this->m_openSongListMenu->getChildByTag(20260105));
+			mise->setEnabled(false);
+			mise->setColor(cocos2d::ccColor3B{128, 128, 128});
+			mise->m_pfnSelector = nullptr;
+			mise->m_pListener = nullptr;
 		}
 		if (this->m_otherLabel) {
-			if (!Utils::getBool("qolModIntegrationSongList")) this->m_otherLabel->setString("Hey there! You're currently viewing this menu inside QOLMod. Keybinds, shortcuts, and the Song List are unavailable.");
-			else this->m_otherLabel->setString("Hey there! You're currently viewing this menu inside QOLMod. Keybinds and shortcuts are unavailable.");
+			this->m_otherLabel->setString(fmt::format("Hey there! You're currently viewing this menu inside QOLMod. {} are unavailable.", Utils::getBool("qolModIntegrationSongList") ? "Keybinds and shortcuts" : "Keybinds, shortcuts, and the Song List").c_str());
 		}
 		if (this->m_infoMenu) {
 			this->m_infoMenu->removeMeAndCleanup();
