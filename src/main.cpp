@@ -298,25 +298,20 @@ $on_mod(Loaded) {
 	#endif
 	listenForSettingChanges<bool>("osuLazerBootleg", [](const bool osuLazerBootlegNew) {
 		SongManager& songManagerLambda = SongManager::get();
-		if (osuLazerBootlegNew || !CCScene::get()) {
-			songManagerLambda.setOsu(osuLazerBootlegNew);
-			return;
-		}
+		songManagerLambda.setOsu(osuLazerBootlegNew);
+		if (!CCScene::get()) return;
 		SongControlMenu* scm = CCScene::get()->getChildByType<SongControlMenu>(0);
 		if (!scm || !scm->m_osu) {
-			songManagerLambda.setOsu(osuLazerBootlegNew);
+			if (osuLazerBootlegNew) scm->createOsuTogglerMenu();
 			return;
 		}
 		if (MenuLayer* ml = MenuLayer::get()) {
+			if (!osuLazerBootlegNew && scm->m_mainLayer && scm->m_mainLayer->getChildByID("osu-toggler-menu"_spr)) scm->m_mainLayer->getChildByID("osu-toggler-menu"_spr)->removeMeAndCleanup();
 			if (!ml->isVisible() && scm->m_osu) {
 				ml->setVisible(true);
 				scm->toggleOsu();
-				if (scm->m_mainLayer && scm->m_mainLayer->getChildByID("osu-toggler-menu"_spr)) scm->m_mainLayer->getChildByID("osu-toggler-menu"_spr)->removeMeAndCleanup();
-			} else if (osuLazerBootlegNew) {
-				scm->createOsuTogglerMenu();
 			}
 		}
-		songManagerLambda.setOsu(osuLazerBootlegNew);
 	});
 	listenForSettingChanges<bool>("advancedLogs", [](const bool newAdvancedLogs) {
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
