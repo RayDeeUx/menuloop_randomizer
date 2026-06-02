@@ -312,7 +312,7 @@ $on_mod(Loaded) {
 				ml->setVisible(true);
 				scm->toggleOsu();
 				if (scm->m_mainLayer && scm->m_mainLayer->getChildByID("osu-toggler-menu"_spr)) scm->m_mainLayer->getChildByID("osu-toggler-menu"_spr)->removeMeAndCleanup();
-			} else if (osuLazerBootlegNew && ml->isVisible() && !scm->m_osu) {
+			} else if (osuLazerBootlegNew) {
 				scm->createOsuTogglerMenu();
 			}
 		}

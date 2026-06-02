@@ -256,7 +256,7 @@ bool SongControlMenu::setup() {
 	this->m_musicVolCntnr->setID("music-volume-container"_spr);
 	this->m_mainLayer->addChild(this->m_musicVolCntnr);
 
-	if (Utils::getBool("osuLazerBootleg")) SongControlMenu::createOsuTogglerMenu();
+	if (songManager.getOsu()) SongControlMenu::createOsuTogglerMenu();
 
 	this->schedule(schedule_selector(SongControlMenu::visualizerScheduler));
 
@@ -362,7 +362,7 @@ bool SongControlMenu::setup() {
 		remove(this->getChildByIDRecursive("osu-toggler-sprite"_spr));
 		remove(this->m_osuToggler);
 		remove(this->getChildByIDRecursive("osu-toggler-menu"_spr));
-	} else if (Utils::getBool("osuLazerBootleg") && Utils::getBool("autoOsuLazerBootleg")) {
+	} else if (songManager.getOsu() && Utils::getBool("autoOsuLazerBootleg")) {
 		SongControlMenu::toggleOsu();
 	}
 
