@@ -256,25 +256,7 @@ bool SongControlMenu::setup() {
 	this->m_musicVolCntnr->setID("music-volume-container"_spr);
 	this->m_mainLayer->addChild(this->m_musicVolCntnr);
 
-	cocos2d::CCLabelBMFont* osu = cocos2d::CCLabelBMFont::create("osu?", "chatFont.fnt");
-	geode::CircleButtonSprite* cbs = geode::CircleButtonSprite::create(osu, geode::CircleBaseColor::Pink, geode::CircleBaseSize::Tiny);
-	this->m_osuToggler = CCMenuItemSpriteExtra::create(cbs, this, menu_selector(SongControlMenu::toggleOsuReal));
-
-	cocos2d::CCMenu* osuTogglerMenu = cocos2d::CCMenu::create();
-	osuTogglerMenu->setPosition({285.f, -10.f});
-	osuTogglerMenu->setContentSize(this->m_osuToggler->getContentSize());
-	osuTogglerMenu->addChild(this->m_osuToggler);
-	osuTogglerMenu->setScale(.75f);
-	this->m_osuToggler->setPosition(osuTogglerMenu->getContentSize() / 2.f);
-	this->m_mainLayer->addChild(osuTogglerMenu);
-
-	this->m_osuLazrLbl = osu;
-	this->m_osuLazrLbl->setScale(.5f);
-
-	cbs->setID("osu-toggler-sprite"_spr);
-	osuTogglerMenu->setID("osu-toggler-menu"_spr);
-	this->m_osuLazrLbl->setID("osu-toggler-label"_spr);
-	this->m_osuToggler->setID("osu-toggler-button"_spr);
+	if (Utils::getBool("osuLazerBootleg")) SongControlMenu::createOsuTogglerMenu();
 
 	this->schedule(schedule_selector(SongControlMenu::visualizerScheduler));
 
@@ -365,7 +347,7 @@ bool SongControlMenu::setup() {
 	this->m_isInQOLMod = songManager.addingToQOLModRightNow;
 
 	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get() || this->m_isInQOLMod) {
-		auto remove = [](auto& ptr) {
+		const std::function<void(cocos2d::CCNode*)> remove = [](cocos2d::CCNode* ptr) {
 			if (!ptr) return;
 			ptr->removeMeAndCleanup();
 			ptr = nullptr;
@@ -377,9 +359,11 @@ bool SongControlMenu::setup() {
 		remove(this->m_musicVolCntnr);
 		remove(this->m_audieoVisual);
 		remove(this->m_osuLazrLbl);
-		remove(cbs);
+		remove(this->getChildByIDRecursive("osu-toggler-sprite"_spr));
 		remove(this->m_osuToggler);
-		remove(osuTogglerMenu);
+		remove(this->getChildByIDRecursive("osu-toggler-menu"_spr));
+	} else if (Utils::getBool("osuLazerBootleg") && Utils::getBool("autoOsuLazerBootleg")) {
+		SongControlMenu::toggleOsu();
 	}
 
 	if (this->m_isInQOLMod) {
@@ -669,6 +653,30 @@ void SongControlMenu::updateCurrentLabel() {
 	if (songData.isInNonVanillaNGMLSongLocation && !songData.isFromConfigOrAltDir && songData.couldPossiblyExistInMusicDownloadManager && !songData.isFromJukeboxDirectory) this->m_smallLabel->setSkewX(10.f);
 	if (songType == SongType::Favorited) this->m_smallLabel->setColor({255, 175, 0});
 	else if (songType == SongType::Blacklisted) this->m_smallLabel->setColor({0, 0, 0});
+}
+
+void SongControlMenu::createOsuTogglerMenu() {
+	if (this->m_isInQOLMod || (this->m_mainLayer && this->m_mainLayer->getChildByID("osu-toggler-menu"_spr))) return;
+	cocos2d::CCLabelBMFont* osu = cocos2d::CCLabelBMFont::create("osu?", "chatFont.fnt");
+	geode::CircleButtonSprite* cbs = geode::CircleButtonSprite::create(osu, geode::CircleBaseColor::Pink, geode::CircleBaseSize::Tiny);
+	cocos2d::CCMenu* osuTogglerMenu = cocos2d::CCMenu::create();
+	this->m_osuToggler = CCMenuItemSpriteExtra::create(cbs, this, menu_selector(SongControlMenu::toggleOsuReal));
+
+	osuTogglerMenu = cocos2d::CCMenu::create();
+	osuTogglerMenu->setPosition({285.f, -10.f});
+	osuTogglerMenu->setContentSize(this->m_osuToggler->getContentSize());
+	osuTogglerMenu->addChild(this->m_osuToggler);
+	osuTogglerMenu->setScale(.75f);
+	this->m_osuToggler->setPosition(osuTogglerMenu->getContentSize() / 2.f);
+	this->m_mainLayer->addChild(osuTogglerMenu);
+
+	this->m_osuLazrLbl = osu;
+	this->m_osuLazrLbl->setScale(.5f);
+
+	cbs->setID("osu-toggler-sprite"_spr);
+	osuTogglerMenu->setID("osu-toggler-menu"_spr);
+	this->m_osuLazrLbl->setID("osu-toggler-label"_spr);
+	this->m_osuToggler->setID("osu-toggler-button"_spr);
 }
 
 void SongControlMenu::toggleMenuLayerVisibility() {

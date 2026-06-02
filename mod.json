@@ -459,6 +459,13 @@
 			"type": "bool",
 			"default": true
 		},
+		"autoOsuLazerBootleg": {
+			"name": "Automatically toggle \"welcome to osu!\" on Control Panel open",
+			"description": "Automatically make the Control Panel the only visible UI element on-screen, much like the <c-ff66aa>osu!</c> cookie logo seen in <c-ff66aa>osu!lazer</c>.",
+			"type": "bool",
+			"default": false,
+			"enable-if": "osuLazerBootleg"
+		},
 		"misc-header": {
 			"name": "Miscellaneous Settings",
 			"description": "Other settings for Menu Loop Randomizer that needed a category.",

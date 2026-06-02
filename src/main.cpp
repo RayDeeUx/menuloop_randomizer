@@ -307,8 +307,15 @@ $on_mod(Loaded) {
 			songManagerLambda.setOsu(osuLazerBootlegNew);
 			return;
 		}
-		if (MenuLayer::get() && !MenuLayer::get()->isVisible() && scm->m_osu) MenuLayer::get()->setVisible(true);
-		scm->toggleOsu();
+		if (MenuLayer* ml = MenuLayer::get()) {
+			if (!ml->isVisible() && scm->m_osu) {
+				ml->setVisible(true);
+				scm->toggleOsu();
+				if (scm->m_mainLayer && scm->m_mainLayer->getChildByID("osu-toggler-menu"_spr)) scm->m_mainLayer->getChildByID("osu-toggler-menu"_spr)->removeMeAndCleanup();
+			} else if (osuLazerBootlegNew && ml->isVisible() && !scm->m_osu) {
+				scm->createOsuTogglerMenu();
+			}
+		}
 		songManagerLambda.setOsu(osuLazerBootlegNew);
 	});
 	listenForSettingChanges<bool>("advancedLogs", [](const bool newAdvancedLogs) {
