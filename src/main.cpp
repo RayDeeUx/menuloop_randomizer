@@ -302,7 +302,7 @@ $on_mod(Loaded) {
 		if (!CCScene::get()) return;
 		SongControlMenu* scm = CCScene::get()->getChildByType<SongControlMenu>(0);
 		if (!scm || !scm->m_osu) {
-			if (osuLazerBootlegNew) scm->createOsuTogglerMenu();
+			if (scm && osuLazerBootlegNew) scm->createOsuTogglerMenu();
 			return;
 		}
 		if (MenuLayer* ml = MenuLayer::get()) {
