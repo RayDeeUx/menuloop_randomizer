@@ -433,8 +433,10 @@ void SongControlMenu::toggleButtonState(cocos2d::CCNode* playlistButton, const b
 	if (isEnabled == plBtn->isEnabled()) return;
 	plBtn->setEnabled(isEnabled);
 	plBtn->setColor(isEnabled ? cocos2d::ccColor3B{255, 255, 255} : cocos2d::ccColor3B{128, 128, 128});
-	if (this->m_otherLabel) this->m_otherLabel->setString(isEnabled ? DEFAULT_FOOTER_TEXT.c_str() : "Hey there! Menu Loop Randomizer is finishing some things to set up the Song List. Hang tight!");
-	if (this->m_otherLabel) this->m_otherLabel->limitLabelWidth(this->m_mainLayer->getContentWidth() * .95f * .95f, 1.0f, .0001f);
+	if (this->m_otherLabel) {
+		this->m_otherLabel->setString(isEnabled ? DEFAULT_FOOTER_TEXT.c_str() : "Hey there! Menu Loop Randomizer is finishing some things to set up the Song List. Hang tight!");
+		this->m_otherLabel->limitLabelWidth(this->m_mainLayer->getContentWidth() * .95f * .95f, 1.0f, .0001f);
+	}
 	if (this->m_openSongListMenu) if (CCNode* spinner = this->m_openSongListMenu->getChildByTag(20260104); spinner) static_cast<geode::LoadingSpinner*>(spinner)->setVisible(!isEnabled);
 }
 
@@ -446,15 +448,19 @@ void SongControlMenu::forceSharpCornerIllusion() {
 	if (!this->b) return;
 
 	#if GEODE_COMP_GD_VERSION > 22074
-	if (this->b->getBottom()) this->b->getBottom()->setPositionX(0.f);
-	if (this->b->getBottom()) this->b->getBottom()->setScaleX(9.375f);
+	if (this->b->getBottom()) {
+		this->b->getBottom()->setPositionX(0.f);
+		this->b->getBottom()->setScaleX(9.375f);
+	}
 	if (this->b->getBottomLeft()) this->b->getBottomLeft()->setVisible(false);
 	if (this->b->getBottomRight()) this->b->getBottomRight()->setVisible(false);
 	#endif
 
 	#if GEODE_COMP_GD_VERSION < 22081
-	if (this->b->_bottom) this->b->_bottom->setPositionX(0.f);
-	if (this->b->_bottom) this->b->_bottom->setScaleX(9.375f);
+	if (this->b->_bottom) {
+		this->b->_bottom->setPositionX(0.f);
+		this->b->_bottom->setScaleX(9.375f);
+	}
 	if (this->b->_bottomLeft) this->b->_bottomLeft->setVisible(false);
 	if (this->b->_bottomRight) this->b->_bottomRight->setVisible(false);
 	#endif
@@ -467,7 +473,7 @@ void SongControlMenu::forceSharpCornerIllusion() {
 	this->m_smallLabel->limitLabelWidth((this->b->getContentWidth() - 20.f) * (canShowPlaybackProgress ? .85f : 1.f), (canShowPlaybackProgress ? .85f : 1.f), .0001f);
 }
 
-void SongControlMenu::forceSharpCornerIllusionScheduler(const float) {
+void SongControlMenu::forceSharpCornerIllusionScheduler(float) {
 	SongControlMenu::forceSharpCornerIllusion();
 }
 
@@ -492,13 +498,13 @@ void SongControlMenu::checkDaSongPositions(float) {
 
 	const int fullLength = fmod->getMusicLengthMS(0);
 	const int lastPosition = songManager.getLastMenuLoopPosition();
-	const int remainingAsMillis = fullLength - lastPosition;
-	const int remainingAsSeconds = remainingAsMillis / 1000;
+	const int remainingAsSeconds = (fullLength - lastPosition) / 1000;
 
 	this->m_currTimeLb->setString(fmt::format("{}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60)).c_str());
 	this->m_remnTimeLb->setString(fmt::format("-{}:{:02}", remainingAsSeconds / 60, remainingAsSeconds % 60).c_str());
 	this->m_totlTimeLb->setString(fmt::format("{}:{:02}", ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
 
+	// need to std::max() in case miniaudio.h is off by a few milliseconds
 	this->m_currProgBar->setContentWidth(std::clamp<float>((1.f * lastPosition) / (1.f * std::max<int>(fullLength, fmod->getMusicLengthMS(0))), 0.f, 1.f) * this->m_darkProgBar->getContentWidth());
 }
 
@@ -640,15 +646,16 @@ void SongControlMenu::updateCurrentLabel() {
 	this->m_currTimeLb->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_remnTimeLb->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_totlTimeLb->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
-	if (!this->m_headerLabl) return;
-	if (songManager.isOverride()) this->m_headerLabl->setString("Current Song (Custom Override):");
-	else if (songManager.getConstantShuffleMode()) this->m_headerLabl->setString("Current Song (Constant Shuffle Mode):");
-	else this->m_headerLabl->setString("Current Song:");
-	if (!songManager.getPlaylistIsEmpty() && Utils::getBool("loadPlaylistFile") && !songManager.isOverride()) {
-		const std::string& newHeaderString = geode::utils::string::replace(this->m_headerLabl->getString(), "Song", fmt::format("Song from {}", songManager.getPlaylistFileName()));
-		this->m_headerLabl->setString(newHeaderString.c_str());
+	if (this->m_headerLabl) {
+		if (songManager.isOverride()) this->m_headerLabl->setString("Current Song (Custom Override):");
+		else if (songManager.getConstantShuffleMode()) this->m_headerLabl->setString("Current Song (Constant Shuffle Mode):");
+		else this->m_headerLabl->setString("Current Song:");
+		if (!songManager.getPlaylistIsEmpty() && Utils::getBool("loadPlaylistFile") && !songManager.isOverride()) {
+			const std::string& newHeaderString = geode::utils::string::replace(this->m_headerLabl->getString(), "Song", fmt::format("Song from {}", songManager.getPlaylistFileName()));
+			this->m_headerLabl->setString(newHeaderString.c_str());
+		}
+		this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.0f, .0001f);
 	}
-	this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.0f, .0001f);
 	if (!Utils::getBool("songIndicatorsInControlPanel")) {
 		this->m_smallLabel->setSkewX(0.f);
 		this->m_smallLabel->setColor({255, 255, 255});
