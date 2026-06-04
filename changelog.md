@@ -1,4 +1,4 @@
-# Menu Loop Randomizer Changelog
+# <c-f25d83>M</c><c-f35f81>e</c><c-f4627e>n</c><c-f6647c>u</c> <c-f7677a>L</c><c-f86977>o</c><c-fa6b75>o</c><c-fb6e72>p</c> <c-fc7070>Ra</c><c-fb6e72>n</c><c-fa6b75>d</c><c-f86977>o</c><c-f7677a>m</c><c-f6647c>i</c><c-f4627e>z</c><c-f35f81>e</c><c-f25d83>r</c> Changelog
 *<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from various updates and features related to bugfixes from various updates) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are here to stay for as long as the boiling point of water is 100 degrees Celsius, and most definitely longer.</c>*
 
 <mod:alk.better-touch-prio>

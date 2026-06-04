@@ -1,4 +1,4 @@
-# Menu Loop Randomizer
+# <c-f25d83>M</c><c-f35f81>e</c><c-f4627e>n</c><c-f6647c>u</c> <c-f7677a>L</c><c-f86977>o</c><c-fa6b75>o</c><c-fb6e72>p</c> <c-fc7070>Ra</c><c-fb6e72>n</c><c-fa6b75>d</c><c-f86977>o</c><c-f7677a>m</c><c-f6647c>i</c><c-f4627e>z</c><c-f35f81>e</c><c-f25d83>r</c>
 Are you bored of hearing the same menu song <cr>over & over</cr>? Well... **No more of that!**
 
 This mod allows you to randomize the menu song every time you open the game, picking from a random downloaded song from <cl>Newgrounds + RobTop's Music Library (including NCS)</c> or <cl>your own songs</c>.\
