@@ -345,11 +345,12 @@ void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
 		lineCount++;
 		if (playlistFileLineString.starts_with('#') || playlistFileLineString.empty()) continue;
 		std::string playlistFileLineModified = playlistFileLineString;
+		if (playlistFileLineModified.ends_with(" [PLR] #")) continue; // dont load practice loop randomizer songs
 		if (playlistFileLineModified.ends_with(" [MLR] #")) {
 			playlistFileLineModified = playlistFileLineModified.substr(0, playlistFileLineModified.find(" # [MLR] Song: "));
 		}
 		if (!std::filesystem::exists(Utils::toProblematicString(playlistFileLineModified), ea)) {
-			geode::log::info("unable to find song on line {} of playlistFile {}", lineCount, playlistFile.filename());
+			geode::log::info("unable to find song on line {} of playlistFile {}: {}", lineCount, playlistFile.filename(), playlistFileLineModified);
 			continue;
 		}
 		const std::string& songPath = Utils::toNormalizedString(playlistFileLineModified);
@@ -376,6 +377,12 @@ void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
 }
 
 void Utils::populateVector(const bool customSongs, const std::filesystem::path& path, std::vector<std::string> textFileBlacklist, std::vector<std::string> textFileFavorites) {
+	std::error_code ez;
+	if (!std::filesystem::exists(path, ez) && !Utils::toNormalizedString(path).empty()) {
+		geode::log::info("path {} does not exist! leaving the scene", path);
+		auto _ = geode::Mod::get()->getConfigDir(true); // unused, force config dir creation
+		return;
+	}
 	if (geode::utils::string::contains(Utils::toNormalizedString(path), "store_your_disabled_menuloops_here") && geode::utils::string::contains(Utils::toNormalizedString(path), Utils::toNormalizedString(geode::Mod::get()->getConfigDir()))) return; // avoid recursion --raydeeux
 
 	SongManager& songManager = SongManager::get();
@@ -606,6 +613,7 @@ std::vector<std::string> Utils::parseBlacklistFile(const std::filesystem::path& 
 	while (std::getline(blacklistFile, blacklistString)) {
 		if (blacklistString.starts_with('#') || blacklistString.empty()) continue;
 		std::string blacklistStringModified = blacklistString;
+		if (blacklistStringModified.ends_with(" [PLR] #")) continue; // dont load practice loop randomizer songs
 		if (blacklistStringModified.ends_with(" [MLR] #")) {
 			blacklistStringModified = blacklistStringModified.substr(0, blacklistStringModified.find(" # [MLR] Song: "));
 		}
@@ -623,6 +631,7 @@ std::vector<std::string> Utils::parseFavoritesFile(const std::filesystem::path& 
 	while (std::getline(favoriteFile, favoriteString)) {
 		if (favoriteString.starts_with('#') || favoriteString.empty()) continue;
 		std::string favoriteStringModified = favoriteString;
+		if (favoriteStringModified.ends_with(" [PLR] #")) continue; // dont load practice loop randomizer songs
 		if (favoriteStringModified.ends_with(" [MLR] #")) {
 			favoriteStringModified = favoriteStringModified.substr(0, favoriteStringModified.find(" # [MLR] Song: "));
 		}
