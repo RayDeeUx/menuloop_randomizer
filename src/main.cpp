@@ -332,7 +332,8 @@ $on_mod(Loaded) {
 			return ListenerResult::Propagate;
 		}
 		if (btn == "reload-songs-button") {
-			Utils::resetSongManagerRefreshVectorSetNewSongBecause("configdir-button pressed");
+			Utils::resetSongManagerRefreshVectorSetNewSongBecause("reload-songs-button pressed");
+			Notification::create("Reloading songs...", NotificationIcon::Info, .75f)->show();
 			return ListenerResult::Propagate;
 		}
 		return ListenerResult::Propagate;
