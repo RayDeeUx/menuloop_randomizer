@@ -1,0 +1,66 @@
+name: RelWithDebInfo
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - name: Windows
+          image: windows
+          target: Win64
+
+        - name: macOS
+          image: macos
+          target: MacOS
+
+        - name: iOS
+          image: ios
+          target: iOS
+
+        - name: Android32
+          image: android
+          target: Android32
+
+        - name: Android64
+          image: android
+          target: Android64
+
+    name: ${{ matrix.config.name }}
+    runs-on: codeberg-medium
+    container:
+      image: prevter/geode-sdk:${{ matrix.config.image }}-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build the mod
+        uses: https://codeberg.org/geode-sdk/build-geode-mod@main
+        with:
+          # build-config: RelWithDebInfo
+          # export-symbols: true
+          # export-pdb: true
+          combine: true
+          target: ${{ matrix.config.target }}
+
+  package:
+    name: Package builds
+    # '-lazy' means you don't care if it takes a while for the job to start (ref: https://codeberg.org/actions/meta)
+    runs-on: codeberg-tiny-lazy
+    needs: ['build']
+
+    steps:
+      - uses: https://codeberg.org/geode-sdk/build-geode-mod/combine@main
+        id: build
+
+      - uses: https://code.forgejo.org/forgejo/upload-artifact@v3
+        with:
+          name: Build Output
+          path: ${{ steps.build.outputs.build-output }}
