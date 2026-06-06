@@ -50,15 +50,23 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 using namespace geode::prelude;
 
 bool shownVibecodedWarning = false;
+bool shownVobecidedWarning = false;
 
 class $modify(MenuLayerMLHook, MenuLayer) {
 	static cocos2d::CCScene* scene(bool p0) {
 		CCScene* scene = MenuLayer::scene(p0);
 		SongManager& songManager = SongManager::get();
-		if (!shownVibecodedWarning && ((songManager.getVibecodedVentilla() && Loader::get()->isModLoaded("joseii.ventilla")) || (songManager.getVobecidedJota() /* leaving this in is fine as it will eval to false anyway */ /* && Loader::get()->isModLoaded("jotabelike.foobarbaz") */ )) && scene->getChildByType<MenuLayer>(0)) {
-			FLAlertLayer* alert = FLAlertLayer::create(scene->getChildByType<MenuLayer>(0), "Uh oh!", "<c_>Another mod overriding the menu loop is active!</c>\n<cy>The specific menu music mod you have active does not respect menu loops created from other mods, and overrides all mods that change the behavior of the in-game menu loop.</c> <co>Additionally, this specific menu music mod relies on an Internet connection, and does not work with Cloudflare WARP.</c> <cy>If you want to use Menu Loop Randomizer, please check your loaded mods.</c>\n\n<cg>You will only see this warning once.</c>", "I Understand", nullptr, 420.f);
+		MenuLayer* ml = scene->getChildByType<MenuLayer>(0);
+		if (!ml) return scene;
+		if (!shownVibecodedWarning && songManager.getVibecodedVentilla()) {
+			FLAlertLayer* alert = FLAlertLayer::create(ml, "Uh oh!", "<c_>Another mod overriding the menu loop is active!</c>\n<cy>The specific menu music mod you have active does not respect menu loops created from other mods, and overrides all mods that change the behavior of the in-game menu loop.</c> <co>Additionally, this specific menu music mod relies on an Internet connection, and does not work with Cloudflare WARP.</c> <cy>If you want to use Menu Loop Randomizer, please check your loaded mods.</c>\n\n<cg>You will only see this warning once per launch session.</c>", "I Understand", nullptr, 420.f);
 			scene->addChild(alert);
 			shownVibecodedWarning = true;
+		}
+		if (!shownVobecidedWarning && songManager.getVobecidedJota()) {
+			FLAlertLayer* alert = FLAlertLayer::create(ml, "Oh dear...", "<c_>A mod messing with the menu loop is active!</c>\n<cy>The specific mod you have active does not control menu loop playback properly.</c> <co>Additionally, this mod does not comply with many of the Geode Index's guidelines.</c> <cy>If menu loop playback becomes inconsistent, please check your loaded mods.</c>\n\n<cg>You will only see this warning once per launch session.</c>", "I Understand", nullptr, 420.f);
+			scene->addChild(alert);
+			shownVobecidedWarning = true;
 		}
 		return scene;
 	}

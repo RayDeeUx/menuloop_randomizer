@@ -50,13 +50,14 @@ using namespace geode::prelude;
 
 bool originalOverrideWasEmpty = false;
 
-/* CHANGE THIS LATER */ #define VOBECIDED_JOTA Loader::get()->getInstalledMod("jotabelike.foobarbaz")
+#define VOBECIDED_JOTA Loader::get()->getInstalledMod("jotabelike.gd_racha")
 #define VIBECODED_RADIO Loader::get()->getInstalledMod("joseii.ventilla")
 #define BTP Loader::get()->getInstalledMod("alk.better-touch-prio")
-#define USE_BETTER_TOUCH_PRIO_DAMMIT "# <c-ff0000>***__Please install \"Better Touch Prio\" to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but nothing more will happen unless if you install the \"Better Touch Prio\" mod.</c>"
+#define USE_BETTER_TOUCH_PRIO_DAMMIT "# <c-ff0000>***__Please install [Better Touch Prio](mod:alk.better-touch-prio) to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but ***__no other changes will happen__*** until you install [Better Touch Prio](mod:alk.better-touch-prio):</c>\n\n<mod:alk.better-touch-prio>\n\n# <c-ff0000>This is ***__NOT__*** ***a neogtiable solution!***</c>"
 
 $on_mod(Loaded) {
 	SongManager& songManager = SongManager::get();
+	const std::filesystem::path& configDir = Mod::get()->getConfigDir();
 	std::error_code ea, eb, ec, ed, ee;
 	// (void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 	songManager.setOsu(Mod::get()->getSettingValue<bool>("osuLazerBootleg"));
@@ -72,15 +73,12 @@ $on_mod(Loaded) {
 	GEODE_DESKTOP(songManager.setYoutubeAndVLCKeyboardShortcutsSongList(Mod::get()->getSettingValue<bool>("youtubeAndVLCKeyboardShortcutsSongList"));)
 	GEODE_DESKTOP(songManager.setYoutubeAndVLCKeyboardShortcutsControlPanel(Mod::get()->getSettingValue<bool>("youtubeAndVLCKeyboardShortcutsControlPanel"));)
 	songManager.setIncrementDecrementByMilliseconds(Mod::get()->getSettingValue<int64_t>("incrementDecrementByMilliseconds"));
-	songManager.setVibecodedVentilla(VIBECODED_RADIO && (VIBECODED_RADIO->isOrWillBeEnabled() || VIBECODED_RADIO->shouldLoad()));
-	/* CHANGE THIS LATER */ // songManager.setVobecidedJota(VOBECIDED_JOTA && (VOBECIDED_JOTA->isOrWillBeEnabled() || VOBECIDED_JOTA->shouldLoad()));
-	/* REMOVE THIS LATER */ songManager.setVobecidedJota(false);
 	songManager.setUndefined0Alk1m123TouchPrio(BTP && (BTP->isOrWillBeEnabled() || BTP->shouldLoad()) && !BTP->hasUnresolvedDependencies() && !BTP->hasUnresolvedIncompatibilities());
-	if (!std::filesystem::exists(Mod::get()->getConfigDir() / "playlistOne.txt", ea)) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", Mod::get()->getConfigDir() / "playlistOne.txt");
-	if (!std::filesystem::exists(Mod::get()->getConfigDir() / "playlistTwo.txt", eb)) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", Mod::get()->getConfigDir() / "playlistTwo.txt");
-	if (!std::filesystem::exists(Mod::get()->getConfigDir() / "playlistThree.txt", ec)) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", Mod::get()->getConfigDir() / "playlistThree.txt");
+	if (!std::filesystem::exists(configDir / "playlistOne.txt", ea)) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistOne.txt");
+	if (!std::filesystem::exists(configDir / "playlistTwo.txt", eb)) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistTwo.txt");
+	if (!std::filesystem::exists(configDir / "playlistThree.txt", ec)) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistThree.txt");
 
-	const std::filesystem::path& blacklistTxt = Mod::get()->getConfigDir() / R"(blacklist.txt)";
+	const std::filesystem::path& blacklistTxt = configDir / R"(blacklist.txt)";
 	if (!std::filesystem::exists(blacklistTxt, ed)) {
 		const std::string& blacklistFileIntro = R"(# Welcome to the Menu Loop Randomizer song blacklist!
 # Each line that doesn't start with a "#" will be treated as a blacklisted song file.
@@ -97,7 +95,7 @@ $on_mod(Loaded) {
 		}
 	}
 
-	const std::filesystem::path& favoriteTxt = Mod::get()->getConfigDir() / R"(favorites.txt)";
+	const std::filesystem::path& favoriteTxt = configDir / R"(favorites.txt)";
 	if (!std::filesystem::exists(favoriteTxt, ee)) {
 		const std::string& favoritesFileIntro = R"(# Welcome to the Menu Loop Randomizer favorites list!
 # Each line that doesn't start with a "#" will be treated as a favorited song file.
@@ -158,8 +156,8 @@ $on_mod(Loaded) {
 	}
 
 	std::error_code eh, ei;
-	if (!std::filesystem::exists(Mod::get()->getConfigDir() / R"(store_your_disabled_menuloops_here)", eh)) {
-		std::filesystem::create_directory(Mod::get()->getConfigDir() / R"(store_your_disabled_menuloops_here)", ei);
+	if (!std::filesystem::exists(configDir / R"(store_your_disabled_menuloops_here)", eh)) {
+		std::filesystem::create_directory(configDir / R"(store_your_disabled_menuloops_here)", ei);
 	}
 	listenForSettingChanges<bool>("useCustomSongs", [](const bool) {
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("useCustomSongs");
@@ -358,6 +356,13 @@ $on_mod(Loaded) {
 		}
 		return ListenerResult::Propagate;
 	}).leak();
+}
+
+$on_game(ModsLoaded) {
+	SongManager& songManager = SongManager::get();
+	songManager.setVibecodedVentilla(VIBECODED_RADIO && VIBECODED_RADIO->isLoaded());
+	songManager.setVobecidedJota(VOBECIDED_JOTA && VOBECIDED_JOTA->isLoaded());
+	songManager.setUndefined0Alk1m123TouchPrio(BTP && BTP->isLoaded());
 }
 
 $on_game(Exiting) {
