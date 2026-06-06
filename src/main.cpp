@@ -358,11 +358,28 @@ $on_mod(Loaded) {
 	}).leak();
 }
 
+// this fires before menulayer::init so that's fine i suppose
 $on_game(ModsLoaded) {
 	SongManager& songManager = SongManager::get();
+	Loader* loader = Loader::get();
+
 	songManager.setVibecodedVentilla(VIBECODED_RADIO && VIBECODED_RADIO->isLoaded());
 	songManager.setVobecidedJota(VOBECIDED_JOTA && VOBECIDED_JOTA->isLoaded());
 	songManager.setUndefined0Alk1m123TouchPrio(BTP && BTP->isLoaded());
+	if (loader->isModLoaded("omgrod.geodify")) {
+		Mod* gify = loader->getLoadedMod("omgrod.geodify");
+		songManager.setGeodify(gify->getSettingValue<bool>("menu-loop"));
+		listenForSettingChanges<bool>("menu-loop", [](const bool newMenuLoop) {
+			SongManager::get().setGeodify(newMenuLoop);
+		}, gify);
+	}
+
+	songManager.setSawbladeCustomSongsFolder(loader->isModLoaded("sawblade.custom_song_folder"));
+	songManager.setUndefined0Alk1m123TouchPrio(loader->isModLoaded("alk.better-touch-prio"));
+	if (loader->isModLoaded("colon.menu_loop_start_time")) songManager.setColonMenuLoopStartTime(loader->getLoadedMod("colon.menu_loop_start_time"));
+
+	if (loader->isModLoaded("eclipse.eclipse-menu")) songManager.isEclipse = true;
+	if (loader->isModLoaded("thesillydoggo.qolmod")) songManager.isQOLMod = true;
 }
 
 $on_game(Exiting) {

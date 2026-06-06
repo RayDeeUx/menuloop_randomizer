@@ -59,13 +59,11 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		MenuLayer* ml = scene->getChildByType<MenuLayer>(0);
 		if (!ml) return scene;
 		if (!shownVibecodedWarning && songManager.getVibecodedVentilla()) {
-			FLAlertLayer* alert = FLAlertLayer::create(ml, "Uh oh!", "<c_>Another mod overriding the menu loop is active!</c>\n<cy>The specific menu music mod you have active does not respect menu loops created from other mods, and overrides all mods that change the behavior of the in-game menu loop.</c> <co>Additionally, this specific menu music mod relies on an Internet connection, and does not work with Cloudflare WARP.</c> <cy>If you want to use Menu Loop Randomizer, please check your loaded mods.</c>\n\n<cg>You will only see this warning once per launch session.</c>", "I Understand", nullptr, 420.f);
-			scene->addChild(alert);
+			scene->addChild(FLAlertLayer::create(ml, "Uh oh!", "<c_>Another mod overriding the menu loop is active!</c>\n<cy>The specific menu music mod you have active does not respect menu loops created from other mods, and overrides all mods that change the behavior of the in-game menu loop.</c> <co>Additionally, this specific menu music mod relies on an Internet connection, and does not work with Cloudflare WARP.</c> <cy>If you want to use Menu Loop Randomizer, please check your loaded mods.</c>\n\n<cg>You will only see this warning once per launch session.</c>", "I Understand", nullptr, 420.f));
 			shownVibecodedWarning = true;
 		}
 		if (!shownVobecidedWarning && songManager.getVobecidedJota()) {
-			FLAlertLayer* alert = FLAlertLayer::create(ml, "Oh dear...", "<c_>A mod messing with the menu loop is active!</c>\n<cy>The specific mod you have active does not control menu loop playback properly in certain cases and menus.</c> <co>Incidentally, this mod does not comply with many of the Geode Index's guidelines.</c> <cy>If menu loop playback becomes inconsistent, please check your loaded mods.</c>\n\n<cg>You will only see this warning once per launch session.</c>", "I Understand", nullptr, 420.f);
-			scene->addChild(alert);
+			scene->addChild(FLAlertLayer::create(ml, "Oh dear...", "<c_>A mod messing with the menu loop is active!</c>\n<cy>The specific mod you have active does not control menu loop playback properly in certain cases and menus.</c> <co>Incidentally, this mod does not comply with many of the Geode Index's guidelines.</c> <cy>If menu loop playback becomes inconsistent, please check your loaded mods.</c>\n\n<cg>You will only see this warning once per launch session.</c>", "I Understand", nullptr, 420.f));
 			shownVobecidedWarning = true;
 		}
 		return scene;
@@ -77,15 +75,6 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 
 		SongManager& songManager = SongManager::get();
 		const Loader* loader = Loader::get();
-
-		if (loader->isModLoaded("omgrod.geodify")) songManager.setGeodify(loader->getLoadedMod("omgrod.geodify")->getSettingValue<bool>("menu-loop"));
-
-		songManager.setSawbladeCustomSongsFolder(loader->isModLoaded("sawblade.custom_song_folder"));
-		songManager.setUndefined0Alk1m123TouchPrio(loader->isModLoaded("alk.better-touch-prio"));
-		if (loader->isModLoaded("colon.menu_loop_start_time")) songManager.setColonMenuLoopStartTime(loader->getLoadedMod("colon.menu_loop_start_time"));
-
-		if (!songManager.isEclipse && loader->isModLoaded("eclipse.eclipse-menu")) songManager.isEclipse = true;
-		if (!songManager.isQOLMod && loader->isModLoaded("thesillydoggo.qolmod")) songManager.isQOLMod = true;
 
 		const std::string& buttonMode = Utils::getString("buttonMode");
 		const bool qualifiedForNoButtonsEclipse = songManager.isEclipse && songManager.eclipseIntegrationSuccessful;
