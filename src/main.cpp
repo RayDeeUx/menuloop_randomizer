@@ -58,7 +58,7 @@ bool originalOverrideWasEmpty = false;
 $on_mod(Loaded) {
 	SongManager& songManager = SongManager::get();
 	std::error_code ea, eb, ec, ed, ee;
-	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
+	// (void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 	songManager.setOsu(Mod::get()->getSettingValue<bool>("osuLazerBootleg"));
 	songManager.setConstantShuffleMode();
 	songManager.setLastMenuLoopPosition(0);
@@ -319,6 +319,12 @@ $on_mod(Loaded) {
 	ButtonSettingPressedEventV3(Mod::get(), "housekeeping-buttons").listen([](const auto btn) {
 		// jeremy culhane get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head
 		SongManager& songManager = SongManager::get();
+		if (btn == "view-tutorial-button") {
+			geode::utils::web::openLinkInBrowser("https://youtu.be/J2_UwVsgjHs&t=60s");
+			// geode::utils::clipboard::write("https://youtu.be/J2_UwVsgjHs&t=60s");
+			// Notification::create("Copied tutorial link to clipboard! Paste it into your web browser.")->show();
+			return ListenerResult::Propagate;
+		}
 		if (GJBaseGameLayer::get() || !songManager.isCurrentMenuLoopBeingPlayed() || !songManager.getFinishedCalculatingSongLengths()) {
 			Notification::create("What are we doing? What's going on?", NotificationIcon::Error, .75f)->show();
 			return ListenerResult::Propagate;

@@ -30,19 +30,15 @@
 		"housekeeping-buttons": {
 			"type": "button",
 			"buttons": {
-				"config-dir-button": "Open Config Dir",
-				"reload-songs-button": "Reload Songs"
+				"config-dir-button": "Config Dir",
+				"reload-songs-button": "Reload Songs",
+				"view-tutorial-button": "Unofficial Tutorial"
 			}
 		},
 		"tutorial": {
 			"type": "info",
-			"description": "For the closest thing to a tutorial for using this mod, please watch this YouTube video by Colours Gaming: <cl>https://youtu.be/J2_UwVsgjHs&t=60s</c>. (Grab your pencil and paper for this one!) <c_>This tutorial is far from the expected/intended way to use this mod, but is a good reference point nontheless.</c>",
+			"description": "The closest thing to a tutorial for using this mod, is this YouTube video by Colours Gaming: <cl>https://youtu.be/J2_UwVsgjHs&t=60s</c>. <c_>It's far from the intended way to use this mod, but is useful anyway.</c>",
 			"color": "#00FFFF"
-		},
-		"configdir": {
-			"name": "Config Dir: Store Custom Songs + Edit Song Blacklist",
-			"description": "<cy>(Hopefully.)</c>\nThis setting does literally nothing new except being a button that acts as a shortcut to open the config directory for this mod (which is kind of important for using this mod properly, because this is where you will store menu loops), because the legendary developers in the Geode Team themselves forgot to add a shortcut button that would have done this exact same thing, and I have gotten far too many folks (rightfully) asking me to find the config directory when using some of my other mods, and I hate repeating the same things over and over again, and I don't know if the next major update for Geode will also repeat this mistake where HJfod forgets to include a config directory shortcut button, so this setting and this button are here for extra insurance, so please enjoy this extra button, I guess. Anyway, by the time you're finished reading this, your device should be finished with opening the config directory; press \"Aight\" to close this window.",
-			"type": "custom:configdir"
 		},
 		"song-fetching-storing-header": {
 			"name": "Song Fetching/Storing",

@@ -38,6 +38,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 ```
 */
 
+/*
 #pragma once
 
 #include <Geode/loader/SettingV3.hpp>
@@ -130,3 +131,4 @@ public:
 		return nullptr;
 	}
 };
+*/

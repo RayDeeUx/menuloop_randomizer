@@ -38,6 +38,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 ```
 */
 
+/*
 #include "Settings.hpp"
 
 SettingNodeV3* MyButtonSettingV3::createNode(float width) {
@@ -48,3 +49,4 @@ SettingNodeV3* MyButtonSettingV3::createNode(float width) {
 }
 
 // i had to include this cpp file because C++ is a legendary language!
+*/
