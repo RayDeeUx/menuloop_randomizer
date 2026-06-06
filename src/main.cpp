@@ -146,6 +146,7 @@ $on_mod(Loaded) {
 	if (Mod::get()->getSavedValue<bool>("songListSortSongLength")) i++;
 	if (Mod::get()->getSavedValue<bool>("songListSortFileSize")) i++;
 	if (Mod::get()->getSavedValue<bool>("songListSortFileExtn")) i++;
+	// if (Mod::get()->getSavedValue<bool>("songListSortBeatsPerMinute")) i++;
 	if (i > 1) {
 		// because i don't trust toddlers to not edit saved.json nilly willy
 		Mod::get()->setSavedValue<bool>("songListSortAlphabetically", false);
@@ -153,6 +154,7 @@ $on_mod(Loaded) {
 		Mod::get()->setSavedValue<bool>("songListSortSongLength", false);
 		Mod::get()->setSavedValue<bool>("songListSortFileSize", false);
 		Mod::get()->setSavedValue<bool>("songListSortFileExtn", false);
+		// Mod::get()->setSavedValue<bool>("songListSortBeatsPerMinute", false);
 	}
 
 	std::error_code eh, ei;
@@ -444,11 +446,14 @@ public:
 		const int lastPosition = songManager.getLastMenuLoopPosition();
 
 		const int percent = std::clamp<int>((lastPosition * 100.f / fullLength * 1.f), 0, 100);
-		int completed = (percent * progressBarWidth * 1.f) / 100.f;
-		int remaining = progressBarWidth - completed;
+		const int completedWidth = (percent * progressBarWidth * 1.f) / 100.f;
 
-		songManager.eclipseSongDurationLabel.value().setText(fmt::format("Progress: {}:{:02} / {}:{:02}", ((lastPosition / 1000) / 60), ((lastPosition / 1000) % 60), ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
-		songManager.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:+<{}}{:-<{}}]", "", completed, "", remaining));
+		const int remainingPositionSecs = (fullLength - lastPosition) / 1000;
+		const int lastPositionSecs = lastPosition / 1000;
+		const int fullLengthSecs = fullLength / 1000;
+
+		songManager.eclipseSongDurationLabel.value().setText(fmt::format("Progress: {}:{:02} (-{}:{:02}) / {}:{:02}", (lastPositionSecs / 60), (lastPositionSecs % 60), (remainingPositionSecs / 60), (remainingPositionSecs % 60), (fullLengthSecs / 60), (fullLengthSecs % 60)).c_str());
+		songManager.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:+<{}}{:-<{}}]", "", completedWidth, "", progressBarWidth - completedWidth));
 	}
 	static void applyNewLinesToHeaders() {
 		// add newline if switching to cocos style so mobile users can fatfinger scroll properly
@@ -514,8 +519,7 @@ public:
 	}
 	static void addButtonWithCheck(eclipse::MenuTab& tab, EclipsePlaybackProgressDummyNode::ButtonDef button) {
 		tab.addButton(button.label, [type = button.type, action = std::move(button.action)]() {
-			if (EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(type)) return;
-			action();
+			if (!EclipsePlaybackProgressDummyNode::failsBasicSanityCheck(type)) action();
 		});
 	}
 };
