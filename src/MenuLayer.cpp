@@ -59,11 +59,11 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		MenuLayer* ml = scene->getChildByType<MenuLayer>(0);
 		if (!ml) return scene;
 		if (!shownVibecodedWarning && songManager.getVibecodedVentilla()) {
-			scene->addChild(FLAlertLayer::create(ml, "Uh oh!", "<c_>Another mod overriding the menu loop is active!</c>\n<cy>The specific menu music mod you have active does not respect menu loops created from other mods, and overrides all mods that change the behavior of the in-game menu loop.</c> <co>Additionally, this specific menu music mod relies on an Internet connection, and does not work with Cloudflare WARP.</c> <cy>If you want to use Menu Loop Randomizer, please check your loaded mods.</c>\n\n<cg>You will only see this warning once per launch session.</c>", "I Understand", nullptr, 420.f));
+			scene->addChild(FLAlertLayer::create(ml, "Uh oh! (!Ay, no!)", "English:\n<c_>Another mod overriding the menu loop is active!</c>\n<cy>The specific menu music mod you have active does not respect menu loops created from other mods, and overrides all mods that change the behavior of the in-game menu loop.</c> <co>Additionally, this specific menu music mod relies on an Internet connection, and does not work with Cloudflare WARP.</c> <cy>If you want to use Menu Loop Randomizer, please check your loaded mods.</c>\n<cg>You will only see this warning once per launch session.</c>\n=====\nEspanol:\n<c_>!Hay otro mod activo que anula el bucle del menu!</c>\n<cy>El mod de musica del menu que tienes activo no respeta los bucles de menu creados por otros mods y anula todos los mods que modifican el comportamiento del bucle del menu del juego.</c> <co>Ademas, este mod de musica del menu en concreto requiere una conexion a Internet y no funciona con Cloudflare WARP.</c> <cy>Si quieres usar Menu Loop Randomizer, comprueba los mods que tienes cargados.</c>\n<cg>Solo veras esta advertencia una vez por sesion de juego.</c>", "I Understand (Lo Entiendo)", nullptr, 440.f, false, 310.f, .5f));
 			shownVibecodedWarning = true;
 		}
 		if (!shownVobecidedWarning && songManager.getVobecidedJota()) {
-			scene->addChild(FLAlertLayer::create(ml, "Oh dear...", "<c_>A mod messing with the menu loop is active!</c>\n<cy>The specific mod you have active does not control menu loop playback properly in certain cases and menus.</c> <co>Incidentally, this mod does not comply with many of the Geode Index's guidelines.</c> <cy>If menu loop playback becomes inconsistent, please check your loaded mods.</c>\n\n<cg>You will only see this warning once per launch session.</c>", "I Understand", nullptr, 420.f));
+			scene->addChild(FLAlertLayer::create(ml, "Oh goodness! (!Ay, Dios mio!)", "English:\n<c_>A mod that might break the menu loop is active!</c>\n<cy>The specific mod you have active does not control menu loop playback properly in certain cases and menus.</c> <cy>If menu loop playback stops entirely or becomes inconsistent, please check your loaded mods.</c>\n<cg>You will only see this warning once per launch session.</c>\n=====\nEspanol:\n<c_>!Hay un mod activo que podria interrumpir el bucle del menu!</c>\n<cy>Es posible que el mod concreto que tienes activo no controle correctamente la reproduccion del bucle del menu en determinados casos y menus.</c> <cy>Si la reproduccion del bucle del menu se detiene por completo o se vuelve irregular, comprueba los mods que tienes cargados.</c>\n<cg>Solo veras esta advertencia una vez por sesion de juego.</c>", "I Understand (Lo Entiendo)", nullptr, 420.f, false, 310.f, .67f));
 			shownVobecidedWarning = true;
 		}
 		return scene;
@@ -74,7 +74,6 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		Utils::removeCard();
 
 		SongManager& songManager = SongManager::get();
-		const Loader* loader = Loader::get();
 
 		const std::string& buttonMode = Utils::getString("buttonMode");
 		const bool qualifiedForNoButtonsEclipse = songManager.isEclipse && songManager.eclipseIntegrationSuccessful;
