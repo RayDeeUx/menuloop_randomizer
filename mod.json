@@ -605,6 +605,11 @@
 			"version": ">=1.0.0",
 			"breaking": false,
 			"importance": "conflicting"
+		},
+		"jotabelike.gd_racha": {
+			"version": ">=1.0.0",
+			"breaking": false,
+			"importance": "conflicting"
 		}
 	}
 }

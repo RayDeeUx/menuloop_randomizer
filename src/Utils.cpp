@@ -835,6 +835,13 @@ void Utils::rememberLastMenuLoop() {
 	geode::Mod::get()->setSavedValue<std::filesystem::path>("lastMenuLoopPath", Utils::toProblematicString(currentSong));
 }
 
+bool Utils::menuLoopIsPlaying() {
+	FMODAudioEngine* fmod = FMODAudioEngine::get();
+	bool menuLoopPlaying = false;
+	fmod->getActiveMusicChannel(0)->isPlaying(&menuLoopPlaying);
+	return menuLoopPlaying;
+}
+
 CCMenuItemSpriteExtra* Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
 	if (!menu || !target || name.empty()) return nullptr;
 

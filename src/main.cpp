@@ -337,7 +337,7 @@ $on_mod(Loaded) {
 			// Notification::create("Copied tutorial link to clipboard! Paste it into your web browser.")->show();
 			return ListenerResult::Propagate;
 		}
-		if (GJBaseGameLayer::get() || !songManager.isCurrentMenuLoopBeingPlayed() || !songManager.getFinishedCalculatingSongLengths()) {
+		if (GJBaseGameLayer::get() || !songManager.isCurrentMenuLoopBeingPlayed() || !songManager.getFinishedCalculatingSongLengths() || !Utils::menuLoopIsPlaying()) {
 			Notification::create("What are we doing? What's going on?", NotificationIcon::Error, .75f)->show();
 			return ListenerResult::Propagate;
 		}
@@ -458,7 +458,7 @@ public:
 
 		constexpr int progressBarWidth = 20;
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
-		if (!songManager.isCurrentMenuLoopBeingPlayed()) {
+		if (!songManager.isCurrentMenuLoopBeingPlayed() || !Utils::menuLoopIsPlaying()) {
 			songManager.eclipseSongDurationLabel.value().setText("Progress: [CURRENTLY PAUSED]");
 			songManager.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:–<{}}]", "", progressBarWidth));
 			return;
@@ -493,12 +493,20 @@ public:
 	static bool failsBasicSanityCheck(const ShortcutType shortcut) {
 		bool fails = false;
 		std::string reason;
-		if (GJBaseGameLayer::get()) {
+		// look, they hardcoded it to channel ID 7777
+		bool isVobecidedPlaying = false;
+		FMODAudioEngine::get()->channelForChannelID(7777)->isPlaying(&isVobecidedPlaying);
+		if (SongManager::get().getVobecidedJota() && isVobecidedPlaying) {
+			fails = true;
+			reason = "[MLR] A mod is forcing its menu loop over other audio sources!";
+		} else if (GJBaseGameLayer::get()) {
 			fails = true;
 			reason = "[MLR] Exit the level first!";
-		} else if (shortcut != ModSettings && Utils::currentFMODSongIsNotCurrentSongManagerSong()) {
+		} else if (shortcut != ModSettings) {
 			fails = true;
-			reason = "[MLR] Another menu loop is active!";
+			if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) reason = "[MLR] Another menu loop is active!";
+			else if (!Utils::menuLoopIsPlaying() && !VANILLA_GD_MENU_LOOP_DISABLED) reason = "[MLR] Someone has paused the menu loop channel!";
+			else reason = "[MLR] Something went wrong...";
 		} else if (VANILLA_GD_MENU_LOOP_DISABLED) {
 			fails = true;
 			reason = "[MLR] You've disabled the menu loop!";
