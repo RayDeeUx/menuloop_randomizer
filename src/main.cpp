@@ -495,7 +495,7 @@ public:
 		std::string reason;
 		if (SongManager::get().getVobecidedJota() && Utils::isVobecidedJotaPlaying()) {
 			fails = true;
-			reason = "[MLR] A mod is forcing its menu loop over other audio sources!";
+			reason = "[MLR] A mod is overriding MLR with its own menu loop!";
 		} else if (GJBaseGameLayer::get()) {
 			fails = true;
 			reason = "[MLR] Exit the level first!";
@@ -748,8 +748,8 @@ $on_mod(Loaded) {
 			butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar->setID("warning-sub-header"_spr);
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setID("warning-footer-two"_spr);
 
-			if (Utils::isVobecidedJotaPlaying()) {
-				QOLModAndroidUITrackerDummyNode::setWarning(layer, "Menu Loop Randomizer is currently not active!", "(One of your mods is actively overriding other menu loops.)");
+			if (songManager.getVobecidedJota() && Utils::isVobecidedJotaPlaying()) {
+				QOLModAndroidUITrackerDummyNode::setWarning(layer, "Menu Loop Randomizer is currently not active!", "(A mod is actively overriding other menu loops.)");
 				return;
 			}
 

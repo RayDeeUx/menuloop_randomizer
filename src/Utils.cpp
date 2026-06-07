@@ -846,7 +846,7 @@ bool Utils::isVobecidedJotaPlaying() {
 	// look, they hardcoded it to channel ID 7777
 	bool isVobecidedPlaying = false;
 	FMODAudioEngine::get()->channelForChannelID(7777)->isPlaying(&isVobecidedPlaying);
-	geode::log::info("isVobecidedPlaying (channel 7777): {}", isVobecidedPlaying);
+	if (SongManager::get().getAdvancedLogs()) geode::log::info("isVobecidedPlaying (channel 7777): {}", isVobecidedPlaying);
 	return isVobecidedPlaying;
 }
 
