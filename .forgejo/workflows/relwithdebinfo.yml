@@ -9,25 +9,25 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - name: Windows
-          image: windows
-          target: Win64
+          - name: Windows
+            image: windows
+            target: Win64
 
-        - name: macOS
-          image: macos
-          target: MacOS
+          - name: macOS
+            image: macos
+            target: MacOS
 
-        - name: iOS
-          image: ios
-          target: iOS
+          - name: iOS
+            image: ios
+            target: iOS
 
-        - name: Android32
-          image: android
-          target: Android32
+          - name: Android32
+            image: android
+            target: Android32
 
-        - name: Android64
-          image: android
-          target: Android64
+          - name: Android64
+            image: android
+            target: Android64
 
     name: ${{ matrix.config.name }}
     runs-on: codeberg-medium
