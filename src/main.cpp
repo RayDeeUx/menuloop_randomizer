@@ -493,10 +493,7 @@ public:
 	static bool failsBasicSanityCheck(const ShortcutType shortcut) {
 		bool fails = false;
 		std::string reason;
-		// look, they hardcoded it to channel ID 7777
-		bool isVobecidedPlaying = false;
-		FMODAudioEngine::get()->channelForChannelID(7777)->isPlaying(&isVobecidedPlaying);
-		if (SongManager::get().getVobecidedJota() && isVobecidedPlaying) {
+		if (SongManager::get().getVobecidedJota() && Utils::isVobecidedJotaPlaying()) {
 			fails = true;
 			reason = "[MLR] A mod is forcing its menu loop over other audio sources!";
 		} else if (GJBaseGameLayer::get()) {
@@ -750,6 +747,11 @@ $on_mod(Loaded) {
 			iLikeWomenYesAndEverywhereIGoImSurroundedByBeautifulWomenAndTheyLoveMeAndTheseWomenTheyreSoSexyAndFun->setID("warning-gold-header"_spr);
 			butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar->setID("warning-sub-header"_spr);
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setID("warning-footer-two"_spr);
+
+			if (Utils::isVobecidedJotaPlaying()) {
+				QOLModAndroidUITrackerDummyNode::setWarning(layer, "Menu Loop Randomizer is currently not active!", "(One of your mods is actively overriding other menu loops.)");
+				return;
+			}
 
 			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || Utils::currentFMODSongIsNotCurrentSongManagerSong()) {
 				std::string cringe = "(Might wanna get that checked out.)";

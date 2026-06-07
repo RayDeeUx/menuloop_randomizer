@@ -842,6 +842,14 @@ bool Utils::menuLoopIsPlaying() {
 	return menuLoopPlaying;
 }
 
+bool Utils::isVobecidedJotaPlaying() {
+	// look, they hardcoded it to channel ID 7777
+	bool isVobecidedPlaying = false;
+	FMODAudioEngine::get()->channelForChannelID(7777)->isPlaying(&isVobecidedPlaying);
+	geode::log::info("isVobecidedPlaying (channel 7777): {}", isVobecidedPlaying);
+	return isVobecidedPlaying;
+}
+
 CCMenuItemSpriteExtra* Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
 	if (!menu || !target || name.empty()) return nullptr;
 
