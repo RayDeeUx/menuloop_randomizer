@@ -337,8 +337,12 @@ $on_mod(Loaded) {
 			// Notification::create("Copied tutorial link to clipboard! Paste it into your web browser.")->show();
 			return ListenerResult::Propagate;
 		}
-		if (GJBaseGameLayer::get() || !songManager.isCurrentMenuLoopBeingPlayed() || !songManager.getFinishedCalculatingSongLengths() || !Utils::menuLoopIsPlaying()) {
+		if (GJBaseGameLayer::get() || !songManager.isCurrentMenuLoopBeingPlayed() || !songManager.getFinishedCalculatingSongLengths()) {
 			Notification::create("What are we doing? What's going on?", NotificationIcon::Error, .75f)->show();
+			return ListenerResult::Propagate;
+		}
+		if (songManager.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
+			Notification::create("EN: Someone's overriding the menu loop!\nES: !Alguien esta anulando el bucle del menu!", NotificationIcon::Error, .75f)->show();
 			return ListenerResult::Propagate;
 		}
 		if (btn == "config-dir-button") {
@@ -458,7 +462,7 @@ public:
 
 		constexpr int progressBarWidth = 20;
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
-		if (!songManager.isCurrentMenuLoopBeingPlayed() || !Utils::menuLoopIsPlaying()) {
+		if (!songManager.isCurrentMenuLoopBeingPlayed() || (songManager.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying()))) {
 			songManager.eclipseSongDurationLabel.value().setText("Progress: [CURRENTLY PAUSED]");
 			songManager.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:–<{}}]", "", progressBarWidth));
 			return;
@@ -492,13 +496,12 @@ public:
 	}
 	static bool failsBasicSanityCheck(const ShortcutType shortcut) {
 		bool fails = false;
-		std::string reason;
-		if (SongManager::get().getVobecidedJota() && Utils::isVobecidedJotaPlaying()) {
-			fails = true;
-			reason = "[MLR] A mod is overriding MLR with its own menu loop!";
-		} else if (GJBaseGameLayer::get()) {
+		std::string reason;if (GJBaseGameLayer::get()) {
 			fails = true;
 			reason = "[MLR] Exit the level first!";
+		} else if (SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
+			fails = true;
+			reason = "[MLR] A mod is overriding MLR with its own menu loop!";
 		} else if (shortcut != ModSettings) {
 			fails = true;
 			if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) reason = "[MLR] Another menu loop is active!";
@@ -748,17 +751,17 @@ $on_mod(Loaded) {
 			butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar->setID("warning-sub-header"_spr);
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setID("warning-footer-two"_spr);
 
-			if (songManager.getVobecidedJota() && Utils::isVobecidedJotaPlaying()) {
-				QOLModAndroidUITrackerDummyNode::setWarning(layer, "Menu Loop Randomizer is currently not active!", "(A mod is actively overriding other menu loops.)");
-				return;
-			}
-
 			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || Utils::currentFMODSongIsNotCurrentSongManagerSong()) {
 				std::string cringe = "(Might wanna get that checked out.)";
 				if (GJBaseGameLayer::get()) cringe = "(You're in a level right now. Try again later.)";
 				else if (!VANILLA_GD_MENU_LOOP_DISABLED && Utils::currentFMODSongIsNotCurrentSongManagerSong()) cringe = "(This menu loop isn't from MLR. Go figure out why ON YOUR OWN.)";
 
 				QOLModAndroidUITrackerDummyNode::setWarning(layer, "Menu Loop Randomizer is currently not active!", cringe);
+				return;
+			}
+
+			if (songManager.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
+				QOLModAndroidUITrackerDummyNode::setWarning(layer, "Menu Loop Randomizer is currently not active!", "(A mod is actively overriding other menu loops.)");
 				return;
 			}
 

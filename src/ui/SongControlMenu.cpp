@@ -45,7 +45,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 
 #define REST_OF_THE_OWL this->m_songControlsMenu, this
 #define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
-#define CAN_SHOW_PLAYBACK_PROGRESS songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong())
+#define CAN_SHOW_PLAYBACK_PROGRESS songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong()) && !songManager.getVobecidedJota() && !Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsPlaying()
 
 #if GEODE_COMP_GD_VERSION > 22074
 bool SongControlMenu::init() {

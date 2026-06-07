@@ -95,6 +95,7 @@ class Utils {
 	static void rememberLastMenuLoop();
 	static bool menuLoopIsPlaying();
 	static bool isVobecidedJotaPlaying();
+	static bool passesVobecidedSanityCheck();
 	static CCMenuItemSpriteExtra* addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static CCMenuItemToggler* addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string_view nodeID, cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static void showMDPopup(const std::string_view title, const std::string& bodyText, const int tag, const std::string_view nodeID);

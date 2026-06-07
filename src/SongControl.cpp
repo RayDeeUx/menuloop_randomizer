@@ -53,6 +53,7 @@ namespace SongControl {
 		);
 	}
 	void previousSong() {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
@@ -80,6 +81,7 @@ namespace SongControl {
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 	void holdSong() {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
@@ -112,6 +114,7 @@ namespace SongControl {
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 	void favoriteSong() {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
@@ -150,6 +153,7 @@ namespace SongControl {
 		if (Utils::songDataContainsSong(currentSong)) return Utils::newNotification(fmt::format("Favorited {}!", Utils::getSongDataOfCurrentSong().displayName));
 	}
 	void blacklistSong() {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
@@ -215,18 +219,21 @@ namespace SongControl {
 		return Utils::newNotification(fmt::format("Blacklisted {}, now playing {}.", backup, Utils::currentCustomSong()));
 	}
 	void copySong() {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 		Utils::copyCurrentSongName();
 		geode::Notification::create("[MLR] Current song name copied!", geode::NotificationIcon::None, geode::Mod::get()->getSettingValue<double>("notificationTime"));
 	}
 	void regenSong() {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		Utils::removeCard();
 		if (VANILLA_GD_MENU_LOOP_DISABLED || !Utils::getBool("enableNotification")) return;
 		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 	void shuffleSong() {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		SongManager& songManager = SongManager::get();
 		Utils::removeCard();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
@@ -243,6 +250,7 @@ namespace SongControl {
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	}
 	void addSongToPlaylist(const std::string& songPath) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
@@ -301,6 +309,7 @@ namespace SongControl {
 		)->show();
 	}
 	void skipBackward() {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
@@ -328,6 +337,7 @@ namespace SongControl {
 		songManager.setPauseSongPositionTracking(false);
 	}
 	void skipForward() {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
@@ -357,6 +367,7 @@ namespace SongControl {
 		songManager.setPauseSongPositionTracking(false);
 	}
 	void setSongPercentage(const int percentage) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 

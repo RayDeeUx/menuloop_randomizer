@@ -850,6 +850,15 @@ bool Utils::isVobecidedJotaPlaying() {
 	return isVobecidedPlaying;
 }
 
+bool Utils::passesVobecidedSanityCheck() {
+	if (!SongManager::get().getVobecidedJota()) return true;
+	if (!Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsPlaying()) return true;
+	FLAlertLayer* fl = FLAlertLayer::create(nullptr, R"(/!\ Attention (Atencion) /!\)", "English:\nOne of your mods has forcibly paused menu loop playback, as you have changed this mod's settings to override its menu loop over all other audio sources (either by disabling it entirely or by asking the mod to play its menu loop everywhere). Please check this mod's custom settings menu to confirm if this is what you want. If it is, feel free to ignore this warning.\n=====\nEspanol:\nUno de tus mods ha interrumpido de forma forzada la reproduccion del bucle del menu, ya que has modificado la configuracion de este mod para que su bucle de menu tenga prioridad sobre el resto de fuentes de audio (ya sea desactivandolo por completo o indicando al mod que reproduzca su bucle de menu en todas partes). Comprueba el menu de configuracion personalizada de este mod para confirmar si esto es lo que deseas. Si es asi, puedes ignorar esta advertencia.", "I Understand (Lo Entiendo)", nullptr, 440.f, false, 310.f, .5f);
+	fl->m_noElasticity = true;
+	fl->show();
+	return false;
+}
+
 CCMenuItemSpriteExtra* Utils::addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
 	if (!menu || !target || name.empty()) return nullptr;
 
