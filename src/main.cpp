@@ -502,7 +502,7 @@ public:
 		} else if (SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
 			fails = true;
 			reason = "[MLR] A mod is overriding MLR with its own menu loop!";
-		} else if (shortcut != ModSettings) {
+		} else if (shortcut != ModSettings && (Utils::currentFMODSongIsNotCurrentSongManagerSong() || (!Utils::menuLoopIsPlaying() && !VANILLA_GD_MENU_LOOP_DISABLED))) {
 			fails = true;
 			if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) reason = "[MLR] Another menu loop is active!";
 			else if (!Utils::menuLoopIsPlaying() && !VANILLA_GD_MENU_LOOP_DISABLED) reason = "[MLR] Someone has paused the menu loop channel!";
