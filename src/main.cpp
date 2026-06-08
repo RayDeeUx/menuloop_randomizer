@@ -691,6 +691,10 @@ public:
 		}
 		songManager.songListLayerForQOLMod = nullptr;
 	}
+	static bool warnIf(CCNode* layer, const bool condition, const std::string& title, const std::string& subtitle) {
+		if (condition) QOLModAndroidUITrackerDummyNode::setWarning(layer, title, subtitle);
+		return condition;
+	};
 	static void setWarning(CCNode* layer, const std::string& mainText, const std::string& subText) {
 		CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create(mainText.c_str(), "bigFont.fnt");
 		dontMarrySvetlana->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
@@ -700,8 +704,13 @@ public:
 		justDont->limitLabelWidth(layer->getContentWidth() * .5f, 1.f, .0001f);
 		justDont->setScale(.75f);
 
+		const bool vobecided = mainText == "Oh my goodness! (!Ay, Dios mio!)";
 		layer->addChildAtPosition(dontMarrySvetlana, geode::Anchor::Center, {0.f, 10.f});
-		layer->addChildAtPosition(justDont, geode::Anchor::Center, {0.f, -5.f});
+		layer->addChildAtPosition(justDont, geode::Anchor::Center, {0.f, vobecided ? -10.f : -5.f});
+
+		if (vobecided) {
+			justDont->setAlignment(kCCTextAlignmentCenter);
+		}
 
 		dontMarrySvetlana->setID("mlr-not-active-warning"_spr);
 		justDont->setID("mlr-not-active-suggestion"_spr);
@@ -735,7 +744,7 @@ $on_mod(Loaded) {
 			butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
 			butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar->setScale(.4f);
 
-			CCLabelBMFont* iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway = CCLabelBMFont::create("Any bugs from using this menu ***__MUST__*** be reported to RayDeeUx and ***__ONLY__*** RayDeeUx!!", "chatFont.fnt");
+			CCLabelBMFont* iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway = CCLabelBMFont::create("Any bugs while using this menu ***MUST*** be reported to RayDeeUx and ***ONLY*** RayDeeUx!!", "chatFont.fnt");
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->limitLabelWidth(layer->getContentWidth() * .65f, 1.f, .0001f);
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setScale(.45f);
@@ -750,24 +759,11 @@ $on_mod(Loaded) {
 			butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar->setID("warning-sub-header"_spr);
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setID("warning-footer-two"_spr);
 
-			if (VANILLA_GD_MENU_LOOP_DISABLED || GJBaseGameLayer::get() || Utils::currentFMODSongIsNotCurrentSongManagerSong()) {
-				std::string cringe = "(Might wanna get that checked out.)";
-				if (GJBaseGameLayer::get()) cringe = "(You're in a level right now. Try again later.)";
-				else if (!VANILLA_GD_MENU_LOOP_DISABLED && Utils::currentFMODSongIsNotCurrentSongManagerSong()) cringe = "(This menu loop isn't from MLR. Go figure out why ON YOUR OWN.)";
-
-				QOLModAndroidUITrackerDummyNode::setWarning(layer, "Menu Loop Randomizer is currently not active!", cringe);
-				return;
-			}
-
-			if (songManager.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
-				QOLModAndroidUITrackerDummyNode::setWarning(layer, "Menu Loop Randomizer is currently not active!", "(A mod is actively overriding other menu loops.)");
-				return;
-			}
-
-			if (!songManager.getFinishedCalculatingSongLengths()) {
-				QOLModAndroidUITrackerDummyNode::setWarning(layer, "Menu Loop Randomizer is currently busy!", "(Check back again in a bit.)");
-				return;
-			}
+			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, songManager.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying()), "Oh my goodness! (!Ay, Dios mio!)", "(EN: A mod is actively overriding other menu loops.)\n(ES: Hay un mod que esta anulando otros bucles de menu.)")) return;
+			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, VANILLA_GD_MENU_LOOP_DISABLED, "Menu Loop Randomizer is currently not active!", "(Double-check your vanilla settings.)")) return;
+			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, GJBaseGameLayer::get(), "Menu Loop Randomizer is currently inactive!", "(You're in a level right now. Try again later.)")) return;
+			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, Utils::currentFMODSongIsNotCurrentSongManagerSong(), "Menu Loop Randomizer is currently not active!", "(This menu loop isn't from MLR. Go figure out why ON YOUR OWN.)")) return;
+			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, !songManager.getFinishedCalculatingSongLengths(), "Menu Loop Randomizer is currently busy!", "(Check back again in a bit.)")) return;
 
 			const bool qolModIntegrationSongList = Utils::getBool("qolModIntegrationSongList");
 			songManager.songControlMenuForQOLMod = nullptr;

@@ -91,7 +91,7 @@ void SongManager::pickRandomSong() {
 			}
 			m_currentSong = m_songs[randomIndex];
 			geode::log::info("new song: {}", m_currentSong);
-		} else m_currentSong = m_songs[0];
+		} else m_currentSong = m_songs.at(0);
 	} else {
 		m_isMenuLoop = true;
 		m_currentSong = "menuLoop.mp3";
