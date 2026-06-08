@@ -336,7 +336,7 @@ $on_mod(Loaded) {
 			return ListenerResult::Propagate;
 		}
 		if (songManager.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
-			Notification::create("EN: Someone's overriding the menu loop!\nES: !Alguien esta anulando el bucle del menu!", NotificationIcon::Error, .75f)->show();
+			Notification::create("EN: Someone's overriding the menu loop!\nES: !Alguien esta anulando el bucle del menu!", NotificationIcon::Error, 5.f)->show();
 			return ListenerResult::Propagate;
 		}
 		if (btn == "config-dir-button") {
