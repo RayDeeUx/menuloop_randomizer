@@ -291,8 +291,8 @@
 			"default": false
 		},
 		"fadeInTime": {
-			"name": "Menu Loop Fade In Duration",
-			"description": "Adjust the fade in duration of the menu loop. To \"disable\" this setting, use the default value of 1.0.",
+			"name": "Menu Loop Fade In Duration (In Seconds)",
+			"description": "Adjust the fade in duration of the menu loop (in seconds). To \"disable\" this setting, use the default value of 1.0.",
 			"type": "float",
 			"default": 1.0,
 			"min": 0.0,
