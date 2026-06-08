@@ -841,7 +841,7 @@ bool Utils::menuLoopIsPlaying() {
 	bool menuLoopPaused = false;
 	fmod->getActiveMusicChannel(0)->isPlaying(&menuLoopPlaying);
 	fmod->getActiveMusicChannel(0)->getPaused(&menuLoopPaused);
-	if (SongManager::get().getAdvancedLogs()) geode::log::info("\nmenuLoopPlaying: {}\nmenuLoopPaused: {}", menuLoopPaused);
+	if (SongManager::get().getAdvancedLogs()) geode::log::info("\nmenuLoopPlaying: {}\nmenuLoopPaused: {}", menuLoopPlaying, menuLoopPaused);
 	return menuLoopPlaying && !menuLoopPaused;
 }
 
