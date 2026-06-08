@@ -438,8 +438,6 @@ bool SongManager::isCurrentMenuLoopBeingPlayed() const {
 		auto hash = std::hash<std::string>{}(FMODAudioEngine::get()->getActiveMusic(0));
 		geode::log::info("FMODAudioEngine::get()->getActiveMusic(0): {}", FMODAudioEngine::get()->getActiveMusic(0));
 		geode::log::info("m_currentSong: {}", m_currentSong);
-		geode::log::info("std::hash<std::string>{}(FMODAudioEngine::get()->getActiveMusic(0)): {}", std::to_string(hash));
-		geode::log::info("m_hashedCurrentSong: {}", std::to_string(m_hashedCurrentSong));
 	}
 	return std::hash<std::string>{}(FMODAudioEngine::get()->getActiveMusic(0)) == m_hashedCurrentSong;
 }
