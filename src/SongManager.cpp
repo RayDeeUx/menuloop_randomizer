@@ -433,11 +433,9 @@ unsigned long SongManager::getHashedCurrentSong() const {
 }
 
 bool SongManager::isCurrentMenuLoopBeingPlayed() const {
-	// somehow they arent lining up???
-	if (m_advancedLogs) {
-		auto hash = std::hash<std::string>{}(FMODAudioEngine::get()->getActiveMusic(0));
-		geode::log::info("FMODAudioEngine::get()->getActiveMusic(0): {}", FMODAudioEngine::get()->getActiveMusic(0));
-		geode::log::info("m_currentSong: {}", m_currentSong);
-	}
+	#ifdef GEODE_IS_WINDOWS
+	return FMODAudioEngine::get()->getActiveMusic(0) == m_currentSong;
+	#else
 	return std::hash<std::string>{}(FMODAudioEngine::get()->getActiveMusic(0)) == m_hashedCurrentSong;
+	#endif
 }
