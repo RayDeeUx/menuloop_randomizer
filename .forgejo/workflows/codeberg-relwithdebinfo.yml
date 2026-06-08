@@ -2,9 +2,9 @@ name: RelWithDebInfo
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - "**"
+  # push:
+    # branches:
+      # - "**"
 
 jobs:
   build:
