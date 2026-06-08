@@ -854,7 +854,7 @@ bool Utils::passesVobecidedSanityCheck() {
 	if (!SongManager::get().getVobecidedJota()) return true;
 	if (!Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsPlaying()) return true;
 	if (GJBaseGameLayer::get()) {
-		// i think showing an flalertlayer in gjbgl might crash the game (endlevellayer ptsd)
+		// i think showing an flalertlayer in gjbgl might crash the game with a nullptr flalertlayerprotocol pointer (endlevellayer ptsd)
 		geode::Notification::create("EN: Someone's overriding the menu loop!\nES: !Alguien esta anulando el bucle del menu!", geode::NotificationIcon::Error, 5.f)->show();
 		return false;
 	}
