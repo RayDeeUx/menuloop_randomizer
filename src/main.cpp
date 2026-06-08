@@ -41,7 +41,6 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 #include "ConstantShuffleModeWarning.hpp"
 #include "SongManager.hpp"
 #include "Utils.hpp"
-#include "Settings.hpp"
 #include "ui/SongListLayer.hpp"
 #include "ui/SongControlMenu.hpp"
 #include <Geode/loader/SettingV3.hpp>
@@ -186,10 +185,6 @@ $on_mod(Loaded) {
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
-		if (constantShuffleMode) {
-			GameManager::sharedState()->playMenuMusic();
-			return ConstantShuffleModeWarning::create(songManagerLambda.getGeodify())->show();
-		}
 		GameManager::sharedState()->playMenuMusic();
 	});
 	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](const std::filesystem::path& specificSongOverride) {
