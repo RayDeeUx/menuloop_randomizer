@@ -454,15 +454,20 @@ public:
 			return;
 		}
 
+		if (songManager.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
+			songManager.eclipseSongDurationLabel.value().setText("[LOOP IS BEING OVERRIDDEN / SE ESTA ANULANDO EL BUCLE]");
+			songManager.eclipseSongProgressBarLabel.value().setText("[CHECK SETTINGS / COMPROBAR CONFIGURACIONES]");
+			return;
+		}
+
 		constexpr int progressBarWidth = 20;
-		FMODAudioEngine* fmod = FMODAudioEngine::get();
-		if (!songManager.isCurrentMenuLoopBeingPlayed() || (songManager.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying()))) {
+		if (!songManager.isCurrentMenuLoopBeingPlayed()) {
 			songManager.eclipseSongDurationLabel.value().setText("Progress: [CURRENTLY PAUSED]");
 			songManager.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:–<{}}]", "", progressBarWidth));
 			return;
 		}
 
-		const int fullLength = fmod->getMusicLengthMS(0);
+		const int fullLength = FMODAudioEngine::get()->getMusicLengthMS(0);
 		const int lastPosition = songManager.getLastMenuLoopPosition();
 
 		const int percent = std::clamp<int>((lastPosition * 100.f / fullLength * 1.f), 0, 100);
