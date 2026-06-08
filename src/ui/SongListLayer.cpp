@@ -535,6 +535,7 @@ void SongListLayer::onPreviousButton(CCObject*) {
 }
 
 void SongListLayer::onControlsButton(CCObject*) {
+	if (!Utils::passesVobecidedSanityCheck()) return;
 	SongManager& songManager = SongManager::get();
 	if (this->m_isInQOLMod && this->getParent() && songManager.songControlMenuForQOLMod->getParent() && songManager.songControlMenuForQOLMod->getParent() == this->getParent()) {
 		if (this->m_searchBar && this->m_searchBar->getInputNode()) this->m_searchBar->getInputNode()->onClickTrackNode(false);

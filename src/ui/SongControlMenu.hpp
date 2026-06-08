@@ -127,5 +127,5 @@ public:
 	#if GEODE_COMP_GD_VERSION < 22081
 	void keyDown(cocos2d::enumKeyCodes key) override;
 	#endif
-	void toggleButtonState(cocos2d::CCNode *playlistButton, const bool isEnabled) const;
+	void toggleButtonState(cocos2d::CCNode* playlistButton, const bool isEnabled) const;
 };
