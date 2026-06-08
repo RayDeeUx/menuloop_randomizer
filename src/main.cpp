@@ -38,7 +38,6 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 ```
 */
 
-#include "ConstantShuffleModeWarning.hpp"
 #include "SongManager.hpp"
 #include "Utils.hpp"
 #include "ui/SongListLayer.hpp"
