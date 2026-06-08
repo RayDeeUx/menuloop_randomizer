@@ -841,7 +841,7 @@ bool Utils::menuLoopIsPlaying() {
 	bool menuLoopPaused = false;
 	fmod->getActiveMusicChannel(0)->isPlaying(&menuLoopPlaying);
 	fmod->getActiveMusicChannel(0)->getPaused(&menuLoopPaused);
-	if (SongManager::get().getAdvancedLogs()) geode::log::info("\nmenuLoopPlaying: {}\nmenuLoopPaused: {}", menuLoopPlaying, menuLoopPaused);
+	// if (SongManager::get().getAdvancedLogs()) geode::log::info("\nmenuLoopPlaying: {}\nmenuLoopPaused: {}", menuLoopPlaying, menuLoopPaused);
 	return menuLoopPlaying && !menuLoopPaused;
 }
 
@@ -849,7 +849,7 @@ bool Utils::isVobecidedJotaPlaying() {
 	// look, they hardcoded it to channel ID 7777
 	bool isVobecidedPlaying = false;
 	FMODAudioEngine::get()->channelForChannelID(7777)->isPlaying(&isVobecidedPlaying);
-	if (SongManager::get().getAdvancedLogs()) geode::log::info("isVobecidedPlaying (channel 7777): {}", isVobecidedPlaying);
+	// if (SongManager::get().getAdvancedLogs()) geode::log::info("isVobecidedPlaying (channel 7777): {}", isVobecidedPlaying);
 	return isVobecidedPlaying;
 }
 
