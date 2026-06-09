@@ -219,7 +219,7 @@ void MLRSongCell::checkIfCurrentSong() const {
 	if (this->m_songData.isEmpty || !this->m_songNameLabel || !this->m_songNameLabel->getParent() || !this->m_menu) return;
 
 	SongManager& songManager = SongManager::get();
-	const bool isCurrentSong = GEODE_MACOS(this->m_songData.hashedPath == songManager.getHashedCurrentSong()) GEODE_MOBILE(this->m_songData.hashedPath == songManager.getHashedCurrentSong()) GEODE_WINDOWS(FMODAudioEngine::get()->getActiveMusic(0) == songManager.getCurrentSong());
+	const bool isCurrentSong = GEODE_MACOS(this->m_songData.hashedPath == songManager.getHashedCurrentSong()) GEODE_MOBILE(this->m_songData.hashedPath == songManager.getHashedCurrentSong()) GEODE_WINDOWS(songManager.getUseHashesForMatching() ? songManager.getHashedCurrentSong() == this->m_songData.hashedPath : FMODAudioEngine::get()->getActiveMusic(0) == this->m_songData.actualFilePath);
 
 	int originalTag = this->getTag();
 	geode::cocos::CCArrayExt<CCNode> childNodes = m_menu->getChildrenExt();
