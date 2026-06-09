@@ -159,26 +159,32 @@ $on_mod(Loaded) {
 		std::filesystem::create_directory(configDir / R"(store_your_disabled_menuloops_here)", ei);
 	}
 	listenForSettingChanges<bool>("useCustomSongs", [](const bool) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("useCustomSongs");
 	});
 	listenForSettingChanges<bool>("searchDeeper", [](const bool) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("searchDeeper");
 	});
 	listenForSettingChanges<std::filesystem::path>("additionalFolder", [](const std::filesystem::path&) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("additionalFolder");
 	});
 	listenForSettingChanges<bool>("loadPlaylistFile", [](const bool loadPlaylistFile) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("loadPlaylistFile");
 		if (!loadPlaylistFile) return;
 		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
 		Utils::showMDPopup("Playlist Files", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", 7302025, "playlist-files");
 	});
 	listenForSettingChanges<std::filesystem::path>("playlistFile", [](const std::filesystem::path&) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("playlistFile");
 		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
 		Utils::showMDPopup("Playlist Files", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", 7302025, "playlist-files");
 	});
-	listenForSettingChanges<bool>("playlistMode", [](const bool constantShuffleMode) {
+	listenForSettingChanges<bool>("playlistMode", [](const bool) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		SongManager& songManagerLambda = SongManager::get();
 		songManagerLambda.setConstantShuffleMode();
 		if (songManagerLambda.isOriginalMenuLoop()) return;
@@ -188,6 +194,7 @@ $on_mod(Loaded) {
 		GameManager::sharedState()->playMenuMusic();
 	});
 	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](const std::filesystem::path& specificSongOverride) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		SongManager& songManagerLambda = SongManager::get();
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
@@ -210,47 +217,57 @@ $on_mod(Loaded) {
 		if (!dangerousBlacklisting) return;
 		log::info("=============== WARNING: USER HAS ENABLED `dangerousBlacklisting` SETTING ===============");
 		// this is consensual gamemanager playerid access, aktimoose and i discussed this in private
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (GameManager::get()->m_playerUserID.value() == 925143 || GameManager::get()->m_playerUserID.value() == 7247326) return log::info("never mind, it's just aktimoose the beta tester. don't show the alert");
 		Utils::showMDPopup("Blacklisting", "<c-ff0000>This is an experimental setting. You agree to hold yourself responsible for any issues that happen when this setting is enabled.</c>", 7302025, "dangerous-blacklisting");
 	});
 	listenForSettingChanges<bool>("randomizeWhenExitingLevel", [](const bool randomizeWhenExitingLevel) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (!Mod::get()->getSettingValue<bool>("restoreWhenExitingLevel")) return;
 		const std::string& mdPopupBody = randomizeWhenExitingLevel ? "# <c-ff0000>Menu loops will always be randomized when leaving a level.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Level Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving a level.</c>\n<cy>*If you don't want this behavior, enable the \"Randomize Menu Loop on Level Exit\" setting.*";
 		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
 	listenForSettingChanges<bool>("randomizeWhenExitingEditor", [](const bool randomizeWhenExitingEditor) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (!Mod::get()->getSettingValue<bool>("restoreWhenExitingEditor")) return;
 		const std::string& mdPopupBody = randomizeWhenExitingEditor ? "# <c-ff0000>Menu loops will always be randomized when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Editor Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving the level editor.</c>\n<cy>*If you don't want this behavior, enable the \"Randomize Menu Loop on Editor Exit\" setting.*";
 		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
 	listenForSettingChanges<bool>("restoreWhenExitingLevel", [](const bool restoreWhenExitingLevel) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (!Mod::get()->getSettingValue<bool>("randomizeWhenExitingLevel")) return;
 		const std::string& mdPopupBody = restoreWhenExitingLevel ? "# <c-ff0000>Menu loops will still be randomized when leaving a level.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Level Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving a level.</c>\n<cy>*If you don't want this behavior, disable the \"Continue Menu Loop on Level Exit\" setting.*";
 		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
 	listenForSettingChanges<bool>("restoreWhenExitingEditor", [](const bool restoreWhenExitingEditor) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (!Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor")) return;
 		const std::string& mdPopupBody = restoreWhenExitingEditor ? "# <c-ff0000>Menu loops will still be randomized when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Editor Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Continue Menu Loop on Editor Exit\" setting.*";
 		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
 	listenForSettingChanges<bool>("showSearchBar", [](const bool showSearchBar) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSearchBar) return;
 		Utils::showMDPopup("Search Bar/Filtering Options", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "search-bar-song-sorting");
 	});
 	listenForSettingChanges<double>("compactModeScaleFactor", [](const double) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) return;
 		Utils::showMDPopup("Compact Mode Scale Factor", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "compact-mode-scale-factor");
 	});
 	listenForSettingChanges<bool>("showSortSongOptions", [](const bool showSortSongOptions) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSortSongOptions) return;
 		Utils::showMDPopup("Search Bar/Filtering Options", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "search-bar-song-sorting");
 	});
 	listenForSettingChanges<bool>("showSortSongLength", [](const bool showSortSongLength) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSortSongLength) return;
 		Utils::showMDPopup("Search Bar/Filtering Options", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "search-bar-song-sorting");
 	});
 	#ifndef GEODE_IS_IOS
 	listenForSettingChanges<bool>("useMiniaudioForLength", [](const bool useMiniaudioForLength) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) {
 			if (useMiniaudioForLength) Utils::showMDPopup("+ Miniaudio Song Lengths", "You are now using Miniaudio to calculate song lengths. <c-ffff00>***__Changes only apply the next time Menu Loop Randomizer reloads its songs.__***</c>\n\nIf you prefer using FMOD for somewhat more precise long lengths at the cost of wait time, disable this option.", 20260105, "miniaudio-song-lengths-using-miniaudio");
 			else Utils::showMDPopup("+ Miniaudio Song Lengths", "You are now using FMOD to calculate song lengths. <c-ffff00>***__Changes only apply the next time Menu Loop Randomizer reloads its songs.__***</c>\n\nIf you prefer using Miniaudio for somewhat less precise long lengths, enable this option.\n<c-aaaaaa>*(Note that FMOD may still be used if Miniaudio fails to find a length.)*</c>", 20260105, "miniaudio-song-lengths-using-fmod");
@@ -259,45 +276,54 @@ $on_mod(Loaded) {
 	});
 	#endif
 	listenForSettingChanges<bool>("showExtraInfoLabel", [](const bool showExtraInfoLabel) {
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showExtraInfoLabel) return;
 		Utils::showMDPopup("Song List Extra Info Label", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "search-bar-song-sorting");
 	});
 	listenForSettingChanges<bool>("showPlaybackProgressAndControls", [](const bool showPlaybackProgressAndControls) {
 		SongManager& songManager = SongManager::get();
 		songManager.setShowPlaybackProgressAndControls(showPlaybackProgressAndControls);
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (songManager.getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressAndControls) return;
 		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "show-playback-progress-controls");
 	});
 	listenForSettingChanges<bool>("showPlaybackProgressControlsSongList", [](const bool showPlaybackProgressControlsSongList) {
 		SongManager& songManager = SongManager::get();
 		songManager.setShowPlaybackControlsSongList(showPlaybackProgressControlsSongList);
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (songManager.getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressControlsSongList) return;
 		Utils::showMDPopup("Song List Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "show-playback-progress-controls");
 	});
 	listenForSettingChanges<int64_t>("incrementDecrementByMilliseconds", [](const int64_t incrementDecrementByMilliseconds) {
 		SongManager& songManager = SongManager::get();
 		songManager.setIncrementDecrementByMilliseconds(incrementDecrementByMilliseconds);
+		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (songManager.getUndefined0Alk1m123TouchPrio()) return;
 		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "playback-progress-incrdecr-amt");
 	});
 	listenForSettingChanges<bool>("songIndicatorsInControlPanel", [](const bool) {
+		Utils::passesVobecidedSanityCheck();
 		Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 	});
 	#ifdef GEODE_IS_DESKTOP
 	listenForSettingChanges<bool>("youtubeAndVLCKeyboardShortcutsSongList", [](const bool youtubeAndVLCKeyboardShortcutsSongList) {
+		Utils::passesVobecidedSanityCheck();
 		SongManager::get().setYoutubeAndVLCKeyboardShortcutsSongList(youtubeAndVLCKeyboardShortcutsSongList);
 	});
 	listenForSettingChanges<bool>("youtubeAndVLCKeyboardShortcutsControlPanel", [](const bool youtubeAndVLCKeyboardShortcutsControlPanel) {
+		Utils::passesVobecidedSanityCheck();
 		SongManager::get().setYoutubeAndVLCKeyboardShortcutsControlPanel(youtubeAndVLCKeyboardShortcutsControlPanel);
 	});
 	#endif
 	#ifdef GEODE_IS_WINDOWS
 	listenForSettingChanges<bool>("useHashesForMatching", [](const bool useHashesForMatchingNew) {
+		Utils::passesVobecidedSanityCheck()
 		SongManager::get().setUseHashesForMatching(useHashesForMatchingNew);
 	});
 	#endif
 	listenForSettingChanges<bool>("osuLazerBootleg", [](const bool osuLazerBootlegNew) {
 		SongManager::get().setOsu(osuLazerBootlegNew);
+		if (!Utils::passesVobecidedSanityCheck()) return;
 
 		CCScene* scene = CCScene::get();
 		if (!scene) return;
@@ -326,6 +352,7 @@ $on_mod(Loaded) {
 		}
 	});
 	listenForSettingChanges<bool>("advancedLogs", [](const bool newAdvancedLogs) {
+		Utils::passesVobecidedSanityCheck();
 		SongManager::get().setAdvancedLogs(newAdvancedLogs);
 	});
 	ButtonSettingPressedEventV3(Mod::get(), "housekeeping-buttons").listen([](const auto btn) {
