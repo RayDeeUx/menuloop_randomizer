@@ -317,7 +317,7 @@ $on_mod(Loaded) {
 	#endif
 	#ifdef GEODE_IS_WINDOWS
 	listenForSettingChanges<bool>("useHashesForMatching", [](const bool useHashesForMatchingNew) {
-		Utils::passesVobecidedSanityCheck()
+		Utils::passesVobecidedSanityCheck();
 		SongManager::get().setUseHashesForMatching(useHashesForMatchingNew);
 	});
 	#endif
