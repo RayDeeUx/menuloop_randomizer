@@ -9,7 +9,7 @@
 - Added an option to change the fade in duration for menu loops.
   - This option is measured in seconds, not milliseconds.
   - To disable this option, use the default value of  `1.0`  .
-- Added safeguards to preventing controlling menu loop playback when a mod decides to forcibly pause all background music audio channels to play its own menu loop in the sound effects channel using a function that was designed to be used only during regular gameplay.
+- Added safeguards in case a mod decides to forcibly pause all background music audio channels to play its own menu loop in the sound effects channel using a function that was designed to be used only during regular gameplay.
   - Featuring incredibly scuffed Spanish translations from DeepL and verified by Cheeseworks.
 - Refactored a number of things here and there.
 - Attempt to fix a bug where Windows would not be able to correctly detect the currently playing song.

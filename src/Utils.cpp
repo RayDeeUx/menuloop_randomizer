@@ -847,10 +847,13 @@ bool Utils::menuLoopIsPlaying() {
 
 bool Utils::isVobecidedJotaPlaying() {
 	// look, they hardcoded it to channel ID 7777
+	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	bool isVobecidedPlaying = false;
-	FMODAudioEngine::get()->channelForChannelID(7777)->isPlaying(&isVobecidedPlaying);
+	if (fmod && fmod->channelForChannelID(7777)) fmod->channelForChannelID(7777)->isPlaying(&isVobecidedPlaying);
+	bool isAnotherVobecidedPlaying = false;
+	if (fmod && fmod->channelForChannelID(7778)) fmod->channelForChannelID(7778)->isPlaying(&isAnotherVobecidedPlaying);
 	// if (SongManager::get().getAdvancedLogs()) geode::log::info("isVobecidedPlaying (channel 7777): {}", isVobecidedPlaying);
-	return isVobecidedPlaying;
+	return isVobecidedPlaying || isAnotherVobecidedPlaying;
 }
 
 bool Utils::passesVobecidedSanityCheck() {

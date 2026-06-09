@@ -495,7 +495,8 @@ public:
 	}
 	static bool failsBasicSanityCheck(const ShortcutType shortcut) {
 		bool fails = false;
-		std::string reason;if (GJBaseGameLayer::get()) {
+		std::string reason;
+		if (GJBaseGameLayer::get()) {
 			fails = true;
 			reason = "[MLR] Exit the level first!";
 		} else if (SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
