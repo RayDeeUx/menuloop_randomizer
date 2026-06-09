@@ -428,14 +428,23 @@ bool SongManager::getInsidePlayMusic() const {
 	return m_insidePlayMusic;
 }
 
+void SongManager::setUseHashesForMatching(const bool value) {
+	GEODE_WINDOWS(m_useHashesForMatching = value;)
+	GEODE_MOBILE(return;)
+	GEODE_MACOS(return;)
+}
+
+bool SongManager::getUseHashesForMatching() const {
+	GEODE_WINDOWS(return m_useHashesForMatching;)
+	GEODE_MOBILE(return false;)
+	GEODE_MACOS(return false;)
+}
+
 unsigned long SongManager::getHashedCurrentSong() const {
 	return m_hashedCurrentSong;
 }
 
 bool SongManager::isCurrentMenuLoopBeingPlayed() const {
-	#ifdef GEODE_IS_WINDOWS
-	return FMODAudioEngine::get()->getActiveMusic(0) == m_currentSong;
-	#else
+	GEODE_WINDOWS(if (!m_useHashesForMatching) return FMODAudioEngine::get()->getActiveMusic(0) == m_currentSong;)
 	return std::hash<std::string>{}(FMODAudioEngine::get()->getActiveMusic(0)) == m_hashedCurrentSong;
-	#endif
 }

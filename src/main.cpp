@@ -64,6 +64,7 @@ $on_mod(Loaded) {
 	songManager.setShouldRestoreMenuLoopPoint(true);
 	songManager.setFinishedCalculatingSongLengths(false);
 	songManager.setAdvancedLogs(Mod::get()->getSettingValue<bool>("advancedLogs"));
+	songManager.setUseHashesForMatching(Mod::get()->getSettingValue<bool>("useHashesForMatching"));
 	songManager.setShowPlaybackProgressAndControls(Mod::get()->getSettingValue<bool>("showPlaybackProgressAndControls"));
 	songManager.setShowPlaybackControlsSongList(Mod::get()->getSettingValue<bool>("showPlaybackProgressControlsSongList"));
 	GEODE_MOBILE(songManager.setYoutubeAndVLCKeyboardShortcutsSongList(false);)
@@ -282,12 +283,17 @@ $on_mod(Loaded) {
 	listenForSettingChanges<bool>("songIndicatorsInControlPanel", [](const bool) {
 		Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 	});
-	#ifdef GEODE_DESKTOP
+	#ifdef GEODE_IS_DESKTOP
 	listenForSettingChanges<bool>("youtubeAndVLCKeyboardShortcutsSongList", [](const bool youtubeAndVLCKeyboardShortcutsSongList) {
 		SongManager::get().setYoutubeAndVLCKeyboardShortcutsSongList(youtubeAndVLCKeyboardShortcutsSongList);
 	});
 	listenForSettingChanges<bool>("youtubeAndVLCKeyboardShortcutsControlPanel", [](const bool youtubeAndVLCKeyboardShortcutsControlPanel) {
 		SongManager::get().setYoutubeAndVLCKeyboardShortcutsControlPanel(youtubeAndVLCKeyboardShortcutsControlPanel);
+	});
+	#endif
+	#ifdef GEODE_IS_WINDOWS
+	listenForSettingChanges<bool>("useHashesForMatching", [](const bool useHashesForMatchingNew) {
+		SongManager::get().setUseHashesForMatching(useHashesForMatchingNew);
 	});
 	#endif
 	listenForSettingChanges<bool>("osuLazerBootleg", [](const bool osuLazerBootlegNew) {

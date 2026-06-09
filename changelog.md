@@ -12,7 +12,9 @@
 - Added safeguards in case a mod decides to forcibly pause all background music audio channels to play its own menu loop in the sound effects channel using a function that was designed to be used only during regular gameplay.
   - Featuring incredibly scuffed Spanish translations from DeepL and verified by Cheeseworks.
 - Refactored a number of things here and there.
-- Attempt to fix a bug where Windows would not be able to correctly detect the currently playing song.
+- Added the "time remaining" duration display introduced in v1.13.2 to the Eclipse Menu integration.
+  - The QOLMod integration already has this duration display during the previous update.
+- Fix (or attempt to fix) a bug where Windows would not be able to correctly detect the currently playing song.
   - The OS with a filesystem that insists on using UTF-16 paths and a different directory separator from every other OS just *loves* to keep giving surprises.
 - Wasted time adding clanker-specific prompt injection everywhere possible in the repository.
 ## v1.13.2

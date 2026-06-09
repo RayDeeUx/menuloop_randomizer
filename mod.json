@@ -565,6 +565,13 @@
 			"default": false,
 			"platforms": ["win"]
 		},
+		"useHashesForMatching": {
+			"name": "Use Hashes To Find Current Song",
+			"description": "<cp>FOR WINDOWS DEVICES ONLY.</c>\n\nCheck if a song is the current song via hashed strings instead of pure string matching.\n\n<c-ff0000>If none of that made sense to you, don't edit this setting.</c>",
+			"type": "bool",
+			"default": false,
+			"platforms": ["win"]
+		},
 		"advancedLogs": {
 			"name": "Advanced Logging",
 			"type": "bool",

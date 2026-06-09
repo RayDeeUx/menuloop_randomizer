@@ -169,6 +169,8 @@ class SongManager {
 	bool getOsu() const;
 	void setInsidePlayMusic(const bool value);
 	bool getInsidePlayMusic() const;
+	void setUseHashesForMatching(const bool value);
+	bool getUseHashesForMatching() const;
 	unsigned long getHashedCurrentSong() const;
 	bool isCurrentMenuLoopBeingPlayed() const;
 
@@ -221,6 +223,7 @@ class SongManager {
 	bool m_youtubeAndVLCKeyboardShortcutsControlPanel = false;
 	bool m_osuSetting = false;
 	bool m_insidePlayMusic = false;
+	bool m_useHashesForMatching = false;
 	int m_lastPosition = 0;
 	int m_towerRepeatCount = 0;
 	int m_incrementDecrementByMilliseconds = 0;
