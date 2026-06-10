@@ -369,7 +369,7 @@ $on_mod(Loaded) {
 			return ListenerResult::Propagate;
 		}
 		if (songManager.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
-			Notification::create("[MLR] EN: Someone's overriding the menu loop!\n[MLR] ES: !Alguien esta anulando el bucle del menu!", NotificationIcon::Error, 5.f)->show();
+			Notification::create("[MLR] EN: Someone's overriding the menu loop!\n[MLR] ES: !Alguien esta anulando el menu loop!", NotificationIcon::Error, 5.f)->show();
 			return ListenerResult::Propagate;
 		}
 		if (btn == "config-dir-button") {
@@ -534,7 +534,7 @@ public:
 			reason = "[MLR] Exit the level first!";
 		} else if (SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
 			fails = true;
-			reason = "[MLR] EN: Someone's overriding the menu loop!\n[MLR] ES: !Alguien esta anulando el bucle del menu!";
+			reason = "[MLR] EN: Someone's overriding the menu loop!\n[MLR] ES: !Alguien esta anulando el menu loop!";
 		} else if (shortcut != ModSettings && (Utils::currentFMODSongIsNotCurrentSongManagerSong() || (!Utils::menuLoopIsPlaying() && !VANILLA_GD_MENU_LOOP_DISABLED))) {
 			fails = true;
 			if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) reason = "[MLR] Another menu loop is active!";

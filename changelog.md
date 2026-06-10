@@ -4,18 +4,19 @@
 <mod:alk.better-touch-prio>
 
 ## v1.13.3
-- Added an option to restore menu loop position if it was interrupted by another menu loop (such as visiting any Shopkeeper, any Vaults, or The Tower).
+- Added an option to restore menu loop position after interruption.
+  - Examples: visiting the shops, vaults, or The Tower.
   - This option is disabled by default, and is pretty experimental.
 - Added an option to change the fade in duration for menu loops.
   - This option is measured in seconds, not milliseconds.
   - To disable this option, use the default value of  `1.0`  .
-- Added safeguards in case a mod decides to forcibly pause all background music audio channels to play its own menu loop in the sound effects channel using a function that was designed to be used only during regular gameplay.
-  - Featuring incredibly scuffed Spanish translations from DeepL and verified by Cheeseworks.
+- Added safeguards against a mod pausing BGM and using gameplay-specific FMOD functions to play its menu loop on the SFX channel.
+  - Scuffed Spanish translations from DeepL were verified by Cheeseworks and Bitz/iArtie.
 - Refactored a number of things here and there.
 - Added the "time remaining" duration display introduced in v1.13.2 to the Eclipse Menu integration.
   - The QOLMod integration already has this duration display during the previous update.
 - Fix (or attempt to fix) a bug where Windows would not be able to correctly detect the currently playing song.
-  - The OS with a filesystem that insists on using UTF-16 paths and a different directory separator from every other OS just *loves* to keep giving surprises.
+  - The Windows filesystem is a godforsaken miracle in the worst way.
 - Wasted time adding clanker-specific prompt injection everywhere possible in the repository.
 ## v1.13.2
 - Added a duration display for the amount of time remaining in a song.
