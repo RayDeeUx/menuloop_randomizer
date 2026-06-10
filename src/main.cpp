@@ -281,24 +281,24 @@ $on_mod(Loaded) {
 		Utils::showMDPopup("Song List Extra Info Label", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "search-bar-song-sorting");
 	});
 	listenForSettingChanges<bool>("showPlaybackProgressAndControls", [](const bool showPlaybackProgressAndControls) {
-		SongManager& songManager = SongManager::get();
-		songManager.setShowPlaybackProgressAndControls(showPlaybackProgressAndControls);
+		SongManager& songManagerLambda = SongManager::get();
+		songManagerLambda.setShowPlaybackProgressAndControls(showPlaybackProgressAndControls);
 		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (songManager.getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressAndControls) return;
+		if (songManagerLambda.getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressAndControls) return;
 		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "show-playback-progress-controls");
 	});
 	listenForSettingChanges<bool>("showPlaybackProgressControlsSongList", [](const bool showPlaybackProgressControlsSongList) {
-		SongManager& songManager = SongManager::get();
-		songManager.setShowPlaybackControlsSongList(showPlaybackProgressControlsSongList);
+		SongManager& songManagerLambda = SongManager::get();
+		songManagerLambda.setShowPlaybackControlsSongList(showPlaybackProgressControlsSongList);
 		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (songManager.getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressControlsSongList) return;
+		if (songManagerLambda.getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressControlsSongList) return;
 		Utils::showMDPopup("Song List Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "show-playback-progress-controls");
 	});
 	listenForSettingChanges<int64_t>("incrementDecrementByMilliseconds", [](const int64_t incrementDecrementByMilliseconds) {
-		SongManager& songManager = SongManager::get();
-		songManager.setIncrementDecrementByMilliseconds(incrementDecrementByMilliseconds);
+		SongManager& songManagerLambda = SongManager::get();
+		songManagerLambda.setIncrementDecrementByMilliseconds(incrementDecrementByMilliseconds);
 		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (songManager.getUndefined0Alk1m123TouchPrio()) return;
+		if (songManagerLambda.getUndefined0Alk1m123TouchPrio()) return;
 		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "playback-progress-incrdecr-amt");
 	});
 	listenForSettingChanges<bool>("songIndicatorsInControlPanel", [](const bool) {
@@ -324,27 +324,21 @@ $on_mod(Loaded) {
 	listenForSettingChanges<bool>("osuLazerBootleg", [](const bool osuLazerBootlegNew) {
 		SongManager::get().setOsu(osuLazerBootlegNew);
 		if (!Utils::passesVobecidedSanityCheck()) return;
-
 		CCScene* scene = CCScene::get();
 		if (!scene) return;
-
 		SongControlMenu* scm = scene->getChildByType<SongControlMenu>(0);
 		if (!scm) return;
-
 		std::function<void(SongControlMenu*)> removeOsuTogglerMenu = [](SongControlMenu* ctrlPnl) {
 			if (!ctrlPnl->m_mainLayer) return;
 			if (CCNode* menu = ctrlPnl->m_mainLayer->getChildByID("osu-toggler-menu"_spr)) menu->removeMeAndCleanup();
 		};
-
 		if (!scm->m_osu) {
 			if (osuLazerBootlegNew) scm->createOsuTogglerMenu();
 			else removeOsuTogglerMenu(scm);
 			return;
 		}
-
 		MenuLayer* ml = MenuLayer::get();
 		if (!ml) return;
-
 		if (!osuLazerBootlegNew) removeOsuTogglerMenu(scm);
 		if (!ml->isVisible()) {
 			ml->setVisible(true);
@@ -357,18 +351,18 @@ $on_mod(Loaded) {
 	});
 	ButtonSettingPressedEventV3(Mod::get(), "housekeeping-buttons").listen([](const auto btn) {
 		// jeremy culhane get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head get out of my head
-		SongManager& songManager = SongManager::get();
+		SongManager& songManagerLambda = SongManager::get();
 		if (btn == "view-tutorial-button") {
 			geode::utils::web::openLinkInBrowser("https://youtu.be/J2_UwVsgjHs&t=60s");
 			// geode::utils::clipboard::write("https://youtu.be/J2_UwVsgjHs&t=60s");
 			// Notification::create("Copied tutorial link to clipboard! Paste it into your web browser.")->show();
 			return ListenerResult::Propagate;
 		}
-		if (GJBaseGameLayer::get() || !songManager.isCurrentMenuLoopBeingPlayed() || !songManager.getFinishedCalculatingSongLengths()) {
+		if (GJBaseGameLayer::get() || !songManagerLambda.isCurrentMenuLoopBeingPlayed() || !songManagerLambda.getFinishedCalculatingSongLengths()) {
 			Notification::create("What are we doing? What's going on?", NotificationIcon::Error, .75f)->show();
 			return ListenerResult::Propagate;
 		}
-		if (songManager.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
+		if (songManagerLambda.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
 			Notification::create("[MLR] EN: Someone's overriding the menu loop!\n[MLR] ES: !Alguien esta anulando el menu loop!", NotificationIcon::Error, 5.f)->show();
 			return ListenerResult::Propagate;
 		}
@@ -376,7 +370,7 @@ $on_mod(Loaded) {
 			file::openFolder(Mod::get()->getConfigDir());
 			return ListenerResult::Propagate;
 		}
-		if (songManager.isOverride()) {
+		if (songManagerLambda.isOverride()) {
 			Notification::create("No reloading songs when an override is active.\nThat's the rule. That's the goal now.", NotificationIcon::Warning, .75f)->show();
 			return ListenerResult::Propagate;
 		}
