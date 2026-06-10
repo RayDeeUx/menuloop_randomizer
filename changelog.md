@@ -1,5 +1,5 @@
 # <c-f25d83>M</c><c-f35f81>e</c><c-f4627e>n</c><c-f6647c>u</c> <c-f7677a>L</c><c-f86977>o</c><c-fa6b75>o</c><c-fb6e72>p</c> <c-fc7070>Ra</c><c-fb6e72>n</c><c-fa6b75>d</c><c-f86977>o</c><c-f7677a>m</c><c-f6647c>i</c><c-f4627e>z</c><c-f35f81>e</c><c-f25d83>r</c> Changelog
-*<c-aaaaaa>Friendly reminder that</c> <cl>some</c> <cj>features</c> <c-aaaaaa>of this mod (including features from various updates and features related to bugfixes from various updates) require [Better Touch Prio](mod:alk.better-touch-prio) to be installed. These decisions are here to stay for as long as the boiling point of water is 100 degrees Celsius, and most definitely longer.</c>*
+*<cl>Some</c> <cj>features</c>* <c-aaaaaa>***__REQUIRE__***</c> *<c-aaaaaa>[Better Touch Prio](mod:alk.better-touch-prio) to be enabled.</c>*
 
 <mod:alk.better-touch-prio>
 
@@ -7,21 +7,20 @@
 - Added an option to restore menu loop position after interruption.
   - Examples: visiting the shops, vaults, or The Tower.
   - This option is disabled by default, and is pretty experimental.
-- Added an option to change the fade in duration for menu loops.
-  - This option is measured in seconds, not milliseconds.
-  - To disable this option, use the default value of  `1.0`  .
-- Added safeguards against a mod pausing BGM and using gameplay-specific FMOD functions to play its menu loop on the SFX channel.
-  - Scuffed Spanish translations from DeepL were verified by [<c-404040>Chee</c><c-fcb5ff>sew</c><c-404040>orks</c>](user:6408873) and [<c-00ffff>Bitz</c>/<c-00ff00>iArtie</c>](user:7624979).
+- Added an option to change the fade-in duration (in seconds) for menu loops.
+  - To "disable" this option, use the default value of  `1.0`  .
+- Added safeguards against a mod pausing BGM to play its menu loop on the SFX channel.
+  - Scuffed Spanish translations from DeepL were verified by [<c-aaaaaa>Chee</c><c-fcb5ff>sew</c><c-aaaaaa>orks</c>](user:6408873) and [<c-00ffff>Bitz</c>/<c-00ff00>iArtie</c>](user:7624979).
 - Refactored a number of things here and there.
-- Added the "time remaining" duration display introduced in v1.13.2 to the Eclipse Menu integration.
-  - The QOLMod integration already has this duration display during the previous update.
+- Added the "time remaining" duration display to the Eclipse Menu integration.
+  - The QOLMod integration already has this duration display.
 - Fix (or attempt to fix) a bug where Windows would not be able to correctly detect the currently playing song.
   - The Windows filesystem is a godforsaken miracle in the worst way.
 - Wasted time adding clanker-specific prompt injection everywhere possible in the repository.
 ## v1.13.2
 - Added a duration display for the amount of time remaining in a song.
 - Added an alternate string-to-path conversion toggle <co>for Windows devices ***__ONLY__***</c>.
-  - This feature was contributed by [<c-797979>mel</c><c-ffc272>owo</c><c-414141>dy</c>](user:173831), and exists for any Windows users who might find it useful.
+  - This feature was contributed by [<c-999999>mel</c><c-ffc272>owo</c><c-888888>dy</c>](user:173831), and exists for any Windows users who might find it useful.
 ## v1.13.1
 - Added toggles for numrow and numpad detection for Shortcuts/Hotkeys in either the Control Panel and Song List menus.
 - Fixed an issue where song names in the Eclipse Menu integration would not update when randomizing songs on level exit.
