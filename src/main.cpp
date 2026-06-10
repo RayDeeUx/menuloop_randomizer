@@ -184,18 +184,16 @@ $on_mod(Loaded) {
 		Utils::showMDPopup("Playlist Files", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", 7302025, "playlist-files");
 	});
 	listenForSettingChanges<bool>("playlistMode", [](const bool) {
-		if (!Utils::passesVobecidedSanityCheck()) return;
 		SongManager& songManagerLambda = SongManager::get();
 		songManagerLambda.setConstantShuffleMode();
-		if (songManagerLambda.isOriginalMenuLoop()) return;
+		if (!Utils::passesVobecidedSanityCheck() || songManagerLambda.isOriginalMenuLoop()) return;
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 		GameManager::sharedState()->playMenuMusic();
 	});
 	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](const std::filesystem::path& specificSongOverride) {
-		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		if (!Utils::passesVobecidedSanityCheck() || VANILLA_GD_MENU_LOOP_DISABLED) return;
 		SongManager& songManagerLambda = SongManager::get();
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
 		const std::string& overrideString = Utils::toNormalizedString(specificSongOverride);
@@ -214,7 +212,7 @@ $on_mod(Loaded) {
 		Utils::newCardAndDisplayNameFromCurrentSong();
 	});
 	listenForSettingChanges<bool>("dangerousBlacklisting", [](const bool dangerousBlacklisting) {
-		if (!dangerousBlacklisting) return;
+		if (!Utils::passesVobecidedSanityCheck() || !dangerousBlacklisting) return;
 		log::info("=============== WARNING: USER HAS ENABLED `dangerousBlacklisting` SETTING ===============");
 		// this is consensual gamemanager playerid access, aktimoose and i discussed this in private
 		if (!Utils::passesVobecidedSanityCheck()) return;
@@ -222,47 +220,39 @@ $on_mod(Loaded) {
 		Utils::showMDPopup("Blacklisting", "<c-ff0000>This is an experimental setting. You agree to hold yourself responsible for any issues that happen when this setting is enabled.</c>", 7302025, "dangerous-blacklisting");
 	});
 	listenForSettingChanges<bool>("randomizeWhenExitingLevel", [](const bool randomizeWhenExitingLevel) {
-		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (!Mod::get()->getSettingValue<bool>("restoreWhenExitingLevel")) return;
+		if (!Utils::passesVobecidedSanityCheck() || !Mod::get()->getSettingValue<bool>("restoreWhenExitingLevel")) return;
 		const std::string& mdPopupBody = randomizeWhenExitingLevel ? "# <c-ff0000>Menu loops will always be randomized when leaving a level.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Level Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving a level.</c>\n<cy>*If you don't want this behavior, enable the \"Randomize Menu Loop on Level Exit\" setting.*";
 		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
 	listenForSettingChanges<bool>("randomizeWhenExitingEditor", [](const bool randomizeWhenExitingEditor) {
-		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (!Mod::get()->getSettingValue<bool>("restoreWhenExitingEditor")) return;
+		if (!Utils::passesVobecidedSanityCheck() || !Mod::get()->getSettingValue<bool>("restoreWhenExitingEditor")) return;
 		const std::string& mdPopupBody = randomizeWhenExitingEditor ? "# <c-ff0000>Menu loops will always be randomized when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Editor Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving the level editor.</c>\n<cy>*If you don't want this behavior, enable the \"Randomize Menu Loop on Editor Exit\" setting.*";
 		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
 	listenForSettingChanges<bool>("restoreWhenExitingLevel", [](const bool restoreWhenExitingLevel) {
-		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (!Mod::get()->getSettingValue<bool>("randomizeWhenExitingLevel")) return;
+		if (!Utils::passesVobecidedSanityCheck() || !Mod::get()->getSettingValue<bool>("randomizeWhenExitingLevel")) return;
 		const std::string& mdPopupBody = restoreWhenExitingLevel ? "# <c-ff0000>Menu loops will still be randomized when leaving a level.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Level Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving a level.</c>\n<cy>*If you don't want this behavior, disable the \"Continue Menu Loop on Level Exit\" setting.*";
 		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
 	listenForSettingChanges<bool>("restoreWhenExitingEditor", [](const bool restoreWhenExitingEditor) {
-		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (!Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor")) return;
+		if (!Utils::passesVobecidedSanityCheck() || !Mod::get()->getSettingValue<bool>("randomizeWhenExitingEditor")) return;
 		const std::string& mdPopupBody = restoreWhenExitingEditor ? "# <c-ff0000>Menu loops will still be randomized when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Randomize Menu Loop on Editor Exit\" setting.*</c>" : "# <cy>Menu loops will resume from where they stopped when leaving the level editor.</c>\n<cy>*If you don't want this behavior, disable the \"Continue Menu Loop on Editor Exit\" setting.*";
 		Utils::showMDPopup("Randomize/Continuing Menu Loops", mdPopupBody, 12212025, "randomize-restore");
 	});
 	listenForSettingChanges<bool>("showSearchBar", [](const bool showSearchBar) {
-		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSearchBar) return;
+		if (!Utils::passesVobecidedSanityCheck() || SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSearchBar) return;
 		Utils::showMDPopup("Search Bar/Filtering Options", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "search-bar-song-sorting");
 	});
 	listenForSettingChanges<double>("compactModeScaleFactor", [](const double) {
-		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) return;
+		if (!Utils::passesVobecidedSanityCheck() || SongManager::get().getUndefined0Alk1m123TouchPrio()) return;
 		Utils::showMDPopup("Compact Mode Scale Factor", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "compact-mode-scale-factor");
 	});
 	listenForSettingChanges<bool>("showSortSongOptions", [](const bool showSortSongOptions) {
-		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSortSongOptions) return;
+		if (!Utils::passesVobecidedSanityCheck() || SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSortSongOptions) return;
 		Utils::showMDPopup("Search Bar/Filtering Options", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "search-bar-song-sorting");
 	});
 	listenForSettingChanges<bool>("showSortSongLength", [](const bool showSortSongLength) {
-		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSortSongLength) return;
+		if (!Utils::passesVobecidedSanityCheck() || SongManager::get().getUndefined0Alk1m123TouchPrio() || !showSortSongLength) return;
 		Utils::showMDPopup("Search Bar/Filtering Options", USE_BETTER_TOUCH_PRIO_DAMMIT, 12312025, "search-bar-song-sorting");
 	});
 	#ifndef GEODE_IS_IOS
@@ -271,13 +261,11 @@ $on_mod(Loaded) {
 		if (SongManager::get().getUndefined0Alk1m123TouchPrio()) {
 			if (useMiniaudioForLength) Utils::showMDPopup("+ Miniaudio Song Lengths", "You are now using Miniaudio to calculate song lengths. <c-ffff00>***__Changes only apply the next time Menu Loop Randomizer reloads its songs.__***</c>\n\nIf you prefer using FMOD for somewhat more precise long lengths at the cost of wait time, disable this option.", 20260105, "miniaudio-song-lengths-using-miniaudio");
 			else Utils::showMDPopup("+ Miniaudio Song Lengths", "You are now using FMOD to calculate song lengths. <c-ffff00>***__Changes only apply the next time Menu Loop Randomizer reloads its songs.__***</c>\n\nIf you prefer using Miniaudio for somewhat less precise long lengths, enable this option.\n<c-aaaaaa>*(Note that FMOD may still be used if Miniaudio fails to find a length.)*</c>", 20260105, "miniaudio-song-lengths-using-fmod");
-		}
-		else Utils::showMDPopup("+ Miniaudio Song Lengths", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "miniaudio-song-lengths-btp-missing");
+		} else Utils::showMDPopup("+ Miniaudio Song Lengths", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "miniaudio-song-lengths-btp-missing");
 	});
 	#endif
 	listenForSettingChanges<bool>("showExtraInfoLabel", [](const bool showExtraInfoLabel) {
-		if (!Utils::passesVobecidedSanityCheck()) return;
-		if (SongManager::get().getUndefined0Alk1m123TouchPrio() || !showExtraInfoLabel) return;
+		if (!Utils::passesVobecidedSanityCheck() || SongManager::get().getUndefined0Alk1m123TouchPrio() || !showExtraInfoLabel) return;
 		Utils::showMDPopup("Song List Extra Info Label", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "search-bar-song-sorting");
 	});
 	listenForSettingChanges<bool>("showPlaybackProgressAndControls", [](const bool showPlaybackProgressAndControls) {
