@@ -518,6 +518,7 @@ void SongListLayer::searchSongs(const std::string& queryString, const bool check
 
 void SongListLayer::onSettingsButton(CCObject*) {
 	if (this->m_isInQOLMod) return;
+	Utils::costingtonsTryNSave();
 	this->onClose(nullptr);
 	Utils::createSettingsPopup();
 }

@@ -153,6 +153,7 @@ $on_mod(Loaded) {
 		Mod::get()->setSavedValue<bool>("songListSortFileExtn", false);
 		// Mod::get()->setSavedValue<bool>("songListSortBeatsPerMinute", false);
 	}
+	Utils::costingtonsTryNSave();
 
 	std::error_code eh, ei;
 	if (!std::filesystem::exists(configDir / R"(store_your_disabled_menuloops_here)", eh)) {

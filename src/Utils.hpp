@@ -101,6 +101,7 @@ class Utils {
 	static void showMDPopup(const std::string_view title, const std::string& bodyText, const int tag, const std::string_view nodeID);
 	static void createSettingsPopup();
 	static bool notFavoritesNorBlacklist(const std::filesystem::path&);
+	static void costingtonsTryNSave();
 	static std::string getPlatform();
 	static std::string generatePlatformWarning();
 	static void writeToFile(const std::string& toWriteToFile, const std::filesystem::path& fileForWriting);

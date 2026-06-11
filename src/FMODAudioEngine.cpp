@@ -140,6 +140,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 			Utils::removeCard();
 			Utils::constantShuffleModeNewSong();
 			Utils::newCardAndDisplayNameFromCurrentSong();
+			Utils::costingtonsTryNSave();
 		}
 	}
 };

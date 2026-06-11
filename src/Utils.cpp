@@ -946,6 +946,7 @@ void Utils::showMDPopup(const std::string_view title, const std::string& bodyTex
 void Utils::createSettingsPopup() {
 	geode::Popup* popup = geode::openSettingsPopup(geode::Mod::get(), false);
 	popup->setTag(20260527);
+	popup->addOnExitCallback([]() { Utils::costingtonsTryNSave(); });
 	if (!cocos2d::CCScene::get() || !cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0)) return;
 	popup->addOnExitCallback([info = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0)->m_infoButton]() {
 		if (info) info->m_description = static_cast<std::string>(SongControlMenu::generateInfoAlertButtonDescription());
@@ -954,6 +955,11 @@ void Utils::createSettingsPopup() {
 
 bool Utils::notFavoritesNorBlacklist(const std::filesystem::path& filePath) {
 	return (filePath != (geode::Mod::get()->getConfigDir() / "favorites.txt")) && (filePath != (geode::Mod::get()->getConfigDir() / "blacklist.txt"));
+}
+
+void Utils::costingtonsTryNSave() {
+	geode::Result<> save = geode::Mod::get()->saveData();
+	if (!save.isOk()) geode::log::error("error trying to save data: {}", save.unwrapErr());
 }
 
 std::string Utils::getPlatform() {
