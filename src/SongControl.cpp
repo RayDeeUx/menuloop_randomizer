@@ -47,8 +47,7 @@ namespace SongControl {
 			"Menu Loop Randomizer", reason,
 			"Never Mind", "Open Mod Settings",
 			[](FLAlertLayer*, bool openConfig) {
-				if (!openConfig) return;
-				Utils::createSettingsPopup();
+				if (openConfig) Utils::createSettingsPopup();
 			}
 		);
 	}
@@ -234,11 +233,10 @@ namespace SongControl {
 	}
 	void shuffleSong() {
 		if (!Utils::passesVobecidedSanityCheck()) return;
-		SongManager& songManager = SongManager::get();
 		Utils::removeCard();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
-		if (songManager.isOriginalMenuLoop()) {
+		if (SongManager::get().isOriginalMenuLoop()) {
 			geode::log::info("repopulating vector from shuffling song while playing original GD menuloop");
 			Utils::refreshTheVector();
 		}
@@ -313,8 +311,8 @@ namespace SongControl {
 		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
-		FMODAudioEngine* fmod = FMODAudioEngine::get();
 		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
+		FMODAudioEngine* fmod = FMODAudioEngine::get();
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 		const int lastPosition = songManager.getLastMenuLoopPosition();
