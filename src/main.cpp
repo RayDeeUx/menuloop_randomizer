@@ -352,7 +352,7 @@ $on_mod(Loaded) {
 			return ListenerResult::Propagate;
 		}
 		if (songManagerLambda.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsNotPausedAndIsPlaying())) {
-			Notification::create("[MLR] EN: Someone's overriding the menu loop!\n[MLR] ES: !Alguien esta anulando el menu loop!", NotificationIcon::Error, 5.f)->show();
+			Notification::create("[MLR] EN: Check your current menu!\n[MLR] ES: !Echa un vistazo a tu menu actual!", NotificationIcon::Error, 5.f)->show();
 			return ListenerResult::Propagate;
 		}
 		if (btn == "config-dir-button") {
@@ -510,7 +510,7 @@ public:
 
 		if (ModMenuIntegrationClass::vobecidedCheck()) {
 			songManager.eclipseSongDurationLabel.value().setText("[LOOP IS BEING OVERRIDDEN / SE ESTA ANULANDO EL BUCLE]");
-			songManager.eclipseSongProgressBarLabel.value().setText("[CHECK SETTINGS / COMPROBAR CONFIGURACIONES]");
+			songManager.eclipseSongProgressBarLabel.value().setText("[CHECK THE CURRENT MENU / CONSULTA EL MENU ACTUAL]");
 			songManager.eclipseSongVolumeVisualizerLabel.value().setText("[THIS IS NOT A BUG / ESTO NO ES UN ERROR]");
 			return;
 		}
@@ -559,7 +559,7 @@ public:
 			reason = "[MLR] Exit the level first!";
 		} else if (SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsNotPausedAndIsPlaying())) {
 			fails = true;
-			reason = "[MLR] EN: Someone's overriding the menu loop!\n[MLR] ES: !Alguien esta anulando el menu loop!";
+			reason = "[MLR] EN: Check your current menu!\n[MLR] ES: !Echa un vistazo a tu menu actual!";
 		} else if (shortcut != ModSettings && (Utils::currentFMODSongIsNotCurrentSongManagerSong() || (!Utils::menuLoopIsNotPausedAndIsPlaying() && !VANILLA_GD_MENU_LOOP_DISABLED))) {
 			fails = true;
 			if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) reason = "[MLR] Another menu loop is active!";
@@ -824,7 +824,7 @@ $on_mod(Loaded) {
 			butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar->setID("warning-sub-header"_spr);
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setID("warning-footer-two"_spr);
 
-			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, ModMenuIntegrationClass::vobecidedCheck(), "Oh my goodness! (!Ay, Dios mio!)", "(EN: A mod is actively overriding other menu loops.)\n(ES: Hay un mod que esta anulando otros bucles de menu.)")) return;
+			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, ModMenuIntegrationClass::vobecidedCheck(), "Oh my goodness! (!Ay, Dios mio!)", "(EN: Check your current menu.)\n(ES: Consulta tu menu actual.)")) return;
 			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, VANILLA_GD_MENU_LOOP_DISABLED, "Menu Loop Randomizer is currently not active!", "(Double-check your vanilla settings.)")) return;
 			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, GJBaseGameLayer::get(), "Menu Loop Randomizer is currently inactive!", "(You're in a level right now. Try again later.)")) return;
 			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, Utils::currentFMODSongIsNotCurrentSongManagerSong(), "Menu Loop Randomizer is currently not active!", "(This menu loop isn't from MLR. Go figure out why ON YOUR OWN.)")) return;
