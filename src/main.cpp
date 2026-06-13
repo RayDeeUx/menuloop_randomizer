@@ -457,6 +457,9 @@ public:
 		EclipsePlaybackProgressDummyNode::ShortcutType type;
 		std::function<void()> action;
 	};
+	struct FMOD_DSP_LOUDNESS_METER_INFO_TYPE {
+		float momentaryloudness, u, nu, sed;
+	};
 	void playbackProgressScheduler(float) { playbackProgress(); }
 	static void playbackProgress() {
 		SongManager& songManager = SongManager::get();
@@ -471,12 +474,14 @@ public:
 				songManager.eclipseSongDurationLabel.value().setText(GEODE_DESKTOP("Switch to the ImGui menu style to view this progress.") GEODE_MOBILE("Feel free to scroll towards the bottom"));
 				songManager.eclipseSongProgressBarLabel.value().setText(GEODE_DESKTOP("(This is a non-negotiable solution.)") GEODE_MOBILE("and use the shortcuts from there instead."));
 			}
+			songManager.eclipseSongVolumeVisualizerLabel.value().setText("(This is not a bug. Do NOT report this.)");
 			return;
 		}
 
 		if (songManager.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying())) {
 			songManager.eclipseSongDurationLabel.value().setText("[LOOP IS BEING OVERRIDDEN / SE ESTA ANULANDO EL BUCLE]");
 			songManager.eclipseSongProgressBarLabel.value().setText("[CHECK SETTINGS / COMPROBAR CONFIGURACIONES]");
+			songManager.eclipseSongVolumeVisualizerLabel.value().setText("[THIS IS NOT A BUG / ESTO NO ES UN ERROR]");
 			return;
 		}
 
@@ -484,10 +489,22 @@ public:
 		if (!songManager.isCurrentMenuLoopBeingPlayed()) {
 			songManager.eclipseSongDurationLabel.value().setText("Progress: [CURRENTLY PAUSED]");
 			songManager.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:–<{}}]", "", progressBarWidth));
+			songManager.eclipseSongVolumeVisualizerLabel.value().setText(fmt::format("({:-<{}})", "", progressBarWidth));
 			return;
 		}
 
-		const int fullLength = FMODAudioEngine::get()->getMusicLengthMS(0);
+		FMODAudioEngine* fmod = FMODAudioEngine::get();
+
+		void* rawData = nullptr;
+		songManager.loudnessDSP->getParameterData(FMOD_DSP_LOUDNESS_METER_INFO, &rawData, nullptr, nullptr, 0);
+
+		const float loudness = (rawData ? static_cast<FMOD_DSP_LOUDNESS_METER_INFO_TYPE*>(rawData)->momentaryloudness : -120.0f);
+		const float amplitude = std::clamp(std::pow(10.0f, loudness / 20.0f), 0.0f, 1.0f);
+		const float compensatedAmplitude = std::clamp(amplitude / fmod->m_musicVolume, 0.f, 1.f);
+		const float curved = std::pow(compensatedAmplitude, .35f);
+		const int filled = fmod->m_musicVolume > 0.f ? static_cast<int>(curved * progressBarWidth) : 0;
+
+		const int fullLength = fmod->getMusicLengthMS(0);
 		const int lastPosition = songManager.getLastMenuLoopPosition();
 
 		const int percent = std::clamp<int>((lastPosition * 100.f / fullLength * 1.f), 0, 100);
@@ -499,6 +516,7 @@ public:
 
 		songManager.eclipseSongDurationLabel.value().setText(fmt::format("Progress: {}:{:02} (-{}:{:02}) / {}:{:02}", (lastPositionSecs / 60), (lastPositionSecs % 60), (remainingPositionSecs / 60), (remainingPositionSecs % 60), (fullLengthSecs / 60), (fullLengthSecs % 60)).c_str());
 		songManager.eclipseSongProgressBarLabel.value().setText(fmt::format("[{:+<{}}{:-<{}}]", "", completedWidth, "", progressBarWidth - completedWidth));
+		songManager.eclipseSongVolumeVisualizerLabel.value().setText(fmt::format("({:+<{}}{:-<{}})", "", filled, "", progressBarWidth - filled));
 	}
 	static void applyNewLinesToHeaders() {
 		// add newline if switching to cocos style so mobile users can fatfinger scroll properly
@@ -670,6 +688,7 @@ $on_mod(Loaded) {
 		songManager.eclipseSongNameLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Current song: [[Hold on, MLR is still loading things!]]"));
 		songManager.eclipseSongDurationLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("Progress: [[Hold on, MLR is still loading things!]]"));
 		songManager.eclipseSongProgressBarLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("[[Hold on, MLR is still loading things!]]"));
+		songManager.eclipseSongVolumeVisualizerLabel = std::make_optional<eclipse::components::Label>(tab.addLabel("[[Hold on, MLR is still loading things!]]"));
 
 		EclipsePlaybackProgressDummyNode::playbackProgress();
 		GameManager::get()->schedule(schedule_selector(EclipsePlaybackProgressDummyNode::playbackProgressScheduler), .125f);
@@ -682,6 +701,10 @@ $on_mod(Loaded) {
 				EclipsePlaybackProgressDummyNode::addButtonWithCheck(tab, button);
 			}
 		}
+
+		FMODAudioEngine* fmod = FMODAudioEngine::get();
+		fmod->m_system->createDSPByType(FMOD_DSP_TYPE_LOUDNESS_METER, &songManager.loudnessDSP);
+		fmod->m_backgroundMusicChannel->addDSP(0, songManager.loudnessDSP);
 
 		songManager.eclipseIntegrationSuccessful = true;
 
@@ -715,7 +738,7 @@ public:
 	static bool warnIf(CCNode* layer, const bool condition, const std::string& title, const std::string& subtitle) {
 		if (condition) QOLModAndroidUITrackerDummyNode::setWarning(layer, title, subtitle);
 		return condition;
-	};
+	}
 	static void setWarning(CCNode* layer, const std::string& mainText, const std::string& subText) {
 		CCLabelBMFont* dontMarrySvetlana = CCLabelBMFont::create(mainText.c_str(), "bigFont.fnt");
 		dontMarrySvetlana->limitLabelWidth(layer->getContentWidth() * .75f, 1.f, .0001f);
@@ -829,6 +852,7 @@ $on_mod(Loaded) {
 			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::checkDaSongPositions), 2.f / 60.f);
 			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::forceSharpCornerIllusionScheduler));
 			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
+			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::visualizerScheduler));
 
 			if (qolModIntegrationSongList && songManager.songListLayerForQOLMod) {
 				if (!songManager.getUndefined0Alk1m123TouchPrio()) CCTouchDispatcher::get()->unregisterForcePrio(songManager.songListLayerForQOLMod);

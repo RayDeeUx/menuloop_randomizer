@@ -177,6 +177,7 @@ class SongManager {
 	std::optional<eclipse::components::Label> eclipseSongNameLabel {};
 	std::optional<eclipse::components::Label> eclipseSongDurationLabel {};
 	std::optional<eclipse::components::Label> eclipseSongProgressBarLabel {};
+	std::optional<eclipse::components::Label> eclipseSongVolumeVisualizerLabel {};
 	bool isEclipse = false;
 	bool isQOLMod = false;
 	bool eclipseIntegrationSuccessful = false;
@@ -190,6 +191,8 @@ class SongManager {
 	geode::Ref<FLAlertLayer> songListLayerForQOLMod = nullptr; // canonically a SongListLayer
 	geode::Ref<CCTextInputNode> songListInputNodeForQOLMod = nullptr;
 	bool trackAndroidUI = false;
+
+	FMOD::DSP* loudnessDSP = nullptr;
 
   private:
 	SongManager();

@@ -88,6 +88,8 @@ bool SongControlMenu::setup() {
 	this->m_songControlsMenu->setLayout(geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f));
 
 	SongManager& songManager = SongManager::get();
+	this->m_isInQOLMod = songManager.addingToQOLModRightNow;
+
 	this->m_infoMenu = cocos2d::CCMenu::create();
 	this->m_infoMenu->setLayout(geode::RowLayout::create()->setAutoScale(false)->setAxis(geode::Axis::Row)->setGap(.0f));
 	this->m_infoMenu->setContentSize({24.f * .75f, 23.f * .75f});
@@ -201,8 +203,10 @@ bool SongControlMenu::setup() {
 	this->m_audieoVisual->setPosition({50.f, -10.f});
 	this->m_audieoVisual->setRotation(90.f);
 
-	for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(static_cast<cocos2d::CCSpriteBatchNode*>(this->m_audieoVisual->getChildByIndex(0))->m_pChildren)) {
-		spriteChild->setOpacity(0);
+	if (!this->m_isInQOLMod)  {
+		for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(this->m_audieoVisual->getChildByIndex(0)->m_pChildren)) {
+			spriteChild->setOpacity(0);
+		}
 	}
 
 	this->m_mainLayer->addChild(this->m_audieoVisual);
@@ -214,7 +218,7 @@ bool SongControlMenu::setup() {
 	this->m_musicVolCntnr->setScale(.5f);
 
 	this->m_musVolLabl = cocos2d::CCLabelBMFont::create("Music Volume:", "chatFont.fnt");
-	this->m_musVolLabl->setOpacity(0);
+	if (!this->m_isInQOLMod) this->m_musVolLabl->setOpacity(0);
 
 	this->m_originalVolume = std::clamp<int>(FMODAudioEngine::get()->getBackgroundMusicVolume() * 100.f, 0, 100);
 	const std::string& stringifiedVolume = geode::utils::numToString(this->m_originalVolume);
@@ -225,15 +229,17 @@ bool SongControlMenu::setup() {
 	});
 	this->m_musicVolumeInput->setString(stringifiedVolume);
 
-	#if GEODE_COMP_GD_VERSION < 22081
-	this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->setOpacity(0);
-	#endif
-	#if GEODE_COMP_GD_VERSION > 22074
-	this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)->setOpacity(0);
-	#endif
-	this->m_musicVolumeInput->getInputNode()->m_textField->setOpacity(0);
-	this->m_musicVolumeInput->getInputNode()->m_textLabel->setOpacity(0);
-	this->m_musicVolumeInput->getInputNode()->m_cursor->setOpacity(0);
+	if (!this->m_isInQOLMod) {
+		#if GEODE_COMP_GD_VERSION < 22081
+		this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->setOpacity(0);
+		#endif
+		#if GEODE_COMP_GD_VERSION > 22074
+		this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)->setOpacity(0);
+		#endif
+		this->m_musicVolumeInput->getInputNode()->m_textField->setOpacity(0);
+		this->m_musicVolumeInput->getInputNode()->m_textLabel->setOpacity(0);
+		this->m_musicVolumeInput->getInputNode()->m_cursor->setOpacity(0);
+	}
 
 	#if GEODE_COMP_GD_VERSION < 22081
 	this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->_scale9Image->setID("music-volume-input-background-batch-node"_spr);
@@ -344,7 +350,6 @@ bool SongControlMenu::setup() {
 	#endif
 
 	this->m_noElasticity = true;
-	this->m_isInQOLMod = songManager.addingToQOLModRightNow;
 
 	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get() || this->m_isInQOLMod) {
 		const std::function<void(cocos2d::CCNode*)> remove = [](cocos2d::CCNode* ptr) {
@@ -354,10 +359,6 @@ bool SongControlMenu::setup() {
 		};
 		remove(this->m_stngButton);
 		remove(this->m_theTimeoutCorner);
-		remove(this->m_musicVolumeInput);
-		remove(this->m_musVolLabl);
-		remove(this->m_musicVolCntnr);
-		remove(this->m_audieoVisual);
 		remove(this->m_osuLazrLbl);
 		remove(this->getChildByIDRecursive("osu-toggler-sprite"_spr));
 		remove(this->m_osuToggler);
