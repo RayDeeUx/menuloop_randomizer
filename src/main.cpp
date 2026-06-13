@@ -439,6 +439,7 @@ public:
 
 #define ECLIPSE_MODULES_HPP
 #include <eclipse.eclipse-menu/include/eclipse.hpp>
+#include <fmod_dsp.h>
 #include "SongControl.hpp"
 
 using namespace eclipse;
@@ -474,11 +475,19 @@ public:
 		void* rawData = nullptr;
 		songManager.loudnessDSP->getParameterData(FMOD_DSP_LOUDNESS_METER_INFO, &rawData, nullptr, nullptr, 0);
 
-		const float loudness = (rawData ? static_cast<FMOD_DSP_LOUDNESS_METER_INFO_TYPE*>(rawData)->momentaryloudness : -120.0f);
-		const float amplitude = std::clamp(std::pow(10.0f, loudness / 20.0f), 0.0f, 1.0f);
-		const float compensatedAmplitude = std::clamp(amplitude / fmod->m_musicVolume, 0.f, 1.f);
+		const float loudness = rawData ? static_cast<FMOD_DSP_LOUDNESS_METER_INFO_TYPE*>(rawData)->momentaryloudness : -120.f;
+
+		static float displayLUFS = -120.f;
+		static const float attackCoeff = std::exp(-1.f / (.002f * 20.f));
+		static const float releaseCoeff = std::exp(-1.f / (.03f * 20.f));
+
+		if (loudness > displayLUFS) displayLUFS = attackCoeff * displayLUFS + (1.f - attackCoeff) * loudness;
+		else displayLUFS = releaseCoeff * displayLUFS + (1.f - releaseCoeff) * loudness;
+
+		const float amplitude = std::clamp(std::pow(10.f, displayLUFS / 20.f), 0.f, 1.f);
+		const float compensatedAmplitude = fmod->m_musicVolume > 0.f ? std::clamp(amplitude / fmod->m_musicVolume, 0.f, 1.f) : 0.f;
 		const float curved = std::pow(compensatedAmplitude, .35f);
-		const int filled = fmod->m_musicVolume > 0.f ? static_cast<int>(curved * progressBarWidth) : 0;
+		const int filled = fmod->m_musicVolume > 0.f ? std::clamp(static_cast<int>(curved * (progressBarWidth + 5)), 0, progressBarWidth) : 0;
 		songManager.eclipseSongVolumeVisualizerLabel.value().setText(fmt::format("({:+<{}}{:-<{}})", "", filled, "", progressBarWidth - filled));
 	}
 	void playbackProgressScheduler(float) { playbackProgress(); }
