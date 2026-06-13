@@ -436,7 +436,7 @@ public:
 		#endif
 	}
 	static bool vobecidedCheck() {
-		return SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsNotPausedAndIsPlaying()) && VOBECIDED_JOTA->getSavedValue<int>("streak_music_mode") > 1;
+		return SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsNotPausedAndIsPlaying()) && VOBECIDED_JOTA->getSavedValue<int>("streak_music_mode") > 0;
 	}
 };
 
