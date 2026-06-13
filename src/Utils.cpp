@@ -859,6 +859,7 @@ bool Utils::isVobecidedJotaPlaying() {
 bool Utils::passesVobecidedSanityCheck() {
 	if (!SongManager::get().getVobecidedJota()) return true;
 	if (!Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsPlaying()) return true;
+	if (geode::Loader::get()->getInstalledMod("jotabelike.gd_racha")->getSavedValue<int>("streak_music_mode") < 2) return true;
 	if (GJBaseGameLayer::get()) {
 		// i think showing an flalertlayer in gjbgl might crash the game with a nullptr flalertlayerprotocol pointer (endlevellayer ptsd)
 		geode::Notification::create("[MLR] EN: Someone's overriding the menu loop!\n[MLR] ES: !Alguien esta anulando el menu loop!", geode::NotificationIcon::Error, 5.f)->show();

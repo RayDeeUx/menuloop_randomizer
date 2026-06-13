@@ -435,6 +435,9 @@ public:
 		foo->keyBackClicked();
 		#endif
 	}
+	static bool vobecidedCheck() {
+		return SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying()) && VOBECIDED_JOTA->getSavedValue<int>("streak_music_mode") > 1;
+	}
 };
 
 #define ECLIPSE_MODULES_HPP
@@ -461,15 +464,12 @@ public:
 	struct FMOD_DSP_LOUDNESS_METER_INFO_TYPE {
 		float momentaryloudness, u, nu, sed;
 	};
-	static bool vobecidedCheck() {
-		return SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying());
-	}
 	void volumeLoudnessScheduler(float) { volumeLoudness(); }
 	static void volumeLoudness() {
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
 		SongManager& songManager = SongManager::get();
 
-		if (EclipsePlaybackProgressDummyNode::vobecidedCheck() || !songManager.isCurrentMenuLoopBeingPlayed() || !songManager.eclipseSongVolumeVisualizerLabel.has_value() || songManager.eclipseIsCocosStyle) return;
+		if (ModMenuIntegrationClass::vobecidedCheck() || !songManager.isCurrentMenuLoopBeingPlayed() || !songManager.eclipseSongVolumeVisualizerLabel.has_value() || songManager.eclipseIsCocosStyle) return;
 
 		constexpr int progressBarWidth = 20;
 		void* rawData = nullptr;
@@ -508,7 +508,7 @@ public:
 			return;
 		}
 
-		if (EclipsePlaybackProgressDummyNode::vobecidedCheck()) {
+		if (ModMenuIntegrationClass::vobecidedCheck()) {
 			songManager.eclipseSongDurationLabel.value().setText("[LOOP IS BEING OVERRIDDEN / SE ESTA ANULANDO EL BUCLE]");
 			songManager.eclipseSongProgressBarLabel.value().setText("[CHECK SETTINGS / COMPROBAR CONFIGURACIONES]");
 			songManager.eclipseSongVolumeVisualizerLabel.value().setText("[THIS IS NOT A BUG / ESTO NO ES UN ERROR]");
@@ -824,7 +824,7 @@ $on_mod(Loaded) {
 			butImAlwaysThinkgAboutThisSlowFuckingHockeyPlayerWithBeautifulFrecklesAndAWeakBackhandAndHesSoBoringAndHeDrivesThisTerribleCar->setID("warning-sub-header"_spr);
 			iAmAlwaysWishingThatTheseWomenWereHimItsATerribleProblemIDontEverWantThatProblemToEverGoAway->setID("warning-footer-two"_spr);
 
-			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, songManager.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsPlaying()), "Oh my goodness! (!Ay, Dios mio!)", "(EN: A mod is actively overriding other menu loops.)\n(ES: Hay un mod que esta anulando otros bucles de menu.)")) return;
+			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, ModMenuIntegrationClass::vobecidedCheck(), "Oh my goodness! (!Ay, Dios mio!)", "(EN: A mod is actively overriding other menu loops.)\n(ES: Hay un mod que esta anulando otros bucles de menu.)")) return;
 			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, VANILLA_GD_MENU_LOOP_DISABLED, "Menu Loop Randomizer is currently not active!", "(Double-check your vanilla settings.)")) return;
 			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, GJBaseGameLayer::get(), "Menu Loop Randomizer is currently inactive!", "(You're in a level right now. Try again later.)")) return;
 			if (QOLModAndroidUITrackerDummyNode::warnIf(layer, Utils::currentFMODSongIsNotCurrentSongManagerSong(), "Menu Loop Randomizer is currently not active!", "(This menu loop isn't from MLR. Go figure out why ON YOUR OWN.)")) return;
