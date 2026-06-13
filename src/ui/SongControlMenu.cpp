@@ -368,7 +368,6 @@ bool SongControlMenu::setup() {
 	}
 
 	if (this->m_isInQOLMod) {
-		this->unschedule(schedule_selector(SongControlMenu::visualizerScheduler));
 		this->unschedule(schedule_selector(SongControlMenu::checkManagerFinished));
 		if (this->m_closeBtn) this->m_closeBtn->removeMeAndCleanup();
 		if (this->m_openSongListMenu->getChildByTag(20260105) && !Utils::getBool("qolModIntegrationSongList")) {
