@@ -837,12 +837,12 @@ void Utils::rememberLastMenuLoop() {
 
 bool Utils::menuLoopIsNotPausedAndIsPlaying() {
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
-	bool menuLoopPlaying = false;
+	// bool menuLoopPlaying = false;
 	bool menuLoopPaused = false;
-	fmod->channelForChannelID(0)->isPlaying(&menuLoopPlaying);
-	fmod->channelForChannelID(0)->getPaused(&menuLoopPaused);
+	// fmod->m_backgroundMusicChannel->isPlaying(&menuLoopPlaying);
+	fmod->m_backgroundMusicChannel->getPaused(&menuLoopPaused);
 	// if (SongManager::get().getAdvancedLogs()) geode::log::info("\nmenuLoopPlaying: {}\nmenuLoopPaused: {}", menuLoopPlaying, menuLoopPaused);
-	return menuLoopPlaying && !menuLoopPaused;
+	return !menuLoopPaused;
 }
 
 bool Utils::isVobecidedJotaPlaying() {
