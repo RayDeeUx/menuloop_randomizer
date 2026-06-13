@@ -351,7 +351,7 @@ $on_mod(Loaded) {
 			Notification::create("What are we doing? What's going on?", NotificationIcon::Error, .75f)->show();
 			return ListenerResult::Propagate;
 		}
-		if (songManagerLambda.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsNotPaused())) {
+		if (songManagerLambda.getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsNotPausedAndIsPlaying())) {
 			Notification::create("[MLR] EN: Someone's overriding the menu loop!\n[MLR] ES: !Alguien esta anulando el menu loop!", NotificationIcon::Error, 5.f)->show();
 			return ListenerResult::Propagate;
 		}
@@ -436,7 +436,7 @@ public:
 		#endif
 	}
 	static bool vobecidedCheck() {
-		return SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsNotPaused()) && VOBECIDED_JOTA->getSavedValue<int>("streak_music_mode") > 1;
+		return SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsNotPausedAndIsPlaying()) && VOBECIDED_JOTA->getSavedValue<int>("streak_music_mode") > 1;
 	}
 };
 
@@ -557,13 +557,13 @@ public:
 		if (GJBaseGameLayer::get()) {
 			fails = true;
 			reason = "[MLR] Exit the level first!";
-		} else if (SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsNotPaused())) {
+		} else if (SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsNotPausedAndIsPlaying())) {
 			fails = true;
 			reason = "[MLR] EN: Someone's overriding the menu loop!\n[MLR] ES: !Alguien esta anulando el menu loop!";
-		} else if (shortcut != ModSettings && (Utils::currentFMODSongIsNotCurrentSongManagerSong() || (!Utils::menuLoopIsNotPaused() && !VANILLA_GD_MENU_LOOP_DISABLED))) {
+		} else if (shortcut != ModSettings && (Utils::currentFMODSongIsNotCurrentSongManagerSong() || (!Utils::menuLoopIsNotPausedAndIsPlaying() && !VANILLA_GD_MENU_LOOP_DISABLED))) {
 			fails = true;
 			if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) reason = "[MLR] Another menu loop is active!";
-			else if (!Utils::menuLoopIsNotPaused() && !VANILLA_GD_MENU_LOOP_DISABLED) reason = "[MLR] Someone has paused the menu loop channel!";
+			else if (!Utils::menuLoopIsNotPausedAndIsPlaying() && !VANILLA_GD_MENU_LOOP_DISABLED) reason = "[MLR] Someone has paused the menu loop channel!";
 			else reason = "[MLR] Something went wrong...";
 		} else if (VANILLA_GD_MENU_LOOP_DISABLED) {
 			fails = true;

@@ -93,7 +93,7 @@ class Utils {
 	static bool currentFMODSongIsNotCurrentSongManagerSong();
 	static bool givenFMODPathIsNotCurrentSongManagerSong(gd::string);
 	static void rememberLastMenuLoop();
-	static bool menuLoopIsNotPaused();
+	static bool menuLoopIsNotPausedAndIsPlaying();
 	static bool isVobecidedJotaPlaying();
 	static bool passesVobecidedSanityCheck();
 	static CCMenuItemSpriteExtra* addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
