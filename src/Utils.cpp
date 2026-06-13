@@ -835,14 +835,14 @@ void Utils::rememberLastMenuLoop() {
 	geode::Mod::get()->setSavedValue<std::filesystem::path>("lastMenuLoopPath", Utils::toProblematicString(currentSong));
 }
 
-bool Utils::menuLoopIsPlaying() {
+bool Utils::menuLoopIsNotPaused() {
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
-	bool menuLoopPlaying = false;
+	// bool menuLoopPlaying = false;
 	bool menuLoopPaused = false;
-	fmod->getActiveMusicChannel(0)->isPlaying(&menuLoopPlaying);
+	// fmod->getActiveMusicChannel(0)->isPlaying(&menuLoopPlaying);
 	fmod->getActiveMusicChannel(0)->getPaused(&menuLoopPaused);
 	// if (SongManager::get().getAdvancedLogs()) geode::log::info("\nmenuLoopPlaying: {}\nmenuLoopPaused: {}", menuLoopPlaying, menuLoopPaused);
-	return menuLoopPlaying && !menuLoopPaused;
+	return !menuLoopPaused;
 }
 
 bool Utils::isVobecidedJotaPlaying() {
@@ -858,7 +858,7 @@ bool Utils::isVobecidedJotaPlaying() {
 
 bool Utils::passesVobecidedSanityCheck() {
 	if (!SongManager::get().getVobecidedJota()) return true;
-	if (!Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsPlaying()) return true;
+	if (!Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsNotPaused()) return true;
 	if (geode::Loader::get()->getInstalledMod("jotabelike.gd_racha")->getSavedValue<int>("streak_music_mode") < 2) return true;
 	if (GJBaseGameLayer::get()) {
 		// i think showing an flalertlayer in gjbgl might crash the game with a nullptr flalertlayerprotocol pointer (endlevellayer ptsd)
