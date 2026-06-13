@@ -488,7 +488,7 @@ public:
 		const float compensatedAmplitude = fmod->m_musicVolume > 0.f ? std::clamp(amplitude / fmod->m_musicVolume, 0.f, 1.f) : 0.f;
 		const float curved = std::pow(compensatedAmplitude, .35f);
 		const int filled = fmod->m_musicVolume > 0.f ? std::clamp(static_cast<int>(curved * (progressBarWidth + 5)), 0, progressBarWidth) : 0;
-		songManager.eclipseSongVolumeVisualizerLabel.value().setText(fmt::format("({:+<{}}{:-<{}})", "", filled, "", progressBarWidth - filled));
+		songManager.eclipseSongVolumeVisualizerLabel.value().setText(fmt::format("({:#<{}}{:-<{}})", "", filled, "", progressBarWidth - filled));
 	}
 	void playbackProgressScheduler(float) { playbackProgress(); }
 	static void playbackProgress() {
