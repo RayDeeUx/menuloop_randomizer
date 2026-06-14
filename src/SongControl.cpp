@@ -271,17 +271,12 @@ namespace SongControl {
 			MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 			SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID);
 			if (songInfoObject && mdm->isResourceSong(songID)) {
-				songManager.incrementTowerRepeatCount();
-				std::string displayString = fmt::format("{} can't be in a playlist! ", songInfoObject->m_songName);
-				if (const int repeats = songManager.getTowerRepeatCount(); repeats > 1) displayString += fmt::format("Touch grass {} times instead.", repeats);
-				else displayString += "It's a resource song!";
 				return geode::Notification::create(
-					displayString,
+					fmt::format("{} can't be in a playlist! ", songInfoObject->m_songName),
 					geode::NotificationIcon::Error, 5.f
 				)->show();
 			}
-			songManager.resetTowerRepeatCount();
-		} else songManager.resetTowerRepeatCount();
+		}
 
 		const std::filesystem::path& playlistFilePath = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
 		if (const std::string& normalizedPlaylistPath = Utils::toNormalizedString(playlistFilePath); normalizedPlaylistPath.empty() || Utils::toNormalizedString(playlistFilePath.extension()) != ".txt" || !Utils::notFavoritesNorBlacklist(playlistFilePath)) {
