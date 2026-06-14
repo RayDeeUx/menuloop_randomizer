@@ -267,18 +267,6 @@ std::string SongManager::getCurrentSongDisplayName() {
 	return m_displayName;
 }
 
-void SongManager::incrementTowerRepeatCount() {
-	m_towerRepeatCount = m_towerRepeatCount + 1;
-}
-
-void SongManager::resetTowerRepeatCount() {
-	m_towerRepeatCount = 0;
-}
-
-int SongManager::getTowerRepeatCount() const {
-	return m_towerRepeatCount;
-}
-
 void SongManager::setSawbladeCustomSongsFolder(const bool value) {
 	m_sawbladeCustomSongsFolder = value;
 }

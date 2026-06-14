@@ -131,9 +131,6 @@ class SongManager {
 	bool songSizeIsBad() const;
 	void setCurrentSongDisplayName(const std::string&);
 	std::string getCurrentSongDisplayName();
-	void incrementTowerRepeatCount();
-	void resetTowerRepeatCount();
-	int getTowerRepeatCount() const;
 	void setSawbladeCustomSongsFolder(const bool);
 	bool getSawbladeCustomSongsFolder() const;
 	void setAdvancedLogs(const bool);
@@ -228,7 +225,6 @@ class SongManager {
 	bool m_insidePlayMusic = false;
 	bool m_useHashesForMatching = false;
 	int m_lastPosition = 0;
-	int m_towerRepeatCount = 0;
 	int m_incrementDecrementByMilliseconds = 0;
 	SongToSongData m_songToSongDataMap {};
 	geode::Mod* m_colonMenuLoopStartTime {};
