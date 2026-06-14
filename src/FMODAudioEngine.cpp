@@ -122,7 +122,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		unsigned int length = 0;
 		menuLoopChannelProbably->getCurrentSound(&sound);
 		menuLoopChannelProbably->isPlaying(&isPlaying);
-		sound->getLength(&length, 1);
+		sound->getLength(&length, FMOD_TIMEUNIT_MS);
 
 		if (songManager.getAdvancedLogs() && stupidAccmulatorTooLazyToPutElsewhere > SECS_BETWEEN_LOGS) {
 			log::info("============= [MLR CONSTANT SHUFFLE TRACKER LOGS] =============");
