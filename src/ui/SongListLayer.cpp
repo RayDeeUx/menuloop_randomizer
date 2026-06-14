@@ -240,7 +240,7 @@ bool SongListLayer::setup() {
 		searchBackground->setID("song-list-search-background"_spr);
 		searchBarMenu->addChild(searchBackground);
 
-		CCMenuItemSpriteExtra* searchButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("gj_findBtn_001.png", 0.7f, [this](auto) {
+		CCMenuItemSpriteExtra* searchButton = geode::cocos::CCMenuItemExt::createSpriteExtraWithFrameName("gj_findBtn_001.png", .7f, [this](auto) {
 			geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 			if (!searchBar || (searchBar->getTag() == -1 && GET_SEARCH_STRING.empty())) return;
 			const std::string& queryString = GET_SEARCH_STRING;
@@ -308,7 +308,7 @@ bool SongListLayer::setup() {
 
 	if (Utils::getBool("showScrollingShortcuts")) {
 		this->m_scrollShortcuts = cocos2d::CCMenu::create();
-		this->m_scrollShortcuts->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(600.f)->setAxisReverse(true)->setAutoScale(true));
+		this->m_scrollShortcuts->setLayout(geode::ColumnLayout::create()->setDefaultScaleLimits(.0001f, 1.f)->setGap(600.f)->setAxisReverse(true)->setAutoScale(true));
 		Utils::addButton("scroll-top", menu_selector(SongListLayer::onScrollTopButton), this->m_scrollShortcuts, this, true);
 		Utils::addButton("scroll-cur", menu_selector(SongListLayer::onScrollCurButton), this->m_scrollShortcuts, this, true);
 		Utils::addButton("scroll-btm", menu_selector(SongListLayer::onScrollBtmButton), this->m_scrollShortcuts, this, true);
@@ -433,7 +433,7 @@ bool SongListLayer::setup() {
 	abridgedControlsMenu->setPosition({layerSize.width / 2.f, abridgedControlsMenuYPos});
 	abridgedControlsMenu->ignoreAnchorPointForPosition(false);
 	abridgedControlsMenu->setContentSize({80.f, 24.f});
-	abridgedControlsMenu->setLayout(geode::RowLayout::create()->setDefaultScaleLimits(.0001f, 1.0f)->setGap(1.5f));
+	abridgedControlsMenu->setLayout(geode::RowLayout::create()->setDefaultScaleLimits(.0001f, 1.f)->setGap(1.5f));
 	abridgedControlsMenu->setID("abridged-controls-menu"_spr);
 	this->m_mainLayer->addChild(abridgedControlsMenu);
 
@@ -447,19 +447,19 @@ bool SongListLayer::setup() {
 		cocos2d::CCSequence* sequenceTop = cocos2d::CCSequence::create(
 			cocos2d::CCTintTo::create(0.f, 255,   0,   0),
 			cocos2d::CCScaleTo::create(0.f, originalScale * 1.1f),
-			cocos2d::CCDelayTime::create(0.25f),
+			cocos2d::CCDelayTime::create(.25f),
 			cocos2d::CCTintTo::create(0.f, 255, 255, 255),
-			cocos2d::CCScaleTo::create(0.f, originalScale * 1.0f),
-			cocos2d::CCDelayTime::create(0.25f),
+			cocos2d::CCScaleTo::create(0.f, originalScale * 1.f),
+			cocos2d::CCDelayTime::create(.25f),
 			nullptr
 		);
 		cocos2d::CCSequence* sequenceBottom = cocos2d::CCSequence::create(
 			cocos2d::CCTintTo::create(0.f, 255, 255, 255),
-			cocos2d::CCScaleTo::create(0.f, originalScale * 1.0f),
-			cocos2d::CCDelayTime::create(0.25f),
+			cocos2d::CCScaleTo::create(0.f, originalScale * 1.f),
+			cocos2d::CCDelayTime::create(.25f),
 			cocos2d::CCTintTo::create(0.f, 255,   0,   0),
 			cocos2d::CCScaleTo::create(0.f, originalScale * 1.1f),
-			cocos2d::CCDelayTime::create(0.25f),
+			cocos2d::CCDelayTime::create(.25f),
 			nullptr
 		);
 		customSongsFolderBottom->runAction(cocos2d::CCRepeatForever::create(sequenceBottom));

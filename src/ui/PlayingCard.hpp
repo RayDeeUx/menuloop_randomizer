@@ -47,5 +47,5 @@ protected:
 public:
 	static PlayingCard* create(const std::string&);
 	cocos2d::CCPoint position;
-	const cocos2d::CCPoint cardSize = {380.0f, 55.0f};
+	const cocos2d::CCPoint cardSize = {380.f, 55.f};
 };

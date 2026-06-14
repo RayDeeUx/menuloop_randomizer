@@ -89,10 +89,10 @@ bool PlayingCard::init(const std::string& output) {
 
 	geode::NineSlice* bg = geode::NineSlice::create("black-square.png"_spr);
 	bg->setContentSize(cardSize);
-	bg->setAnchorPoint({0.5f, 0.0f});
+	bg->setAnchorPoint({.5f, 0.f});
 
-	nowPlayingLabel->limitLabelWidth(cardSize.x - 4.0f, 0.5f, 0.1f);
-	nowPlayingLabel->setPositionY(12.0f);
+	nowPlayingLabel->limitLabelWidth(cardSize.x - 4.f, .5f, .1f);
+	nowPlayingLabel->setPositionY(12.f);
 
 	mainNode->addChild(bg);
 	mainNode->addChild(nowPlayingLabel);

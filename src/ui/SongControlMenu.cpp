@@ -85,7 +85,7 @@ bool SongControlMenu::setup() {
 	this->m_songControlsMenu->setPosition({centerStage, 40.f});
 	this->m_songControlsMenu->ignoreAnchorPointForPosition(false);
 	this->m_songControlsMenu->setContentSize({idealWidth, 32.f});
-	this->m_songControlsMenu->setLayout(geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.0f));
+	this->m_songControlsMenu->setLayout(geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.f));
 
 	SongManager& songManager = SongManager::get();
 	this->m_isInQOLMod = songManager.addingToQOLModRightNow;
@@ -105,7 +105,7 @@ bool SongControlMenu::setup() {
 	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 2.5f});
 	this->m_theTimeoutCorner->ignoreAnchorPointForPosition(false);
 	this->m_theTimeoutCorner->setContentSize({24.f, 24.f});
-	this->m_theTimeoutCorner->setLayout(geode::ColumnLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true));
+	this->m_theTimeoutCorner->setLayout(geode::ColumnLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.f)->setAutoScale(true));
 
 	this->m_openSongListMenu = cocos2d::CCMenu::create();
 	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), this->m_openSongListMenu, this);
@@ -113,7 +113,7 @@ bool SongControlMenu::setup() {
 	this->m_openSongListMenu->setPosition({280.f, this->m_title->getPositionY() - 51.5f});
 	this->m_openSongListMenu->ignoreAnchorPointForPosition(false);
 	this->m_openSongListMenu->setContentSize({27.f, 27.f});
-	this->m_openSongListMenu->setLayout(geode::RowLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.0f)->setAutoScale(true));
+	this->m_openSongListMenu->setLayout(geode::RowLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.f)->setAutoScale(true));
 
 	geode::LoadingSpinner* loadingSpinner = geode::LoadingSpinner::create(15.f);
 	loadingSpinner->setVisible(true);
@@ -126,7 +126,7 @@ bool SongControlMenu::setup() {
 
 	this->m_otherLabel = cocos2d::CCLabelBMFont::create(DEFAULT_FOOTER_TEXT.c_str(), "chatFont.fnt");
 	this->m_otherLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
-	this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.0f, .0001f);
+	this->m_otherLabel->limitLabelWidth(idealWidth * .95f, 1.f, .0001f);
 	this->m_otherLabel->setPosition({centerStage, 12.5f});
 
 	this->m_headerLabl = cocos2d::CCLabelBMFont::create("Current Song:", "chatFont.fnt");
@@ -281,19 +281,19 @@ bool SongControlMenu::setup() {
 		cocos2d::CCSequence* sequenceTop = cocos2d::CCSequence::create(
 			cocos2d::CCTintTo::create(0.f, 255,   0,   0),
 			cocos2d::CCScaleTo::create(0.f, originalScale * 1.1f),
-			cocos2d::CCDelayTime::create(0.25f),
+			cocos2d::CCDelayTime::create(.25f),
 			cocos2d::CCTintTo::create(0.f, 255, 255, 255),
-			cocos2d::CCScaleTo::create(0.f, originalScale * 1.0f),
-			cocos2d::CCDelayTime::create(0.25f),
+			cocos2d::CCScaleTo::create(0.f, originalScale * 1.f),
+			cocos2d::CCDelayTime::create(.25f),
 			nullptr
 		);
 		cocos2d::CCSequence* sequenceBottom = cocos2d::CCSequence::create(
 			cocos2d::CCTintTo::create(0.f, 255, 255, 255),
-			cocos2d::CCScaleTo::create(0.f, originalScale * 1.0f),
-			cocos2d::CCDelayTime::create(0.25f),
+			cocos2d::CCScaleTo::create(0.f, originalScale * 1.f),
+			cocos2d::CCDelayTime::create(.25f),
 			cocos2d::CCTintTo::create(0.f, 255,   0,   0),
 			cocos2d::CCScaleTo::create(0.f, originalScale * 1.1f),
-			cocos2d::CCDelayTime::create(0.25f),
+			cocos2d::CCDelayTime::create(.25f),
 			nullptr
 		);
 		customSongsFolderBottom->runAction(cocos2d::CCRepeatForever::create(sequenceBottom));
@@ -420,7 +420,7 @@ void SongControlMenu::toggleButtonState(cocos2d::CCNode* playlistButton, const b
 	plBtn->setColor(isEnabled ? cocos2d::ccColor3B{255, 255, 255} : cocos2d::ccColor3B{128, 128, 128});
 	if (this->m_otherLabel) {
 		this->m_otherLabel->setString(isEnabled ? DEFAULT_FOOTER_TEXT.c_str() : "Hey there! Menu Loop Randomizer is finishing some things to set up the Song List. Hang tight!");
-		this->m_otherLabel->limitLabelWidth(this->m_mainLayer->getContentWidth() * .95f * .95f, 1.0f, .0001f);
+		this->m_otherLabel->limitLabelWidth(this->m_mainLayer->getContentWidth() * .95f * .95f, 1.f, .0001f);
 	}
 	if (this->m_openSongListMenu) if (CCNode* spinner = this->m_openSongListMenu->getChildByTag(20260104); spinner) static_cast<geode::LoadingSpinner*>(spinner)->setVisible(!isEnabled);
 }
@@ -639,7 +639,7 @@ void SongControlMenu::updateCurrentLabel() {
 			const std::string& newHeaderString = geode::utils::string::replace(this->m_headerLabl->getString(), "Song", fmt::format("Song from {}", songManager.getPlaylistFileName()));
 			this->m_headerLabl->setString(newHeaderString.c_str());
 		}
-		this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.0f, .0001f);
+		this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.f, .0001f);
 	}
 	if (!Utils::getBool("songIndicatorsInControlPanel")) {
 		this->m_smallLabel->setSkewX(0.f);
