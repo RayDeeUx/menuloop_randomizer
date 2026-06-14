@@ -96,8 +96,8 @@ std::string Utils::getString(const std::string_view setting) {
 
 cocos2d::CCNode* Utils::findCardRemotely() {
 	cocos2d::CCNode* card = nullptr;
-	if (!card && MenuLayer::get()) card = MenuLayer::get()->getChildByIDRecursive("now-playing"_spr);
-	if (!card && cocos2d::CCScene::get()) card = cocos2d::CCScene::get()->getChildByIDRecursive("now-playing"_spr);
+	if (!geode::OverlayManager::get()) return nullptr;
+	card = geode::OverlayManager::get()->getChildByIDRecursive("now-playing"_spr);
 	if (!card) return nullptr;
 	return card;
 }
@@ -156,12 +156,12 @@ void Utils::constantShuffleModeNewSong() {
 
 // create notif card stuff
 void Utils::newNotification(const std::string& notifString, const bool checkSetting) {
-	if (!cocos2d::CCScene::get()) return;
+	if (!geode::OverlayManager::get()) return;
 	if (cocos2d::CCNode* oldCard = Utils::findCardRemotely()) oldCard->removeMeAndCleanup();
 	if (checkSetting && !Utils::getBool("enableNotification")) return;
 
-	auto card = PlayingCard::create(notifString);
-	auto screenSize = cocos2d::CCDirector::get()->getWinSize();
+	PlayingCard* card = PlayingCard::create(notifString);
+	const cocos2d::CCSize screenSize = cocos2d::CCDirector::get()->getWinSize();
 
 	card->position.x = screenSize.width / 2.0f;
 	card->position.y = screenSize.height;
@@ -169,13 +169,9 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 	const cocos2d::CCPoint defaultPos = card->position;
 
 	card->setPosition(defaultPos);
-	// card->setZOrder(200); // this should've been removed a long time ago
 	card->setID("now-playing"_spr);
 
-	if (MenuLayer::get()) MenuLayer::get()->addChild(card);
-	else if (checkSetting && Utils::getBool("showOutsideOfMainMenu")) cocos2d::CCScene::get()->addChild(card);
-
-	if (cocos2d::CCScene* parent = geode::cast::typeinfo_cast<cocos2d::CCScene*>(card->getParent())) card->setZOrder(parent->getHighestChildZ() + 1);
+	if ((cocos2d::CCScene::get() && cocos2d::CCScene::get()->getChildByType<MenuLayer>(0)) || (checkSetting && Utils::getBool("showOutsideOfMainMenu"))) geode::OverlayManager::get()->addChild(card);
 
 	auto sequence = cocos2d::CCSequence::create(
 		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, {defaultPos.x, defaultPos.y - 24.0f}), 2.0f),
@@ -770,7 +766,7 @@ std::filesystem::path Utils::toProblematicString(const std::string_view path) {
 void Utils::fadeOutCardRemotely(cocos2d::CCNode* card) {
 	if (!card) return;
 	card->stopAllActions();
-	card->runAction(cocos2d::CCSequence::create(cocos2d::CCEaseOut::create(cocos2d::CCMoveBy::create(.25f, {0, 24}), 1.f), nullptr));
+	card->runAction(cocos2d::CCSequence::create(cocos2d::CCEaseOut::create(cocos2d::CCMoveBy::create(.25f, {0, 24}), 1.f), cocos2d::CCRemoveSelf::create(), IHnullptr));
 }
 
 void Utils::removeCardRemotely(cocos2d::CCNode* card) {

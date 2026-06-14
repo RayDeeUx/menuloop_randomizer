@@ -45,20 +45,18 @@ using namespace geode::prelude;
 
 class $modify(MenuLoopCCDHook, CCDirector) {
 	void willSwitchToScene(cocos2d::CCScene* scene) {
-		CCDirector* director = CCDirector::get();
-		CCScene* previousScene = director->getRunningScene();
+		CCScene* previousScene = CCDirector::get()->getRunningScene();
 
-		director->willSwitchToScene(scene);
+		CCDirector::willSwitchToScene(scene);
 
 		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
 		else if (!scene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely(Utils::findCardRemotely());
 	}
 
 	bool pushScene(cocos2d::CCScene* scene) {
-		CCDirector* director = CCDirector::get();
-		CCScene* previousScene = director->getRunningScene();
+		CCScene* previousScene = CCDirector::get()->getRunningScene();
 
-		bool result = director->pushScene(scene);
+		bool result = CCDirector::pushScene(scene);
 
 		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
 		else if (!scene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely(Utils::findCardRemotely());
@@ -67,10 +65,9 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 	}
 
 	bool replaceScene(cocos2d::CCScene* scene) {
-		CCDirector* director = CCDirector::get();
-		CCScene* previousScene = director->getRunningScene();
+		CCScene* previousScene = CCDirector::get()->getRunningScene();
 
-		bool result = director->replaceScene(scene);
+		bool result = CCDirector::replaceScene(scene);
 
 		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
 		else if (!scene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely(Utils::findCardRemotely());
@@ -79,10 +76,9 @@ class $modify(MenuLoopCCDHook, CCDirector) {
 	}
 
 	void popSceneWithTransition(float p0, cocos2d::PopTransition p1) {
-		CCDirector* director = CCDirector::get();
-		CCScene* previousScene = director->getRunningScene();
+		CCScene* previousScene = CCDirector::get()->getRunningScene();
 
-		director->popSceneWithTransition(p0, p1);
+		CCDirector::popSceneWithTransition(p0, p1);
 
 		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
 		else Utils::removeCardRemotely(Utils::findCardRemotely());
