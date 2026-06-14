@@ -609,7 +609,6 @@ void SongControlMenu::toggleOsuReal(cocos2d::CCObject*) {
 
 void SongControlMenu::updateCurrentLabel() {
 	SongManager& songManager = SongManager::get();
-	songManager.resetTowerRepeatCount();
 	const std::string& currentSong = Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel();
 	if (!this->m_smallLabel || !this->m_smallLabel->getParent() || this->m_smallLabel->getParent() != this->b) {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");

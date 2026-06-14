@@ -474,8 +474,6 @@ bool SongListLayer::setup() {
 	this->m_closeBtn->setID("close-button"_spr);
 	this->m_buttonMenu->setID("close-menu"_spr);
 
-	songManager.resetTowerRepeatCount();
-
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE) {
 		SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
 		this->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
