@@ -57,10 +57,7 @@ bool SongControlMenu::setup() {
 	if (!geode::Popup::init(300.f, 150.f, "GJ_square05.png")) return false;
 	#endif
 
-	this->setUserFlag("undefined0.draggable-popups/undraggable", true);
-	this->setUserFlag("undefined0.draggable-popups/undraggable-popup", true);
-	this->setUserObject("undefined0.draggable-popups/undraggable", cocos2d::CCBool::create(true));
-	this->setUserObject("undefined0.draggable-popups/undraggable-popup", cocos2d::CCBool::create(true));
+	Utils::addUndraggablePopupTraits(this);
 
 	this->setTitle("Menu Loop Randomizer - Control Panel");
 	this->m_title->setScale(.45f);
@@ -354,8 +351,6 @@ bool SongControlMenu::setup() {
 	this->m_bgSprite->_scale9Image->setID("the-less-darned-sprite-9"_spr);
 	#endif
 
-	this->m_noElasticity = true;
-
 	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get() || this->m_isInQOLMod) {
 		const std::function<void(cocos2d::CCNode*)> remove = [](cocos2d::CCNode* ptr) {
 			if (!ptr) return;
@@ -573,7 +568,7 @@ void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 	if (this->m_isInQOLMod && (!Utils::getBool("qolModIntegrationSongList") || !songManager.songListLayerForQOLMod)) return;
 	if (!songManager.getFinishedCalculatingSongLengths()) {
 		FLAlertLayer* alert = FLAlertLayer::create("Hold on a sec!", "<cl>Menu Loop Randomizer</c> is still calculating song lengths to set up the Song List menu. Hang tight, and try again later.", "I Understand");
-		alert->m_noElasticity = true;
+		Utils::addUndraggablePopupTraits(alert);
 		alert->show();
 		return;
 	}

@@ -60,10 +60,7 @@ PlayingCard* PlayingCard::create(const std::string& output) {
 bool PlayingCard::init(const std::string& output) {
 	if (!CCNode::init()) return false;
 
-	this->setUserObject("undefined0.draggable-popups/undraggable-popup", cocos2d::CCBool::create(true));
-	this->setUserObject("undefined0.draggable-popups/undraggable", cocos2d::CCBool::create(true));
-	this->setUserFlag("undefined0.draggable-popups/undraggable-popup", true);
-	this->setUserFlag("undefined0.draggable-popups/undraggable", true);
+	Utils::undraggableUserFlagsAndUserObjects(this);
 
 	std::string fontFile = "gjFont17.fnt";
 	int font = Mod::get()->getSettingValue<int64_t>("notificationFont");

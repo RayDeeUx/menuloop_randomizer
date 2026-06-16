@@ -387,7 +387,7 @@ $on_game(ModsLoaded) {
 			SongManager::get().setGeodify(newMenuLoop);
 			if (!newMenuLoop) return;
 			FLAlertLayer* pp = FLAlertLayer::create("Heads up!", "<cl>(From Menu Loop Randomizer)</c>\n\nGeodify's menu loop has been enabled.\n<c_>If you don't hear your menu loop from <cl>Menu Loop Randomizer</c>, you're on your own to figure out why.</c>", "I Understand");
-			pp->m_noElasticity = true;
+			Utils::addUndraggablePopupTraits(pp);
 			pp->show();
 		}, gify);
 	}

@@ -649,6 +649,7 @@ void Utils::showFreezeWarning() {
 	if (!cocos2d::CCScene::get()) return;
 	if (!SongManager::get().getFinishedCalculatingSongLengths()) {
 		FLAlertLayer* alert = FLAlertLayer::create("Sorry About That!", "<cl>Menu Loop Randomizer</c> still needed to finish song length calculations from your previous set of songs before you changed your settings.\n\n<cy>Don't panic--the freezing was intended, and it's over now.</c>\n\n<cl>(You might see multiple copies of this message depending on how many settings you changed.)</c>", "I Understand");
+		Utils::addUndraggablePopupTraits(alert);
 		alert->setTag(20260106);
 		alert->setUserObject("the-freezing-is-part-of-the-mod"_spr, cocos2d::CCBool::create(true));
 		alert->m_noElasticity = true;
@@ -766,7 +767,7 @@ std::filesystem::path Utils::toProblematicString(const std::string_view path) {
 void Utils::fadeOutCardRemotely(cocos2d::CCNode* card) {
 	if (!card) return;
 	card->stopAllActions();
-	card->runAction(cocos2d::CCSequence::create(cocos2d::CCEaseOut::create(cocos2d::CCMoveBy::create(.25f, {0, 24}), 1.f), cocos2d::CCRemoveSelf::create(), IHnullptr));
+	card->runAction(cocos2d::CCSequence::create(cocos2d::CCEaseOut::create(cocos2d::CCMoveBy::create(.25f, {0, 24}), 1.f), cocos2d::CCRemoveSelf::create(), nullptr));
 }
 
 void Utils::removeCardRemotely(cocos2d::CCNode* card) {
@@ -861,7 +862,7 @@ bool Utils::passesVobecidedSanityCheck() {
 		return false;
 	}
 	FLAlertLayer* fl = FLAlertLayer::create(nullptr, R"(/!\ Attention (Atencion) /!\)", "English:\n<c_>One of your mods has forcibly paused menu loop playback,</c> <cy>as you have changed this mod's settings to override its menu loop over all other audio sources</c> <co>(either by disabling it entirely or by asking the mod to play its menu loop everywhere).</c> <cg>Please check this mod's custom settings menu to confirm if this is what you want.</c> <cl>If it is, feel free to ignore this warning.</c>\n=====\nEspanol:\n<c_>Uno de tus mods ha interrumpido de forma forzada la reproduccion del menu loop,</c> <cy>ya que has modificado la configuracion de este mod para que su bucle de menu tenga prioridad sobre el resto de fuentes de audio</c> <co>(ya sea desactivandolo por completo o indicando al mod que reproduzca su bucle de menu en todas partes).</c> <cg>Revise el menu de configuracion personalizada de este mod para confirmar si esto es lo que deseas.</c> <cl>Si es asi, puedes ignorar esta advertencia.</c>", "I Understand (Lo Entiendo)", nullptr, 440.f, false, 310.f, .5f);
-	fl->m_noElasticity = true;
+	Utils::addUndraggablePopupTraits(fl);
 	fl->show();
 	return false;
 }
@@ -931,22 +932,33 @@ CCMenuItemToggler* Utils::addViewModeToggle(const bool relevantBoolean, const st
 	return toggle;
 }
 
+void Utils::undraggableUserFlagsAndUserObjects(cocos2d::CCNode* node) {
+	if (!node) return;
+	node->setUserObject("undefined0.draggable-popups/undraggable-popup", cocos2d::CCBool::create(true));
+	node->setUserObject("undefined0.draggable-popups/undraggable", cocos2d::CCBool::create(true));
+	node->setUserFlag("undefined0.draggable-popups/undraggable-popup", true);
+	node->setUserFlag("undefined0.draggable-popups/undraggable", true);
+}
+
+void Utils::addUndraggablePopupTraits(FLAlertLayer* popup) {
+	if (!popup) return;
+	Utils::undraggableUserFlagsAndUserObjects(popup);
+	popup->m_noElasticity = true;
+}
+
 void Utils::showMDPopup(const std::string_view title, const std::string& bodyText, const int tag, const std::string_view nodeID) {
 	geode::MDPopup* popup = geode::MDPopup::create(fmt::format("MLR {}: A Warning", title), bodyText, "I Understand");
 	popup->setID(fmt::format("{}-warning"_spr, nodeID));
+	Utils::addUndraggablePopupTraits(popup);
 	popup->setTag(tag);
-	popup->m_noElasticity = true;
 	popup->show();
 }
 
 void Utils::createSettingsPopup() {
 	geode::Popup* popup = geode::openSettingsPopup(geode::Mod::get(), false);
+	Utils::addUndraggablePopupTraits(popup);
 	popup->setTag(20260527);
 	popup->addOnExitCallback([]() { Utils::costingtonsTryNSave(); });
-	popup->setUserObject("undefined0.draggable-popups/undraggable-popup", cocos2d::CCBool::create(true));
-	popup->setUserObject("undefined0.draggable-popups/undraggable", cocos2d::CCBool::create(true));
-	popup->setUserFlag("undefined0.draggable-popups/undraggable-popup", true);
-	popup->setUserFlag("undefined0.draggable-popups/undraggable", true);
 	if (!cocos2d::CCScene::get() || !cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0)) return;
 	popup->addOnExitCallback([info = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0)->m_infoButton]() {
 		if (info) info->m_description = static_cast<std::string>(SongControlMenu::generateInfoAlertButtonDescription());

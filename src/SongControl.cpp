@@ -43,13 +43,15 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 
 namespace SongControl {
 	void woahThereBuddy(const std::string& reason) {
-		geode::createQuickPopup(
+		FLAlertLayer* foo = geode::createQuickPopup(
 			"Menu Loop Randomizer", reason,
 			"Never Mind", "Open Mod Settings",
 			[](FLAlertLayer*, bool openConfig) {
 				if (openConfig) Utils::createSettingsPopup();
-			}
+			}, false
 		);
+		Utils::addUndraggablePopupTraits(foo);
+		foo->show();
 	}
 	void previousSong() {
 		if (!Utils::passesVobecidedSanityCheck()) return;
