@@ -209,6 +209,11 @@ bool SongListLayer::setup() {
 	if (!geode::Popup::init(420.f, 290.f, "GJ_square02.png")) return false;
 	#endif
 
+	this->setUserFlag("undefined0.draggable-popups/undraggable", true);
+	this->setUserFlag("user95401.scrollbar_everywhere/scrollbar", true);
+	this->setUserFlag("undefined0.draggable-popups/undraggable-popup", true);
+	this->setUserObject("undefined0.draggable-popups/undraggable", cocos2d::CCBool::create(true));
+	this->setUserObject("undefined0.draggable-popups/undraggable-popup", cocos2d::CCBool::create(true));
 	this->setUserObject("user95401.scrollbar_everywhere/scrollbar", cocos2d::CCBool::create(true)); // fuck off, user95401.
 	this->m_noElasticity = true;
 

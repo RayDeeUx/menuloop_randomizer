@@ -71,6 +71,12 @@ bool MLRSongCell::initEmpty(const bool isEven) {
 
 bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool isCompact) {
 	if (!CCLayerColor::initWithColor(isEven ? cocos2d::ccColor4B{160, 90, 45, 254} : cocos2d::ccColor4B{195, 115, 60, 254})) return false;
+
+	this->setUserObject("undefined0.draggable-popups/undraggable-popup", cocos2d::CCBool::create(true));
+	this->setUserObject("undefined0.draggable-popups/undraggable", cocos2d::CCBool::create(true));
+	this->setUserFlag("undefined0.draggable-popups/undraggable-popup", true);
+	this->setUserFlag("undefined0.draggable-popups/undraggable", true);
+
 	this->m_songData = songData;
 
 	this->setContentWidth(356.f);

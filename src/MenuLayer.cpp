@@ -101,8 +101,7 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		if (noClassic)
 			Utils::addButton("controls", menu_selector(MenuLayerMLHook::onControlsButton), REST_OF_THE_OWL);
 		if (Utils::getBool("enableShuffleButton")) Utils::addButton("shuffle", menu_selector(MenuLayerMLHook::onShuffleButton), REST_OF_THE_OWL);
-		if (Utils::getBool("enableNotification") && Utils::getBool("enableNewNotification"))
-			Utils::addButton("regen", menu_selector(MenuLayerMLHook::onRegenButton), REST_OF_THE_OWL);
+		if (Utils::getBool("enableNotification") && Utils::getBool("enableNewNotification")) Utils::addButton("regen", menu_selector(MenuLayerMLHook::onRegenButton), REST_OF_THE_OWL);
 		if (Utils::getBool("enableCopySongID")) Utils::addButton("copy", menu_selector(MenuLayerMLHook::onCopyButton), REST_OF_THE_OWL);
 
 		if (noClassic) return true;

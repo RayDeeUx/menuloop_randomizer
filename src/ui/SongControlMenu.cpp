@@ -57,6 +57,11 @@ bool SongControlMenu::setup() {
 	if (!geode::Popup::init(300.f, 150.f, "GJ_square05.png")) return false;
 	#endif
 
+	this->setUserFlag("undefined0.draggable-popups/undraggable", true);
+	this->setUserFlag("undefined0.draggable-popups/undraggable-popup", true);
+	this->setUserObject("undefined0.draggable-popups/undraggable", cocos2d::CCBool::create(true));
+	this->setUserObject("undefined0.draggable-popups/undraggable-popup", cocos2d::CCBool::create(true));
+
 	this->setTitle("Menu Loop Randomizer - Control Panel");
 	this->m_title->setScale(.45f);
 

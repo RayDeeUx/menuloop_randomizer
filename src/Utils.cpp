@@ -943,6 +943,10 @@ void Utils::createSettingsPopup() {
 	geode::Popup* popup = geode::openSettingsPopup(geode::Mod::get(), false);
 	popup->setTag(20260527);
 	popup->addOnExitCallback([]() { Utils::costingtonsTryNSave(); });
+	popup->setUserObject("undefined0.draggable-popups/undraggable-popup", cocos2d::CCBool::create(true));
+	popup->setUserObject("undefined0.draggable-popups/undraggable", cocos2d::CCBool::create(true));
+	popup->setUserFlag("undefined0.draggable-popups/undraggable-popup", true);
+	popup->setUserFlag("undefined0.draggable-popups/undraggable", true);
 	if (!cocos2d::CCScene::get() || !cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0)) return;
 	popup->addOnExitCallback([info = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0)->m_infoButton]() {
 		if (info) info->m_description = static_cast<std::string>(SongControlMenu::generateInfoAlertButtonDescription());
