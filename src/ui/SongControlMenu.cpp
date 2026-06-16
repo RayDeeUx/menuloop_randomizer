@@ -58,6 +58,7 @@ bool SongControlMenu::setup() {
 	#endif
 
 	Utils::addUndraggablePopupTraits(this);
+	SongManager& songManager = SongManager::get();
 
 	this->setTitle("Menu Loop Randomizer - Control Panel");
 	this->m_title->setScale(.45f);
@@ -80,7 +81,7 @@ bool SongControlMenu::setup() {
 	Utils::addButton("favorite", menu_selector(SongControlMenu::onFavoriteButton), REST_OF_THE_OWL);
 	Utils::addButton("hold", menu_selector(SongControlMenu::onHoldSongButton), REST_OF_THE_OWL);
 	Utils::addButton("prev", menu_selector(SongControlMenu::onPreviousButton), REST_OF_THE_OWL);
-	if (!Utils::getBool("loadPlaylistFile") || SongManager::get().getPlaylistIsEmpty()) {
+	if (!Utils::getBool("loadPlaylistFile") || songManager.getPlaylistIsEmpty()) {
 		Utils::addButton("add", menu_selector(SongControlMenu::onAddToPlylstBtn), REST_OF_THE_OWL);
 	}
 
@@ -89,7 +90,6 @@ bool SongControlMenu::setup() {
 	this->m_songControlsMenu->setContentSize({idealWidth, 32.f});
 	this->m_songControlsMenu->setLayout(geode::RowLayout::create()->setGap(5.f)->setDefaultScaleLimits(.0001f, 1.f));
 
-	SongManager& songManager = SongManager::get();
 	this->m_isInQOLMod = songManager.addingToQOLModRightNow;
 
 	this->m_infoMenu = cocos2d::CCMenu::create();
@@ -225,9 +225,8 @@ bool SongControlMenu::setup() {
 	this->m_originalVolume = std::clamp<int>(FMODAudioEngine::get()->getBackgroundMusicVolume() * 100.f, 0, 100);
 	const std::string& stringifiedVolume = geode::utils::numToString(this->m_originalVolume);
 	this->m_musicVolumeInput = geode::TextInput::create(50.f, stringifiedVolume, "chatFont.fnt");
-	this->m_musicVolumeInput->setCommonFilter(geode::CommonFilter::Uint);
-	this->m_musicVolumeInput->setCallback([this](const std::string& inputString) {
-		FMODAudioEngine::get()->setBackgroundMusicVolume(std::clamp<int>(geode::utils::numFromString<int>(inputString).unwrapOr(this->m_originalVolume), 0, 100) / 100.f);
+	this->m_musicVolumeInput->setCallback([origVol = this->m_originalVolume](const std::string& inputString) {
+		FMODAudioEngine::get()->setBackgroundMusicVolume(std::clamp<int>(geode::utils::numFromString<int>(inputString).unwrapOr(origVol), 0, 100) / 100.f);
 	});
 	this->m_musicVolumeInput->setString(stringifiedVolume);
 

@@ -776,7 +776,7 @@ void Utils::removeCardRemotely(cocos2d::CCNode* card) {
 
 void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {
 	SongManager& songManager = SongManager::get();
-	if (SongManager::get().isEclipse && SongManager::get().eclipseSongNameLabel.has_value() && SongManager::get().eclipseIntegrationSuccessful) geode::Loader::get()->queueInMainThread([]() {
+	if (songManager.isEclipse && songManager.eclipseSongNameLabel.has_value() && songManager.eclipseIntegrationSuccessful) geode::Loader::get()->queueInMainThread([]() {
 		SongManager& songManagerLambda = SongManager::get();
 		if (!songManagerLambda.eclipseIsCocosStyle) songManagerLambda.eclipseSongNameLabel.value().setText(fmt::format("Current song: {}", Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel()));
 		else songManagerLambda.eclipseSongNameLabel.value().setText("Song progress is unavailable in this menu style!");
