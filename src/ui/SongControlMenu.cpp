@@ -554,8 +554,15 @@ void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 	if (Utils::getBool("qolModIntegrationSongList") && this->m_isInQOLMod && this->getParent() && songManager.songListLayerForQOLMod->getParent() && songManager.songListLayerForQOLMod->getParent() == this->getParent()) {
 		this->setScale(0.f);
 		songManager.songListLayerForQOLMod->setScale(.7f);
+		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getInputNode()) {
+			this->m_musicVolumeInput->setEnabled(false);
+			this->m_musicVolumeInput->getInputNode()->onClickTrackNode(false);
+		}
 		SongListLayer* foo = static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data());
-		if (foo->m_searchBar && foo->m_searchBar->getInputNode()) foo->m_searchBar->getInputNode()->onClickTrackNode(false);
+		if (foo->m_searchBar && foo->m_searchBar->getInputNode()) {
+			foo->m_searchBar->setEnabled(true);
+			foo->m_searchBar->getInputNode()->onClickTrackNode(false);
+		}
 		if (Utils::getBool("autoScrollToCurrentSong")) {
 			geode::Loader::get()->queueInMainThread([foo, contentLayer = foo->getContentLayer()]() {
 				if (!contentLayer || !contentLayer->getChildByTag(12192025)) return;

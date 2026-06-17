@@ -750,11 +750,13 @@ public:
 		}
 		songManager.trackAndroidUI = false;
 		if (songManager.songControlInputNodeQOLMod) {
+			songManager.songControlInputNodeQOLMod->setString(geode::utils::numToString(std::clamp<int>(FMODAudioEngine::get()->getBackgroundMusicVolume() * 100.f, 0, 100)));
 			songManager.songControlInputNodeQOLMod->onClickTrackNode(false);
 			songManager.songControlInputNodeQOLMod = nullptr;
 		}
 		songManager.songControlMenuForQOLMod = nullptr;
 		if (songManager.songListInputNodeForQOLMod) {
+			songManager.songListInputNodeForQOLMod->setString("");
 			songManager.songListInputNodeForQOLMod->onClickTrackNode(false);
 			songManager.songListInputNodeForQOLMod = nullptr;
 		}
@@ -891,9 +893,19 @@ $on_mod(Loaded) {
 				}
 				songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
 
-				if (SongListLayer* foo = static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data()); foo) {
-					foo->searchSongs("", false);
-					if (foo && foo->m_searchBar && foo->m_searchBar->getInputNode()) foo->m_searchBar->getInputNode()->onClickTrackNode(false);
+				if (SongControlMenu* foo = static_cast<SongControlMenu*>(songManager.songControlMenuForQOLMod.data()); foo) {
+					if (foo && foo->m_musicVolumeInput && foo->m_musicVolumeInput->getInputNode()) {
+						foo->m_musicVolumeInput->setEnabled(true);
+						foo->m_musicVolumeInput->getInputNode()->onClickTrackNode(false);
+					}
+				}
+
+				if (SongListLayer* bar = static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data()); bar) {
+					bar->searchSongs("", false);
+					if (bar && bar->m_searchBar && bar->m_searchBar->getInputNode()) {
+						bar->m_searchBar->setEnabled(false);
+						bar->m_searchBar->getInputNode()->onClickTrackNode(false);
+					}
 				}
 			}
 

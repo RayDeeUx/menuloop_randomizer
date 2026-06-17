@@ -78,7 +78,6 @@ protected:
 	cocos2d::CCLayerColor* m_currProgBar{};
 	cocos2d::CCClippingNode* m_clipNode {};
 	FMODLevelVisualizer* m_audieoVisual {};
-	geode::TextInput* m_musicVolumeInput{};
 	cocos2d::CCLabelBMFont* m_musVolLabl{};
 	cocos2d::CCLabelBMFont* m_osuLazrLbl{};
 	cocos2d::CCNodeRGBA* m_musicVolCntnr{};
@@ -107,6 +106,7 @@ public:
 	bool m_osu = false;
 	bool m_isInQOLMod = false;
 	InfoAlertButton* m_infoButton {};
+	geode::TextInput* m_musicVolumeInput{};
 	static SongControlMenu* create();
 	void onRegenButton(cocos2d::CCObject*);
 	void toggleOsuReal(cocos2d::CCObject*);

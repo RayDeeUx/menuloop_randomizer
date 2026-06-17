@@ -538,8 +538,16 @@ void SongListLayer::onControlsButton(CCObject*) {
 	if (!Utils::passesVobecidedSanityCheck()) return;
 	SongManager& songManager = SongManager::get();
 	if (this->m_isInQOLMod && this->getParent() && songManager.songControlMenuForQOLMod->getParent() && songManager.songControlMenuForQOLMod->getParent() == this->getParent()) {
-		if (this->m_searchBar && this->m_searchBar->getInputNode()) this->m_searchBar->getInputNode()->onClickTrackNode(false);
+		if (this->m_searchBar && this->m_searchBar->getInputNode()) {
+			this->m_searchBar->setEnabled(false);
+			this->m_searchBar->getInputNode()->onClickTrackNode(false);
+		}
 		this->setScale(0.f);
+		SongControlMenu* foo = static_cast<SongControlMenu*>(songManager.songControlMenuForQOLMod.data());
+		if (foo->m_musicVolumeInput && foo->m_musicVolumeInput->getInputNode()) {
+			foo->m_musicVolumeInput->setEnabled(true);
+			foo->m_musicVolumeInput->getInputNode()->onClickTrackNode(false);
+		}
 		songManager.songControlMenuForQOLMod->setScale(1.f);
 		return;
 	}
