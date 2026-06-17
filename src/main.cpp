@@ -893,19 +893,15 @@ $on_mod(Loaded) {
 				}
 				songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
 
-				if (SongControlMenu* foo = static_cast<SongControlMenu*>(songManager.songControlMenuForQOLMod.data()); foo) {
-					if (foo && foo->m_musicVolumeInput && foo->m_musicVolumeInput->getInputNode()) {
-						foo->m_musicVolumeInput->setEnabled(true);
-						foo->m_musicVolumeInput->getInputNode()->onClickTrackNode(false);
-					}
+				if (SongControlMenu* foo = static_cast<SongControlMenu*>(songManager.songControlMenuForQOLMod.data()); foo && foo->m_musicVolumeInput && foo->m_musicVolumeInput->getInputNode()) {
+					foo->m_musicVolumeInput->setEnabled(true);
+					foo->m_musicVolumeInput->getInputNode()->onClickTrackNode(false);
 				}
 
-				if (SongListLayer* bar = static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data()); bar) {
+				if (SongListLayer* bar = static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data()); bar && bar->m_searchBar && bar->m_searchBar->getInputNode()) {
 					bar->searchSongs("", false);
-					if (bar && bar->m_searchBar && bar->m_searchBar->getInputNode()) {
-						bar->m_searchBar->setEnabled(false);
-						bar->m_searchBar->getInputNode()->onClickTrackNode(false);
-					}
+					bar->m_searchBar->setEnabled(false);
+					bar->m_searchBar->getInputNode()->onClickTrackNode(false);
 				}
 			}
 

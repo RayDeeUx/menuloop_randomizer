@@ -551,7 +551,7 @@ void SongControlMenu::onPreviousButton(cocos2d::CCObject*) {
 void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 	if (!Utils::passesVobecidedSanityCheck()) return;
 	SongManager& songManager = SongManager::get();
-	if (Utils::getBool("qolModIntegrationSongList") && this->m_isInQOLMod && this->getParent() && songManager.songListLayerForQOLMod->getParent() && songManager.songListLayerForQOLMod->getParent() == this->getParent()) {
+	if (Utils::getBool("qolModIntegrationSongList") && this->m_isInQOLMod && this->getParent() && songManager.songListLayerForQOLMod && songManager.songListLayerForQOLMod->getParent() && songManager.songListLayerForQOLMod->getParent() == this->getParent()) {
 		this->setScale(0.f);
 		songManager.songListLayerForQOLMod->setScale(.7f);
 		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getInputNode()) {
@@ -559,7 +559,7 @@ void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 			this->m_musicVolumeInput->getInputNode()->onClickTrackNode(false);
 		}
 		SongListLayer* foo = static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data());
-		if (foo->m_searchBar && foo->m_searchBar->getInputNode()) {
+		if (foo && foo->m_searchBar && foo->m_searchBar->getInputNode()) {
 			foo->m_searchBar->setEnabled(true);
 			foo->m_searchBar->getInputNode()->onClickTrackNode(false);
 		}
@@ -578,6 +578,7 @@ void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 		alert->show();
 		return;
 	}
+	if (this->m_isInQOLMod) return;
 	if (MenuLayer::get() && !MenuLayer::get()->isVisible() && this->m_osu) MenuLayer::get()->setVisible(true);
 	SongControlMenu::onClose(nullptr);
 	SongListLayer::create()->show();
