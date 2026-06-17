@@ -240,7 +240,7 @@ bool SongControlMenu::setup() {
 		this->m_musicVolumeInput->getInputNode()->m_textField->setOpacity(0);
 		this->m_musicVolumeInput->getInputNode()->m_textLabel->setOpacity(0);
 		this->m_musicVolumeInput->getInputNode()->m_cursor->setOpacity(0);
-	}
+	} else songManager.songControlInputNodeQOLMod = geode::Ref(this->m_musicVolumeInput->getInputNode());
 
 	#if GEODE_COMP_GD_VERSION < 22081
 	this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->_scale9Image->setID("music-volume-input-background-batch-node"_spr);

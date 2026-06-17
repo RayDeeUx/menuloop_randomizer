@@ -187,6 +187,7 @@ class SongManager {
 	geode::Ref<FLAlertLayer> songControlMenuForQOLMod = nullptr; // canonically a SongControlMenu
 	geode::Ref<FLAlertLayer> songListLayerForQOLMod = nullptr; // canonically a SongListLayer
 	geode::Ref<CCTextInputNode> songListInputNodeForQOLMod = nullptr;
+	geode::Ref<CCTextInputNode> songControlInputNodeQOLMod = nullptr;
 	bool trackAndroidUI = false;
 
 	FMOD::DSP* loudnessDSP = nullptr;

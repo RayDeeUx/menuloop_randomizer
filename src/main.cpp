@@ -749,6 +749,10 @@ public:
 			if (geode::cocos::getObjectName(child) == "AndroidUI") return;
 		}
 		songManager.trackAndroidUI = false;
+		if (songManager.songControlInputNodeQOLMod) {
+			songManager.songControlInputNodeQOLMod->onClickTrackNode(false);
+			songManager.songControlInputNodeQOLMod = nullptr;
+		}
 		songManager.songControlMenuForQOLMod = nullptr;
 		if (songManager.songListInputNodeForQOLMod) {
 			songManager.songListInputNodeForQOLMod->onClickTrackNode(false);
