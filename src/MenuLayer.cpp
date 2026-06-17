@@ -50,7 +50,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 using namespace geode::prelude;
 
 bool shownVibecodedWarning = false;
-// bool shownVobecidedWarning = false;
+bool shownVobecidedWarning = false;
 bool shownAGUAbuserWarning = false;
 
 class $modify(MenuLayerMLHook, MenuLayer) {
@@ -65,14 +65,12 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 			scene->addChild(popup);
 			shownVibecodedWarning = true;
 		}
-		/*
 		if (!shownVobecidedWarning && songManager.getVobecidedJota()) {
-			FLAlertLayer* popup = FLAlertLayer::create(ml, "Oh goodness! (!Ay, Dios mio!)", "<cl>[Menu Loop Randomizer]</c> English:\n<c_>A mod that can forcibly stop the menu loop is active!</c>\n<cy>The specific mod you have active offers an option to never play menu loops from other sources in favor of its own menu loop, and can even continue playing its own menu loop when playing a level.</c> <cy>If</c> <cl>Menu Loop Randomizer</c> <cy>playback stops entirely or becomes inconsistent, please check your loaded mods or the settings for that specific mod.</c>\n<cg>You will only see this warning once per launch session.</c>\n=====\n<cl>[Menu Loop Randomizer]</c> Espanol:\n<c_>!Hay un mod activo que puede detener a la fuerza el menu loop!</c>\n<cy>El mod concreto que tienes activo ofrece una opcion para no reproducir nunca los bucles de menu de otras fuentes, dando prioridad a su propio bucle de menu, e incluso puede seguir reproduciendo su propio bucle de menu mientras se juega un nivel.</c> <cy>Si la reproduccion del</c> <cl>Menu Loop Randomizer</c> <cy>se detiene por completo o se vuelve irregular, comprueba los mods que tienes cargados o la configuracion de ese mod en concreto.</c>\n<cg>Solo veras esta advertencia una vez por sesion de juego.</c>", "I Understand (Lo Entiendo)", nullptr, 440.f, false, 310.f, .5f);
+			FLAlertLayer* popup = FLAlertLayer::create(ml, "Oh goodness! (!Ay, Dios mio!)", "<cl>[Menu Loop Randomizer]</c> English:\n<c_>A mod that can forcibly stop the menu loop is active!</c>\n<cy>The specific mod you have active offers an option to never play menu loops from other sources in favor of its own menu loop.</c> <cy>If</c> <cl>Menu Loop Randomizer</c> <cy>playback stops entirely or becomes inconsistent, please check your loaded mods or the settings for that specific mod.</c>\n<cg>You will only see this warning once per launch session.</c>\n=====\n<cl>[Menu Loop Randomizer]</c> Espanol:\n<c_>!Hay un mod activo que puede detener a la fuerza el menu loop!</c>\n<cy>El mod concreto que tienes activo ofrece una opcion para no reproducir nunca los bucles de menu de otras fuentes, dando prioridad a su propio bucle de menu.</c> <cy>Si la reproduccion del</c> <cl>Menu Loop Randomizer</c> <cy>se detiene por completo o se vuelve irregular, comprueba los mods que tienes cargados o la configuracion de ese mod en concreto.</c>\n<cg>Solo veras esta advertencia una vez por sesion de juego.</c>", "I Understand (Lo Entiendo)", nullptr, 440.f, false, 310.f, .5f);
 			Utils::addUndraggablePopupTraits(popup);
 			scene->addChild(popup);
 			shownVobecidedWarning = true;
 		}
-		*/
 		if (!shownAGUAbuserWarning && songManager.getGeodify()) {
 			FLAlertLayer* popup = FLAlertLayer::create("Heads up!", "<cl>(From Menu Loop Randomizer)</c>\n\nGeodify's menu loop has been enabled.\n<c_>If any bugs happen, you're on your own.</c>", "I Understand");
 			Utils::addUndraggablePopupTraits(popup);
