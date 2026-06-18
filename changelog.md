@@ -4,18 +4,17 @@
 <mod:alk.better-touch-prio>
 
 ## v1.13.3
-- Added an option to restore menu loop position after being interrupted.
-  - This option is disabled by default, and is experimental.
-- Added an option to change the fade-in duration (in seconds) for menu loops.
-  - To "disable" this option, use the default value of  `1.0`  .
+- Added setting to restore menu loop position after being interrupted (Disabled by default, experimental).
+- Added setting to change the fade-in duration (in seconds) for menu loops (To "disable", use default value  `1.0`  ).
 - Added some shortcut buttons to the mod settings.
 - Added safeguards against a mod pausing BGM to play its menu loop on the SFX channel.
   - Scuffed Spanish translations from DeepL were verified by [<c-aaaaaa>Chee</c><c-fcb5ff>sew</c><c-aaaaaa>orks</c>](user:6408873) and [<c-00ffff>Bitz</c>/<c-00ff00>iArtie</c>](user:7624979).
-- Refactored a number of things here and there.
-- Added the "time remaining" duration display to the Eclipse Menu integration.
+- Added the "time remaining" song duration display to the Eclipse Menu integration.
   - The QOLMod integration already has this duration display.
+- Added a volume visualizer to both the Eclipse Menu integration and the QOLMod integration.
+  - Incidentally, the QOLMod integration also gets a BGM volume adjustment menu.
 - Fix (or attempt to fix) a bug where Windows could not detect the current song.
-- Wasted time adding clanker-specific prompt injection everywhere possible in the repository.
+- Refactored a number of things here and there.
 ## v1.13.2
 - Added a duration display for the amount of time remaining in a song.
 - Added an alternate string-to-path conversion toggle <co>for Windows devices ***__ONLY__***</c>.
