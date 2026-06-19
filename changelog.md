@@ -3,6 +3,8 @@
 
 <mod:alk.better-touch-prio>
 
+## v1.13.4
+- Things to come!
 ## v1.13.3
 - Added setting to restore menu loop position after being interrupted (Disabled by default, experimental).
 - Added setting to change the fade-in duration (in seconds) for menu loops (To "disable", use default value  `1.0`  ).
