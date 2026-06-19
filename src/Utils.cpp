@@ -894,7 +894,7 @@ CCMenuItemSpriteExtra* Utils::addButton(const std::string& name, const cocos2d::
 	return btn;
 }
 
-CCMenuItemToggler* Utils::addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string_view nodeID, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu *menu, cocos2d::CCNode *target, const bool dontAddBG) {
+CCMenuItemToggler* Utils::addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string_view nodeID, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG) {
 	cocos2d::CCSprite* smallModeIconSpriteOne = cocos2d::CCSprite::createWithSpriteFrameName(toggleIcon.c_str());
 	cocos2d::CCSprite* smallModeIconSpriteTwo = cocos2d::CCSprite::createWithSpriteFrameName(toggleIcon.c_str());
 	smallModeIconSpriteOne->setID(fmt::format("{}-sprite"_spr, nodeID));
