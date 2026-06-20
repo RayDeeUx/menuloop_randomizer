@@ -224,7 +224,7 @@ namespace SongControl {
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
 		Utils::copyCurrentSongName();
-		geode::Notification::create("[MLR] Current song name copied!", geode::NotificationIcon::None, geode::Mod::get()->getSettingValue<double>("notificationTime"));
+		geode::Notification::create("[MLR] Current song name copied!", geode::NotificationIcon::None, geode::Mod::get()->getSettingValue<double>("notificationTime"))->show();
 	}
 	void regenSong() {
 		if (!Utils::passesVobecidedSanityCheck()) return;
