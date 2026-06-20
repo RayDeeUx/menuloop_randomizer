@@ -177,7 +177,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
 
-	this->m_scaleFactor = !songListCompactMode ? 1.f : static_cast<float>(std::clamp<double>(geode::Mod::get()->getSettingValue<double>("compactModeScaleFactor"), 1.5, 2.0));
+	this->m_scaleFactor = !songListCompactMode ? 1.f : static_cast<float>(std::clamp<double>(geode::Mod::get()->getSettingValue<double>("compactModeScaleFactor"), 1.5f, 2.f));
 	this->m_tallestPoint = (scrollLayer->m_contentLayer->getContentHeight() * -1.f) + scrollLayer->getContentHeight();
 
 	if (this->m_scrollBar) this->m_scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));

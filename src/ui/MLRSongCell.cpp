@@ -88,7 +88,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 		return true;
 	}
 
-	const float compactModeFactor = isCompact ? static_cast<float>(std::clamp<double>(geode::Mod::get()->getSettingValue<double>("compactModeScaleFactor"), 1.5, 2.0)) : 1.f;
+	const float compactModeFactor = isCompact ? static_cast<float>(std::clamp<double>(geode::Mod::get()->getSettingValue<double>("compactModeScaleFactor"), 1.5f, 2.f)) : 1.f;
 	this->setContentHeight(36.f / compactModeFactor);
 
 	cocos2d::CCLabelBMFont* songNameLabel = cocos2d::CCLabelBMFont::create(songData.fullDisplayNameForControlPanelAndSongList.c_str(), "bigFont.fnt");
@@ -285,7 +285,7 @@ void MLRSongCell::checkIfCurrentSongScheduler(float) {
 	this->m_songNameLabel->setFntFile("goldFont.fnt");
 	this->m_songNameLabel->setColor(cocos2d::ccColor3B{0, 255, 255});
 	this->m_songNameLabel->limitLabelWidth(356.f * (.8f / compactModeFactor), std::clamp<float>((.75f / compactModeFactor), .3, .75), .001f);
-	if (compactModeFactor != 1.0 && this->m_extraInfoLabl) {
+	if (compactModeFactor != 1.f && this->m_extraInfoLabl) {
 		this->m_extraInfoLabl->limitLabelWidth(356.f * (.7f / compactModeFactor), std::clamp<float>((.5f / compactModeFactor), .3, .75), .001f);
 	}
 }

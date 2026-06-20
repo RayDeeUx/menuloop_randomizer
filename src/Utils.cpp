@@ -129,7 +129,7 @@ void Utils::constantShuffleModeNewSong() {
 	const auto fmod = FMODAudioEngine::sharedEngine();
 	float fmodIsCBrained;
 	const FMOD_RESULT fmodResult = fmod->m_backgroundMusicChannel->getVolume(&fmodIsCBrained);
-	if (fmod->m_musicVolume <= 0.0f || fmod->getBackgroundMusicVolume() <= 0.0f || fmodIsCBrained <= 0.0f) return geode::log::info(" --- !!! MISSION ABORT !!! ---\n\none of the following was at or below 0.0f:\nfmod->m_musicVolume: {}\nfmod->getBackgroundMusicVolume(): {}\nfmodIsCBrained: {} (with fmodResult {} as int)", fmod->m_musicVolume, fmod->getBackgroundMusicVolume(), fmodIsCBrained, static_cast<int>(fmodResult));
+	if (fmod->m_musicVolume <= 0.f || fmod->getBackgroundMusicVolume() <= 0.f || fmodIsCBrained <= 0.f) return geode::log::info(" --- !!! MISSION ABORT !!! ---\n\none of the following was at or below 0.f:\nfmod->m_musicVolume: {}\nfmod->getBackgroundMusicVolume(): {}\nfmodIsCBrained: {} (with fmodResult {} as int)", fmod->m_musicVolume, fmod->getBackgroundMusicVolume(), fmodIsCBrained, static_cast<int>(fmodResult));
 	fmod->m_backgroundMusicChannel->stop();
 	SongManager& songManager = SongManager::get();
 	const std::string& songToBeStored = songManager.getCurrentSong();
@@ -163,7 +163,7 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 	PlayingCard* card = PlayingCard::create(notifString);
 	const cocos2d::CCSize screenSize = cocos2d::CCDirector::get()->getWinSize();
 
-	card->position.x = screenSize.width / 2.0f;
+	card->position.x = screenSize.width / 2.f;
 	card->position.y = screenSize.height;
 
 	const cocos2d::CCPoint defaultPos = card->position;
@@ -174,9 +174,9 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 	if ((cocos2d::CCScene::get() && cocos2d::CCScene::get()->getChildByType<MenuLayer>(0)) || (checkSetting && Utils::getBool("showOutsideOfMainMenu"))) geode::OverlayManager::get()->addChild(card);
 
 	auto sequence = cocos2d::CCSequence::create(
-		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, {defaultPos.x, defaultPos.y - 24.0f}), 2.0f),
+		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, {defaultPos.x, defaultPos.y - 24.f}), 2.f),
 		cocos2d::CCDelayTime::create(geode::Mod::get()->getSettingValue<double>("notificationTime")),
-		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, defaultPos), 2.0f),
+		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, defaultPos), 2.f),
 		cocos2d::CCRemoveSelf::create(),
 		nullptr
 	);
