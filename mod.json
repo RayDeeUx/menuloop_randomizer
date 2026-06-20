@@ -9,17 +9,9 @@
 	"version": "v1.13.4",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
-	"developers": [
-		"RayDeeUx",
-		"elnexreal"
-	],
+	"developers": ["RayDeeUx", "elnexreal"],
 	"description": "Menu Loop randomizer for GD.",
-	"tags": [
-		"music",
-		"offline",
-		"interface",
-		"enhancement"
-	],
+	"tags": ["music", "offline", "interface", "enhancement"],
 	"repository": "https://github.com/RayDeeUx/menuloop_randomizer",
 	"settings": {
 		"basic-housekeeping-header": {
@@ -64,7 +56,7 @@
 			"default": "{mod_config_dir}/playlistOne.txt",
 			"filters": [
 				{
-					"files": [ "*.txt" ],
+					"files": ["*.txt"],
 					"description": "Text files"
 				}
 			]
@@ -391,10 +383,10 @@
 			"default": {
 				"win": true,
 				"mac": true,
-				"android": "false",
-				"ios": "false"
+				"ios": false,
+				"android": false
 			},
-			"platforms": [ "win", "mac" ]
+			"platforms": ["win", "mac"]
 		},
 		"youtubeAndVLCKeyboardShortcutsSongListNoNumrow": {
 			"name": "Don't Use Numrow for Hotkeys",
@@ -432,10 +424,10 @@
 			"default": {
 				"win": true,
 				"mac": true,
-				"android": "false",
-				"ios": "false"
+				"ios": false,
+				"android": false
 			},
-			"platforms": [ "win", "mac" ]
+			"platforms": ["win", "mac"]
 		},
 		"youtubeAndVLCKeyboardShortcutsControlPanelNoNumrow": {
 			"name": "Don't Use Numrow for Hotkeys",
@@ -524,13 +516,7 @@
 			},
 			"filters": [
 				{
-					"files": [
-						"*.mp3",
-						"*.ogg",
-						"*.oga",
-						"*.wav",
-						"*.flac"
-					],
+					"files": ["*.mp3", "*.ogg", "*.oga", "*.wav", "*.flac"],
 					"description": "Audio files"
 				}
 			]
