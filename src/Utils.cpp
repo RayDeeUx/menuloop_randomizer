@@ -48,6 +48,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 #include <filesystem>
 #include <iostream>
 #include <fstream>
+#include <Geode/utils/random.hpp>
 
 static std::regex m_songEffectRegex(R"(.*(?:\\|\/)(\S+)\.(mp3|ogg|wav|flac|oga))", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/CqvIvI/1.
 static const std::regex m_geodeAudioRegex(R"(((?!\S+geode)(?:\\|\/)(?:([a-z0-9\-_]+\.[a-z0-9\-_]+)(?:\\|\/))([\S ]+)\.(mp3|ogg|wav|flac|oga))$)", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/0b9rY1/1.
@@ -56,10 +57,8 @@ static constexpr int m_desiredIndexForFileName = 1; // easier place to change in
 
 int Utils::randomIndex(int size) {
 	// select a random item from the vector and return the path
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dist(0, size - 1);
-	return dist(gen);
+	static std::mt19937 gen(std::random_device{}());
+	return std::uniform_int_distribution<int>(0, size - 1)(gen);
 }
 
 bool Utils::isSupportedFile(const std::string_view path) {
