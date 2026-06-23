@@ -52,7 +52,7 @@ class $modify(MenuLoopGMHook, GameManager) {
 		// code taken verbatim from colon. i've had two too many toddlers nagging me to add this feature to the mod now so here we are
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
 		SongManager& songManager = SongManager::get();
-		const auto oldTrack = fmod->getActiveMusic(0);
+		const std::string& oldTrack = static_cast<std::string>(fmod->getActiveMusic(0));
 		GameManager::fadeInMenuMusic();
 		// ensure compat with colon
 		const geode::Mod* colon = songManager.getColonMenuLoopStartTime();

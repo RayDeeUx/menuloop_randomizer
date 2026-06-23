@@ -94,9 +94,10 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 
 		constexpr int channelNumber = 0;
 
-		FMOD::Channel* menuLoopChannelProbably = FMODAudioEngine::get()->getActiveMusicChannel(channelNumber);
-		const auto activeSong = FMODAudioEngine::get()->getActiveMusic(channelNumber);
-		const auto songManagerSong = songManager.getCurrentSong();
+		FMODAudioEngine* fmod = FMODAudioEngine::sharedEngine();
+		FMOD::Channel* menuLoopChannelProbably = fmod->getActiveMusicChannel(channelNumber);
+		const std::string& activeSong = static_cast<std::string>(fmod->getActiveMusic(channelNumber));
+		const std::string& songManagerSong = songManager.getCurrentSong();
 		const bool isSongManagerSong = activeSong == songManagerSong;
 		// should call SongManager::get().isCurrentMenuLoopBeingPlayed() here but names are needed for logs
 		if (!isSongManagerSong) {

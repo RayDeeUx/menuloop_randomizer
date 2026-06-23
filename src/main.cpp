@@ -698,7 +698,7 @@ $on_mod(Loaded) {
 			EclipsePlaybackProgressDummyNode::applyNewLinesToHeaders();
 		}, geode::Loader::get()->getInstalledMod("eclipse.eclipse-menu"));
 
-		auto tab = MenuTab::find("Menu Loop Randomizer");
+		MenuTab tab = MenuTab::find("Menu Loop Randomizer");
 
 		(void) tab.addLabel("= AN ECLIPSE MENU INTEGRATION =");
 		(void) tab.addLabel("== FROM MENU LOOP RANDOMIZER ==");

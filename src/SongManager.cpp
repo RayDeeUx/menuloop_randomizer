@@ -77,7 +77,7 @@ void SongManager::pickRandomSong() {
 	} else if (!m_songs.empty()) {
 		m_isMenuLoop = false;
 		if (m_songs.size() != 1) {
-			auto randomIndex = Utils::randomIndex(m_songs.size());
+			int randomIndex = Utils::randomIndex(m_songs.size());
 			if (SongManager::get().getAdvancedLogs()) geode::log::info("entering a while loop maybe");
 			if (!std::filesystem::exists(Utils::toProblematicString(m_songs[randomIndex]), ea)) {
 				m_isMenuLoop = true;
@@ -113,8 +113,8 @@ void SongManager::setCurrentSong(const std::string& song) {
 void SongManager::setCurrentSongToSavedSong() {
 	if (m_isMenuLoop || !SongManager::getOverrideSong().empty()) return;
 	std::error_code ea, eb;
-	const auto lastMenuLoop = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
-	const auto lastMenuLoopPath = geode::Mod::get()->getSavedValue<std::filesystem::path>("lastMenuLoopPath");
+	const std::string& lastMenuLoop = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
+	const std::filesystem::path& lastMenuLoopPath = geode::Mod::get()->getSavedValue<std::filesystem::path>("lastMenuLoopPath");
 	if (std::filesystem::exists(Utils::toProblematicString(lastMenuLoop), ea)) m_currentSong = lastMenuLoop;
 	else if (std::filesystem::exists(lastMenuLoopPath, eb)) m_currentSong = Utils::toNormalizedString(lastMenuLoopPath);
 	m_hashedCurrentSong = std::hash<std::string>{}(m_currentSong);

@@ -854,7 +854,7 @@ bool SongListLayer::caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, 
 	if (SONG_SORTING_DISABLED) return false;
 	const std::string& cleanedUpA = SongListLayer::generateDisplayName(a->m_songData);
 	const std::string& cleanedUpB = SongListLayer::generateDisplayName(b->m_songData);
-	auto it1 = cleanedUpA.begin(), it2 = cleanedUpB.begin();
+	std::string::const_iterator it1 = cleanedUpA.begin(), it2 = cleanedUpB.begin();
 	while (it1 != cleanedUpA.end() && it2 != cleanedUpB.end()) {
 		unsigned char c1 = static_cast<unsigned char>(*it1++);
 		unsigned char c2 = static_cast<unsigned char>(*it2++);
@@ -881,7 +881,7 @@ bool SongListLayer::fileExtn(MLRSongCell* a, MLRSongCell* b, const bool reverse)
 	if (SONG_SORTING_DISABLED) return false;
 	const std::string& cleanedUpA = a->m_songData.fileExtension;
 	const std::string& cleanedUpB = b->m_songData.fileExtension;
-	auto it1 = cleanedUpA.begin(), it2 = cleanedUpB.begin();
+	std::string::const_iterator it1 = cleanedUpA.begin(), it2 = cleanedUpB.begin();
 	while (it1 != cleanedUpA.end() && it2 != cleanedUpB.end()) {
 		unsigned char c1 = static_cast<unsigned char>(*it1++);
 		unsigned char c2 = static_cast<unsigned char>(*it2++);
@@ -898,8 +898,8 @@ bool SongListLayer::fileExtn(MLRSongCell* a, MLRSongCell* b, const bool reverse)
 bool SongListLayer::dateAdded(MLRSongCell* a, MLRSongCell* b, const bool reverse) {
 	if (SONG_SORTING_DISABLED) return false;
 	std::error_code ea, eb;
-	auto ta = std::filesystem::last_write_time(Utils::toProblematicString(a->m_songData.actualFilePath), ea);
-	auto tb = std::filesystem::last_write_time(Utils::toProblematicString(b->m_songData.actualFilePath), eb);
+	const std::filesystem::file_time_type ta = std::filesystem::last_write_time(Utils::toProblematicString(a->m_songData.actualFilePath), ea);
+	const std::filesystem::file_time_type tb = std::filesystem::last_write_time(Utils::toProblematicString(b->m_songData.actualFilePath), eb);
 	if (ea || eb) {
 		if (ea && eb) return a->m_songData.actualFilePath < b->m_songData.actualFilePath;
 		if (ea) return reverse;

@@ -125,7 +125,7 @@ void Utils::setNewSong() {
 void Utils::constantShuffleModeNewSong() {
 	if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 	if (!Utils::getBool("playlistMode")) return Utils::setNewSong();
-	const auto fmod = FMODAudioEngine::sharedEngine();
+	FMODAudioEngine* fmod = FMODAudioEngine::sharedEngine();
 	float fmodIsCBrained;
 	const FMOD_RESULT fmodResult = fmod->m_backgroundMusicChannel->getVolume(&fmodIsCBrained);
 	if (fmod->m_musicVolume <= 0.f || fmod->getBackgroundMusicVolume() <= 0.f || fmodIsCBrained <= 0.f) return geode::log::info(" --- !!! MISSION ABORT !!! ---\n\none of the following was at or below 0.f:\nfmod->m_musicVolume: {}\nfmod->getBackgroundMusicVolume(): {}\nfmodIsCBrained: {} (with fmodResult {} as int)", fmod->m_musicVolume, fmod->getBackgroundMusicVolume(), fmodIsCBrained, static_cast<int>(fmodResult));
@@ -172,7 +172,7 @@ void Utils::newNotification(const std::string& notifString, const bool checkSett
 
 	if ((cocos2d::CCScene::get() && cocos2d::CCScene::get()->getChildByType<MenuLayer>(0)) || (checkSetting && Utils::getBool("showOutsideOfMainMenu"))) geode::OverlayManager::get()->addChild(card);
 
-	auto sequence = cocos2d::CCSequence::create(
+	cocos2d::CCSequence* sequence = cocos2d::CCSequence::create(
 		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, {defaultPos.x, defaultPos.y - 24.f}), 2.f),
 		cocos2d::CCDelayTime::create(geode::Mod::get()->getSettingValue<double>("notificationTime")),
 		cocos2d::CCEaseInOut::create(cocos2d::CCMoveTo::create(1.5f, defaultPos), 2.f),
@@ -263,10 +263,10 @@ bool Utils::adjustSongInfoIfJukeboxReplacedIt(SongInfoObject* songInfo) {
 	std::error_code ea;
 	const std::filesystem::path& targetPath = geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songInfo->m_songID);
 	if (!std::filesystem::exists(targetPath, ea)) return shouldReplaceDisplayName;
-	auto parsed = geode::utils::file::readJson(targetPath);
+	geode::Result<matjson::Value> parsed = geode::utils::file::readJson(targetPath);
 	if (parsed.isOk() && parsed.unwrap().contains("default") && parsed.unwrap().get("default").isOk()) {
-		auto fooBar = parsed.unwrap().get("default").unwrap().get("name");
-		auto barBaz = parsed.unwrap().get("default").unwrap().get("artist");
+		geode::Result<matjson::Value&> fooBar = parsed.unwrap().get("default").unwrap().get("name");
+		geode::Result<matjson::Value&> barBaz = parsed.unwrap().get("default").unwrap().get("artist");
 		if (fooBar.isOk()) songInfo->m_songName = fooBar.unwrap().asString().unwrapOr(songInfo->m_songName);
 		if (barBaz.isOk()) songInfo->m_artistName = barBaz.unwrap().asString().unwrapOr(songInfo->m_artistName);
 		if (fooBar.isOk() && barBaz.isOk()) shouldReplaceDisplayName = true;
@@ -375,7 +375,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 	std::error_code ez;
 	if (!std::filesystem::exists(path, ez) && !Utils::toNormalizedString(path).empty()) {
 		geode::log::info("path {} does not exist! leaving the scene", path);
-		auto _ = geode::Mod::get()->getConfigDir(true); // unused, force config dir creation
+		const std::filesystem::path& _ = geode::Mod::get()->getConfigDir(true); // unused, force config dir creation
 		return;
 	}
 	if (geode::utils::string::contains(Utils::toNormalizedString(path), "store_your_disabled_menuloops_here") && geode::utils::string::contains(Utils::toNormalizedString(path), Utils::toNormalizedString(geode::Mod::get()->getConfigDir()))) return; // avoid recursion --raydeeux
@@ -481,7 +481,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 		--raydeeux
 		*/
 		const bool qualifiedForOGMenuBlacklist = geode::Mod::get()->getSavedValue<bool>("isEry");
-		for (const auto song : geode::cocos::CCArrayExt<SongInfoObject*>(downloadManager->getDownloadedSongs())) {
+		for (SongInfoObject* song : geode::cocos::CCArrayExt<SongInfoObject*>(downloadManager->getDownloadedSongs())) {
 			if (!song) continue;
 			if (downloadManager->isResourceSong(song->m_songID)) continue; // resource songs not supported!!!
 
@@ -574,7 +574,7 @@ void Utils::popualteSongToSongDataMap() {
 		songData.displayName = SongListLayer::generateDisplayName(songData);
 
 		std::chrono::system_clock::time_point timepoint = std::chrono::system_clock::time_point(std::chrono::duration_cast<std::chrono::system_clock::duration>(songData.songWriteTime.time_since_epoch()));
-		auto datepoint = floor<std::chrono::days>(floor<std::chrono::seconds>(timepoint));
+		const std::chrono::sys_days datepoint = floor<std::chrono::days>(floor<std::chrono::seconds>(timepoint));
 		const std::chrono::year_month_day yearMonthDate{std::chrono::sys_days{datepoint}};
 		songData.dateTimeText = fmt::format("{} {:02}, {:04}", months[static_cast<unsigned>(yearMonthDate.month()) - 1], static_cast<unsigned>(yearMonthDate.day()), static_cast<int>(yearMonthDate.year()));
 		songData.extraInfoText = fmt::format("{} | {:.2f} MB | {}", songData.fileExtension, songData.songFileSize / 1000000.f, songData.dateTimeText).c_str();
@@ -588,7 +588,7 @@ void Utils::popualteSongToSongDataMap() {
 		std::thread([]() {
 			SongManager& songManagerThreaded = SongManager::get();
 			for (const std::string_view song : songManagerThreaded.getSongs()) {
-				const auto iterator = songManagerThreaded.getSongToSongDataEntries().find(Utils::toProblematicString(song));
+				const std::unordered_map<std::filesystem::path, SongData>::iterator iterator = songManagerThreaded.getSongToSongDataEntries().find(Utils::toProblematicString(song));
 				if (iterator == songManagerThreaded.getSongToSongDataEntries().end()) continue;
 				auto& [unused, songData] = *iterator;
 				songData.songLength = SongListLayer::getLength(std::string(song), std::numeric_limits<unsigned int>::max());

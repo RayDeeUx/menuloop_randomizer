@@ -114,12 +114,12 @@ class $modify(MenuLoopEPLHook, EditorPauseLayer) {
 
 		EDIT: PREVTER CAME IN CLUTCH. ORIGINAL CODE KEPT HERE FOR POSTERITY
 
-		auto textArea = static_cast<TextArea*>(p0->m_mainLayer->getChildByIDRecursive("content-text-area"));
-		for (auto node : CCArrayExt<CCNode*>(textArea->getChildren())) {
+		TextArea* textArea = static_cast<TextArea*>(p0->m_mainLayer->getChildByIDRecursive("content-text-area"));
+		for (CCNode* node : CCArrayExt<CCNode*>(textArea->getChildren())) {
 			if (typeinfo_cast<MultilineBitmapFont*>(node)) {
-				for (auto nodeTwo : CCArrayExt<CCNode*>(node->getChildren())) {
-					if (auto label = typeinfo_cast<CCLabelBMFont*>(nodeTwo)) {
-						auto labelString = std::string(label->getString());
+				for (CCNode* nodeTwo : CCArrayExt<CCNode*>(node->getChildren())) {
+					if (CCLabelBMFont* label = typeinfo_cast<CCLabelBMFont*>(nodeTwo)) {
+						const std::string& labelString = static_cast<std::string>(label->getString());
 						isQualifedAlert = labelString == R"(Exit without saving? All unsaved changes will be lost!)";
 						log::info("labelString: {}", labelString); // log::info calls since that's kinda this mod's thing
 						break;

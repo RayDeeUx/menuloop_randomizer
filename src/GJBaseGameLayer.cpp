@@ -57,7 +57,7 @@ class $modify(MenuLoopGJBGLHook, GJBaseGameLayer) {
 		}
 		songManager.setShouldRestoreMenuLoopPoint(false);
 		if (!Utils::getBool("playlistMode")) return true;
-		const auto fmod = FMODAudioEngine::get();
+		FMODAudioEngine* fmod = FMODAudioEngine::get();
 		if (!fmod) return true;
 		fmod->m_backgroundMusicChannel->stop();
 		return true;
