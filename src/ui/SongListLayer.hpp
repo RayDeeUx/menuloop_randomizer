@@ -118,6 +118,8 @@ public:
 	#endif
 	void searchSongs(const std::string&, const bool checkSetting = true);
 
+	void keepThePopupUndraggableDammit(float);
+
 	static std::string generateDisplayName(SongData&);
 	static bool tallEnough(geode::ScrollLayer*);
 	static float determineYPosition(geode::ScrollLayer*);

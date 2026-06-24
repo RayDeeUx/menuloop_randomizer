@@ -63,17 +63,16 @@ bool SongControlMenu::setup() {
 	this->setTitle("Menu Loop Randomizer - Control Panel");
 	this->m_title->setScale(.45f);
 
-	const cocos2d::CCSize layerSize = this->m_mainLayer->getContentSize();
+	cocos2d::CCLayer* mainLayer = this->m_mainLayer;
+	const cocos2d::CCSize layerSize = mainLayer->getContentSize();
 	const float idealWidth = layerSize.width * .95f;
 	const float centerStage = layerSize.width / 2.f;
-	cocos2d::CCLayer* mainLayer = this->m_mainLayer;
 	mainLayer->setID("main-layer"_spr);
 
 	this->m_title->setPositionY(this->m_title->getPositionY() + 2.f);
 	this->m_title->setPositionX(mainLayer->getContentWidth() / 2.f);
 
 	this->m_songControlsMenu = cocos2d::CCMenu::create();
-
 	Utils::addButton("shuffle", menu_selector(SongControlMenu::onShuffleButton), REST_OF_THE_OWL);
 	Utils::addButton("regen", menu_selector(SongControlMenu::onRegenButton), REST_OF_THE_OWL);
 	Utils::addButton("copy", menu_selector(SongControlMenu::onCopyButton), REST_OF_THE_OWL);
@@ -266,6 +265,7 @@ bool SongControlMenu::setup() {
 	if (songManager.getOsu()) SongControlMenu::createOsuTogglerMenu();
 
 	this->schedule(schedule_selector(SongControlMenu::visualizerScheduler));
+	this->schedule(schedule_selector(SongControlMenu::keepThePopupUndraggableDammit), 1.f / 60.f);
 
 	SongControlMenu::forceSharpCornerIllusion();
 	SongControlMenu::updateCurrentLabel();
@@ -504,6 +504,10 @@ void SongControlMenu::pressAndHoldScheduler(float dt) {
 	if (this->m_ffwdButton->isSelected() && this->m_ffwdButton->isVisible() && this->m_ffwdButton->isEnabled() && this->m_ffwdButton->m_pfnSelector && this->m_ffwdButton->m_pListener) (this->m_ffwdButton->m_pListener->*this->m_ffwdButton->m_pfnSelector)(this->m_ffwdButton);
 	else if (this->m_bkwdButton->isSelected() && this->m_bkwdButton->isVisible() && this->m_bkwdButton->isEnabled() && this->m_bkwdButton->m_pfnSelector && this->m_bkwdButton->m_pListener) (this->m_bkwdButton->m_pListener->*this->m_bkwdButton->m_pfnSelector)(this->m_bkwdButton);
 	else m_time = 0.f;
+}
+
+void SongControlMenu::keepThePopupUndraggableDammit(float) {
+	Utils::addUndraggablePopupTraits(this);
 }
 
 void SongControlMenu::visualizerScheduler(float dt) {

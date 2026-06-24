@@ -880,6 +880,7 @@ $on_mod(Loaded) {
 			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::forceSharpCornerIllusionScheduler));
 			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
 			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::visualizerScheduler));
+			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::keepThePopupUndraggableDammit), 1.f / 60.f);
 
 			if (qolModIntegrationSongList && songManager.songListLayerForQOLMod) {
 				if (!songManager.getUndefined0Alk1m123TouchPrio()) CCTouchDispatcher::get()->unregisterForcePrio(songManager.songListLayerForQOLMod);
@@ -892,6 +893,7 @@ $on_mod(Loaded) {
 					songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
 				}
 				songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
+				songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::keepThePopupUndraggableDammit), 1.f / 60.f);
 
 				if (SongControlMenu* foo = static_cast<SongControlMenu*>(songManager.songControlMenuForQOLMod.data()); foo && foo->m_musicVolumeInput && foo->m_musicVolumeInput->getInputNode()) {
 					foo->m_musicVolumeInput->setEnabled(true);

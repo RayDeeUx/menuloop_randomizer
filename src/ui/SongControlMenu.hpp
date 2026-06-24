@@ -117,6 +117,7 @@ public:
 	void visualizerScheduler(float);
 	void forceSharpCornerIllusion();
 	void forceSharpCornerIllusionScheduler(float);
+	void keepThePopupUndraggableDammit(float);
 	void toggleOsu();
 	void createOsuTogglerMenu();
 	static std::string generateInfoAlertButtonDescription();

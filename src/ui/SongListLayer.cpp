@@ -481,6 +481,7 @@ bool SongListLayer::setup() {
 	}
 
 	this->schedule(schedule_selector(SongListLayer::checkPosition));
+	this->schedule(schedule_selector(SongListLayer::keepThePopupUndraggableDammit), 1.f / 60.f);
 
 	if (Utils::getBool("autoScrollToCurrentSong") && !VANILLA_GD_MENU_LOOP_DISABLED && !songManager.isOverride()) SongListLayer::scrollToCurrentSong();
 
@@ -671,6 +672,10 @@ void SongListLayer::checkPosition(const float) {
 	if (contentLayer->getPositionY() > 0 || contentLayer->getPositionY() < m_tallestPoint) contentLayer->stopActionByTag(20260214);
 	if (contentLayer->getPositionY() > 0) contentLayer->setPositionY(0);
 	else if (contentLayer->getPositionY() < m_tallestPoint) contentLayer->setPositionY(m_tallestPoint);
+}
+
+void SongListLayer::keepThePopupUndraggableDammit(float) {
+	Utils::addUndraggablePopupTraits(this);
 }
 
 #ifdef GEODE_IS_DESKTOP
