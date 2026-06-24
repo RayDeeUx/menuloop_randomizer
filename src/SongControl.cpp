@@ -55,8 +55,8 @@ namespace SongControl {
 	}
 	void previousSong() {
 		if (!Utils::passesVobecidedSanityCheck()) return;
-		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		SongManager& songManager = SongManager::get();
 		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
 		
 		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're currently playing a menu loop <cy>override</c>. Double-check your settings again.");
@@ -83,8 +83,8 @@ namespace SongControl {
 	}
 	void holdSong() {
 		if (!Utils::passesVobecidedSanityCheck()) return;
-		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		SongManager& songManager = SongManager::get();
 		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
 		
 		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're currently playing a menu loop <cy>override</c>. Double-check your settings again.");
@@ -116,8 +116,8 @@ namespace SongControl {
 	}
 	void favoriteSong() {
 		if (!Utils::passesVobecidedSanityCheck()) return;
-		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		SongManager& songManager = SongManager::get();
 		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
 
 		if (songManager.isOriginalMenuLoop()) return SongControl::woahThereBuddy("There's nothing to favorite! Double-check your config folder again.");
@@ -155,8 +155,8 @@ namespace SongControl {
 	}
 	void blacklistSong() {
 		if (!Utils::passesVobecidedSanityCheck()) return;
-		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
+		SongManager& songManager = SongManager::get();
 		if (!songManager.getFinishedCalculatingSongLengths()) return Utils::newNotification("MLR is still busy. Try again in a bit!");
 
 		if (songManager.isOriginalMenuLoop()) return SongControl::woahThereBuddy("There's nothing to blacklist! Open Menu Loop Randomizer's config directory and edit its <cj>blacklist.txt</c> file to bring back some songs.");
@@ -251,9 +251,9 @@ namespace SongControl {
 	}
 	void addSongToPlaylist(const std::string& songPath) {
 		if (!Utils::passesVobecidedSanityCheck()) return;
-		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 
+		SongManager& songManager = SongManager::get();
 		if (songManager.isOriginalMenuLoop()) return SongControl::woahThereBuddy("There's nothing to add to your playlist! Double-check your config folder again.");
 		if (songManager.isOverride()) return SongControl::woahThereBuddy("You're trying to add your own <cy>override</c> to your playlist. Double-check your settings again.");
 
@@ -305,10 +305,10 @@ namespace SongControl {
 	}
 	void skipBackward() {
 		if (!Utils::passesVobecidedSanityCheck()) return;
-		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-
 		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
+
+		SongManager& songManager = SongManager::get();
 		FMODAudioEngine* fmod = FMODAudioEngine::get();
 
 		const int fullLength = fmod->getMusicLengthMS(0);
@@ -333,11 +333,11 @@ namespace SongControl {
 	}
 	void skipForward() {
 		if (!Utils::passesVobecidedSanityCheck()) return;
-		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-
-		FMODAudioEngine* fmod = FMODAudioEngine::get();
 		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
+
+		SongManager& songManager = SongManager::get();
+		FMODAudioEngine* fmod = FMODAudioEngine::get();
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 		const int lastPosition = songManager.getLastMenuLoopPosition();
@@ -363,11 +363,11 @@ namespace SongControl {
 	}
 	void setSongPercentage(const int percentage) {
 		if (!Utils::passesVobecidedSanityCheck()) return;
-		SongManager& songManager = SongManager::get();
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
-
-		FMODAudioEngine* fmod = FMODAudioEngine::get();
 		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;
+
+		SongManager& songManager = SongManager::get();
+		FMODAudioEngine* fmod = FMODAudioEngine::get();
 
 		const int fullLength = fmod->getMusicLengthMS(0);
 
