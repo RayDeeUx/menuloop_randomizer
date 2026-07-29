@@ -892,15 +892,16 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 	#endif
 }
 
-bool SongControlMenu::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch) {
+bool SongControlMenu::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch *touch, const bool fromBegan) {
 	SongManager& songManager = SongManager::get();
 	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
-	if (!canShowPlaybackProgress || !this->m_isDragging || !touch || !this->m_darkProgBar || !this->m_currProgBar) return true;
+	if (!canShowPlaybackProgress || !touch || !this->m_darkProgBar || !this->m_currProgBar) return true;
+	if (!fromBegan && !this->m_isDragging) return true;
 	return false;
 }
 
 bool SongControlMenu::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
-	if (this->failsSanityCheckForDraggableProgressBar(touch)) return true;
+	if (this->failsSanityCheckForDraggableProgressBar(touch, true)) return true;
 
 	const cocos2d::CCPoint touchLocation = touch->getLocation();
 	const cocos2d::CCPoint location = this->m_darkProgBar->convertToNodeSpace(touchLocation);
@@ -924,17 +925,17 @@ bool SongControlMenu::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* ev
 }
 
 void SongControlMenu::ccTouchMoved(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
-	if (this->failsSanityCheckForDraggableProgressBar(touch)) return;
+	if (this->failsSanityCheckForDraggableProgressBar(touch, false)) return;
 	this->updateFromTouch(touch);
 }
 
 void SongControlMenu::ccTouchCancelled(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
-	if (this->failsSanityCheckForDraggableProgressBar(touch)) return;
+	if (this->failsSanityCheckForDraggableProgressBar(touch, false)) return;
 	this->ccTouchEnded(touch, event);
 }
 
 void SongControlMenu::ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
-	if (this->failsSanityCheckForDraggableProgressBar(touch)) return;
+	if (this->failsSanityCheckForDraggableProgressBar(touch, false)) return;
 
 	this->m_currProgBar->stopActionByTag(20260728);
 	this->m_currProgBar->runAction(cocos2d::CCTintTo::create(.125f, 200, 200, 200));
@@ -946,7 +947,7 @@ void SongControlMenu::ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* ev
 }
 
 void SongControlMenu::updateFromTouch(cocos2d::CCTouch* touch) {
-	if (this->failsSanityCheckForDraggableProgressBar(touch)) return;
+	if (this->failsSanityCheckForDraggableProgressBar(touch, false)) return;
 
 	const cocos2d::CCPoint location = this->m_mainLayer->convertToNodeSpace(touch->getLocation());
 	const float x = location.x - this->m_dragOffset;

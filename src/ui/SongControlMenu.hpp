@@ -132,7 +132,7 @@ public:
 	void keyDown(cocos2d::enumKeyCodes key) override;
 	#endif
 	void toggleButtonState(cocos2d::CCNode* playlistButton, const bool isEnabled) const;
-	bool failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch);
+	bool failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch, const bool fromBegan);
 	bool ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
 	void ccTouchMoved(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
 	void ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
