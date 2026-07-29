@@ -892,12 +892,15 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 	#endif
 }
 
-bool SongControlMenu::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
+bool SongControlMenu::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch) {
 	SongManager& songManager = SongManager::get();
 	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
+	if (!canShowPlaybackProgress || !this->m_isDragging || !touch || !this->m_darkProgBar || !this->m_currProgBar) return true;
+	return false;
+}
 
-	// ordinarily this should return false. however returning false just means someone else swallows the touch instead
-	if (!canShowPlaybackProgress || !touch || !this->m_darkProgBar || !this->m_currProgBar) return true;
+bool SongControlMenu::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
+	if (this->failsSanityCheckForDraggableProgressBar(touch)) return true;
 
 	const cocos2d::CCPoint touchLocation = touch->getLocation();
 	const cocos2d::CCPoint location = this->m_darkProgBar->convertToNodeSpace(touchLocation);
@@ -910,7 +913,7 @@ bool SongControlMenu::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* ev
 	GameManager* gm = GameManager::get();
 	const cocos2d::ccColor3B pc = gm->colorForIdx(gm->m_playerColor.value());
 	const cocos2d::ccColor3B pc2 = gm->colorForIdx(gm->m_playerColor2.value());
-	this->m_currProgBar->runAction(cocos2d::CCTintTo::create(.125f, ((pc.r + pc2.r) / 2), ((pc.g + pc2.g) / 2), ((pc.b + pc2.b) / 2)));
+	this->m_currProgBar->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCTintTo::create(.125f, ((pc.r + pc2.r) / 2), ((pc.g + pc2.g) / 2), ((pc.b + pc2.b) / 2)), cocos2d::CCTintTo::create(.125f, 200, 200, 200))))->setTag(20260728);
 
 	const cocos2d::CCPoint popupSpace = this->m_mainLayer->convertToNodeSpace(touchLocation);
 	this->m_dragOffset = popupSpace.x - this->m_currProgBar->boundingBox().getMaxX();
@@ -921,25 +924,20 @@ bool SongControlMenu::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* ev
 }
 
 void SongControlMenu::ccTouchMoved(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
-	SongManager& songManager = SongManager::get();
-	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
-	if (!canShowPlaybackProgress || !this->m_isDragging || !touch || !this->m_darkProgBar || !this->m_currProgBar) return;
+	if (this->failsSanityCheckForDraggableProgressBar(touch)) return;
 	this->updateFromTouch(touch);
 }
 
 void SongControlMenu::ccTouchCancelled(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
-	SongManager& songManager = SongManager::get();
-	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
-	if (!canShowPlaybackProgress || !this->m_isDragging || !touch || !this->m_darkProgBar || !this->m_currProgBar) return;
+	if (this->failsSanityCheckForDraggableProgressBar(touch)) return;
 	this->ccTouchEnded(touch, event);
 }
 
 void SongControlMenu::ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
-	SongManager& songManager = SongManager::get();
-	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
-	if (!canShowPlaybackProgress || !this->m_isDragging || !touch || !this->m_darkProgBar || !this->m_currProgBar) return;
+	if (this->failsSanityCheckForDraggableProgressBar(touch)) return;
 
-	this->m_currProgBar->runAction(cocos2d::CCTintTo::create(.125f, 255, 255, 255));
+	this->m_currProgBar->stopActionByTag(20260728);
+	this->m_currProgBar->runAction(cocos2d::CCTintTo::create(.125f, 200, 200, 200));
 	SongControl::setSongPercentage(this->m_newPercent);
 
 	this->m_isDragging = false;
@@ -948,9 +946,7 @@ void SongControlMenu::ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* ev
 }
 
 void SongControlMenu::updateFromTouch(cocos2d::CCTouch* touch) {
-	SongManager& songManager = SongManager::get();
-	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
-	if (!canShowPlaybackProgress || !this->m_isDragging || !touch || !this->m_darkProgBar || !this->m_currProgBar) return;
+	if (this->failsSanityCheckForDraggableProgressBar(touch)) return;
 
 	const cocos2d::CCPoint location = this->m_mainLayer->convertToNodeSpace(touch->getLocation());
 	const float x = location.x - this->m_dragOffset;
