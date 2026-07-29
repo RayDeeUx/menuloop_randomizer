@@ -56,6 +56,9 @@ class SongListLayer final : public geode::Popup {
 #if GEODE_COMP_GD_VERSION < 22081
 class SongListLayer final : public geode::Popup<> {
 #endif
+private:
+	float m_scaleFactor = 1.f;
+	float m_tallestPoint = -0.f;
 public:
 	CCMenuItemToggler* m_songListCompactMode {};
 	CCMenuItemToggler* m_songListFavoritesOnlyMode {};
@@ -70,10 +73,16 @@ public:
 	cocos2d::CCMenu* m_viewFiltersMenu {};
 	geode::ScrollLayer* m_scrollLayer {};
 	geode::Scrollbar* m_scrollBar {};
-private:
-	float m_scaleFactor = 1.f;
-	float m_tallestPoint = -0.f;
-public:
+	geode::TextInput* m_searchBar {};
+	CCLayerColor* m_fakeCurrProg {};
+	CCLayerColor* m_fakeFullBar {};
+
+	bool m_isInQOLMod = false;
+	bool m_isDragging = false;
+	bool m_changedSongs = false;
+	float m_dragOffset = 0.f;
+	float m_newPercent = 0.f;
+
 	static SongListLayer* create();
 	void addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString = "");
 	void updateSongCountAndFavoritesCount(SongManager& songManager);
@@ -150,11 +159,5 @@ public:
 	void ccTouchCancelled(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
 	void ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
 	void updateFromTouch(cocos2d::CCTouch* touch);
-
-	geode::TextInput* m_searchBar {};
-	bool m_isInQOLMod = false;
-	bool m_isDragging = false;
-	bool m_changedSongs = false;
-	float m_dragOffset = 0.f;
-	float m_newPercent = 0.f;
+	void updateWidthOfFakeProgressBar(float);
 };
