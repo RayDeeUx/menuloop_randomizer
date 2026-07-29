@@ -142,6 +142,19 @@ public:
 	void searchArray(const int key, KeycodeToToggler keycodeArray);
 	#endif
 
+	MLRSongCell* findCurrentSongCell();
+	bool failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch, const bool fromBegan);
+	void releaseCurrProgBar();
+	bool ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
+	void ccTouchMoved(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
+	void ccTouchCancelled(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
+	void ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
+	void updateFromTouch(cocos2d::CCTouch* touch);
+
 	geode::TextInput* m_searchBar {};
 	bool m_isInQOLMod = false;
+	bool m_isDragging = false;
+	bool m_changedSongs = false;
+	float m_dragOffset = 0.f;
+	float m_newPercent = 0.f;
 };

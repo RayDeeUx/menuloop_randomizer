@@ -212,6 +212,8 @@ void MLRSongCell::onPlaySong(CCObject*) {
 void MLRSongCell::updateProgressBar() const {
 	SongManager& songManager = SongManager::get();
 	if (!songManager.getFinishedCalculatingSongLengths() || !this->m_currentB || !this->m_totalBar) return;
+	SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0);
+	if (sll && sll->m_isDragging) return;
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;

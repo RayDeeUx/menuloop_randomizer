@@ -960,7 +960,7 @@ void SongControlMenu::updateFromTouch(cocos2d::CCTouch* touch) {
 	const cocos2d::CCPoint location = this->m_mainLayer->convertToNodeSpace(touch->getLocation());
 	const float x = location.x - this->m_dragOffset;
 
-	// clamp this to 99 so there's no recurring nightmares about playlist mode going bonkers. should be fineeeeeeeeeee
+	// clamp this to 99.95 so there's no recurring nightmares about playlist mode going bonkers. should be fineeeeeeeeeee
 	this->m_newPercent = std::clamp<float>((std::clamp<float>(x, 0, this->m_darkProgBar->getContentWidth()) / this->m_darkProgBar->getContentWidth()) * 100.f, 0.f, 99.95f);
 	this->m_currProgBar->setContentWidth(this->m_darkProgBar->getContentWidth() * (this->m_newPercent / 100.f));
 }

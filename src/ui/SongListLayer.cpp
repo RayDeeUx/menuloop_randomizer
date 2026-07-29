@@ -554,7 +554,7 @@ void SongListLayer::onControlsButton(CCObject*) {
 	}
 	if (this->m_isInQOLMod) return;
 	this->onClose(nullptr);
-	SongControlMenu::create()->show();
+	SongListLayer::create()->show();
 }
 
 CCContentLayer* SongListLayer::getContentLayer() const {
@@ -977,4 +977,82 @@ unsigned int SongListLayer::getLength(const std::string& path, const bool revers
 void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float) {
 	if (SEARCH_BAR_DISABLED || !GET_SEARCH_BAR_NODE) return;
 	SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
+}
+
+MLRSongCell* SongListLayer::findCurrentSongCell() {
+	if (SongListLayer::getContentLayer() && SongListLayer::getContentLayer()->getChildByTag(12192025)) return static_cast<MLRSongCell*>(SongListLayer::getContentLayer()->getChildByTag(12192025));
+	return nullptr;
+}
+
+bool SongListLayer::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch, const bool fromBegan) {
+	SongManager& songManager = SongManager::get();
+	MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell();
+	const bool canShowPlaybackProgress = songManager.getFinishedCalculatingSongLengths() && Utils::getBool("showPlaybackProgressControlsSongList") && songManager.getUndefined0Alk1m123TouchPrio();
+	if (!canShowPlaybackProgress || !touch || !this->m_title || !currentSongCell || !currentSongCell->m_totalBar || !currentSongCell->m_currentB) return true;
+	if (!fromBegan && !this->m_isDragging) return true;
+	return false;
+}
+
+void SongListLayer::releaseCurrProgBar() {
+	MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell();
+	if (currentSongCell && currentSongCell->m_currentB) {
+		currentSongCell->m_currentB->stopActionByTag(20260728);
+		currentSongCell->m_currentB->runAction(cocos2d::CCTintTo::create(.125f, 255, 255, 255));
+	}
+	if (!this->m_changedSongs) SongControl::setSongPercentage(this->m_newPercent);
+
+	this->m_changedSongs = false;
+	this->m_isDragging = false;
+	this->m_dragOffset = 0;
+	this->m_newPercent = 0;
+}
+
+bool SongListLayer::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
+	if (this->failsSanityCheckForDraggableProgressBar(touch, true)) return true;
+
+	const cocos2d::CCPoint touchLocation = touch->getLocation();
+	const cocos2d::CCPoint location = this->m_title->convertToNodeSpace(touchLocation);
+	const cocos2d::CCRect bounds = cocos2d::CCRect{0.f, 0.f, this->m_title->getContentWidth(), this->m_title->getContentHeight()};
+
+	if (!bounds.containsPoint(location)) return true;
+
+	this->m_isDragging = true;
+
+	GameManager* gm = GameManager::get();
+	const cocos2d::ccColor3B pc = gm->colorForIdx(gm->m_playerColor.value());
+	const cocos2d::ccColor3B pc2 = gm->colorForIdx(gm->m_playerColor2.value());
+	if (MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell(); currentSongCell && currentSongCell->m_currentB) currentSongCell->m_currentB->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCTintTo::create(.25f, ((pc.r + pc2.r) / 2), ((pc.g + pc2.g) / 2), ((pc.b + pc2.b) / 2)), cocos2d::CCTintTo::create(.25f, 255, 255, 255))))->setTag(20260728);
+
+	const cocos2d::CCPoint popupSpace = this->m_mainLayer->convertToNodeSpace(touchLocation);
+	this->m_dragOffset = popupSpace.x - this->m_title->boundingBox().getMaxX();
+
+	this->updateFromTouch(touch);
+
+	return true;
+}
+
+void SongListLayer::ccTouchMoved(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
+	if (this->failsSanityCheckForDraggableProgressBar(touch, false)) return;
+	this->updateFromTouch(touch);
+}
+
+void SongListLayer::ccTouchCancelled(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
+	if (this->failsSanityCheckForDraggableProgressBar(touch, false)) return;
+	this->ccTouchEnded(touch, event);
+}
+
+void SongListLayer::ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
+	if (this->failsSanityCheckForDraggableProgressBar(touch, false)) return;
+	this->releaseCurrProgBar();
+}
+
+void SongListLayer::updateFromTouch(cocos2d::CCTouch* touch) {
+	if (this->failsSanityCheckForDraggableProgressBar(touch, false)) return;
+
+	const cocos2d::CCPoint location = this->m_mainLayer->convertToNodeSpace(touch->getLocation());
+	const float x = location.x - this->m_dragOffset;
+
+	// clamp this to 99.95 so there's no recurring nightmares about playlist mode going bonkers. should be fineeeeeeeeeee
+	this->m_newPercent = std::clamp<float>((std::clamp<float>(x, 0, (this->m_title->getContentWidth())) / (this->m_title->getContentWidth())) * 100.f, 0.f, 99.95f);
+	if (MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell(); currentSongCell && currentSongCell->m_currentB && currentSongCell->m_totalBar) currentSongCell->m_currentB->setContentWidth(currentSongCell->m_totalBar->getContentWidth() * (this->m_newPercent / 100.f));
 }
