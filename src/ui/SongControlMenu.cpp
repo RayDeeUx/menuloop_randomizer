@@ -621,6 +621,7 @@ void SongControlMenu::toggleOsuReal(cocos2d::CCObject*) {
 void SongControlMenu::updateCurrentLabel() {
 	SongManager& songManager = SongManager::get();
 	const std::string& currentSong = Utils::getFullNameOfCurrentSongForIntegrationsAndControlPanel();
+	this->m_changedSongs = true;
 	if (!this->m_smallLabel || !this->m_smallLabel->getParent() || this->m_smallLabel->getParent() != this->b) {
 		this->m_smallLabel = cocos2d::CCLabelBMFont::create(currentSong.c_str(), "chatFont.fnt");
 		this->b->addChildAtPosition(this->m_smallLabel, geode::Anchor::Center, {0.f, 3.5f});
@@ -652,6 +653,7 @@ void SongControlMenu::updateCurrentLabel() {
 		}
 		this->m_headerLabl->limitLabelWidth(this->m_mainLayer->getContentSize().width * .95f * .95f, 1.f, .0001f);
 	}
+	this->releaseCurrProgBar();
 	if (!Utils::getBool("songIndicatorsInControlPanel")) {
 		this->m_smallLabel->setSkewX(0.f);
 		this->m_smallLabel->setColor({255, 255, 255});
@@ -892,12 +894,25 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 	#endif
 }
 
-bool SongControlMenu::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch *touch, const bool fromBegan) {
+bool SongControlMenu::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch, const bool fromBegan) {
 	SongManager& songManager = SongManager::get();
 	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
 	if (!canShowPlaybackProgress || !touch || !this->m_darkProgBar || !this->m_currProgBar) return true;
 	if (!fromBegan && !this->m_isDragging) return true;
 	return false;
+}
+
+void SongControlMenu::releaseCurrProgBar() {
+	if (this->m_currProgBar) {
+		this->m_currProgBar->stopActionByTag(20260728);
+		this->m_currProgBar->runAction(cocos2d::CCTintTo::create(.125f, 200, 200, 200));
+	}
+	if (!this->m_changedSongs) SongControl::setSongPercentage(this->m_newPercent);
+
+	this->m_changedSongs = false;
+	this->m_isDragging = false;
+	this->m_dragOffset = 0;
+	this->m_newPercent = 0;
 }
 
 bool SongControlMenu::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
@@ -914,7 +929,7 @@ bool SongControlMenu::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* ev
 	GameManager* gm = GameManager::get();
 	const cocos2d::ccColor3B pc = gm->colorForIdx(gm->m_playerColor.value());
 	const cocos2d::ccColor3B pc2 = gm->colorForIdx(gm->m_playerColor2.value());
-	this->m_currProgBar->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCTintTo::create(.125f, ((pc.r + pc2.r) / 2), ((pc.g + pc2.g) / 2), ((pc.b + pc2.b) / 2)), cocos2d::CCTintTo::create(.125f, 200, 200, 200))))->setTag(20260728);
+	this->m_currProgBar->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCTintTo::create(.25f, ((pc.r + pc2.r) / 2), ((pc.g + pc2.g) / 2), ((pc.b + pc2.b) / 2)), cocos2d::CCTintTo::create(.25f, 200, 200, 200))))->setTag(20260728);
 
 	const cocos2d::CCPoint popupSpace = this->m_mainLayer->convertToNodeSpace(touchLocation);
 	this->m_dragOffset = popupSpace.x - this->m_currProgBar->boundingBox().getMaxX();
@@ -936,14 +951,7 @@ void SongControlMenu::ccTouchCancelled(cocos2d::CCTouch* touch, cocos2d::CCEvent
 
 void SongControlMenu::ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
 	if (this->failsSanityCheckForDraggableProgressBar(touch, false)) return;
-
-	this->m_currProgBar->stopActionByTag(20260728);
-	this->m_currProgBar->runAction(cocos2d::CCTintTo::create(.125f, 200, 200, 200));
-	SongControl::setSongPercentage(this->m_newPercent);
-
-	this->m_isDragging = false;
-	this->m_dragOffset = 0;
-	this->m_newPercent = 0;
+	this->releaseCurrProgBar();
 }
 
 void SongControlMenu::updateFromTouch(cocos2d::CCTouch* touch) {

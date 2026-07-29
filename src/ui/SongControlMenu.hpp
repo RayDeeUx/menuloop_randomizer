@@ -106,6 +106,7 @@ public:
 	bool m_osu = false;
 	bool m_isInQOLMod = false;
 	bool m_isDragging = false;
+	bool m_changedSongs = false;
 	float m_dragOffset = 0.f;
 	float m_newPercent = 0.f;
 	InfoAlertButton* m_infoButton {};
@@ -133,6 +134,7 @@ public:
 	#endif
 	void toggleButtonState(cocos2d::CCNode* playlistButton, const bool isEnabled) const;
 	bool failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch, const bool fromBegan);
+	void releaseCurrProgBar();
 	bool ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
 	void ccTouchMoved(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
 	void ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
