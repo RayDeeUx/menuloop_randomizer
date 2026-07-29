@@ -449,7 +449,7 @@ bool SongListLayer::setup() {
 		this->m_fakeFullBar->addChild(this->m_fakeCurrProg);
 
 		this->m_mainLayer->addChild(this->m_fakeFullBar);
-		this->m_fakeFullBar->setPosition({35.f, 262.5f});
+		this->m_fakeFullBar->setPosition({32.5f, 263.f});
 
 		SongListLayer::updateWidthOfFakeProgressBar(0.f);
 		this->schedule(schedule_selector(SongListLayer::updateWidthOfFakeProgressBar), .125f);
@@ -1072,7 +1072,7 @@ void SongListLayer::updateFromTouch(cocos2d::CCTouch* touch) {
 
 	// clamp this to 99.95 so there's no recurring nightmares about playlist mode going bonkers. should be fineeeeeeeeeee
 	this->m_newPercent = std::clamp<float>((std::clamp<float>(x, 0, (this->m_fakeFullBar->getContentWidth())) / (this->m_fakeFullBar->getContentWidth())) * 100.f, 0.f, 99.95f);
-	this->m_fakeCurrProg->setContentWidth(this->m_fakeCurrProg->getContentWidth() * (this->m_newPercent / 100.f));
+	this->m_fakeCurrProg->setContentWidth(this->m_fakeFullBar->getContentWidth() * (this->m_newPercent / 100.f));
 	if (MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell(); currentSongCell && currentSongCell->m_currentB && currentSongCell->m_totalBar) currentSongCell->m_currentB->setContentWidth(currentSongCell->m_totalBar->getContentWidth() * (this->m_newPercent / 100.f));
 }
 
