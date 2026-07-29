@@ -136,32 +136,27 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 	playButton->setID("song-cell-play-button"_spr);
 
 	SongManager& songManager = SongManager::get();
-	const bool canPlaybackProgress = songManager.getFinishedCalculatingSongLengths() && Utils::getBool("showPlaybackProgressControlsSongList") && songManager.getUndefined0Alk1m123TouchPrio();
+	const bool canPlaybackProgress = songManager.getFinishedCalculatingSongLengths() && songManager.getShowPlaybackControlsSongList() && songManager.getUndefined0Alk1m123TouchPrio();
 	if (canPlaybackProgress) {
-		CCMenuItemSpriteExtra* skipBkwd = Utils::addButton("skip-bkwd", menu_selector(MLRSongCell::onSkipBkwdButton), menu, this, true);
-		CCMenuItemSpriteExtra* skipFwrd = Utils::addButton("skip-fwrd", menu_selector(MLRSongCell::onSkipFwrdButton), menu, this, true);
-		skipBkwd->setVisible(false);
-		skipFwrd->setVisible(false);
+		this->m_bkwdButton = Utils::addButton("skip-bkwd", menu_selector(MLRSongCell::onSkipBkwdButton), menu, this, true);
+		this->m_ffwdButton = Utils::addButton("skip-fwrd", menu_selector(MLRSongCell::onSkipFwrdButton), menu, this, true);
+		this->m_bkwdButton->setVisible(false);
+		this->m_ffwdButton->setVisible(false);
 
-		CCLayerColor* total = CCLayerColor::create({0, 0, 0, 127}, 356.f, 2.5f / compactModeFactor);
-		total->setAnchorPoint({0.f, 0.f});
+		this->m_totalBar = CCLayerColor::create({0, 0, 0, 127}, 356.f, 2.5f / compactModeFactor);
+		this->m_totalBar->setAnchorPoint({0.f, 0.f});
 
-		CCLayerColor* current = CCLayerColor::create({255, 255, 255, 255}, 349.f, 2.5f / compactModeFactor);
-		current->setAnchorPoint({0.f, 0.f});
-		current->setPositionX(current->getPositionX() + 3.5f);
+		this->m_currentB = CCLayerColor::create({255, 255, 255, 255}, 349.f, 2.5f / compactModeFactor);
+		this->m_currentB->setAnchorPoint({0.f, 0.f});
+		this->m_currentB->setPositionX(this->m_currentB->getPositionX() + 3.5f);
 
-		total->addChild(current);
-		total->setPosition({0.f, .5f});
+		this->m_totalBar->addChild(this->m_currentB);
+		this->m_totalBar->setPosition({0.f, .5f});
 
-		total->setID("total-progress"_spr);
-		current->setID("current-progress"_spr);
+		this->m_totalBar->setID("total-progress"_spr);
+		this->m_currentB->setID("current-progress"_spr);
 
-		this->addChild(total);
-
-		this->m_totalBar = total;
-		this->m_currentB = current;
-		this->m_bkwdButton = skipBkwd;
-		this->m_ffwdButton = skipFwrd;
+		this->addChild(this->m_totalBar);
 	}
 
 	geode::AxisLayout* layout = geode::RowLayout::create()->setGap(0.f)->setAutoScale(true)->setAxisReverse(false)->setDefaultScaleLimits(.0001f, .75f);

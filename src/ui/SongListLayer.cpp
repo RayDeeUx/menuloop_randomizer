@@ -55,7 +55,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 #define EMPTY_SEARCH_STRG m_searchBar->setString("", false);
 #define LIMIT_PLACEHOLDER SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
 #define NO_PLAYLIST_AND_NO_CUSTOM_SONGS SongManager::get().getPlaylistIsEmpty() && !Utils::getBool("useCustomSongs")
-#define CAN_SHOW_PLAYBACK_PROGRESS songManager.getShowPlaybackControlsSongList() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong()) && !Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsNotPausedAndIsPlaying() && !Utils::currentFMODSongIsNotCurrentSongManagerSong()
+#define CAN_SHOW_PLAYBACK_PROGRESS songManager.getFinishedCalculatingSongLengths() && songManager.getShowPlaybackControlsSongList() && songManager.getUndefined0Alk1m123TouchPrio() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && !Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsNotPausedAndIsPlaying() && !Utils::currentFMODSongIsNotCurrentSongManagerSong()
 
 using Comparator = bool(*)(MLRSongCell*, MLRSongCell*, bool);
 
@@ -572,7 +572,7 @@ void SongListLayer::onControlsButton(CCObject*) {
 	}
 	if (this->m_isInQOLMod) return;
 	this->onClose(nullptr);
-	SongListLayer::create()->show();
+	SongControlMenu::create()->show();
 }
 
 CCContentLayer* SongListLayer::getContentLayer() const {
