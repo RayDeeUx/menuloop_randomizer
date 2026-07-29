@@ -55,6 +55,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 #define EMPTY_SEARCH_STRG m_searchBar->setString("", false);
 #define LIMIT_PLACEHOLDER SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
 #define NO_PLAYLIST_AND_NO_CUSTOM_SONGS SongManager::get().getPlaylistIsEmpty() && !Utils::getBool("useCustomSongs")
+#define CAN_SHOW_PLAYBACK_PROGRESS songManager.getShowPlaybackControlsSongList() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong()) && !Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsNotPausedAndIsPlaying() && !Utils::currentFMODSongIsNotCurrentSongManagerSong()
 
 using Comparator = bool(*)(MLRSongCell*, MLRSongCell*, bool);
 
@@ -438,7 +439,7 @@ bool SongListLayer::setup() {
 	abridgedControlsMenu->setID("abridged-controls-menu"_spr);
 	this->m_mainLayer->addChild(abridgedControlsMenu);
 
-	if (songManager.getFinishedCalculatingSongLengths() && Utils::getBool("showPlaybackProgressControlsSongList") && songManager.getUndefined0Alk1m123TouchPrio()) {
+	if (CAN_SHOW_PLAYBACK_PROGRESS) {
 		this->m_fakeCurrProg = CCLayerColor::create({0, 0, 0, 0}, 356.f, 13.f);
 		this->m_fakeCurrProg->setAnchorPoint({0.f, 0.f});
 		this->m_fakeCurrProg->setID("fake-curr-prog"_spr);
@@ -1004,7 +1005,7 @@ MLRSongCell* SongListLayer::findCurrentSongCell() {
 bool SongListLayer::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch, const bool fromBegan) {
 	SongManager& songManager = SongManager::get();
 	MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell();
-	const bool canShowPlaybackProgress = songManager.getFinishedCalculatingSongLengths() && Utils::getBool("showPlaybackProgressControlsSongList") && songManager.getUndefined0Alk1m123TouchPrio();
+	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
 	if (!canShowPlaybackProgress || !touch || !this->m_title || !currentSongCell || !currentSongCell->m_totalBar || !currentSongCell->m_currentB) return true;
 	if (!this->m_fakeCurrProg || !this->m_fakeFullBar) return true;
 	if (!fromBegan && !this->m_isDragging) return true;

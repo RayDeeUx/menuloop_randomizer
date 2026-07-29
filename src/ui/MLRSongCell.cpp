@@ -315,7 +315,6 @@ void MLRSongCell::pressAndHoldScheduler(float dt) {
 	else m_time = 0.f;
 }
 
-
 void MLRSongCell::onSkipBkwdButton(CCObject*) {
 	if (SongManager::get().getShowPlaybackControlsSongList()) SongControl::skipBackward();
 }
