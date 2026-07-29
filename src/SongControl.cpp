@@ -361,7 +361,7 @@ namespace SongControl {
 		songManager.setLastMenuLoopPosition(newPosition);
 		songManager.setPauseSongPositionTracking(false);
 	}
-	void setSongPercentage(const int percentage) {
+	void setSongPercentage(const float percentage) {
 		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (VANILLA_GD_MENU_LOOP_DISABLED) return;
 		if (Utils::currentFMODSongIsNotCurrentSongManagerSong()) return;

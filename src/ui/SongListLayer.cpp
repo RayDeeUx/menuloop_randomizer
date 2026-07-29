@@ -719,15 +719,11 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		const bool isAlt = GEODE_MACOS(cckd->getControlKeyPressed()) GEODE_WINDOWS(cckd->getAltKeyPressed());
 		if (!Utils::getBool("youtubeAndVLCKeyboardShortcutsSongListNoNumrow") && (key == cocos2d::KEY_Zero || key == cocos2d::KEY_One || key == cocos2d::KEY_Two || key == cocos2d::KEY_Three || key == cocos2d::KEY_Four || key == cocos2d::KEY_Five || key == cocos2d::KEY_Six || key == cocos2d::KEY_Seven || key == cocos2d::KEY_Eight || key == cocos2d::KEY_Nine)) {
 			if (!isShift && !isCmd && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_Zero)));
-			if (isShift && (windowsCtrl || macOSCtrl)) {
-				SongListLayer::searchArray(key, numrowToToggler);
-			}
+			if (isShift && (windowsCtrl || macOSCtrl)) return SongListLayer::searchArray(key, numrowToToggler);
 		}
 		if (!Utils::getBool("youtubeAndVLCKeyboardShortcutsSongListNoNumpad") && (key == cocos2d::KEY_NumPad0 || key == cocos2d::KEY_NumPad1 || key == cocos2d::KEY_NumPad2 || key == cocos2d::KEY_NumPad3 || key == cocos2d::KEY_NumPad4 || key == cocos2d::KEY_NumPad5 || key == cocos2d::KEY_NumPad6 || key == cocos2d::KEY_NumPad7 || key == cocos2d::KEY_NumPad8 || key == cocos2d::KEY_NumPad9)) {
 			if (!isShift && !macOSCtrl && !windowsCtrl) return SongControl::setSongPercentage(10 * (static_cast<int>(key) - static_cast<int>(cocos2d::KEY_NumPad0)));
-			if (isShift && (windowsCtrl || macOSCtrl)) {
-				SongListLayer::searchArray(key, numpadToToggler);
-			}
+			if (isShift && (windowsCtrl || macOSCtrl)) return SongListLayer::searchArray(key, numpadToToggler);
 		}
 		if ((windowsCtrl || isCmd) && key == cocos2d::KEY_R) {
 			return SongControl::setSongPercentage(0);

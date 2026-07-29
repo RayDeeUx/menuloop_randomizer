@@ -105,6 +105,9 @@ protected:
 public:
 	bool m_osu = false;
 	bool m_isInQOLMod = false;
+	bool m_isDragging = false;
+	float m_dragOffset = 0.f;
+	float m_newPercent = 0.f;
 	InfoAlertButton* m_infoButton {};
 	geode::TextInput* m_musicVolumeInput{};
 	static SongControlMenu* create();
@@ -129,4 +132,9 @@ public:
 	void keyDown(cocos2d::enumKeyCodes key) override;
 	#endif
 	void toggleButtonState(cocos2d::CCNode* playlistButton, const bool isEnabled) const;
+	bool ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
+	void ccTouchMoved(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
+	void ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
+	void ccTouchCancelled(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) override;
+	void updateFromTouch(cocos2d::CCTouch* touch);
 };

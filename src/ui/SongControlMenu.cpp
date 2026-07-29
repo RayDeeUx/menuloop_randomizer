@@ -489,7 +489,7 @@ void SongControlMenu::checkDaSongPositions(float) {
 	this->m_totlTimeLb->setString(fmt::format("{}:{:02}", ((fullLength / 1000) / 60), ((fullLength / 1000) % 60)).c_str());
 
 	// need to std::max() in case miniaudio.h is off by a few milliseconds
-	this->m_currProgBar->setContentWidth(std::clamp<float>((1.f * lastPosition) / (1.f * std::max<int>(fullLength, fmod->getMusicLengthMS(0))), 0.f, 1.f) * this->m_darkProgBar->getContentWidth());
+	if (!this->m_isDragging) this->m_currProgBar->setContentWidth(std::clamp<float>((1.f * lastPosition) / (1.f * std::max<int>(fullLength, fmod->getMusicLengthMS(0))), 0.f, 1.f) * this->m_darkProgBar->getContentWidth());
 }
 
 void SongControlMenu::pressAndHoldScheduler(float dt) {
@@ -890,4 +890,72 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 	#if GEODE_COMP_GD_VERSION < 22081
 	return FLAlertLayer::keyDown(key);
 	#endif
+}
+
+bool SongControlMenu::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
+	SongManager& songManager = SongManager::get();
+	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
+
+	// ordinarily this should return false. however returning false just means someone else swallows the touch instead
+	if (!canShowPlaybackProgress || !touch || !this->m_darkProgBar || !this->m_currProgBar) return true;
+
+	const cocos2d::CCPoint touchLocation = touch->getLocation();
+	const cocos2d::CCPoint location = this->m_darkProgBar->convertToNodeSpace(touchLocation);
+	const cocos2d::CCRect bounds = cocos2d::CCRect{0.f, 0.f, this->m_darkProgBar->getContentWidth(), this->m_darkProgBar->getContentHeight()};
+
+	if (!bounds.containsPoint(location)) return true;
+
+	this->m_isDragging = true;
+
+	GameManager* gm = GameManager::get();
+	const cocos2d::ccColor3B pc = gm->colorForIdx(gm->m_playerColor.value());
+	const cocos2d::ccColor3B pc2 = gm->colorForIdx(gm->m_playerColor2.value());
+	this->m_currProgBar->runAction(cocos2d::CCTintTo::create(.125f, ((pc.r + pc2.r) / 2), ((pc.g + pc2.g) / 2), ((pc.b + pc2.b) / 2)));
+
+	const cocos2d::CCPoint popupSpace = this->m_mainLayer->convertToNodeSpace(touchLocation);
+	this->m_dragOffset = popupSpace.x - this->m_currProgBar->boundingBox().getMaxX();
+
+	this->updateFromTouch(touch);
+
+	return true;
+}
+
+void SongControlMenu::ccTouchMoved(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
+	SongManager& songManager = SongManager::get();
+	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
+	if (!canShowPlaybackProgress || !this->m_isDragging || !touch || !this->m_darkProgBar || !this->m_currProgBar) return;
+	this->updateFromTouch(touch);
+}
+
+void SongControlMenu::ccTouchCancelled(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
+	SongManager& songManager = SongManager::get();
+	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
+	if (!canShowPlaybackProgress || !this->m_isDragging || !touch || !this->m_darkProgBar || !this->m_currProgBar) return;
+	this->ccTouchEnded(touch, event);
+}
+
+void SongControlMenu::ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {
+	SongManager& songManager = SongManager::get();
+	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
+	if (!canShowPlaybackProgress || !this->m_isDragging || !touch || !this->m_darkProgBar || !this->m_currProgBar) return;
+
+	this->m_currProgBar->runAction(cocos2d::CCTintTo::create(.125f, 255, 255, 255));
+	SongControl::setSongPercentage(this->m_newPercent);
+
+	this->m_isDragging = false;
+	this->m_dragOffset = 0;
+	this->m_newPercent = 0;
+}
+
+void SongControlMenu::updateFromTouch(cocos2d::CCTouch* touch) {
+	SongManager& songManager = SongManager::get();
+	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
+	if (!canShowPlaybackProgress || !this->m_isDragging || !touch || !this->m_darkProgBar || !this->m_currProgBar) return;
+
+	const cocos2d::CCPoint location = this->m_mainLayer->convertToNodeSpace(touch->getLocation());
+	const float x = location.x - this->m_dragOffset;
+
+	// clamp this to 99 so there's no recurring nightmares about playlist mode going bonkers. should be fineeeeeeeeeee
+	this->m_newPercent = std::clamp<float>((std::clamp<float>(x, 0, this->m_darkProgBar->getContentWidth()) / this->m_darkProgBar->getContentWidth()) * 100.f, 0.f, 99.95f);
+	this->m_currProgBar->setContentWidth(this->m_darkProgBar->getContentWidth() * (this->m_newPercent / 100.f));
 }
