@@ -564,6 +564,13 @@ void Utils::parseSongInformationForSongManager(SongToSongData& songToSongData, c
 	songData.extraInfoText = fmt::format("{} | {:.2f} MB | {}", songData.fileExtension, songData.songFileSize / 1000000.f, songData.dateTimeText).c_str();
 
 	songToSongData.emplace(theirPath, songData);
+
+	geode::log::info("songData.isInNonVanillaNGMLSongLocation: {}", songData.isInNonVanillaNGMLSongLocation);
+	geode::log::info("hypotheticalPathWhereMDMSongsAreStored: {}", hypotheticalPathWhereMDMSongsAreStored);
+	geode::log::info("Utils::toNormalizedString(theirParentPath): {}", Utils::toNormalizedString(theirParentPath));
+	geode::log::info("!songData.isFromConfigOrAltDir: {}", !songData.isFromConfigOrAltDir);
+	geode::log::info("songData.couldPossiblyExistInMusicDownloadManager: {}", songData.couldPossiblyExistInMusicDownloadManager);
+	geode::log::info("!songData.isFromJukeboxDirectory: {}", !songData.isFromJukeboxDirectory);
 }
 
 void Utils::popualteSongToSongDataMap() {
@@ -578,7 +585,7 @@ void Utils::popualteSongToSongDataMap() {
 
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 	const std::string& dummyJukeboxPath = Utils::toNormalizedString(geode::dirs::getModsSaveDir() / "fleym.nongd" / "nongs");
-	const std::string& hypotheticalPathWhereMDMSongsAreStored = Utils::toNormalizedString(Utils::toProblematicString(mdm->pathForSong(593059)).parent_path()); // this song ID in particular is banned from newgrounds
+	const std::string& hypotheticalPathWhereMDMSongsAreStored = Utils::toNormalizedString(Utils::toProblematicString(mdm->pathForSongFolder(593059)).parent_path()); // this song ID in particular is banned from newgrounds
 	std::error_code ea;
 
 	for (const std::string_view song : songManager.getSongs()) {
