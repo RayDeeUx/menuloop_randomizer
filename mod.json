@@ -29,7 +29,7 @@
 		},
 		"tutorial": {
 			"type": "info",
-			"description": "The closest thing to a tutorial on using MLR is this video by Colours Gaming: <cl>https://youtu.be/J2_UwVsgjHs&t=60s</c>. <c_>It's far from the intended way to use MLR, but nice to have.</c>",
+			"description": "The closest thing to a tutorial on using MLR is this video by Colours Gaming: <cl>https://youtu.be/J2_UwVsgjHs&t=60s</c>. <c-ff0000>It's far from the intended way to use MLR, but nice to have.</c>",
 			"color": "#00FFFF"
 		},
 		"song-fetching-storing-header": {
@@ -45,13 +45,13 @@
 		},
 		"loadPlaylistFile": {
 			"name": "Load Playlist File Instead",
-			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will load as menu loop options.\n\nNote that your `blacklist.txt` and `favorites.txt` files will still apply.\n\n## ***<c_>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***",
+			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will load as menu loop options.\n\nNote that your `blacklist.txt` and `favorites.txt` files will still apply.\n\n## ***<c-ff0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***",
 			"type": "bool",
 			"default": false
 		},
 		"playlistFile": {
 			"name": "Playlist File (.txt Files ONLY)",
-			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will either:\n- load as menu loop options, if <cl>\"Load Playlist File Instead\"</c> is enabled.\n- edit to add new songs to the selected playlist file, if <cl>\"Load Playlist File Instead\"</c> is disabled.\n\n## ***<c_>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***",
+			"description": "<cl>Based on an original idea by TheTrueNyxa.</c>\n\nChoose a `.txt` file containing a list of song file paths that MLR will either:\n- load as menu loop options, if <cl>\"Load Playlist File Instead\"</c> is enabled.\n- edit to add new songs to the selected playlist file, if <cl>\"Load Playlist File Instead\"</c> is disabled.\n\n## ***<c-ff0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***",
 			"type": "file",
 			"default": "{mod_config_dir}/playlistOne.txt",
 			"filters": [
@@ -127,7 +127,7 @@
 		},
 		"enablePreviousButton": {
 			"name": "Previous Song Button (READ!)",
-			"description": "<cl>Original idea by DurexSensitive.</c>\n\nGo back <c_>one</c> song. This does <c_>NOT</c> store your entire menu loop history, only one song at a time.\n\nDon't expect this intentional limitation to go away anytime soon.\n\n<cy>Only applicable when using the \"Classic\" Button Mode.</c>",
+			"description": "<cl>Original idea by DurexSensitive.</c>\n\nGo back <c-ff0000>one</c> song. This does <c-ff0000>NOT</c> store your entire menu loop history, only one song at a time.\n\nDon't expect this intentional limitation to go away anytime soon.\n\n<cy>Only applicable when using the \"Classic\" Button Mode.</c>",
 			"type": "bool",
 			"default": true
 		},
@@ -528,32 +528,32 @@
 		},
 		"dangerousBlacklisting": {
 			"name": "(DANGEROUS) Dangerous Blacklisting",
-			"description": "<cl>Original idea by Aktimoose.</c>\n\nAttempts to remove the lagspike when removing songs.\n\n<c_>This is an experimental setting. You agree to hold yourself responsible for any issues/lag/damages/crashes that happen when this setting is enabled.</c>",
+			"description": "<cl>Original idea by Aktimoose.</c>\n\nAttempts to remove the lagspike when removing songs.\n\n<c-ff0000>This is an experimental setting. You agree to hold yourself responsible for any issues/lag/damages/crashes that happen when this setting is enabled.</c>",
 			"type": "bool",
 			"default": false
 		},
 		"additionalFolder": {
 			"name": "(DANGEROUS) Additional Custom Songs Folder",
-			"description": "<cl>Original idea by RighteousRyan.</c>\n\nAdd an additional song folder for custom songs.\n\n<c_>This is an EXPERIMENTAL setting. By enabling this, you will hold yourself responsible for any issues/lag/damages/crashes that happen with this setting enabled. You also agree that this setting was added despite the developer's (RayDeeUx's) lack of personal belief/confidence that this feature belongs in MLR.</c>",
+			"description": "<cl>Original idea by RighteousRyan.</c>\n\nAdd an additional song folder for custom songs.\n\n<c-ff0000>This is an EXPERIMENTAL setting. By enabling this, you will hold yourself responsible for any issues/lag/damages/crashes that happen with this setting enabled. You also agree that this setting was added despite the developer's (RayDeeUx's) lack of personal belief/confidence that this feature belongs in MLR.</c>",
 			"type": "folder",
 			"default": ""
 		},
 		"searchDeeper": {
 			"name": "(DANGEROUS) Check Within Subdirectories",
-			"description": "<cl>Original idea by RighteousRyan.</c>\n\nSearch for songs within subdirectories.\n\n<c_>This is an EXPERIMENTAL setting. By enabling this, you will hold yourself responsible for any issues/lag/damages/crashes that happen with this setting enabled. You also agree that this setting was added despite the developer's (RayDeeUx's) lack of personal belief/confidence that this feature belongs in MLR.</c>",
+			"description": "<cl>Original idea by RighteousRyan.</c>\n\nSearch for songs within subdirectories.\n\n<c-ff0000>This is an EXPERIMENTAL setting. By enabling this, you will hold yourself responsible for any issues/lag/damages/crashes that happen with this setting enabled. You also agree that this setting was added despite the developer's (RayDeeUx's) lack of personal belief/confidence that this feature belongs in MLR.</c>",
 			"type": "bool",
 			"default": false
 		},
 		"melowodyMode": {
 			"name": "(DANGEROUS) Alternate String to Path Conversion",
-			"description": "<cl>Contributed by</c> <c-797979>mel</c><c-ffc272>owo</c><c-414141>dy</c><cl>.</c>\n\n<cp>FOR WINDOWS DEVICES ONLY.</c>\n\nUse a different method of converting raw strings to filesystem paths.\n\n<c_>This is an EXPERIMENTAL setting. By enabling this, you will hold yourself responsible for any issues/lag/damages/crashes that happen with this setting enabled. You also agree that this setting was added despite general lack of personal belief/confidence that this feature belongs in MLR from various members of Geode Team.</c>",
+			"description": "<cl>Contributed by</c> <c-797979>mel</c><c-ffc272>owo</c><c-414141>dy</c><cl>.</c>\n\n<cp>FOR WINDOWS DEVICES ONLY.</c>\n\nUse a different method of converting raw strings to filesystem paths.\n\n<c-ff0000>This is an EXPERIMENTAL setting. By enabling this, you will hold yourself responsible for any issues/lag/damages/crashes that happen with this setting enabled. You also agree that this setting was added despite general lack of personal belief/confidence that this feature belongs in MLR from various members of Geode Team.</c>",
 			"type": "bool",
 			"default": false,
 			"platforms": ["win"]
 		},
 		"liveDownloadedSongUpdating": {
 			"name": "(DANGEROUS) Live Updating of Downloaded Songs",
-			"description": "<cl>Original idea by cypher798.</c>\n\nAdd a song to the songs pool when successfully downloading it without having to reload the remainder of the existing song pool.\n\n<cp>*This option applies when* ***__BOTH__***</c> <cl>*\"Use Custom Songs Instead\"*</c> <cp>***__AND__***</c> <cl>*\"Load Playlist File Instead\"*</c> <cp>*are disabled* ***__ONLY__*** *.*</c>\n\n<c_>This is an EXPERIMENTAL setting. By enabling this, you will hold yourself responsible for any issues/lag/damages/crashes that happen with this setting enabled. You also agree that this setting was added despite general lack of personal belief/confidence that this feature belongs in MLR from various members of Geode Team.</c>",
+			"description": "<cl>Original idea by cypher798.</c>\n\nAdd a song to the songs pool when successfully downloading it without having to reload the remainder of the existing song pool.\n\n<cp>*This option applies when* ***__BOTH__***</c> <cl>*\"Use Custom Songs Instead\"*</c> <cp>***__AND__***</c> <cl>*\"Load Playlist File Instead\"*</c> <cp>*are disabled* ***__ONLY__*** *.*</c>\n\n<c-ff0000>This is an EXPERIMENTAL setting. By enabling this, you will hold yourself responsible for any issues/lag/damages/crashes that happen with this setting enabled. You also agree that this setting was added despite general lack of personal belief/confidence that this feature belongs in MLR from various members of Geode Team.</c>",
 			"type": "bool",
 			"default": false,
 			"enable-if": "!useCustomSongs && !loadPlaylistFile"
