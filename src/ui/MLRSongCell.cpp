@@ -81,7 +81,7 @@ bool MLRSongCell::init(const SongData& songData, const bool isEven, const bool i
 
 	if (songData.isEmpty) {
 		this->setOpacity(0);
-		this->setTag(11152025);
+		this->setTag(isEven ? 20260730 : 11152025);
 		this->setContentHeight(isEven ? 3.5f : 36.f); // for empty cells isEven == isEndOfList, !isEven == isForSearchBarPadding
 		this->setID("this-cell-intentionally-blank"_spr);
 		this->setUserObject("this-cell-intentionally-blank"_spr, cocos2d::CCBool::create(true));
