@@ -947,6 +947,7 @@ void Utils::undraggableUserFlagsAndUserObjects(cocos2d::CCNode* node) {
 	node->setUserObject("undefined0.draggable-popups/undraggable-popup", cocos2d::CCBool::create(true));
 	node->setUserObject("undefined0.draggable-popups/undraggable", cocos2d::CCBool::create(true));
 	node->setUserFlag("undefined0.draggable-popups/undraggable-popup", true);
+	node->setUserFlag("chs000.customizepopupanimation/dont-animate", true);
 	node->setUserFlag("undefined0.draggable-popups/undraggable", true);
 }
 
