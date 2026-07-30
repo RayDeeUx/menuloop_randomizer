@@ -50,7 +50,7 @@ class $modify(MenuLoopCSWHook, CustomSongWidget) {
 	void doIReallyNeedToDelayThisShitByOneFuckingFrame(const int songID) {
 		SongManager& songManager = SongManager::get();
 		MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
-		if (!mdm || !mdm->isSongDownloaded(songID)) return log::info("not downloaded...");
+		if (!mdm || !mdm->isSongDownloaded(songID)) return;
 
 		if (SongListLayer* foo = CCScene::get()->getChildByType<SongListLayer>(0); foo) {
 			#if GEODE_COMP_GD_VERSION > 22074
@@ -82,7 +82,7 @@ class $modify(MenuLoopCSWHook, CustomSongWidget) {
 		if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && songManager.qolModIntegrationSuccessful) CCScene::get()->getChildByType<AndroidUI>(0)->removeMeAndCleanup();
 
 		const std::string& songPath = Utils::toNormalizedString(Utils::toProblematicString(mdm->pathForSong(songID)));
-		if (std::ranges::find(songManager.getSongs().begin(), songManager.getSongs().end(), songPath) != songManager.getSongs().end()) return log::info("already parsed this information for song ID {}", songID);
+		if (std::ranges::find(songManager.getSongs().begin(), songManager.getSongs().end(), songPath) != songManager.getSongs().end()) return;
 
 		songManager.addSong(songPath);
 
@@ -104,7 +104,7 @@ class $modify(MenuLoopCSWHook, CustomSongWidget) {
 	}
 	void holyFuckHowManyFunctionsDoINeedToFuckingHookHere() {
 		SongManager& songManager = SongManager::get();
-		if (Utils::getBool("useCustomSongs") || songManager.isOverride() || (Utils::getBool("loadPlaylistFile") && !songManager.getPlaylistIsEmpty())) return geode::log::info("settings!!!!");
+		if (Utils::getBool("useCustomSongs") || songManager.isOverride() || (Utils::getBool("loadPlaylistFile") && !songManager.getPlaylistIsEmpty())) return;
 
 		if (this->m_songs.size() > 0) {
 			Loader::get()->queueInMainThread([this, songs = this->m_songs]() {
@@ -116,6 +116,7 @@ class $modify(MenuLoopCSWHook, CustomSongWidget) {
 			});
 		} else if (!this->m_isRobtopSong) {
 			Loader::get()->queueInMainThread([this, songID = this->m_customSongID]() {
+				if (MusicDownloadManager::sharedState() && !MusicDownloadManager::sharedState()->isSongDownloaded(songID)) return;
 				MenuLoopCSWHook::doIReallyNeedToDelayThisShitByOneFuckingFrame(songID);
 				// bruh i really had to delay that shit by one fucking frame im so fucking pissed
 			});
