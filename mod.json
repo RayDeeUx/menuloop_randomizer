@@ -527,7 +527,7 @@
 			"type": "title"
 		},
 		"dangerousBlacklisting": {
-			"name": "Dangerous Blacklisting",
+			"name": "(DANGEROUS) Dangerous Blacklisting",
 			"description": "<cl>Original idea by Aktimoose.</c>\n\nAttempts to remove the lagspike when removing songs.\n\n<c_>This is an experimental setting. You agree to hold yourself responsible for any issues/lag/damages/crashes that happen when this setting is enabled.</c>",
 			"type": "bool",
 			"default": false
@@ -550,6 +550,13 @@
 			"type": "bool",
 			"default": false,
 			"platforms": ["win"]
+		},
+		"liveDownloadedSongUpdating": {
+			"name": "(DANGEROUS) Live Updating of Downloaded Songs",
+			"description": "<cl>Original idea by cypher798.</c>\n\nAdd a song to the songs pool when successfully downloading it without having to reload the remainder of the existing song pool.\n\n<cp>*This option applies when* ***__BOTH__***</c> <cl>*\"Use Custom Songs Instead\"*</c> <cp>***__AND__***</c> <cl>*\"Load Playlist File Instead\"*</c> <cp>*are disabled* ***__ONLY__*** *.*</c>\n\n<c_>This is an EXPERIMENTAL setting. By enabling this, you will hold yourself responsible for any issues/lag/damages/crashes that happen with this setting enabled. You also agree that this setting was added despite general lack of personal belief/confidence that this feature belongs in MLR from various members of Geode Team.</c>",
+			"type": "bool",
+			"default": false,
+			"enable-if": "!useCustomSongs && !loadPlaylistFile"
 		},
 		"useHashesForMatching": {
 			"name": "Use Hashes To Find Current Song",

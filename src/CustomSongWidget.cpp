@@ -104,7 +104,7 @@ class $modify(MenuLoopCSWHook, CustomSongWidget) {
 	}
 	void holyFuckHowManyFunctionsDoINeedToFuckingHookHere() {
 		SongManager& songManager = SongManager::get();
-		if (Utils::getBool("useCustomSongs") || songManager.isOverride() || (Utils::getBool("loadPlaylistFile") && !songManager.getPlaylistIsEmpty())) return;
+		if (!Utils::getBool("liveDownloadedSongUpdating") || Utils::getBool("useCustomSongs") || songManager.isOverride() || (Utils::getBool("loadPlaylistFile") && !songManager.getPlaylistIsEmpty())) return;
 
 		if (this->m_songs.size() > 0) {
 			Loader::get()->queueInMainThread([this, songs = this->m_songs]() {
