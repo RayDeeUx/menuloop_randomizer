@@ -520,6 +520,52 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 	Utils::popualteSongToSongDataMap();
 }
 
+void Utils::parseSongInformationForSongManager(SongToSongData& songToSongData, const std::vector<std::string>& blacklist, const std::vector<std::string>& favorites, std::error_code ec, std::error_code ed, MusicDownloadManager* mdm, const std::string& dummyJukeboxPath, const std::string& hypotheticalPathWhereMDMSongsAreStored, std::error_code ea, const std::string_view song) {
+	SongType songType = SongType::Regular;
+	if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
+	else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
+
+	const std::filesystem::path& theirPath = Utils::toProblematicString(song);
+	const std::filesystem::path& theirParentPath = theirPath.parent_path();
+	const int songID = geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(-1);
+
+	std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
+	std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(theirPath, ed);
+	const bool isFromConfigOrAltDirWithoutMDMCheck = Utils::isFromConfigOrAlternateDir(theirParentPath);
+
+	SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID);
+	const bool isInNonVanillaNGMLSongLocation = songInfoObject && !geode::utils::string::contains(hypotheticalPathWhereMDMSongsAreStored, Utils::toNormalizedString(theirParentPath));
+
+	SongData songData = {
+		.actualFilePath = std::string(song),
+		.fileExtension = Utils::toNormalizedString(theirPath.extension()),
+		.fileName = Utils::toNormalizedString(theirPath.filename()),
+		.type = songType,
+		.songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
+		.hashedPath = std::hash<std::string>{}(std::string(song)),
+		.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
+		.isFromConfigOrAltDir = isFromConfigOrAltDirWithoutMDMCheck,
+		.couldPossiblyExistInMusicDownloadManager = songID > -1 && songInfoObject,
+		.isInNonVanillaNGMLSongLocation = isInNonVanillaNGMLSongLocation,
+		.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), dummyJukeboxPath),
+		.isEmpty = false
+	};
+	if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID), ea) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
+		songData.displayName = Utils::getFormattedNGMLSongName(songInfoObject, false);
+		songData.songID = songInfoObject->m_songID;
+		songData.bpm = songInfoObject->m_BPM;
+	}
+	songData.displayName = SongListLayer::generateDisplayName(songData);
+
+	std::chrono::system_clock::time_point timepoint = std::chrono::system_clock::time_point(std::chrono::duration_cast<std::chrono::system_clock::duration>(songData.songWriteTime.time_since_epoch()));
+	const std::chrono::sys_days datepoint = floor<std::chrono::days>(floor<std::chrono::seconds>(timepoint));
+	const std::chrono::year_month_day yearMonthDate{std::chrono::sys_days{datepoint}};
+	songData.dateTimeText = fmt::format("{} {:02}, {:04}", months[static_cast<unsigned>(yearMonthDate.month()) - 1], static_cast<unsigned>(yearMonthDate.day()), static_cast<int>(yearMonthDate.year()));
+	songData.extraInfoText = fmt::format("{} | {:.2f} MB | {}", songData.fileExtension, songData.songFileSize / 1000000.f, songData.dateTimeText).c_str();
+
+	songToSongData.emplace(theirPath, songData);
+}
+
 void Utils::popualteSongToSongDataMap() {
 	SongManager& songManager = SongManager::get();
 
@@ -528,7 +574,6 @@ void Utils::popualteSongToSongDataMap() {
 
 	const std::vector<std::string>& blacklist = songManager.getBlacklist();
 	const std::vector<std::string>& favorites = songManager.getFavorites();
-	std::vector<std::string> tempKeys = {};
 	std::error_code ec, ed;
 
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
@@ -537,50 +582,7 @@ void Utils::popualteSongToSongDataMap() {
 	std::error_code ea;
 
 	for (const std::string_view song : songManager.getSongs()) {
-		SongType songType = SongType::Regular;
-		if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
-		else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
-
-		const std::filesystem::path& theirPath = Utils::toProblematicString(song);
-		const std::filesystem::path& theirParentPath = theirPath.parent_path();
-		const int songID = geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(-1);
-
-		std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
-		std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(theirPath, ed);
-		const bool isFromConfigOrAltDirWithoutMDMCheck = Utils::isFromConfigOrAlternateDir(theirParentPath);
-
-		SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID);
-		const bool isInNonVanillaNGMLSongLocation = songInfoObject && !geode::utils::string::contains(hypotheticalPathWhereMDMSongsAreStored, Utils::toNormalizedString(theirParentPath));
-
-		SongData songData = {
-			.actualFilePath = std::string(song),
-			.fileExtension = Utils::toNormalizedString(theirPath.extension()),
-			.fileName = Utils::toNormalizedString(theirPath.filename()),
-			.type = songType,
-			.songFileSize = ec ? std::numeric_limits<std::uintmax_t>::max() : fileSize,
-			.hashedPath = std::hash<std::string>{}(std::string(song)),
-			.songWriteTime = ed ? std::filesystem::file_time_type::min() : fileTime,
-			.isFromConfigOrAltDir = isFromConfigOrAltDirWithoutMDMCheck,
-			.couldPossiblyExistInMusicDownloadManager = songID > -1 && songInfoObject,
-			.isInNonVanillaNGMLSongLocation = isInNonVanillaNGMLSongLocation,
-			.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), dummyJukeboxPath),
-			.isEmpty = false
-		};
-		if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID), ea) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
-			songData.displayName = Utils::getFormattedNGMLSongName(songInfoObject, false);
-			songData.songID = songInfoObject->m_songID;
-			songData.bpm = songInfoObject->m_BPM;
-		}
-		songData.displayName = SongListLayer::generateDisplayName(songData);
-
-		std::chrono::system_clock::time_point timepoint = std::chrono::system_clock::time_point(std::chrono::duration_cast<std::chrono::system_clock::duration>(songData.songWriteTime.time_since_epoch()));
-		const std::chrono::sys_days datepoint = floor<std::chrono::days>(floor<std::chrono::seconds>(timepoint));
-		const std::chrono::year_month_day yearMonthDate{std::chrono::sys_days{datepoint}};
-		songData.dateTimeText = fmt::format("{} {:02}, {:04}", months[static_cast<unsigned>(yearMonthDate.month()) - 1], static_cast<unsigned>(yearMonthDate.day()), static_cast<int>(yearMonthDate.year()));
-		songData.extraInfoText = fmt::format("{} | {:.2f} MB | {}", songData.fileExtension, songData.songFileSize / 1000000.f, songData.dateTimeText).c_str();
-
-		songToSongData.emplace(theirPath, songData);
-		tempKeys.push_back(songData.actualFilePath);
+		Utils::parseSongInformationForSongManager(songToSongData, blacklist, favorites, ec, ed, mdm, dummyJukeboxPath, hypotheticalPathWhereMDMSongsAreStored, ea, song);
 	}
 
 	songManager.setFinishedCalculatingSongLengths(false);
