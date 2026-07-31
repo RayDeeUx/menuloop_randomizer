@@ -1078,7 +1078,7 @@ bool SongListLayer::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* even
 	this->m_fakeFullBarNonHitbox->stopActionByTag(20260730);
 	this->m_fakeCurrProgNonHitbox->stopActionByTag(20260730);
 	this->m_fakeFullBarNonHitbox->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCFadeTo::create(.25f, 128), cocos2d::CCFadeTo::create(.25f, 0))))->setTag(20260731);
-	this->m_fakeCurrProgNonHitbox->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCFadeTo::create(.25f, 256), cocos2d::CCFadeTo::create(.25f, 0))))->setTag(20260731);
+	this->m_fakeCurrProgNonHitbox->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCFadeTo::create(.25f, 255), cocos2d::CCFadeTo::create(.25f, 0))))->setTag(20260731);
 	if (MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell(); currentSongCell && currentSongCell->m_currentB && currentSongCell->m_totalBar) currentSongCell->m_currentB->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCTintTo::create(.25f, decidedColor.r, decidedColor.g, decidedColor.b), cocos2d::CCTintTo::create(.25f, 255, 255, 255))))->setTag(20260728);
 
 	const cocos2d::CCPoint popupSpace = this->m_mainLayer->convertToNodeSpace(touchLocation);
