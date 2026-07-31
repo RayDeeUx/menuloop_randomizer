@@ -196,7 +196,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	if (this->m_scrollBar) this->m_scrollBar->setPositionY(wasntTallEnough ? 99999.f : SongListLayer::determineYPosition(scrollLayer));
 	if (this->m_scrollShortcuts) this->m_scrollShortcuts->setPositionY(wasntTallEnough ? 99999.f : SongListLayer::determineYPosition(scrollLayer));
 
-	if (Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
+	if (!wasntTallEnough && Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
 		geode::Loader::get()->queueInMainThread([this, contentLayer = scrollLayer->m_contentLayer]() {
 			if (!contentLayer || !contentLayer->getChildByTag(12192025)) return;
 			SongListLayer::scrollToCurrentSong();
