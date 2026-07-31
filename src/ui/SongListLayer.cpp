@@ -472,11 +472,11 @@ bool SongListLayer::setup() {
 		this->m_fakeCurrProgNonHitbox->setAnchorPoint({0.f, 0.f});
 		this->m_fakeCurrProgNonHitbox->setID("fake-curr-prog-but-conditionally-visible"_spr);
 
-		this->m_fakeFullBarNonHitbox = CCLayerColor::create({0, 0, 0, 255}, 356.f, 2.5f);
+		this->m_fakeFullBarNonHitbox = CCLayerColor::create({0, 0, 0, 128}, 356.f, 2.5f);
 		this->m_fakeFullBarNonHitbox->setCascadeOpacityEnabled(true);
 		this->m_fakeFullBarNonHitbox->setAnchorPoint({0.f, 0.f});
 		this->m_fakeFullBarNonHitbox->setID("fake-full-bar-but-conditionally-visible"_spr);
-		this->m_fakeFullBarNonHitbox->addChild(this->m_fakeCurrProg);
+		this->m_fakeFullBarNonHitbox->addChild(this->m_fakeCurrProgNonHitbox);
 
 		this->m_mainLayer->addChild(this->m_fakeFullBarNonHitbox);
 		this->m_fakeFullBarNonHitbox->setPosition({32.5f, 240.f});
@@ -1073,7 +1073,7 @@ bool SongListLayer::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* even
 
 	const cocos2d::ccColor3B decidedColor = Utils::getDecidedColor();
 	this->m_fakeFullBarNonHitbox->stopActionByTag(20260730);
-	this->m_fakeFullBarNonHitbox->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCFadeTo::create(.25f, 255), cocos2d::CCFadeTo::create(.25f, 0))))->setTag(20260731);
+	this->m_fakeFullBarNonHitbox->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCFadeTo::create(.25f, 128), cocos2d::CCFadeTo::create(.25f, 0))))->setTag(20260731);
 	if (MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell(); currentSongCell && currentSongCell->m_currentB && currentSongCell->m_totalBar) currentSongCell->m_currentB->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCTintTo::create(.25f, decidedColor.r, decidedColor.g, decidedColor.b), cocos2d::CCTintTo::create(.25f, 255, 255, 255))))->setTag(20260728);
 
 	const cocos2d::CCPoint popupSpace = this->m_mainLayer->convertToNodeSpace(touchLocation);
