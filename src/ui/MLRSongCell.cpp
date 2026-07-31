@@ -212,7 +212,7 @@ void MLRSongCell::updateProgressBar() const {
 	FMODAudioEngine* fmod = FMODAudioEngine::get();
 	const std::string& currSong = songManager.getCurrentSong();
 	if (fmod->getActiveMusic(0) != currSong || !songManager.getSongToSongDataEntries().contains(currSong)) return;
-	this->m_currentB->setContentWidth(std::clamp<float>(((1.f * songManager.getLastMenuLoopPosition()) / (1.f * std::max<int>(Utils::getSongDataOfCurrentSong().songLength, fmod->getMusicLengthMS(0)))), 0.f, 1.f) * 349.f); // some songs hae lengths calculated by miniaudio, so clamp it to 1.f
+	this->m_currentB->setContentWidth(std::clamp<float>(((1.f * songManager.getLastMenuLoopPosition()) / (1.f * fmod->getMusicLengthMS(0))), 0.f, 1.f) * 349.f); // some songs hae lengths calculated by miniaudio, so clamp it to 1.f
 }
 
 void MLRSongCell::checkIfCurrentSong() const {

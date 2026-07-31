@@ -564,13 +564,6 @@ void Utils::parseSongInformationForSongManager(SongToSongData& songToSongData, c
 	songData.extraInfoText = fmt::format("{} | {:.2f} MB | {}", songData.fileExtension, songData.songFileSize / 1000000.f, songData.dateTimeText).c_str();
 
 	songToSongData.emplace(theirPath, songData);
-
-	geode::log::info("songData.isInNonVanillaNGMLSongLocation: {}", songData.isInNonVanillaNGMLSongLocation);
-	geode::log::info("hypotheticalPathWhereMDMSongsAreStored: {}", hypotheticalPathWhereMDMSongsAreStored);
-	geode::log::info("Utils::toNormalizedString(theirParentPath): {}", Utils::toNormalizedString(theirParentPath));
-	geode::log::info("!songData.isFromConfigOrAltDir: {}", !songData.isFromConfigOrAltDir);
-	geode::log::info("songData.couldPossiblyExistInMusicDownloadManager: {}", songData.couldPossiblyExistInMusicDownloadManager);
-	geode::log::info("!songData.isFromJukeboxDirectory: {}", !songData.isFromJukeboxDirectory);
 }
 
 void Utils::popualteSongToSongDataMap() {
