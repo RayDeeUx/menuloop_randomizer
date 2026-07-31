@@ -186,7 +186,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	}
 	scrollLayer->scrollToTop();
 	scrollLayer->m_disableMovement = wasntTallEnough;
-	if (wasntTallEnough) scrollLayer->m_contentLayer->setPositionY(amountToAddBy - (36.f / this->m_scaleFactor));
+	if (wasntTallEnough) scrollLayer->m_contentLayer->setPositionY(amountToAddBy + (songListCompactMode ? (36.f / this->m_scaleFactor) : 0.f));
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
 
