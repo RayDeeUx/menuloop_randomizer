@@ -185,7 +185,6 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		tallEnough = SongListLayer::tallEnough(scrollLayer);
 	}
 	if (!wasntTallEnough) scrollLayer->scrollToTop();
-	// scrollLayer->m_disableMovement = wasntTallEnough;
 	if (wasntTallEnough) scrollLayer->m_contentLayer->setPositionY(amountToAddBy + (songListCompactMode ? (40.f * (this->m_scaleFactor - 1.5f)) : 0.f));
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
@@ -611,13 +610,13 @@ CCContentLayer* SongListLayer::getContentLayer() const {
 void SongListLayer::onScrollTopButton(CCObject*) {
 	if (!Utils::getBool("showScrollingShortcuts")) return;
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || !this->m_scrollLayer || this->m_scrollLayer->m_disableMovement) return; // cmon bruh it's in plain sight lol
+	if (!contentLayer || !this->m_scrollLayer) return; // cmon bruh it's in plain sight lol
 	contentLayer->setPositionY((contentLayer->getContentHeight() * -1.f) + contentLayer->getParent()->getContentHeight());
 }
 
 void SongListLayer::scrollToCurrentSong() {
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || !this->m_scrollLayer || this->m_scrollLayer->m_disableMovement) return;
+	if (!contentLayer || !this->m_scrollLayer) return;
 	// cmon bruh it's in plain sight lol
 	CCNode* currentCell = contentLayer->getChildByTag(12192025);
 	cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
@@ -634,7 +633,7 @@ void SongListLayer::onScrollCurButton(CCObject*) {
 }
 
 void SongListLayer::onScrollBtmButton(CCObject*) {
-	if (!Utils::getBool("showScrollingShortcuts") || !this->m_scrollLayer || this->m_scrollLayer->m_disableMovement) return;
+	if (!Utils::getBool("showScrollingShortcuts") || !this->m_scrollLayer) return;
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
 	if (!contentLayer) return; // cmon bruh it's in plain sight lol
 	contentLayer->setPositionY(0.f);
@@ -743,7 +742,7 @@ void SongListLayer::keyUp(const cocos2d::enumKeyCodes key) {
 #endif
 	if (key == cocos2d::KEY_Up || key == cocos2d::KEY_ArrowUp || key == cocos2d::KEY_Down || key == cocos2d::KEY_ArrowDown) {
 		CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-		if (!contentLayer || this->m_scrollLayer && this->m_scrollLayer->m_disableMovement) return;
+		if (!contentLayer) return;
 		return contentLayer->stopActionByTag(20260214);
 	}
 }
@@ -800,7 +799,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	}
 	if (key == cocos2d::KEY_Up || key == cocos2d::KEY_ArrowUp || key == cocos2d::KEY_Down || key == cocos2d::KEY_ArrowDown) {
 		CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-		if (!contentLayer || !this->m_scrollLayer || this->m_scrollLayer->m_disableMovement || !SongListLayer::tallEnough(this->m_scrollLayer)) return; // cmon bruh it's in plain sight lol
+		if (!contentLayer || !this->m_scrollLayer) return; // cmon bruh it's in plain sight lol
 
 		contentLayer->stopActionByTag(20260214);
 
