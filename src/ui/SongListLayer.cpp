@@ -183,10 +183,14 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		scrollLayer->m_contentLayer->updateLayout();
 		scrollLayer->m_contentLayer->setContentHeight(desiredContentHeight);
 		tallEnough = SongListLayer::tallEnough(scrollLayer);
+		// 1.5: 108 -> 88
+		// 1.75: 108 -> 88
+		// 2.000: 108 -> 88
 	}
 	scrollLayer->scrollToTop();
 	scrollLayer->m_disableMovement = wasntTallEnough;
-	if (wasntTallEnough) scrollLayer->m_contentLayer->setPositionY(amountToAddBy + (songListCompactMode ? (36.f / this->m_scaleFactor) : 0.f));
+	geode::log::info("");
+	if (wasntTallEnough) scrollLayer->m_contentLayer->setPositionY(amountToAddBy + (songListCompactMode ? (40.f * (this->m_scaleFactor - 1.5f)) : 0.f));
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
 
