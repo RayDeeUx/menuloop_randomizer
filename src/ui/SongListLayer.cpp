@@ -172,16 +172,21 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	scrollLayer->m_contentLayer->setContentHeight(desiredContentHeight);
 
 	bool tallEnough = SongListLayer::tallEnough(scrollLayer);
+	const bool wasntTallEnough = !tallEnough;
+	float amountToAddBy = -36.f;
 	while (!tallEnough) {
 		MLRSongCell* forcedPadding = MLRSongCell::createEmpty(false);
 		forcedPadding->setTag(20260730);
-		scrollLayer->addChild(forcedPadding, -20260730); // oh no ery's using the addchild overload with the z order param!!! sue him!!!
+		scrollLayer->m_contentLayer->addChild(forcedPadding, -20260730); // oh no ery's using the addchild overload with the z order param!!! sue him!!!
 		desiredContentHeight += 36.f;
+		amountToAddBy += 36.f;
 		scrollLayer->m_contentLayer->updateLayout();
 		scrollLayer->m_contentLayer->setContentHeight(desiredContentHeight);
 		tallEnough = SongListLayer::tallEnough(scrollLayer);
 	}
 	scrollLayer->scrollToTop();
+	scrollLayer->m_disableMovement = wasntTallEnough;
+	if (wasntTallEnough) scrollLayer->m_contentLayer->setPositionY(amountToAddBy);
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
 
@@ -722,7 +727,7 @@ void SongListLayer::keyUp(const cocos2d::enumKeyCodes key) {
 #endif
 	if (key == cocos2d::KEY_Up || key == cocos2d::KEY_ArrowUp || key == cocos2d::KEY_Down || key == cocos2d::KEY_ArrowDown) {
 		CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-		if (!contentLayer) return;
+		if (!contentLayer || this->m_scrollLayer && this->m_scrollLayer->m_disableMovement) return;
 		return contentLayer->stopActionByTag(20260214);
 	}
 }
@@ -779,7 +784,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 	}
 	if (key == cocos2d::KEY_Up || key == cocos2d::KEY_ArrowUp || key == cocos2d::KEY_Down || key == cocos2d::KEY_ArrowDown) {
 		CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-		if (!contentLayer || !this->m_scrollLayer || !SongListLayer::tallEnough(this->m_scrollLayer)) return; // cmon bruh it's in plain sight lol
+		if (!contentLayer || !this->m_scrollLayer || this->m_scrollLayer->m_disableMovement || !SongListLayer::tallEnough(this->m_scrollLayer)) return; // cmon bruh it's in plain sight lol
 
 		contentLayer->stopActionByTag(20260214);
 
