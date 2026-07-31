@@ -470,7 +470,7 @@ bool SongListLayer::setup() {
 		this->m_fakeCurrProgNonHitbox->setID("fake-curr-prog-but-conditionally-visible"_spr);
 
 		this->m_fakeFullBarNonHitbox = CCLayerColor::create({0, 0, 0, 128}, 356.f, 2.5f);
-		this->m_fakeFullBarNonHitbox->setCascadeOpacityEnabled(true);
+		this->m_fakeFullBarNonHitbox->setCascadeOpacityEnabled(false);
 		this->m_fakeFullBarNonHitbox->setAnchorPoint({0.f, 0.f});
 		this->m_fakeFullBarNonHitbox->setID("fake-full-bar-but-conditionally-visible"_spr);
 		this->m_fakeFullBarNonHitbox->addChild(this->m_fakeCurrProgNonHitbox);
@@ -1032,9 +1032,8 @@ MLRSongCell* SongListLayer::findCurrentSongCell() {
 
 bool SongListLayer::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch, const bool fromBegan) {
 	SongManager& songManager = SongManager::get();
-	MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell();
 	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS_AND_SCRUB_PLAYBACK;
-	if (!canShowPlaybackProgress || !touch || !this->m_title || !currentSongCell || !currentSongCell->m_totalBar || !currentSongCell->m_currentB) return true;
+	if (!canShowPlaybackProgress || !touch || !this->m_title) return true;
 	if (!this->m_fakeCurrProg || !this->m_fakeFullBar || !this->m_fakeCurrProgNonHitbox || !this->m_fakeFullBarNonHitbox) return true;
 	if (!fromBegan && !this->m_isDragging) return true;
 	return false;
