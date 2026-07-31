@@ -1112,10 +1112,12 @@ void SongListLayer::updateFromTouch(cocos2d::CCTouch* touch) {
 void SongListLayer::updateWidthOfFakeProgressBar(float) {
 	if (this->m_isDragging || !this->m_fakeCurrProg || !this->m_fakeFullBar || !this->m_fakeCurrProgNonHitbox || !this->m_fakeFullBarNonHitbox) return;
 
-	MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell();
-	if (!currentSongCell || !currentSongCell->m_currentB || !currentSongCell->m_totalBar) return;
+	SongManager& songManager = SongManager::get();
+	FMODAudioEngine* fmod = FMODAudioEngine::get();
+	const int fullLength = fmod->getMusicLengthMS(0);
+	const int lastPosition = songManager.getLastMenuLoopPosition();
+	const float songProgress = std::clamp<float>((lastPosition * 100.f / fullLength * 1.f), 0.f, 100.f) / 100.f;
 
-	const float songProgress = (currentSongCell->m_currentB->getContentWidth() / currentSongCell->m_totalBar->getContentWidth());
 	this->m_fakeCurrProgNonHitbox->setContentWidth(songProgress * this->m_fakeFullBarNonHitbox->getContentWidth());
 	this->m_fakeCurrProg->setContentWidth(songProgress * this->m_fakeFullBar->getContentWidth());
 }
