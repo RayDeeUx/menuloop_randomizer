@@ -186,15 +186,15 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	}
 	scrollLayer->scrollToTop();
 	scrollLayer->m_disableMovement = wasntTallEnough;
-	if (wasntTallEnough) scrollLayer->m_contentLayer->setPositionY(amountToAddBy);
+	if (wasntTallEnough) scrollLayer->m_contentLayer->setPositionY(amountToAddBy - (36.f / this->m_scaleFactor));
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
 
 	this->m_scaleFactor = !songListCompactMode ? 1.f : static_cast<float>(std::clamp<double>(geode::Mod::get()->getSettingValue<double>("compactModeScaleFactor"), 1.5f, 2.f));
 	this->m_tallestPoint = (scrollLayer->m_contentLayer->getContentHeight() * -1.f) + scrollLayer->getContentHeight();
 
-	if (this->m_scrollBar) this->m_scrollBar->setPositionY(SongListLayer::determineYPosition(scrollLayer));
-	if (this->m_scrollShortcuts) this->m_scrollShortcuts->setPositionY(SongListLayer::determineYPosition(scrollLayer));
+	if (this->m_scrollBar) this->m_scrollBar->setPositionY(wasntTallEnough ? 99999.f : SongListLayer::determineYPosition(scrollLayer));
+	if (this->m_scrollShortcuts) this->m_scrollShortcuts->setPositionY(wasntTallEnough ? 99999.f : SongListLayer::determineYPosition(scrollLayer));
 
 	if (Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
 		geode::Loader::get()->queueInMainThread([this, contentLayer = scrollLayer->m_contentLayer]() {
