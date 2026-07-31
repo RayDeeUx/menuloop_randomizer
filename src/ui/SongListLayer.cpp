@@ -479,6 +479,7 @@ bool SongListLayer::setup() {
 		this->m_fakeFullBarNonHitbox->setPosition({32.5f, 255.f});
 
 		this->m_fakeFullBarNonHitbox->runAction(cocos2d::CCSequence::create(cocos2d::CCDelayTime::create(1.25f), cocos2d::CCFadeTo::create(.25f, 0), nullptr))->setTag(20260730);
+		this->m_fakeCurrProgNonHitbox->runAction(cocos2d::CCSequence::create(cocos2d::CCDelayTime::create(1.25f), cocos2d::CCFadeTo::create(.25f, 0), nullptr))->setTag(20260730);
 		SongListLayer::updateWidthOfFakeProgressBar(0.f);
 		this->schedule(schedule_selector(SongListLayer::updateWidthOfFakeProgressBar), .125f);
 	}
