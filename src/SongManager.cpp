@@ -368,6 +368,22 @@ bool SongManager::getShowPlaybackControlsSongList() const {
 	return m_showPlaybackControlsSongList;
 }
 
+void SongManager::setSongScrubbingInSongList(const bool value) {
+	m_songScrubbingInSongList = value;
+}
+
+bool SongManager::getSongScrubbingInSongList() const {
+	return m_songScrubbingInSongList;
+}
+
+void SongManager::setSongScrubbingInControlPanel(const bool value) {
+	m_songScrubbingInControlPanel = value;
+}
+
+bool SongManager::getSongScrubbingInControlPanel() const {
+	return m_songScrubbingInControlPanel;
+}
+
 void SongManager::setFinishedCalculatingSongLengths(const bool value) {
 	m_finishedCalculatingSongLengths = value;
 }

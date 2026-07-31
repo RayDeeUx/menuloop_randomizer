@@ -64,6 +64,8 @@ $on_mod(Loaded) {
 	songManager.setShouldRestoreMenuLoopPoint(true);
 	songManager.setFinishedCalculatingSongLengths(false);
 	songManager.setAdvancedLogs(Mod::get()->getSettingValue<bool>("advancedLogs"));
+	songManager.setSongScrubbingInSongList(Mod::get()->getSettingValue<bool>("songScrubbingInSongList"));
+	songManager.setSongScrubbingInControlPanel(Mod::get()->getSettingValue<bool>("songScrubbingInControlPanel"));
 	songManager.setShowPlaybackProgressAndControls(Mod::get()->getSettingValue<bool>("showPlaybackProgressAndControls"));
 	songManager.setShowPlaybackControlsSongList(Mod::get()->getSettingValue<bool>("showPlaybackProgressControlsSongList"));
 	GEODE_MOBILE(songManager.setYoutubeAndVLCKeyboardShortcutsSongList(false);)
@@ -333,6 +335,14 @@ $on_mod(Loaded) {
 			ml->setVisible(true);
 			scm->toggleOsu();
 		}
+	});
+	listenForSettingChanges<bool>("songScrubbingInSongList", [](const bool songScrubbingInSongListNew) {
+		Utils::passesVobecidedSanityCheck();
+		SongManager::get().setSongScrubbingInSongList(songScrubbingInSongListNew);
+	});
+	listenForSettingChanges<bool>("songScrubbingInControlPanel", [](const bool songScrubbingInControlPanelNew) {
+		Utils::passesVobecidedSanityCheck();
+		SongManager::get().setSongScrubbingInControlPanel(songScrubbingInControlPanelNew);
 	});
 	listenForSettingChanges<bool>("advancedLogs", [](const bool newAdvancedLogs) {
 		Utils::passesVobecidedSanityCheck();

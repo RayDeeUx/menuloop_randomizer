@@ -3,8 +3,15 @@
 
 <mod:alk.better-touch-prio>
 
-## v1.13.4
-- Things to come!
+## v1.14.0
+- <cg>Added</c> song progress scrubbing to the Control Panel and Song List menus.
+  - Requires the  `Show Playback Progress and Controls`  setting to be enabled for the respective menu's setting category, depending on whether you want song scrubbing enabled in only one of these two menus.
+  - In the Control Panel, scrub along the progress bar.
+  - In the Song List, scrub along the golden popup menu title area.
+  - Song playback continues while you scrub, and only changes position when you release.
+- <co>Attempt to fix</c> a bug that misidentified songs from Newgrounds/Music Library as songs in a non-vanilla song folder location after initial game load.
+- <co>Attempt to fix</c> a bug where search results in the Song List would go off-screen if there weren't enough songs to populate the scrollable area.
+  - The current fix *almost* fully fixes this issue, but a deeper and more precise fix requires a level of insight into geode::ScrollLayer that cannot be afforded now, and will most likely remain unaffordable for a long time.
 ## v1.13.3
 - Added setting to restore menu loop position after being interrupted (Disabled by default, experimental).
 - Added setting to change the fade-in duration (in seconds) for menu loops (To "disable", use default value  `1.0`  ).
