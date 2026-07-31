@@ -463,9 +463,6 @@ bool SongListLayer::setup() {
 
 		this->m_mainLayer->addChild(this->m_fakeFullBar);
 		this->m_fakeFullBar->setPosition({32.5f, 263.f});
-		this->m_fakeCurrProg = CCLayerColor::create({0, 0, 0, 0}, 356.f, 13.f);
-		this->m_fakeCurrProg->setAnchorPoint({0.f, 0.f});
-		this->m_fakeCurrProg->setID("fake-curr-prog"_spr);
 
 		const cocos2d::ccColor3B decidedColor = Utils::getDecidedColor();
 		this->m_fakeCurrProgNonHitbox = CCLayerColor::create({decidedColor.r, decidedColor.g, decidedColor.b, 255}, 356.f, 2.5f);
@@ -481,7 +478,7 @@ bool SongListLayer::setup() {
 		this->m_mainLayer->addChild(this->m_fakeFullBarNonHitbox);
 		this->m_fakeFullBarNonHitbox->setPosition({32.5f, 240.f});
 
-		this->m_fakeFullBarNonHitbox->runAction(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCDelayTime::create(1.25f), cocos2d::CCFadeTo::create(.25f, 0)))->setTag(20260730);
+		this->m_fakeFullBarNonHitbox->runAction(cocos2d::CCSequence::create(cocos2d::CCDelayTime::create(1.25f), cocos2d::CCFadeTo::create(.25f, 0), nullptr))->setTag(20260730);
 		SongListLayer::updateWidthOfFakeProgressBar(0.f);
 		this->schedule(schedule_selector(SongListLayer::updateWidthOfFakeProgressBar), .125f);
 	}
