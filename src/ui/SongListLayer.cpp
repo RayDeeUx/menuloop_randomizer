@@ -478,8 +478,8 @@ bool SongListLayer::setup() {
 		this->m_fakeFullBarNonHitbox->setID("fake-full-bar-but-conditionally-visible"_spr);
 		this->m_fakeFullBarNonHitbox->addChild(this->m_fakeCurrProg);
 
-		this->m_mainLayer->addChild(this->m_fakeFullBar);
-		this->m_fakeFullBar->setPosition({32.5f, 240.f});
+		this->m_mainLayer->addChild(this->m_fakeFullBarNonHitbox);
+		this->m_fakeFullBarNonHitbox->setPosition({32.5f, 240.f});
 
 		this->m_fakeFullBarNonHitbox->runAction(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCDelayTime::create(1.25f), cocos2d::CCFadeTo::create(.25f, 0)))->setTag(20260730);
 		SongListLayer::updateWidthOfFakeProgressBar(0.f);
