@@ -103,6 +103,7 @@ class Utils {
 	static void addUndraggablePopupTraits(FLAlertLayer* popup);
 	static void showMDPopup(const std::string_view title, const std::string& bodyText, const int tag, const std::string_view nodeID);
 	static void createSettingsPopup();
+	static cocos2d::ccColor3B getDecidedColor();
 	static bool notFavoritesNorBlacklist(const std::filesystem::path&);
 	static void costingtonsTryNSave();
 	static std::string getPlatform();

@@ -463,7 +463,25 @@ bool SongListLayer::setup() {
 
 		this->m_mainLayer->addChild(this->m_fakeFullBar);
 		this->m_fakeFullBar->setPosition({32.5f, 263.f});
+		this->m_fakeCurrProg = CCLayerColor::create({0, 0, 0, 0}, 356.f, 13.f);
+		this->m_fakeCurrProg->setAnchorPoint({0.f, 0.f});
+		this->m_fakeCurrProg->setID("fake-curr-prog"_spr);
 
+		const cocos2d::ccColor3B decidedColor = Utils::getDecidedColor();
+		this->m_fakeCurrProgNonHitbox = CCLayerColor::create({decidedColor.r, decidedColor.g, decidedColor.b, 255}, 356.f, 2.5f);
+		this->m_fakeCurrProgNonHitbox->setAnchorPoint({0.f, 0.f});
+		this->m_fakeCurrProgNonHitbox->setID("fake-curr-prog-but-conditionally-visible"_spr);
+
+		this->m_fakeFullBarNonHitbox = CCLayerColor::create({0, 0, 0, 255}, 356.f, 2.5f);
+		this->m_fakeFullBarNonHitbox->setCascadeOpacityEnabled(true);
+		this->m_fakeFullBarNonHitbox->setAnchorPoint({0.f, 0.f});
+		this->m_fakeFullBarNonHitbox->setID("fake-full-bar-but-conditionally-visible"_spr);
+		this->m_fakeFullBarNonHitbox->addChild(this->m_fakeCurrProg);
+
+		this->m_mainLayer->addChild(this->m_fakeFullBar);
+		this->m_fakeFullBar->setPosition({32.5f, 240.f});
+
+		this->m_fakeFullBarNonHitbox->runAction(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCDelayTime::create(1.25f), cocos2d::CCFadeTo::create(.25f, 0)))->setTag(20260730);
 		SongListLayer::updateWidthOfFakeProgressBar(0.f);
 		this->schedule(schedule_selector(SongListLayer::updateWidthOfFakeProgressBar), .125f);
 	}
@@ -1019,14 +1037,18 @@ bool SongListLayer::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* to
 	MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell();
 	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
 	if (!canShowPlaybackProgress || !touch || !this->m_title || !currentSongCell || !currentSongCell->m_totalBar || !currentSongCell->m_currentB) return true;
-	if (!this->m_fakeCurrProg || !this->m_fakeFullBar) return true;
+	if (!this->m_fakeCurrProg || !this->m_fakeFullBar || !this->m_fakeCurrProgNonHitbox || !this->m_fakeFullBarNonHitbox) return true;
 	if (!fromBegan && !this->m_isDragging) return true;
 	return false;
 }
 
 void SongListLayer::releaseCurrProgBar() {
-	MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell();
-	if (currentSongCell && currentSongCell->m_currentB) {
+	if (this->m_fakeFullBarNonHitbox) {
+		this->m_fakeFullBarNonHitbox->stopActionByTag(20260730);
+		this->m_fakeFullBarNonHitbox->stopActionByTag(20260731);
+		this->m_fakeFullBarNonHitbox->runAction(cocos2d::CCFadeTo::create(.125f, 0));
+	}
+	if (MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell(); currentSongCell && currentSongCell->m_currentB) {
 		currentSongCell->m_currentB->stopActionByTag(20260728);
 		currentSongCell->m_currentB->runAction(cocos2d::CCTintTo::create(.125f, 255, 255, 255));
 	}
@@ -1049,10 +1071,10 @@ bool SongListLayer::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* even
 
 	this->m_isDragging = true;
 
-	GameManager* gm = GameManager::get();
-	const cocos2d::ccColor3B pc = gm->colorForIdx(gm->m_playerColor.value());
-	const cocos2d::ccColor3B pc2 = gm->colorForIdx(gm->m_playerColor2.value());
-	if (MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell(); currentSongCell && currentSongCell->m_currentB && currentSongCell->m_totalBar) currentSongCell->m_currentB->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCTintTo::create(.25f, ((pc.r + pc2.r) / 2), ((pc.g + pc2.g) / 2), ((pc.b + pc2.b) / 2)), cocos2d::CCTintTo::create(.25f, 255, 255, 255))))->setTag(20260728);
+	const cocos2d::ccColor3B decidedColor = Utils::getDecidedColor();
+	this->m_fakeFullBarNonHitbox->stopActionByTag(20260730);
+	this->m_fakeFullBarNonHitbox->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCFadeTo::create(.25f, 255), cocos2d::CCFadeTo::create(.25f, 0))))->setTag(20260731);
+	if (MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell(); currentSongCell && currentSongCell->m_currentB && currentSongCell->m_totalBar) currentSongCell->m_currentB->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCTintTo::create(.25f, decidedColor.r, decidedColor.g, decidedColor.b), cocos2d::CCTintTo::create(.25f, 255, 255, 255))))->setTag(20260728);
 
 	const cocos2d::CCPoint popupSpace = this->m_mainLayer->convertToNodeSpace(touchLocation);
 	this->m_dragOffset = popupSpace.x - this->m_fakeCurrProg->boundingBox().getMaxX();
@@ -1085,15 +1107,18 @@ void SongListLayer::updateFromTouch(cocos2d::CCTouch* touch) {
 
 	// clamp this to 99.95 so there's no recurring nightmares about playlist mode going bonkers. should be fineeeeeeeeeee
 	this->m_newPercent = std::clamp<float>((std::clamp<float>(x, 0, (this->m_fakeFullBar->getContentWidth())) / (this->m_fakeFullBar->getContentWidth())) * 100.f, 0.f, 99.95f);
+	this->m_fakeCurrProgNonHitbox->setContentWidth(this->m_fakeFullBarNonHitbox->getContentWidth() * (this->m_newPercent / 100.f));
 	this->m_fakeCurrProg->setContentWidth(this->m_fakeFullBar->getContentWidth() * (this->m_newPercent / 100.f));
 	if (MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell(); currentSongCell && currentSongCell->m_currentB && currentSongCell->m_totalBar) currentSongCell->m_currentB->setContentWidth(currentSongCell->m_totalBar->getContentWidth() * (this->m_newPercent / 100.f));
 }
 
 void SongListLayer::updateWidthOfFakeProgressBar(float) {
-	if (this->m_isDragging || !this->m_fakeCurrProg || !this->m_fakeFullBar) return;
+	if (this->m_isDragging || !this->m_fakeCurrProg || !this->m_fakeFullBar || !this->m_fakeCurrProgNonHitbox || !this->m_fakeFullBarNonHitbox) return;
 
 	MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell();
 	if (!currentSongCell || !currentSongCell->m_currentB || !currentSongCell->m_totalBar) return;
 
-	this->m_fakeCurrProg->setContentWidth((currentSongCell->m_currentB->getContentWidth() / currentSongCell->m_totalBar->getContentWidth()) * this->m_fakeFullBar->getContentWidth());
+	const float songProgress = (currentSongCell->m_currentB->getContentWidth() / currentSongCell->m_totalBar->getContentWidth());
+	this->m_fakeCurrProgNonHitbox->setContentWidth(songProgress * this->m_fakeFullBarNonHitbox->getContentWidth());
+	this->m_fakeCurrProg->setContentWidth(songProgress * this->m_fakeFullBar->getContentWidth());
 }

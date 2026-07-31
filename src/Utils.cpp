@@ -976,6 +976,14 @@ void Utils::createSettingsPopup() {
 	});
 }
 
+cocos2d::ccColor3B Utils::getDecidedColor() {
+	GameManager* gm = GameManager::get();
+	const cocos2d::ccColor3B pc = gm->colorForIdx(gm->m_playerColor.value());
+	const cocos2d::ccColor3B pc2 = gm->colorForIdx(gm->m_playerColor2.value());
+	const cocos2d::ccColor3B pc3 = gm->m_playerGlow ? gm->colorForIdx(gm->m_playerGlowColor.value()) : cocos2d::ccColor3B{0, 0, 0};
+	return gm->m_playerGlow ? cocos2d::ccColor3B{static_cast<GLubyte>((pc.r + pc2.r + pc3.r) / 3), static_cast<GLubyte>((pc.g + pc2.g + pc3.g) / 3), static_cast<GLubyte>((pc.b + pc2.b + pc3.b) / 3)} : cocos2d::ccColor3B{static_cast<GLubyte>((pc.r + pc2.r) / 2), static_cast<GLubyte>((pc.g + pc2.g) / 2), static_cast<GLubyte>((pc.b + pc2.b) / 2)};
+}
+
 bool Utils::notFavoritesNorBlacklist(const std::filesystem::path& filePath) {
 	return (filePath != (geode::Mod::get()->getConfigDir() / "favorites.txt")) && (filePath != (geode::Mod::get()->getConfigDir() / "blacklist.txt"));
 }

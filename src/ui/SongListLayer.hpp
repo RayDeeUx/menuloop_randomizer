@@ -74,6 +74,8 @@ public:
 	geode::ScrollLayer* m_scrollLayer {};
 	geode::Scrollbar* m_scrollBar {};
 	geode::TextInput* m_searchBar {};
+	CCLayerColor* m_fakeCurrProgNonHitbox {};
+	CCLayerColor* m_fakeFullBarNonHitbox {};
 	CCLayerColor* m_fakeCurrProg {};
 	CCLayerColor* m_fakeFullBar {};
 

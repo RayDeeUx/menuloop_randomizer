@@ -926,10 +926,8 @@ bool SongControlMenu::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* ev
 
 	this->m_isDragging = true;
 
-	GameManager* gm = GameManager::get();
-	const cocos2d::ccColor3B pc = gm->colorForIdx(gm->m_playerColor.value());
-	const cocos2d::ccColor3B pc2 = gm->colorForIdx(gm->m_playerColor2.value());
-	this->m_currProgBar->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCTintTo::create(.25f, ((pc.r + pc2.r) / 2), ((pc.g + pc2.g) / 2), ((pc.b + pc2.b) / 2)), cocos2d::CCTintTo::create(.25f, 200, 200, 200))))->setTag(20260728);
+	const cocos2d::ccColor3B decidedColor = Utils::getDecidedColor();
+	this->m_currProgBar->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCTintTo::create(.25f, decidedColor.r, decidedColor.g, decidedColor.b), cocos2d::CCTintTo::create(.25f, 200, 200, 200))))->setTag(20260728);
 
 	const cocos2d::CCPoint popupSpace = this->m_mainLayer->convertToNodeSpace(touchLocation);
 	this->m_dragOffset = popupSpace.x - this->m_currProgBar->boundingBox().getMaxX();
