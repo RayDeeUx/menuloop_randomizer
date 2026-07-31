@@ -184,8 +184,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 		scrollLayer->m_contentLayer->setContentHeight(desiredContentHeight);
 		tallEnough = SongListLayer::tallEnough(scrollLayer);
 	}
-	scrollLayer->scrollToTop();
-	scrollLayer->m_disableMovement = wasntTallEnough;
+	if (!wasntTallEnough) scrollLayer->scrollToTop();
+	// scrollLayer->m_disableMovement = wasntTallEnough;
 	if (wasntTallEnough) scrollLayer->m_contentLayer->setPositionY(amountToAddBy + (songListCompactMode ? (40.f * (this->m_scaleFactor - 1.5f)) : 0.f));
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
@@ -196,7 +196,7 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	if (this->m_scrollBar) this->m_scrollBar->setPositionY(wasntTallEnough ? 99999.f : SongListLayer::determineYPosition(scrollLayer));
 	if (this->m_scrollShortcuts) this->m_scrollShortcuts->setPositionY(wasntTallEnough ? 99999.f : SongListLayer::determineYPosition(scrollLayer));
 
-	if (!wasntTallEnough && Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
+	if (Utils::getBool("alwaysAutoScrollToCurrentSong") && Utils::getBool("autoScrollToCurrentSong")) {
 		geode::Loader::get()->queueInMainThread([this, contentLayer = scrollLayer->m_contentLayer]() {
 			if (!contentLayer || !contentLayer->getChildByTag(12192025)) return;
 			SongListLayer::scrollToCurrentSong();
@@ -611,13 +611,13 @@ CCContentLayer* SongListLayer::getContentLayer() const {
 void SongListLayer::onScrollTopButton(CCObject*) {
 	if (!Utils::getBool("showScrollingShortcuts")) return;
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || !this->m_scrollLayer || !SongListLayer::tallEnough(this->m_scrollLayer)) return; // cmon bruh it's in plain sight lol
+	if (!contentLayer || !this->m_scrollLayer || this->m_scrollLayer->m_disableMovement) return; // cmon bruh it's in plain sight lol
 	contentLayer->setPositionY((contentLayer->getContentHeight() * -1.f) + contentLayer->getParent()->getContentHeight());
 }
 
 void SongListLayer::scrollToCurrentSong() {
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || !this->m_scrollLayer || !SongListLayer::tallEnough(this->m_scrollLayer)) return;
+	if (!contentLayer || !this->m_scrollLayer || this->m_scrollLayer->m_disableMovement) return;
 	// cmon bruh it's in plain sight lol
 	CCNode* currentCell = contentLayer->getChildByTag(12192025);
 	cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
@@ -634,9 +634,9 @@ void SongListLayer::onScrollCurButton(CCObject*) {
 }
 
 void SongListLayer::onScrollBtmButton(CCObject*) {
-	if (!Utils::getBool("showScrollingShortcuts") || !this->m_scrollLayer) return;
+	if (!Utils::getBool("showScrollingShortcuts") || !this->m_scrollLayer || this->m_scrollLayer->m_disableMovement) return;
 	CCContentLayer* contentLayer = SongListLayer::getContentLayer();
-	if (!contentLayer || !SongListLayer::tallEnough(this->m_scrollLayer)) return; // cmon bruh it's in plain sight lol
+	if (!contentLayer) return; // cmon bruh it's in plain sight lol
 	contentLayer->setPositionY(0.f);
 }
 
