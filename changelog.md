@@ -9,6 +9,10 @@
   - In the Control Panel, scrub along the progress bar.
   - In the Song List, scrub along the golden popup menu title area.
   - Song playback continues while you scrub, and only changes position when you release.
+- <cg>Added</c> experimental support to automatically add newly downloaded songs from Newgrounds/Music Library to the song pool.
+  - Suggested by [cypher798](https://www.twitch.tv/cypher798).
+  - This only happens if you are NOT using custom songs AND if you do not have a playlist loaded.
+  - This option is marked as "Dangerous", so tread carefully and enable it only if you need to.
 - <co>Attempt to fix</c> a bug that misidentified songs from Newgrounds/Music Library as songs in a non-vanilla song folder location after initial game load.
 - <co>Attempt to fix</c> a bug where search results in the Song List would go off-screen if there weren't enough songs to populate the scrollable area.
   - The current fix *almost* fully fixes this issue, but a deeper and more precise fix requires a level of insight into geode::ScrollLayer that cannot be afforded now, and will most likely remain unaffordable for a long time.
