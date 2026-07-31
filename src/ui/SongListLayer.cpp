@@ -55,7 +55,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 #define EMPTY_SEARCH_STRG m_searchBar->setString("", false);
 #define LIMIT_PLACEHOLDER SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
 #define NO_PLAYLIST_AND_NO_CUSTOM_SONGS SongManager::get().getPlaylistIsEmpty() && !Utils::getBool("useCustomSongs")
-#define CAN_SHOW_PLAYBACK_PROGRESS songManager.getSongScrubbingInSongList() && songManager.getFinishedCalculatingSongLengths() && songManager.getShowPlaybackControlsSongList() && songManager.getUndefined0Alk1m123TouchPrio() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && !Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsNotPausedAndIsPlaying() && !Utils::currentFMODSongIsNotCurrentSongManagerSong()
+#define CAN_SHOW_PLAYBACK_PROGRESS_AND_SCRUB_PLAYBACK songManager.getSongScrubbingInSongList() && songManager.getFinishedCalculatingSongLengths() && songManager.getShowPlaybackControlsSongList() && songManager.getUndefined0Alk1m123TouchPrio() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && !Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsNotPausedAndIsPlaying() && !Utils::currentFMODSongIsNotCurrentSongManagerSong()
 
 using Comparator = bool(*)(MLRSongCell*, MLRSongCell*, bool);
 
@@ -451,7 +451,7 @@ bool SongListLayer::setup() {
 	abridgedControlsMenu->setID("abridged-controls-menu"_spr);
 	this->m_mainLayer->addChild(abridgedControlsMenu);
 
-	if (CAN_SHOW_PLAYBACK_PROGRESS) {
+	if (CAN_SHOW_PLAYBACK_PROGRESS_AND_SCRUB_PLAYBACK) {
 		this->m_fakeCurrProg = CCLayerColor::create({0, 0, 0, 0}, 356.f, 13.f);
 		this->m_fakeCurrProg->setAnchorPoint({0.f, 0.f});
 		this->m_fakeCurrProg->setID("fake-curr-prog"_spr);
@@ -476,7 +476,7 @@ bool SongListLayer::setup() {
 		this->m_fakeFullBarNonHitbox->addChild(this->m_fakeCurrProgNonHitbox);
 
 		this->m_mainLayer->addChild(this->m_fakeFullBarNonHitbox);
-		this->m_fakeFullBarNonHitbox->setPosition({32.5f, 240.f});
+		this->m_fakeFullBarNonHitbox->setPosition({32.5f, 255.f});
 
 		this->m_fakeFullBarNonHitbox->runAction(cocos2d::CCSequence::create(cocos2d::CCDelayTime::create(1.25f), cocos2d::CCFadeTo::create(.25f, 0), nullptr))->setTag(20260730);
 		SongListLayer::updateWidthOfFakeProgressBar(0.f);
@@ -1032,7 +1032,7 @@ MLRSongCell* SongListLayer::findCurrentSongCell() {
 bool SongListLayer::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch, const bool fromBegan) {
 	SongManager& songManager = SongManager::get();
 	MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell();
-	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
+	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS_AND_SCRUB_PLAYBACK;
 	if (!canShowPlaybackProgress || !touch || !this->m_title || !currentSongCell || !currentSongCell->m_totalBar || !currentSongCell->m_currentB) return true;
 	if (!this->m_fakeCurrProg || !this->m_fakeFullBar || !this->m_fakeCurrProgNonHitbox || !this->m_fakeFullBarNonHitbox) return true;
 	if (!fromBegan && !this->m_isDragging) return true;
@@ -1040,6 +1040,11 @@ bool SongListLayer::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* to
 }
 
 void SongListLayer::releaseCurrProgBar() {
+	if (this->m_fakeCurrProgNonHitbox) {
+		this->m_fakeCurrProgNonHitbox->stopActionByTag(20260730);
+		this->m_fakeCurrProgNonHitbox->stopActionByTag(20260731);
+		this->m_fakeCurrProgNonHitbox->runAction(cocos2d::CCFadeTo::create(.125f, 0));
+	}
 	if (this->m_fakeFullBarNonHitbox) {
 		this->m_fakeFullBarNonHitbox->stopActionByTag(20260730);
 		this->m_fakeFullBarNonHitbox->stopActionByTag(20260731);
@@ -1070,7 +1075,9 @@ bool SongListLayer::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* even
 
 	const cocos2d::ccColor3B decidedColor = Utils::getDecidedColor();
 	this->m_fakeFullBarNonHitbox->stopActionByTag(20260730);
+	this->m_fakeCurrProgNonHitbox->stopActionByTag(20260730);
 	this->m_fakeFullBarNonHitbox->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCFadeTo::create(.25f, 128), cocos2d::CCFadeTo::create(.25f, 0))))->setTag(20260731);
+	this->m_fakeCurrProgNonHitbox->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCFadeTo::create(.25f, 256), cocos2d::CCFadeTo::create(.25f, 0))))->setTag(20260731);
 	if (MLRSongCell* currentSongCell = SongListLayer::findCurrentSongCell(); currentSongCell && currentSongCell->m_currentB && currentSongCell->m_totalBar) currentSongCell->m_currentB->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCTintTo::create(.25f, decidedColor.r, decidedColor.g, decidedColor.b), cocos2d::CCTintTo::create(.25f, 255, 255, 255))))->setTag(20260728);
 
 	const cocos2d::CCPoint popupSpace = this->m_mainLayer->convertToNodeSpace(touchLocation);
