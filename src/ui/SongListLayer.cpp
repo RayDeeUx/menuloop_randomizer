@@ -171,10 +171,17 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 	scrollLayer->m_contentLayer->updateLayout();
 	scrollLayer->m_contentLayer->setContentHeight(desiredContentHeight);
 
-	const bool tallEnough = SongListLayer::tallEnough(scrollLayer);
-	scrollLayer->m_disableMovement = !tallEnough;
-	if (tallEnough) scrollLayer->scrollToTop();
-	else scrollLayer->m_contentLayer->setPositionY(0.f);
+	bool tallEnough = SongListLayer::tallEnough(scrollLayer);
+	while (!tallEnough) {
+		MLRSongCell* forcedPadding = MLRSongCell::createEmpty(false);
+		forcedPadding->setTag(20260730);
+		scrollLayer->addChild(forcedPadding, -20260730); // oh no ery's using the addchild overload with the z order param!!! sue him!!!
+		desiredContentHeight += 36.f;
+		scrollLayer->m_contentLayer->updateLayout();
+		scrollLayer->m_contentLayer->setContentHeight(desiredContentHeight);
+		tallEnough = SongListLayer::tallEnough(scrollLayer);
+	}
+	scrollLayer->scrollToTop();
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
 
