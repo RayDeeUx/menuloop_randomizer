@@ -891,6 +891,7 @@ $on_mod(Loaded) {
 			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::pressAndHoldScheduler), .125f);
 			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::visualizerScheduler));
 			songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongControlMenu::keepThePopupUndraggableDammit), 1.f / 60.f);
+			if (songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong()) && !Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsNotPausedAndIsPlaying() && !Utils::currentFMODSongIsNotCurrentSongManagerSong() && songManager.getSongScrubbingInControlPanel()) songManager.songControlMenuForQOLMod->schedule(schedule_selector(SongListLayer::updateWidthOfFakeProgressBar), .125f);
 
 			if (qolModIntegrationSongList && songManager.songListLayerForQOLMod) {
 				if (!songManager.getUndefined0Alk1m123TouchPrio()) CCTouchDispatcher::get()->unregisterForcePrio(songManager.songListLayerForQOLMod);
@@ -904,6 +905,7 @@ $on_mod(Loaded) {
 				}
 				songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
 				songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::keepThePopupUndraggableDammit), 1.f / 60.f);
+				if (songManager.getSongScrubbingInSongList() && songManager.getFinishedCalculatingSongLengths() && songManager.getShowPlaybackControlsSongList() && songManager.getUndefined0Alk1m123TouchPrio() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && !Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsNotPausedAndIsPlaying() && !Utils::currentFMODSongIsNotCurrentSongManagerSong()) songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::updateWidthOfFakeProgressBar), .125f);
 
 				if (SongControlMenu* foo = static_cast<SongControlMenu*>(songManager.songControlMenuForQOLMod.data()); foo && foo->m_musicVolumeInput && foo->m_musicVolumeInput->getInputNode()) {
 					foo->m_musicVolumeInput->setEnabled(true);
