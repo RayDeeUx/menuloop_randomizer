@@ -896,7 +896,7 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 
 bool SongControlMenu::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch, const bool fromBegan) {
 	SongManager& songManager = SongManager::get();
-	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS && songManager.getSongScrubbingInControlPanel();
+	const bool canShowPlaybackProgress = !this->m_isInQOLMod && CAN_SHOW_PLAYBACK_PROGRESS && songManager.getSongScrubbingInControlPanel();
 	if (!canShowPlaybackProgress || !touch || !this->m_darkProgBar || !this->m_currProgBar) return true;
 	if (!fromBegan && !this->m_isDragging) return true;
 	return false;
