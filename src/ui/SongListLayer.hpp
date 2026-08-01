@@ -65,7 +65,7 @@ public:
 	CCMenuItemToggler* m_songListReverseSort {};
 	CCMenuItemToggler* m_songListSortAlphabetically {};
 	CCMenuItemToggler* m_songListSortDateAdded {};
- 	CCMenuItemToggler* m_songListSortSongLength {};
+	CCMenuItemToggler* m_songListSortSongLength {};
 	CCMenuItemToggler* m_songListSortFileSize {};
 	CCMenuItemToggler* m_songListSortFileExtn {};
 	// CCMenuItemToggler* m_songListSortBeatsPerMinute {};
@@ -74,6 +74,7 @@ public:
 	geode::ScrollLayer* m_scrollLayer {};
 	geode::Scrollbar* m_scrollBar {};
 	geode::TextInput* m_searchBar {};
+	cocos2d::CCLabelBMFont* m_searchResultsLabel {};
 	CCLayerColor* m_fakeCurrProgNonHitbox {};
 	CCLayerColor* m_fakeFullBarNonHitbox {};
 	CCLayerColor* m_fakeCurrProg {};

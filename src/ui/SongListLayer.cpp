@@ -189,6 +189,12 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE && queryString.empty()) LIMIT_PLACEHOLDER
 
+	if (this->m_searchResultsLabel) {
+		const int results = cellsToAdd.size();
+		if (songListFavoritesOnlyMode || !queryString.empty()) this->m_searchResultsLabel->setString(fmt::format("{} result{}", results, results != 1 ? "s" : "").c_str());
+		else this->m_searchResultsLabel->setString("");
+	}
+
 	this->m_scaleFactor = !songListCompactMode ? 1.f : static_cast<float>(std::clamp<double>(geode::Mod::get()->getSettingValue<double>("compactModeScaleFactor"), 1.5f, 2.f));
 	this->m_tallestPoint = (scrollLayer->m_contentLayer->getContentHeight() * -1.f) + scrollLayer->getContentHeight();
 
@@ -309,6 +315,14 @@ bool SongListLayer::setup() {
 		searchBarDivider->setID("song-list-search-divider"_spr);
 		searchBarMenu->addChild(searchBarDivider);
 
+		this->m_searchResultsLabel = cocos2d::CCLabelBMFont::create("", "chatFont.fnt");
+		this->m_searchResultsLabel->setPosition({this->m_title->boundingBox().getMaxX() - 1.5f, this->m_title->boundingBox().getMinY() + .5f});
+		this->m_searchResultsLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+		this->m_searchResultsLabel->setAlignment(cocos2d::CCTextAlignment::kCCTextAlignmentRight);
+		this->m_searchResultsLabel->setAnchorPoint({1.f, 1.f});
+		this->m_searchResultsLabel->setScale(.4f);
+		this->m_searchResultsLabel->setID("search-results-count-label"_spr);
+
 		if (this->m_isInQOLMod) songManager.songListInputNodeForQOLMod = geode::Ref(this->m_searchBar->getInputNode());
 	}
 
@@ -318,6 +332,8 @@ bool SongListLayer::setup() {
 	listBorder->ignoreAnchorPointForPosition(false);
 	listBorder->setID("songs-list-border"_spr);
 	this->m_mainLayer->addChildAtPosition(listBorder, geode::Anchor::Center);
+
+	if (this->m_searchResultsLabel) this->m_mainLayer->addChild(this->m_searchResultsLabel);
 
 	if (Utils::getBool("showScrollingShortcuts")) {
 		this->m_scrollShortcuts = cocos2d::CCMenu::create();

@@ -6,7 +6,7 @@
 		"ios": "2.2081",
 		"android": "2.2081"
 	},
-	"version": "v1.13.4",
+	"version": "v1.14.0",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developers": ["RayDeeUx", "elnexreal"],
