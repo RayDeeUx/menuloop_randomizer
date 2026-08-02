@@ -316,13 +316,15 @@ bool SongListLayer::setup() {
 		searchBarDivider->setID("song-list-search-divider"_spr);
 		searchBarMenu->addChild(searchBarDivider);
 
-		this->m_searchResultsLabel = cocos2d::CCLabelBMFont::create("", "chatFont.fnt");
-		this->m_searchResultsLabel->setPosition({this->m_title->boundingBox().getMaxX() - 1.5f, this->m_isInQOLMod ? this->m_title->boundingBox().getMaxY() - .5f : this->m_title->boundingBox().getMinY() + .5f});
-		this->m_searchResultsLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
-		this->m_searchResultsLabel->setAlignment(cocos2d::CCTextAlignment::kCCTextAlignmentRight);
-		this->m_searchResultsLabel->setAnchorPoint({1.f, this->m_isInQOLMod ? 0.f : 1.f});
-		this->m_searchResultsLabel->setScale(.4f);
-		this->m_searchResultsLabel->setID("search-results-count-label"_spr);
+		if (Utils::getBool("showFilterOrSearchResultsCount")) {
+			this->m_searchResultsLabel = cocos2d::CCLabelBMFont::create("", "chatFont.fnt");
+			this->m_searchResultsLabel->setPosition({this->m_title->boundingBox().getMaxX() - 1.5f, this->m_isInQOLMod ? this->m_title->boundingBox().getMaxY() - .5f : this->m_title->boundingBox().getMinY() + .5f});
+			this->m_searchResultsLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
+			this->m_searchResultsLabel->setAlignment(cocos2d::CCTextAlignment::kCCTextAlignmentRight);
+			this->m_searchResultsLabel->setAnchorPoint({1.f, this->m_isInQOLMod ? 0.f : 1.f});
+			this->m_searchResultsLabel->setScale(.4f);
+			this->m_searchResultsLabel->setID("search-results-count-label"_spr);
+		}
 
 		if (this->m_isInQOLMod) songManager.songListInputNodeForQOLMod = geode::Ref(this->m_searchBar->getInputNode());
 	}

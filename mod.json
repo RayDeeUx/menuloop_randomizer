@@ -330,6 +330,13 @@
 			"default": true,
 			"enable-if": "loaded:alk.better-touch-prio"
 		},
+		"showFilterOrSearchResultsCount": {
+			"name": "Show Filter/Search Result Count",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS SETTING WILL BE IGNORED.__***</c>\n\nChoose if you want to show the number of search results when filtering or searching for songs in the Song List menu.",
+			"type": "bool",
+			"default": true,
+			"enable-if": "loaded:alk.better-touch-prio && showSearchBar"
+		},
 		"compactModeScaleFactor": {
 			"name": "Compact Mode Scale Factor",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, COMPACT MODE CANNOT BE ENABLED.__***</c>\n\nChoose how much smaller each song entry in the Song List becomes when enabling Compact Mode. The higher this number, the smaller each song entry in the Song List becomes.",
@@ -377,7 +384,7 @@
 			"enable-if": "loaded:alk.better-touch-prio"
 		},
 		"songScrubbingInSongList": {
-			"name": "Song Scrubbing",
+			"name": "Song Scrubbing in Song List",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS SETTING WILL BE IGNORED.__***</c>\n\nChoose if you want to scrub along the golden popup title of the Song List menu to change song playback position of the currently playing song.",
 			"type": "bool",
 			"default": true,
@@ -425,7 +432,7 @@
 			"default": true
 		},
 		"songScrubbingInControlPanel": {
-			"name": "Song Scrubbing",
+			"name": "Song Scrubbing in Control Panel",
 			"description": "Choose if you want to scrub along the dark progress bar of the Control Panel menu to change song playback position of the currently playing song.",
 			"type": "bool",
 			"default": true,
