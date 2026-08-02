@@ -191,7 +191,8 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 
 	if (this->m_searchResultsLabel) {
 		const int results = cellsToAdd.size();
-		if (songListFavoritesOnlyMode || !queryString.empty()) this->m_searchResultsLabel->setString(fmt::format("{} result{}", results, results != 1 ? "s" : "").c_str());
+		if (results < 1) this->m_searchResultsLabel->setString("No results!");
+		else if (songListFavoritesOnlyMode || !queryString.empty()) this->m_searchResultsLabel->setString(fmt::format("{} result{}", results, results != 1 ? "s" : "").c_str());
 		else this->m_searchResultsLabel->setString("");
 	}
 
