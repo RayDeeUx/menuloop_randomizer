@@ -87,8 +87,10 @@ public:
 	bool m_isInQOLMod = false;
 	bool m_isDragging = false;
 	bool m_changedSongs = false;
-	float m_dragOffset = 0.f;
 	float m_newPercent = 0.f;
+	float m_dragOffsetX = 0.f;
+	float m_dragOffsetY = 0.f;
+	float m_scrubStartWidth = 0.f;
 	InfoAlertButton* m_infoButton {};
 	geode::TextInput* m_musicVolumeInput{};
 	static SongControlMenu* create();

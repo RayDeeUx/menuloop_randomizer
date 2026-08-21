@@ -821,7 +821,9 @@ void SongControlMenu::releaseCurrProgBar() {
 
 	this->m_changedSongs = false;
 	this->m_isDragging = false;
-	this->m_dragOffset = 0;
+	this->m_scrubStartWidth = 0;
+	this->m_dragOffsetX = 0;
+	this->m_dragOffsetY = 0;
 	this->m_newPercent = 0;
 }
 
@@ -840,7 +842,9 @@ bool SongControlMenu::ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* ev
 	this->m_currProgBar->runAction(cocos2d::CCRepeatForever::create(cocos2d::CCSequence::createWithTwoActions(cocos2d::CCTintTo::create(.25f, decidedColor.r, decidedColor.g, decidedColor.b), cocos2d::CCTintTo::create(.25f, 200, 200, 200))))->setTag(20260728);
 
 	const cocos2d::CCPoint popupSpace = this->m_mainLayer->convertToNodeSpace(touchLocation);
-	this->m_dragOffset = popupSpace.x - this->m_currProgBar->boundingBox().getMaxX();
+	this->m_dragOffsetX = popupSpace.x - this->m_currProgBar->boundingBox().getMaxX();
+	this->m_dragOffsetY = popupSpace.y - this->m_currProgBar->getPositionY();
+	this->m_scrubStartWidth = this->m_currProgBar->getContentWidth();
 
 	this->updateFromTouch(touch);
 
@@ -865,10 +869,15 @@ void SongControlMenu::ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* ev
 void SongControlMenu::updateFromTouch(cocos2d::CCTouch* touch) {
 	if (this->failsSanityCheckForDraggableProgressBar(touch, false)) return;
 
+	const float darkProgWidth = this->m_darkProgBar->getContentWidth();
 	const cocos2d::CCPoint location = this->m_mainLayer->convertToNodeSpace(touch->getLocation());
-	const float x = location.x - this->m_dragOffset;
+	const float yDifference = std::abs(location.y - std::clamp<float>(std::abs(this->m_darkProgBar->getPositionY() - location.y), 0.f, 40.f)) - 27.f;
+	const float speedFactor = std::clamp<float>(1.f / (1.f + (.225f * yDifference)), 0.1f, 1.f);
+	geode::log::info("speedFactor = {}, yDifference = {}, location.y = {}, touch->getLocation().y: {}", speedFactor, yDifference, location.y, touch->getLocation().y);
+	const float deltaX = location.x - this->m_dragOffsetX - this->m_scrubStartWidth;
+	const float newWidth = std::clamp<float>(this->m_scrubStartWidth + (deltaX * speedFactor), 0.f, darkProgWidth);
 
 	// clamp this to 99.95 so there's no recurring nightmares about playlist mode going bonkers. should be fineeeeeeeeeee
-	this->m_newPercent = std::clamp<float>((std::clamp<float>(x, 0, this->m_darkProgBar->getContentWidth()) / this->m_darkProgBar->getContentWidth()) * 100.f, 0.f, 99.95f);
-	this->m_currProgBar->setContentWidth(this->m_darkProgBar->getContentWidth() * (this->m_newPercent / 100.f));
+	this->m_newPercent = std::clamp<float>((newWidth / darkProgWidth) * 100.f, 0.f, 99.95f);
+	this->m_currProgBar->setContentWidth(newWidth);
 }
