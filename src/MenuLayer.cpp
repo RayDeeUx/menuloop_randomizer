@@ -54,7 +54,7 @@ bool shownVobecidedWarning = false;
 bool shownAGUAbuserWarning = false;
 bool shownModThiefWarnings = false;
 
-constexpr bool debugMode = true;
+constexpr bool debugMode = false;
 
 class $modify(MenuLayerMLHook, MenuLayer) {
 	static cocos2d::CCScene* scene(bool p0) {
