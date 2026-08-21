@@ -986,12 +986,18 @@ unsigned int SongListLayer::getLength(const std::string& path, const bool revers
 	#ifndef GEODE_IS_IOS
 	if (!Utils::getBool("useMiniaudioForLength")) return SongListLayer::useFMODToGetLength(path, extreme);
 
+	// const bool advancedLogging = SongManager::get().getAdvancedLogs();
+
 	ma_decoder decoder;
-	if (ma_decoder_init_file(path.c_str(), nullptr, &decoder) != MA_SUCCESS) return SongListLayer::useFMODToGetLength(path, extreme);
+	if (ma_decoder_init_file(path.c_str(), nullptr, &decoder) != MA_SUCCESS) {
+		// if (advancedLogging) geode::log::debug("ma_decoder_init_file failed. using FMOD fallback length calculations for path {}", path);
+		return SongListLayer::useFMODToGetLength(path, extreme);
+	}
 
 	ma_uint64 frames = 0;
 	if (ma_decoder_get_length_in_pcm_frames(&decoder, &frames) != MA_SUCCESS) {
 		ma_decoder_uninit(&decoder);
+		// if (advancedLogging) geode::log::debug("ma_decoder_get_length_in_pcm_frames failed. using FMOD fallback length calculations for path {}", path);
 		return SongListLayer::useFMODToGetLength(path, extreme);
 	}
 
