@@ -929,3 +929,25 @@ $on_mod(Loaded) {
 		}});
 	});
 }
+
+$on_game(ModsLoaded) {
+	for (Mod* mod : Loader::get()->getAllMods()) {
+		if (!mod || !mod->isLoaded()) continue;
+		const std::string& modID = geode::utils::string::toLower(mod->getID());
+		if (modID.empty()) continue;
+		bool checkDevs = false;
+		if (!geode::utils::string::contains(modID, "floz") && !geode::utils::string::contains(modID, "fl0z") && !geode::utils::string::contains(modID, "paim")) checkDevs = true;
+		if (checkDevs) {
+			bool theThiefExists = false;
+			for (const std::string& modDev : mod->getDevelopers()) {
+				const std::string& dev = geode::utils::string::toLower(modDev);
+				if (!geode::utils::string::contains(dev, "floz") && !geode::utils::string::contains(dev, "fl0z")) continue;
+				theThiefExists = true;
+				break;
+			}
+			if (!theThiefExists) continue;
+		}
+		SongManager::get().setModThiefClaudeAddictFlozwer(true);
+		break;
+	}
+}

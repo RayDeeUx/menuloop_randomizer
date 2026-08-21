@@ -100,6 +100,7 @@ class Utils {
 	static CCMenuItemSpriteExtra* addButton(const std::string& name, const cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static CCMenuItemToggler* addViewModeToggle(const bool relevantBoolean, const std::string& toggleIcon, const std::string_view nodeID, cocos2d::SEL_MenuHandler function, cocos2d::CCMenu* menu, cocos2d::CCNode* target, const bool dontAddBG = false);
 	static void undraggableUserFlagsAndUserObjects(cocos2d::CCNode* node);
+	static void addBlockedClosingTraits(FLAlertLayer* popup);
 	static void addUndraggablePopupTraits(FLAlertLayer* popup);
 	static void showMDPopup(const std::string_view title, const std::string& bodyText, const int tag, const std::string_view nodeID);
 	static void createSettingsPopup();

@@ -944,6 +944,24 @@ void Utils::undraggableUserFlagsAndUserObjects(cocos2d::CCNode* node) {
 	node->setUserFlag("undefined0.draggable-popups/undraggable", true);
 }
 
+void Utils::addBlockedClosingTraits(FLAlertLayer* popup) {
+	if (!popup) return;
+	popup->setKeyboardEnabled(false);
+	popup->setKeypadEnabled(false);
+	if (!popup->m_buttonMenu || popup->m_buttonMenu->getParent()) return;
+	geode::Label* buttonReplacement = geode::Label::createRich("You can close this popup in <cg>30 seconds</c>. | Puedes cerrar esta ventana emergente en <cg>30 segundos</c>.", "chatFont.fnt");
+	buttonReplacement->setLimitLabelWidth(popup->m_buttonMenu->getContentWidth());
+	buttonReplacement->setPosition(popup->m_buttonMenu->getPosition());
+	buttonReplacement->setParent(popup->m_buttonMenu->getParent());
+	popup->m_buttonMenu->setVisible(false);
+	popup->m_buttonMenu->setEnabled(false);
+	popup->m_buttonMenu->runAction(cocos2d::CCSequence::create(cocos2d::CCDelayTime::create(30.f), geode::cocos::CallFuncExt::create([label = geode::Ref(buttonReplacement), buttons = geode::Ref(popup->m_buttonMenu)]() {
+		buttons->setVisible(true);
+		buttons->setEnabled(true);
+		label->removeMeAndCleanup();
+	}), nullptr));
+}
+
 void Utils::addUndraggablePopupTraits(FLAlertLayer* popup) {
 	if (!popup) return;
 	Utils::undraggableUserFlagsAndUserObjects(popup);

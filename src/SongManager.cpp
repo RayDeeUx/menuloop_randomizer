@@ -344,6 +344,14 @@ bool SongManager::getVobecidedJota() const {
 	return m_vobecidedJota;
 }
 
+void SongManager::setModThiefClaudeAddictFlozwer(const bool value) {
+	m_modThiefClaudeAddictFlozwer = value;
+}
+
+bool SongManager::getModThiefClaudeAddictFlozwer() const {
+	return m_modThiefClaudeAddictFlozwer;
+}
+
 void SongManager::setPauseSongPositionTracking(const bool value) {
 	m_pausedSongPositionTracking = value;
 }
