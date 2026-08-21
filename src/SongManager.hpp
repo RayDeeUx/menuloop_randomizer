@@ -41,7 +41,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 #pragma once
 
 #define ECLIPSE_MODULES_HPP
-#include <eclipse.eclipse-menu/include/eclipse.hpp>
+#include "eclipsemenu/eclipse.hpp"
 
 enum class SongType {
 	Regular,
