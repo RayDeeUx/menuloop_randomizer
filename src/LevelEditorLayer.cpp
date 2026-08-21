@@ -40,25 +40,21 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 
 #include "SongManager.hpp"
 #include "Utils.hpp"
-#include <Geode/modify/EditorPauseLayer.hpp>
+#include <Geode/modify/LevelEditorLayer.hpp>
 
 using namespace geode::prelude;
 
-void iHateHookingMultipleThingsToGetSomethingDone() {
-	SongManager& songManager = SongManager::get();
-	songManager.setPauseSongPositionTracking(true);
-	if (Utils::getBool("randomizeWhenExitingEditor")) {
-		songManager.pickRandomSong();
-		if (songManager.eclipseIntegrationSuccessful || songManager.qolModIntegrationSuccessful) Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
-	} else {
-		songManager.setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
-	}
-}
-
-class $modify(MenuLoopEPLHook, EditorPauseLayer) {
+class $modify(MenuLoopLELHook, LevelEditorLayer) {
 	struct Fields {
 		~Fields() {
-			iHateHookingMultipleThingsToGetSomethingDone();
+			SongManager& songManager = SongManager::get();
+			songManager.setPauseSongPositionTracking(true);
+			if (Utils::getBool("randomizeWhenExitingEditor")) {
+				songManager.pickRandomSong();
+				if (songManager.eclipseIntegrationSuccessful || songManager.qolModIntegrationSuccessful) Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
+			} else {
+				songManager.setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
+			}
 			Utils::removeCardRemotely(Utils::findCardRemotely());
 		}
 	};
