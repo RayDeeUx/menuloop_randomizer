@@ -419,31 +419,19 @@ public:
 	static void closeSongListLayer() {
 		SongListLayer* foo = CCScene::get()->getChildByType<SongListLayer>(0);
 		if (!foo) return;
-		#if GEODE_COMP_GD_VERSION > 22074
 		geode::Popup::CloseEvent(foo).send();
 		foo->setKeypadEnabled(false);
 		foo->setTouchEnabled(false);
 		foo->removeFromParent();
-		#endif
-
-		#if GEODE_COMP_GD_VERSION < 22081
-		foo->keyBackClicked();
-		#endif
 	}
 	static void closeSongControlMenu() {
 		SongControlMenu* foo = CCScene::get()->getChildByType<SongControlMenu>(0);
 		if (!foo) return;
 		if (foo->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
-		#if GEODE_COMP_GD_VERSION > 22074
 		geode::Popup::CloseEvent(foo).send();
 		foo->setKeypadEnabled(false);
 		foo->setTouchEnabled(false);
 		foo->removeFromParent();
-		#endif
-
-		#if GEODE_COMP_GD_VERSION < 22081
-		foo->keyBackClicked();
-		#endif
 	}
 	static bool vobecidedCheck() {
 		return SongManager::get().getVobecidedJota() && (Utils::isVobecidedJotaPlaying() || !Utils::menuLoopIsNotPausedAndIsPlaying());
@@ -865,21 +853,11 @@ $on_mod(Loaded) {
 
 			iKnowItWouldntBeForLoveOrWhatever->setKeypadEnabled(false);
 			iKnowItWouldntBeForLoveOrWhatever->setTouchEnabled(false);
-			#if GEODE_COMP_GD_VERSION > 22074
 			iKnowItWouldntBeForLoveOrWhatever->removeFromParent();
-			#endif
-			#if GEODE_COMP_GD_VERSION < 22081
-			iKnowItWouldntBeForLoveOrWhatever->removeFromParentAndCleanup(true);
-			#endif
 			if (qolModIntegrationSongList && weCanFigureSomethingElseOutOK) {
 				weCanFigureSomethingElseOutOK->setKeypadEnabled(false);
 				weCanFigureSomethingElseOutOK->setTouchEnabled(false);
-				#if GEODE_COMP_GD_VERSION > 22074
 				weCanFigureSomethingElseOutOK->removeFromParent();
-				#endif
-				#if GEODE_COMP_GD_VERSION < 22081
-				weCanFigureSomethingElseOutOK->removeFromParentAndCleanup(true);
-				#endif
 			}
 
 			// so what you need to be doing is unregistering force prio since it isn't being used as a popup --alphalaneous --raydeeux

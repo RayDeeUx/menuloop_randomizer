@@ -86,12 +86,7 @@ static constexpr SongListLayer::KeycodeToToggler numpadToToggler = {
 
 SongListLayer* SongListLayer::create() {
 	SongListLayer* ret = new SongListLayer();
-	#if GEODE_COMP_GD_VERSION > 22074
 	if (ret->init()) {
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	if (ret->initAnchored(420.f, 290.f, "GJ_square02.png")) {
-	#endif
 		ret->autorelease();
 		return ret;
 	}
@@ -218,15 +213,8 @@ void SongListLayer::updateSongCountAndFavoritesCount(SongManager& songManager) {
 	this->m_title->limitLabelWidth(320.f, 1.f, .0001f);
 }
 
-#if GEODE_COMP_GD_VERSION > 22074
 bool SongListLayer::init() {
-#endif
-#if GEODE_COMP_GD_VERSION < 22081
-bool SongListLayer::setup() {
-#endif
-	#if GEODE_COMP_GD_VERSION > 22074
 	if (!geode::Popup::init(420.f, 290.f, "GJ_square02.png")) return false;
-	#endif
 
 	Utils::addUndraggablePopupTraits(this);
 	this->setUserFlag("user95401.scrollbar_everywhere/scrollbar", true);
@@ -299,13 +287,7 @@ bool SongListLayer::setup() {
 		inputNode->setMaxLabelScale(.5f);
 		inputNode->setID("song-list-search-bar-input-node"_spr);
 
-		#if GEODE_COMP_GD_VERSION < 22081
-		this->m_searchBar->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->_scale9Image->setID("song-list-search-bar-batch-node"_spr);
-		this->m_searchBar->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->setID("song-list-search-bar-background"_spr);
-		#endif
-		#if GEODE_COMP_GD_VERSION > 22074
 		this->m_searchBar->getChildByType<geode::NineSlice>(0)->setID("song-list-search-bar-background"_spr);
-		#endif
 		inputNode->m_textField->setID("song-list-search-bar-input-node-text-field"_spr);
 		inputNode->m_textLabel->setID("song-list-search-bar-input-node-text-label"_spr);
 		inputNode->m_cursor->setID("song-list-search-bar-input-node-cursor"_spr);
@@ -753,12 +735,7 @@ void SongListLayer::searchArray(const int key, SongListLayer::KeycodeToToggler k
 }
 #endif
 
-#if GEODE_COMP_GD_VERSION > 22074
 void SongListLayer::keyUp(const cocos2d::enumKeyCodes key, double p1) {
-#endif
-#if GEODE_COMP_GD_VERSION < 22081
-void SongListLayer::keyUp(const cocos2d::enumKeyCodes key) {
-#endif
 	if (key == cocos2d::KEY_Up || key == cocos2d::KEY_ArrowUp || key == cocos2d::KEY_Down || key == cocos2d::KEY_ArrowDown) {
 		CCContentLayer* contentLayer = SongListLayer::getContentLayer();
 		if (!contentLayer) return;
@@ -766,12 +743,7 @@ void SongListLayer::keyUp(const cocos2d::enumKeyCodes key) {
 	}
 }
 
-#if GEODE_COMP_GD_VERSION > 22074
 void SongListLayer::keyDown(const cocos2d::enumKeyCodes key, double p1) {
-#endif
-#if GEODE_COMP_GD_VERSION < 22081
-void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
-#endif
 	SongManager& songManager = SongManager::get();
 	#ifdef GEODE_IS_DESKTOP
 	cocos2d::CCKeyboardDispatcher* cckd = cocos2d::CCKeyboardDispatcher::get();
@@ -850,12 +822,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key) {
 		// code taken directly from geode::Popup keyDown impl as of dec 19 2025
 		if (key == cocos2d::KEY_Escape && !this->m_isInQOLMod) return this->onClose(nullptr);
 		if (key == cocos2d::KEY_Space) return;
-		#if GEODE_COMP_GD_VERSION > 22074
 		return FLAlertLayer::keyDown(key, p1);
-		#endif
-		#if GEODE_COMP_GD_VERSION < 22081
-		return FLAlertLayer::keyDown(key);
-		#endif
 	}
 	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 	if (key == cocos2d::KEY_Escape) {

@@ -40,12 +40,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 
 #pragma once
 
-#if GEODE_COMP_GD_VERSION > 22074
 class SongControlMenu final : public geode::Popup {
-#endif
-#if GEODE_COMP_GD_VERSION < 22081
-class SongControlMenu final : public geode::Popup<> {
-#endif
 protected:
 	cocos2d::CCLabelBMFont* m_smallLabel{};
 	cocos2d::CCLabelBMFont* m_otherLabel{};
@@ -62,18 +57,8 @@ protected:
 	CCMenuItemSpriteExtra* m_bkwdButton {};
 	CCMenuItemSpriteExtra* m_stngButton {};
 	CCMenuItemSpriteExtra* m_osuToggler {};
-	#if GEODE_COMP_GD_VERSION > 22074
 	geode::NineSlice* b                 {};
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	cocos2d::extension::CCScale9Sprite*b{};
-	#endif
-	#if GEODE_COMP_GD_VERSION > 22074
 	geode::NineSlice* w                 {};
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	cocos2d::extension::CCScale9Sprite*w{};
-	#endif
 	cocos2d::CCLayerColor* m_darkProgBar{};
 	cocos2d::CCLayerColor* m_currProgBar{};
 	cocos2d::CCClippingNode* m_clipNode {};
@@ -83,12 +68,7 @@ protected:
 	cocos2d::CCNodeRGBA* m_musicVolCntnr{};
 	int m_originalVolume = 0;
 	float m_time = 0.f;
-	#if GEODE_COMP_GD_VERSION > 22074
 	bool init() override;
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	bool setup() override;
-	#endif
 	void onShuffleButton(cocos2d::CCObject*);
 	void onCopyButton(cocos2d::CCObject*);
 	void onBlacklistButton(cocos2d::CCObject*);
@@ -126,12 +106,7 @@ public:
 	void createOsuTogglerMenu();
 	static std::string generateInfoAlertButtonDescription();
 	void onClose(cocos2d::CCObject*) override;
-	#if GEODE_COMP_GD_VERSION > 22074
 	void keyDown(cocos2d::enumKeyCodes key, double p1) override;
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	void keyDown(cocos2d::enumKeyCodes key) override;
-	#endif
 	void toggleButtonState(cocos2d::CCNode* playlistButton, const bool isEnabled) const;
 	bool failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch, const bool fromBegan);
 	void releaseCurrProgBar();

@@ -47,15 +47,8 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 #define DEFAULT_FOOTER_TEXT fmt::format("Hi! Menu Loop Randomizer will never resemble Spotify or its distant cousin EditorMusic. Please respect that. :) [Platform: {}]", Utils::getPlatform())
 #define CAN_SHOW_PLAYBACK_PROGRESS songManager.getShowPlaybackProgressAndControls() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::songDataContainsSong(songManager.getCurrentSong()) && !Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsNotPausedAndIsPlaying() && !Utils::currentFMODSongIsNotCurrentSongManagerSong()
 
-#if GEODE_COMP_GD_VERSION > 22074
 bool SongControlMenu::init() {
-#endif
-#if GEODE_COMP_GD_VERSION < 22081
-bool SongControlMenu::setup() {
-#endif
-	#if GEODE_COMP_GD_VERSION > 22074
 	if (!geode::Popup::init(300.f, 150.f, "GJ_square05.png")) return false;
-	#endif
 
 	Utils::addUndraggablePopupTraits(this);
 	SongManager& songManager = SongManager::get();
@@ -134,12 +127,7 @@ bool SongControlMenu::setup() {
 	this->m_headerLabl->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 	this->m_headerLabl->setPosition({centerStage, 107.5f});
 
-	#if GEODE_COMP_GD_VERSION > 22074
 	this->b = geode::NineSlice::create("square02b_001.png");
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	this->b = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
-	#endif
 	this->b->ignoreAnchorPointForPosition(false);
 	this->b->setContentSize({250.f, 30.f});
 	this->b->setAnchorPoint({0.f, .5f});
@@ -147,12 +135,7 @@ bool SongControlMenu::setup() {
 	this->b->setColor({0, 0, 0});
 	this->b->setOpacity(128);
 
-	#if GEODE_COMP_GD_VERSION > 22074
 	this->w = geode::NineSlice::create("square02b_001.png");
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	this->w = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
-	#endif
 	this->w->setContentSize(this->m_mainLayer->getContentSize());
 	this->w->setPosition(this->w->getContentSize() / 2.f);
 	this->w->ignoreAnchorPointForPosition(false);
@@ -230,24 +213,13 @@ bool SongControlMenu::setup() {
 	this->m_musicVolumeInput->setString(stringifiedVolume);
 
 	if (!this->m_isInQOLMod) {
-		#if GEODE_COMP_GD_VERSION < 22081
-		this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->setOpacity(0);
-		#endif
-		#if GEODE_COMP_GD_VERSION > 22074
 		this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)->setOpacity(0);
-		#endif
 		this->m_musicVolumeInput->getInputNode()->m_textField->setOpacity(0);
 		this->m_musicVolumeInput->getInputNode()->m_textLabel->setOpacity(0);
 		this->m_musicVolumeInput->getInputNode()->m_cursor->setOpacity(0);
 	} else songManager.songControlInputNodeQOLMod = geode::Ref(this->m_musicVolumeInput->getInputNode());
 
-	#if GEODE_COMP_GD_VERSION < 22081
-	this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->_scale9Image->setID("music-volume-input-background-batch-node"_spr);
-	this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)->setID("music-volume-input-background"_spr);
-	#endif
-	#if GEODE_COMP_GD_VERSION > 22074
 	this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)->setID("music-volume-input-background"_spr);
-	#endif
 	this->m_musicVolumeInput->getInputNode()->m_textField->setID("music-volume-input-text-field"_spr);
 	this->m_musicVolumeInput->getInputNode()->m_textLabel->setID("music-volume-input-text-label"_spr);
 	this->m_musicVolumeInput->getInputNode()->m_cursor->setID("music-volume-input-text-cursor"_spr);
@@ -330,25 +302,10 @@ bool SongControlMenu::setup() {
 	this->m_increDecreMenu->setID("incdec-time-menu"_spr);
 	this->m_theTimeoutCorner->setID("timeout-corner"_spr);
 	this->m_openSongListMenu->setID("song-list-menu"_spr);
-	#if GEODE_COMP_GD_VERSION > 22074
 	this->b->getBatchNode()->setID("the-darn-scale-9"_spr);
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	this->b->_scale9Image->setID("the-darn-scale-9"_spr);
-	#endif
-	#if GEODE_COMP_GD_VERSION > 22074
 	this->w->getBatchNode()->setID("osu-darn-scale-9"_spr);
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	this->w->_scale9Image->setID("osu-darn-scale-9"_spr);
-	#endif
 	this->m_songControlsMenu->setID("song-controls-menu"_spr);
-	#if GEODE_COMP_GD_VERSION > 22074
 	this->m_bgSprite->getBatchNode()->setID("the-less-darned-sprite-9"_spr);
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	this->m_bgSprite->_scale9Image->setID("the-less-darned-sprite-9"_spr);
-	#endif
 
 	if (!MenuLayer::get() || !cocos2d::CCScene::get() || cocos2d::CCScene::get()->getChildByType<MenuLayer>(0) != MenuLayer::get() || this->m_isInQOLMod) {
 		const std::function<void(cocos2d::CCNode*)> remove = [](cocos2d::CCNode* ptr) {
@@ -391,12 +348,7 @@ bool SongControlMenu::setup() {
 
 SongControlMenu* SongControlMenu::create() {
 	SongControlMenu* ret = new SongControlMenu();
-	#if GEODE_COMP_GD_VERSION > 22074
 	if (ret->init()) {
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	if (ret->initAnchored(300.f, 150.f, "GJ_square05.png")) {
-	#endif
 		ret->autorelease();
 		return ret;
 	}
@@ -431,23 +383,12 @@ void SongControlMenu::checkManagerFinished(float) {
 void SongControlMenu::forceSharpCornerIllusion() {
 	if (!this->b) return;
 
-	#if GEODE_COMP_GD_VERSION > 22074
 	if (this->b->getBottom()) {
 		this->b->getBottom()->setPositionX(0.f);
 		this->b->getBottom()->setScaleX(9.375f);
 	}
 	if (this->b->getBottomLeft()) this->b->getBottomLeft()->setVisible(false);
 	if (this->b->getBottomRight()) this->b->getBottomRight()->setVisible(false);
-	#endif
-
-	#if GEODE_COMP_GD_VERSION < 22081
-	if (this->b->_bottom) {
-		this->b->_bottom->setPositionX(0.f);
-		this->b->_bottom->setScaleX(9.375f);
-	}
-	if (this->b->_bottomLeft) this->b->_bottomLeft->setVisible(false);
-	if (this->b->_bottomRight) this->b->_bottomRight->setVisible(false);
-	#endif
 
 	SongManager& songManager = SongManager::get();
 	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS;
@@ -732,12 +673,7 @@ void SongControlMenu::toggleOsu() {
 	this->m_mainLayer->stopAllActions();
 	if (this->m_musVolLabl) this->m_musVolLabl->stopAllActions();
 	if (this->m_musicVolumeInput) {
-		#if GEODE_COMP_GD_VERSION < 22081
-		if (CCNode* foo = this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)) foo->stopAllActions();
-		#endif
-		#if GEODE_COMP_GD_VERSION > 22074
 		if (CCNode* foo = this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)) foo->stopAllActions();
-		#endif
 		CCTextInputNode* inputNode = this->m_musicVolumeInput->getInputNode();
 		if (inputNode) {
 			if (inputNode->m_textField) inputNode->m_textField->stopAllActions();
@@ -759,12 +695,7 @@ void SongControlMenu::toggleOsu() {
 			spriteChild->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, spriteChild->getTag() < 100 ? 100 : 255)));
 		}
 		if (this->m_musicVolumeInput) {
-			#if GEODE_COMP_GD_VERSION < 22081
-			if (CCNode* foo = this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)) foo->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
-			#endif
-			#if GEODE_COMP_GD_VERSION > 22074
 			if (CCNode* foo = this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)) foo->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
-			#endif
 			CCTextInputNode* inputNode = this->m_musicVolumeInput->getInputNode();
 			if (inputNode) {
 				if (inputNode->m_textField) inputNode->m_textField->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
@@ -788,12 +719,7 @@ void SongControlMenu::toggleOsu() {
 			spriteChild->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
 		}
 		if (this->m_musicVolumeInput) {
-			#if GEODE_COMP_GD_VERSION < 22081
-			if (CCNode* foo = this->m_musicVolumeInput->getChildByType<cocos2d::extension::CCScale9Sprite>(0)) foo->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
-			#endif
-			#if GEODE_COMP_GD_VERSION > 22074
 			if (CCNode* foo = this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)) foo->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
-			#endif
 			CCTextInputNode* inputNode = this->m_musicVolumeInput->getInputNode();
 			if (inputNode) {
 				if (inputNode->m_textField) inputNode->m_textField->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
@@ -818,14 +744,8 @@ std::string SongControlMenu::generateInfoAlertButtonDescription() {
 		"Platform: <cl>{}</c>\n"
 		"Constant Shuffle Mode: <cl>{}</c>\n"
 		"Current playlist file: <cl>{}</c> (Loaded: <cl>{}</c>)\n\n"
-		#if GEODE_COMP_GD_VERSION < 22081
-		"<cy>Q: Why do I see overlapping elements?</c>\n"
-		"A: Install <cl>Happy Textures by Alphalaneous</c>.\n<c_>This is a non-negotiable solution.</c>\n\n"
-		#endif
-		#if GEODE_COMP_GD_VERSION > 22074
 		"<cy>Q: Why can I only go back one song?</c>\n"
 		"A: You're randomizing <co>menu loops</c>, not using a mini-VLC/mini-Spotify. Deal with it.\n<c_>This is a non-negotiable solution.</c>\n\n"
-		#endif
 		"<cy>Q: Add</c> <cl>[feature suggestion that makes this mod act like Spotify or EditorMusic, but with the menu loop]</c><cy>!</c>\n"
 		"A: <c_>No. Never.</c>",
 		Utils::getPlatform(),
@@ -835,12 +755,7 @@ std::string SongControlMenu::generateInfoAlertButtonDescription() {
 	);
 }
 
-#if GEODE_COMP_GD_VERSION > 22074
 void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key, double p1) {
-#endif
-#if GEODE_COMP_GD_VERSION < 22081
-void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
-#endif
 	SongManager& songManager = SongManager::get();
 	if (songManager.getOsu() && (key == cocos2d::KEY_O || key == cocos2d::KEY_Enter)) {
 		SongControlMenu::toggleOsu();
@@ -886,12 +801,7 @@ void SongControlMenu::keyDown(const cocos2d::enumKeyCodes key) {
 		return this->onClose(nullptr);
 	}
 	if (key == cocos2d::KEY_Space) return;
-	#if GEODE_COMP_GD_VERSION > 22074
 	return FLAlertLayer::keyDown(key, p1);
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	return FLAlertLayer::keyDown(key);
-	#endif
 }
 
 bool SongControlMenu::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch, const bool fromBegan) {

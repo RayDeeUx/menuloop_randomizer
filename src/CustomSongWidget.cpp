@@ -53,30 +53,18 @@ class $modify(MenuLoopCSWHook, CustomSongWidget) {
 		if (!mdm || !mdm->isSongDownloaded(songID)) return;
 
 		if (SongListLayer* foo = CCScene::get()->getChildByType<SongListLayer>(0); foo) {
-			#if GEODE_COMP_GD_VERSION > 22074
 			geode::Popup::CloseEvent(foo).send();
 			foo->setKeypadEnabled(false);
 			foo->setTouchEnabled(false);
 			foo->removeFromParent();
-			#endif
-
-			#if GEODE_COMP_GD_VERSION < 22081
-			foo->keyBackClicked();
-			#endif
 		}
 
 		if (SongControlMenu* bar = CCScene::get()->getChildByType<SongControlMenu>(0); bar) {
 			if (bar->m_osu && MenuLayer::get() && !MenuLayer::get()->isVisible()) MenuLayer::get()->setVisible(true);
-			#if GEODE_COMP_GD_VERSION > 22074
 			geode::Popup::CloseEvent(bar).send();
 			bar->setKeypadEnabled(false);
 			bar->setTouchEnabled(false);
 			bar->removeFromParent();
-			#endif
-
-			#if GEODE_COMP_GD_VERSION < 22081
-			foo->keyBackClicked();
-			#endif
 		}
 
 		if (CCScene::get() && CCScene::get()->getChildByType<AndroidUI>(0) && songManager.qolModIntegrationSuccessful) CCScene::get()->getChildByType<AndroidUI>(0)->removeMeAndCleanup();

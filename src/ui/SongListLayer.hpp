@@ -50,12 +50,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 #define SEARCH_BAR_ENABLED SongManager::get().getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSearchBar")
 #define SONG_SORTING_ENABLED SongManager::get().getUndefined0Alk1m123TouchPrio() && Utils::getBool("showSortSongOptions")
 
-#if GEODE_COMP_GD_VERSION > 22074
 class SongListLayer final : public geode::Popup {
-#endif
-#if GEODE_COMP_GD_VERSION < 22081
-class SongListLayer final : public geode::Popup<> {
-#endif
 private:
 	float m_scaleFactor = 1.f;
 	float m_tallestPoint = -0.f;
@@ -89,12 +84,7 @@ public:
 	static SongListLayer* create();
 	void addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongManager& songManager, const std::string& queryString = "");
 	void updateSongCountAndFavoritesCount(SongManager& songManager);
-	#if GEODE_COMP_GD_VERSION > 22074
 	bool init() override;
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	bool setup() override;
-	#endif
 	void onSettingsButton(cocos2d::CCObject*);
 	void onShuffleButton(cocos2d::CCObject*);
 	void onCopyButton(cocos2d::CCObject*);
@@ -120,14 +110,8 @@ public:
 	void scrollToCurrentSong();
 
 	void checkPosition(const float);
-	#if GEODE_COMP_GD_VERSION > 22074
 	void keyDown(const cocos2d::enumKeyCodes, double p1) override;
 	void keyUp(const cocos2d::enumKeyCodes, double p1) override;
-	#endif
-	#if GEODE_COMP_GD_VERSION < 22081
-	void keyDown(const cocos2d::enumKeyCodes) override;
-	void keyUp(const cocos2d::enumKeyCodes) override;
-	#endif
 	void searchSongs(const std::string&, const bool checkSetting = true);
 
 	void keepThePopupUndraggableDammit(float);
