@@ -14,7 +14,7 @@
   - Song playback continues while you scrub, and only changes position when you release.
   - You can disable this in mod settings.
 - <cg>Added</c> experimental support to automatically add newly downloaded songs from Newgrounds/Music Library to the song pool.
-  - Suggested by [cypher798](https://www.twitch.tv/cypher798).
+  - Suggested by [cypher798](https://www.youtube.com/@cypher78GMD).
   - This only happens if you are NOT using custom songs AND if you do not have a playlist loaded.
   - This option is marked as "Dangerous", so tread carefully and enable it only if you need to.
   - You can disable this in mod settings.
