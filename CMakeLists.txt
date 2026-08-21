@@ -17,7 +17,7 @@
 # ```
 
 cmake_minimum_required(VERSION 3.21)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if ("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" OR IOS)
 	set(CMAKE_OSX_ARCHITECTURES "arm64")
@@ -28,19 +28,42 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 project(MenuLoopRandomizer VERSION 1.0.0)
 
-file(GLOB SOURCES
-    src/*.cpp
-    src/*.hpp
-    src/ui/*.cpp
-    src/ui/*.hpp
+add_library(${PROJECT_NAME} SHARED
+    src/CustomSongWidget.cpp
+    src/FMODAudioEngine.cpp
+    src/GJBaseGameLayer.cpp
+    src/SongControl.cpp
+    src/SongManager.cpp
+    src/CCDirector.cpp
+    src/MenuLayer.cpp
+    src/Utils.cpp
+    src/main.cpp
+    src/Utils.hpp
+    src/SongManager.hpp
+    src/SongControl.hpp
+    src/ui/MLRSongCell.cpp
+    src/ui/PlayingCard.cpp
+    src/ui/SongListLayer.cpp
+    src/ui/SongControlMenu.cpp
+    src/ui/SongControlMenu.hpp
+    src/ui/SongListLayer.hpp
+    src/ui/PlayingCard.hpp
+    src/ui/MLRSongCell.hpp
 )
-
-add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 if (NOT DEFINED ENV{GEODE_SDK})
     message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
 else()
     message(STATUS "Found Geode: $ENV{GEODE_SDK}")
+endif()
+
+if (DEFINED ENV{GITHUB_ACTIONS})
+    message(STATUS "Enabling unity build")
+    set_target_properties(
+        ${PROJECT_NAME} PROPERTIES
+        UNITY_BUILD ON
+        UNITY_BUILD_UNIQUE_ID "GEODE_UNITY_NS_ID"
+    )
 endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)

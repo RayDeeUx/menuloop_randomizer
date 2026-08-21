@@ -40,7 +40,43 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 
 #include "SongManager.hpp"
 #include "Utils.hpp"
+#include <Geode/modify/LevelEditorLayer.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/GameManager.hpp>
+#include <Geode/modify/PlayLayer.hpp>
+
+using namespace geode::prelude;
+
+class $modify(MenuLoopGMHook, GameManager) {
+	gd::string getMenuMusicFile() {
+		return SongManager::get().getCurrentSong();
+	}
+	void fadeInMenuMusic() {
+		// code taken verbatim from colon. i've had two too many toddlers nagging me to add this feature to the mod now so here we are
+		FMODAudioEngine* fmod = FMODAudioEngine::get();
+		SongManager& songManager = SongManager::get();
+		const std::string& oldTrack = static_cast<std::string>(fmod->getActiveMusic(0));
+		GameManager::fadeInMenuMusic();
+		// ensure compat with colon
+		const geode::Mod* colon = songManager.getColonMenuLoopStartTime();
+		if ((colon && colon->getSettingValue<bool>("enable")) || !songManager.getShouldRestoreMenuLoopPoint()) {
+			songManager.setPauseSongPositionTracking(false);
+			return;
+		}
+		// NOTE: THIS LINE CAN CAUSE ISSUES WHEN MENU LOOP AND LEVEL'S MOST RECENTLY PLAYED SONG ARE THE SAME
+		if (oldTrack == fmod->getActiveMusic(0) && !songManager.getPauseSongPositionTracking()) {
+			songManager.setPauseSongPositionTracking(false);
+			return;
+		}
+		songManager.restoreLastMenuLoopPosition();
+		songManager.setShouldRestoreMenuLoopPoint(false);
+		songManager.setPauseSongPositionTracking(false);
+	}
+	void encodeDataTo(DS_Dictionary* p0) {
+		Utils::rememberLastMenuLoop();
+		GameManager::encodeDataTo(p0);
+	}
+};
 
 class $modify(MenuLoopGJBGLHook, GJBaseGameLayer) {
 	struct Fields {
@@ -61,5 +97,37 @@ class $modify(MenuLoopGJBGLHook, GJBaseGameLayer) {
 		if (!fmod) return true;
 		fmod->m_backgroundMusicChannel->stop();
 		return true;
+	}
+};
+
+class $modify(MenuLoopLELHook, LevelEditorLayer) {
+	struct Fields {
+		~Fields() {
+			SongManager& songManager = SongManager::get();
+			songManager.setPauseSongPositionTracking(true);
+			if (Utils::getBool("randomizeWhenExitingEditor")) {
+				songManager.pickRandomSong();
+				if (songManager.eclipseIntegrationSuccessful || songManager.qolModIntegrationSuccessful) Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
+			} else {
+				songManager.setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingEditor") && Utils::getBool("restoreWhenExitingEditor"));
+			}
+			Utils::removeCardRemotely(Utils::findCardRemotely());
+		}
+	};
+};
+
+class $modify(MenuLoopPLHook, PlayLayer) {
+	void onQuit() {
+		SongManager& songManager = SongManager::get();
+		songManager.setPauseSongPositionTracking(true);
+		if (Utils::getBool("randomizeWhenExitingLevel")) {
+			songManager.pickRandomSong();
+			if (songManager.eclipseIntegrationSuccessful || songManager.qolModIntegrationSuccessful) Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
+		} else {
+			songManager.setShouldRestoreMenuLoopPoint(!Utils::getBool("randomizeWhenExitingLevel") && Utils::getBool("restoreWhenExitingLevel"));
+		}
+
+		PlayLayer::onQuit();
+		Utils::removeCardRemotely(Utils::findCardRemotely());
 	}
 };
