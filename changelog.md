@@ -3,6 +3,9 @@
 
 <mod:alk.better-touch-prio>
 
+## v1.14.1
+- Add warnings for people using mods that plagarized source code from Menu Loop Randomizer.
+- Move some things around to reduce compile times.
 ## v1.14.0
 - <cg>Added</c> song progress scrubbing to the Control Panel and Song List menus.
   - Requires the  `Show Playback Progress and Controls`  setting to be enabled for the respective menu's setting category, depending on whether you want song scrubbing enabled in only one of these two menus.
