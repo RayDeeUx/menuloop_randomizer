@@ -614,13 +614,6 @@
 		"community": "https://discord.gg/WqZBYdBWZW",
 		"homepage": "https://discord.com/channels/822510988409831486/1206371881222144020"
 	},
-	"dependencies": {
-		"eclipse.eclipse-menu": {
-			"version": ">=1.7.0",
-			"required": false,
-			"importance": "suggested"
-		}
-	},
 	"incompatibilities": {
 		"joseii.ventilla": {
 			"version": ">=1.0.0",

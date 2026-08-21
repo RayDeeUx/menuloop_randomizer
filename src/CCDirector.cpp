@@ -44,43 +44,34 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 using namespace geode::prelude;
 
 class $modify(MenuLoopCCDHook, CCDirector) {
+	void forciblyRemoveCard(CCScene* previousScene, CCScene* nextScene) {
+		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
+		else if (!nextScene || !nextScene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely(Utils::findCardRemotely());
+	}
+
 	void willSwitchToScene(cocos2d::CCScene* scene) {
 		CCScene* previousScene = CCDirector::get()->getRunningScene();
-
 		CCDirector::willSwitchToScene(scene);
-
-		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
-		else if (!scene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely(Utils::findCardRemotely());
+		MenuLoopCCDHook::forciblyRemoveCard(previousScene, scene);
 	}
 
 	bool pushScene(cocos2d::CCScene* scene) {
 		CCScene* previousScene = CCDirector::get()->getRunningScene();
-
 		bool result = CCDirector::pushScene(scene);
-
-		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
-		else if (!scene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely(Utils::findCardRemotely());
-
+		MenuLoopCCDHook::forciblyRemoveCard(previousScene, scene);
 		return result;
 	}
 
 	bool replaceScene(cocos2d::CCScene* scene) {
 		CCScene* previousScene = CCDirector::get()->getRunningScene();
-
 		bool result = CCDirector::replaceScene(scene);
-
-		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
-		else if (!scene->getChildByType<MenuLayer>(0)) Utils::removeCardRemotely(Utils::findCardRemotely());
-
+		MenuLoopCCDHook::forciblyRemoveCard(previousScene, scene);
 		return result;
 	}
 
 	void popSceneWithTransition(float p0, cocos2d::PopTransition p1) {
 		CCScene* previousScene = CCDirector::get()->getRunningScene();
-
 		CCDirector::popSceneWithTransition(p0, p1);
-
-		if (previousScene->getChildByType<MenuLayer>(0)) Utils::fadeOutCardRemotely(Utils::findCardRemotely());
-		else Utils::removeCardRemotely(Utils::findCardRemotely());
+		MenuLoopCCDHook::forciblyRemoveCard(previousScene, nullptr);
 	}
 };

@@ -451,8 +451,8 @@ public:
 };
 
 #define ECLIPSE_MODULES_HPP
-#include <eclipse.eclipse-menu/include/eclipse.hpp>
 #include <fmod_dsp.h>
+#include "eclipsemenu/eclipse.hpp"
 #include "SongControl.hpp"
 
 using namespace eclipse;
@@ -747,7 +747,7 @@ $on_mod(Loaded) {
 	});
 }
 
-#include "CategoryExt.hpp"
+#include "qolmod/CategoryExt.hpp"
 
 // i'm aware that this is VERY evil. however! there's this really stupid bug where i have to unfocus the search bar from SongListLayer and this was the most consistent solution.
 class QOLModAndroidUITrackerDummyNode final : public CCNode {

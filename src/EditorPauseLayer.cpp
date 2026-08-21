@@ -56,89 +56,10 @@ void iHateHookingMultipleThingsToGetSomethingDone() {
 }
 
 class $modify(MenuLoopEPLHook, EditorPauseLayer) {
-	#ifdef GEODE_IS_IOS
 	struct Fields {
 		~Fields() {
 			iHateHookingMultipleThingsToGetSomethingDone();
 			Utils::removeCardRemotely(Utils::findCardRemotely());
 		}
 	};
-	#endif
-	#ifndef __APPLE__
-	void onExitEditor(CCObject* sender) {
-		iHateHookingMultipleThingsToGetSomethingDone();
-
-		EditorPauseLayer::onExitEditor(sender);
-
-		Utils::removeCardRemotely(Utils::findCardRemotely());
-
-	}
-	#endif
-	#ifdef GEODE_IS_MACOS
-	/*
-	this section is for macOS (both intel and ARM). remarks:
-	- don't hook onSaveAndPlay; while it IS macos hookable, it goes to playlayer
-	- don't hook onSave or the FLAlertLayer from it; while it IS macos hookable, it does not exit the editor
-	- can't hook onExitEditor for macOS, due to aggressive inlining from robtop/appleclang
-		(yes, nin. i know the address exists; justin found those addresses for me.
-		but i keep getting the same song five times in a row if i hook onExitEditor
-		for macos, and i don't think any of us have the same RNG seed as Dream.)
-		[for the record, i had 29 possible audio files total while doing this.
-		1/29 = 0.0344827586207. (1/29)^5 = 4.87539727785E-8 = 1/20511149.
-		let that sink in for a moment.]
-	-- raydeeux
-	*/
-	void onSaveAndExit(CCObject* sender) {
-		iHateHookingMultipleThingsToGetSomethingDone();
-
-		EditorPauseLayer::onSaveAndExit(sender);
-
-		Utils::removeCardRemotely(Utils::findCardRemotely());
-
-	}
-	void FLAlert_Clicked(FLAlertLayer* p0, bool btnTwo) {
-		bool shouldClose = p0->getTag() == 1 && btnTwo;
-		// determine if the FLAlertLayer being clicked on is the one from onExitNoSave
-		/*
-		hooking FLAlertLayer::init() and then storing its desc param is also an option,
-		but i'm not sure what this mod's stance is with global variables.
-		consider this overkill, but it gets the job done.
-
-		i wanted to use getChildOfType to reduce the line count but ran into one of those
-		C-Tidy/Clang red squiggly lines about typeinfo_cast or whatever and got worried,
-		so all you get is this.
-
-		yep, nested forloops and typeinfo_cast calls for days.
-
-		if anyone has a shorter solution that still hooks this function, go ahead.
-
-		EDIT: PREVTER CAME IN CLUTCH. ORIGINAL CODE KEPT HERE FOR POSTERITY
-
-		TextArea* textArea = static_cast<TextArea*>(p0->m_mainLayer->getChildByIDRecursive("content-text-area"));
-		for (CCNode* node : CCArrayExt<CCNode*>(textArea->getChildren())) {
-			if (typeinfo_cast<MultilineBitmapFont*>(node)) {
-				for (CCNode* nodeTwo : CCArrayExt<CCNode*>(node->getChildren())) {
-					if (CCLabelBMFont* label = typeinfo_cast<CCLabelBMFont*>(nodeTwo)) {
-						const std::string& labelString = static_cast<std::string>(label->getString());
-						isQualifedAlert = labelString == R"(Exit without saving? All unsaved changes will be lost!)";
-						log::info("labelString: {}", labelString); // log::info calls since that's kinda this mod's thing
-						break;
-					}
-				}
-			}
-		}
-		*/
-
-		if (SongManager::get().getAdvancedLogs()) log::info("shouldClose: {} (p0->getTag() == 1: {}, btnTwo: {})", shouldClose, p0->getTag() == 1, btnTwo); // log::info calls since that's kinda this mod's thing
-
-		if (!shouldClose) return EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
-
-		iHateHookingMultipleThingsToGetSomethingDone();
-
-		EditorPauseLayer::FLAlert_Clicked(p0, btnTwo);
-
-		Utils::removeCardRemotely(Utils::findCardRemotely());
-
-	}
-	#endif
 };
