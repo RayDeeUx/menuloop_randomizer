@@ -872,7 +872,7 @@ void SongControlMenu::updateFromTouch(cocos2d::CCTouch* touch) {
 	const float darkProgWidth = this->m_darkProgBar->getContentWidth();
 	const cocos2d::CCPoint location = this->m_mainLayer->convertToNodeSpace(touch->getLocation());
 	const float yDifference = std::abs(location.y - std::clamp<float>(std::abs(this->m_darkProgBar->getPositionY() - location.y), 0.f, 40.f)) - 27.f;
-	const float speedFactor = std::clamp<float>(1.f / (1.f + (.225f * yDifference)), 0.1f, 1.f);
+	const float speedFactor = SongManager::get().getSongScrubbingSpeedFactorInControlPanel() ? std::clamp<float>(1.f / (1.f + (.225f * yDifference)), 0.1f, 1.f) : 1.f;
 	const float deltaX = location.x - this->m_dragOffsetX - this->m_scrubStartWidth;
 	const float newWidth = std::clamp<float>(this->m_scrubStartWidth + (deltaX * speedFactor), 0.f, darkProgWidth);
 

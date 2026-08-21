@@ -160,6 +160,10 @@ class SongManager {
 	bool getSongScrubbingInSongList() const;
 	void setSongScrubbingInControlPanel(const bool);
 	bool getSongScrubbingInControlPanel() const;
+	void setSongScrubbingSpeedFactorInSongList(const bool);
+	bool getSongScrubbingSpeedFactorInSongList() const;
+	void setSongScrubbingSpeedFactorInControlPanel(const bool);
+	bool getSongScrubbingSpeedFactorInControlPanel() const;
 	void setFinishedCalculatingSongLengths(const bool);
 	bool getFinishedCalculatingSongLengths() const;
 	void setIncrementDecrementByMilliseconds(const int);
@@ -222,6 +226,8 @@ class SongManager {
 	bool m_showPlaybackControlsSongList = false;
 	bool m_songScrubbingInSongList = false;
 	bool m_songScrubbingInControlPanel = false;
+	bool m_songScrubbingSpeedFactorInSongList = false;
+	bool m_songScrubbingSpeedFactorInControlPanel = false;
 	bool m_shouldRestoreMenuLoopPoint = false;
 	bool m_finishedCalculatingSongLengths = false;
 	bool m_isUndefined0Alk1m123TouchPrio = false;

@@ -66,6 +66,8 @@ $on_mod(Loaded) {
 	songManager.setAdvancedLogs(Mod::get()->getSettingValue<bool>("advancedLogs"));
 	songManager.setSongScrubbingInSongList(Mod::get()->getSettingValue<bool>("songScrubbingInSongList"));
 	songManager.setSongScrubbingInControlPanel(Mod::get()->getSettingValue<bool>("songScrubbingInControlPanel"));
+	songManager.setSongScrubbingSpeedFactorInSongList(Mod::get()->getSettingValue<bool>("songScrubbingSpeedFactorInSongList"));
+	songManager.setSongScrubbingSpeedFactorInControlPanel(Mod::get()->getSettingValue<bool>("songScrubbingSpeedFactorInControlPanel"));
 	songManager.setShowPlaybackProgressAndControls(Mod::get()->getSettingValue<bool>("showPlaybackProgressAndControls"));
 	songManager.setShowPlaybackControlsSongList(Mod::get()->getSettingValue<bool>("showPlaybackProgressControlsSongList"));
 	GEODE_MOBILE(songManager.setYoutubeAndVLCKeyboardShortcutsSongList(false);)
@@ -276,14 +278,28 @@ $on_mod(Loaded) {
 		songManagerLambda.setShowPlaybackProgressAndControls(showPlaybackProgressAndControls);
 		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (songManagerLambda.getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressAndControls) return;
-		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "show-playback-progress-controls");
+		Utils::showMDPopup("Control Panel Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260609, "show-playback-progress-controls");
 	});
 	listenForSettingChanges<bool>("showPlaybackProgressControlsSongList", [](const bool showPlaybackProgressControlsSongList) {
 		SongManager& songManagerLambda = SongManager::get();
 		songManagerLambda.setShowPlaybackControlsSongList(showPlaybackProgressControlsSongList);
 		if (!Utils::passesVobecidedSanityCheck()) return;
 		if (songManagerLambda.getUndefined0Alk1m123TouchPrio() || !showPlaybackProgressControlsSongList) return;
-		Utils::showMDPopup("Song List Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260105, "show-playback-progress-controls");
+		Utils::showMDPopup("Song List Playback Progress Controls", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260609, "show-playback-progress-controls");
+	});
+	listenForSettingChanges<bool>("songScrubbingSpeedFactorInSongList", [](const bool songScrubbingSpeedFactorInSongList) {
+		SongManager& songManagerLambda = SongManager::get();
+		songManagerLambda.setSongScrubbingSpeedFactorInSongList(songScrubbingSpeedFactorInSongList);
+		if (!Utils::passesVobecidedSanityCheck()) return;
+		if (songManagerLambda.getUndefined0Alk1m123TouchPrio() || !songScrubbingSpeedFactorInSongList) return;
+		Utils::showMDPopup("iOS-like Controls For Fine-grained Song Scrubbing in Song List", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260821, "show-playback-progress-controls");
+	});
+	listenForSettingChanges<bool>("songScrubbingSpeedFactorInControlPanel", [](const bool songScrubbingSpeedFactorInControlPanel) {
+		SongManager& songManagerLambda = SongManager::get();
+		songManagerLambda.setSongScrubbingSpeedFactorInControlPanel(songScrubbingSpeedFactorInControlPanel);
+		if (!Utils::passesVobecidedSanityCheck()) return;
+		if (songManagerLambda.getUndefined0Alk1m123TouchPrio() || !songScrubbingSpeedFactorInControlPanel) return;
+		Utils::showMDPopup("iOS-like Controls For Fine-grained Song Scrubbing in Control Panel", USE_BETTER_TOUCH_PRIO_DAMMIT, 20260821, "show-playback-progress-controls");
 	});
 	listenForSettingChanges<int64_t>("incrementDecrementByMilliseconds", [](const int64_t incrementDecrementByMilliseconds) {
 		SongManager& songManagerLambda = SongManager::get();

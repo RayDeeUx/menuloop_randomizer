@@ -392,6 +392,22 @@ bool SongManager::getSongScrubbingInControlPanel() const {
 	return m_songScrubbingInControlPanel;
 }
 
+void SongManager::setSongScrubbingSpeedFactorInSongList(const bool value) {
+	m_songScrubbingSpeedFactorInSongList = value;
+}
+
+bool SongManager::getSongScrubbingSpeedFactorInSongList() const {
+	return m_songScrubbingSpeedFactorInSongList;
+}
+
+void SongManager::setSongScrubbingSpeedFactorInControlPanel(const bool value) {
+	m_songScrubbingSpeedFactorInControlPanel = value;
+}
+
+bool SongManager::getSongScrubbingSpeedFactorInControlPanel() const {
+	return m_songScrubbingSpeedFactorInControlPanel;
+}
+
 void SongManager::setFinishedCalculatingSongLengths(const bool value) {
 	m_finishedCalculatingSongLengths = value;
 }

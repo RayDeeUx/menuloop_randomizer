@@ -1104,7 +1104,7 @@ void SongListLayer::updateFromTouch(cocos2d::CCTouch* touch) {
 	const float fullProgWidth = this->m_fakeFullBar->getContentWidth();
 	const cocos2d::CCPoint location = this->m_mainLayer->convertToNodeSpace(touch->getLocation());
 	const float yDifference = std::abs(location.y - std::clamp<float>(std::abs(this->m_fakeFullBar->getPositionY() - location.y), 0.f, 40.f)) - 265.f;
-	const float speedFactor = std::clamp<float>(std::abs(-1.f / (-1.f - (.225f * yDifference))), 0.1f, 1.f);
+	const float speedFactor = SongManager::get().getSongScrubbingSpeedFactorInSongList() ? std::clamp<float>(std::abs(-1.f / (-1.f - (.225f * yDifference))), 0.1f, 1.f) : 1.f;
 	const float deltaX = location.x - this->m_dragOffsetX - this->m_scrubStartWidth;
 	const float newWidth = std::clamp<float>(this->m_scrubStartWidth + (deltaX * speedFactor), 0.f, fullProgWidth);
 

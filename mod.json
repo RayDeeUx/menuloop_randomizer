@@ -390,6 +390,13 @@
 			"default": true,
 			"enable-if": "loaded:alk.better-touch-prio && showPlaybackProgressControlsSongList"
 		},
+		"songScrubbingSpeedFactorInSongList": {
+			"name": "iOS-like Controls For Fine-grained Song Scrubbing in Song List",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS SETTING WILL BE IGNORED.__***</c>\n\nChoose if you want to allow classic iOS-like controls for fine-grained song scrubbing. This would trigger along the area BELOW the golden popup title of the Song List menu.",
+			"type": "bool",
+			"default": false,
+			"enable-if": "loaded:alk.better-touch-prio && showPlaybackProgressControlsSongList && songScrubbingInSongList"
+		},
 		"youtubeAndVLCKeyboardShortcutsSongList": {
 			"name": "YT/VLC/Spotify-like Hotkeys",
 			"description": "Choose if you want to use <cr>YT</c>/<c-FFA544>VLC</c>/<c-06CE91>Spotify</c>-like shortcuts to control playback progress or control song selection in the Song List menu.\n\n- <cr>Numrow/Numpad 0-9</c>: Control playback progress position. (0 = 0%, 1 = 10%, etc..., 9 = 90%.)\n- <cr>Shift + N</c>, <c-06CE91>Ctrl + S</c>, <c-FFA544>Command + Right Arrow</c> (macOS)/<c-FFA544>Ctrl + Right Arrow</c> (Windows): Shuffle song\n- <cr>Shift + P</c>, <c-FFA544>Command + Left Arrow</c> (macOS)/<c-FFA544>Ctrl + Left Arrow</c> (Windows): Play previous song (if available)\n- <c-06CE91>Command + R</c> (macOS)/<c-06CE91>Ctrl + R</c> (Windows): Restart current song\n- <c-06CE91>Cmd + H</c> (macOS)/<c-06CE91>Ctrl + H</c>, <c-06CE91>Cmd + K</c> (macOS)/<c-06CE91>Ctrl + K</c> (Windows): Switch to Control Panel\n- <c-06CE91>Shift + Ctrl + B</c> (macOS)/<c-06CE91>Shift + Alt + B</c> (Windows): Favorite current song\n- <c-06CE91>Shift + Cmd + J</c> (macOS)/<c-06CE91>Shift + Ctrl + J</c> (Windows): Scroll to current song",
@@ -437,6 +444,13 @@
 			"type": "bool",
 			"default": true,
 			"enable-if": "showPlaybackProgressAndControls"
+		},
+		"songScrubbingSpeedFactorInControlPanel": {
+			"name": "iOS-like Controls For Fine-grained Song Scrubbing in Control Panel",
+			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS SETTING WILL BE IGNORED.__***</c>\n\nChoose if you want to allow classic iOS-like controls for fine-grained song scrubbing. This would trigger along the area ABOVE the playback progress bar of the Control Panel.",
+			"type": "bool",
+			"default": false,
+			"enable-if": "loaded:alk.better-touch-prio && showPlaybackProgressControlsSongList && songScrubbingInControlPanel"
 		},
 		"youtubeAndVLCKeyboardShortcutsControlPanel": {
 			"name": "YT/VLC/Spotify-like Hotkeys",
