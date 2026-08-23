@@ -6,6 +6,7 @@
 ## v1.14.1
 - Add that funny quality-of-life feature thnigymajig from older versions of iOS that changes the scrubbing speed based on how far you're dragging from the scrubbing area.
   - Due to how finicky it is, <cr>this option is disabled by default</c>.
+-  `geode::utils::numFromString`  sucks when a string starts with a digit and doesn't end with a digit.
 - Add warnings for people using mods that plagarized source code from Menu Loop Randomizer.
 - Move some things around to reduce compile times.
 ## v1.14.0

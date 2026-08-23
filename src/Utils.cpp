@@ -251,6 +251,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 
 	// sometimes songInfo is nullptr, so improvise
 	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && !Utils::isFromConfigOrAlternateDir(currentSong)) {
+		if (!std::all_of(songFileName.begin(), songFileName.end(), [](unsigned const char c) { return std::isdigit(c); })) return Utils::newNotification(geode::utils::string::replace(songFileName, Utils::toNormalizedString(currentSong.extension()), ""), true);
 		// default: "Song Name, Artist, Song ID"
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
 		return Utils::newNotification(Utils::composedNotifString(notifString, Utils::getFormattedNGMLSongName(songInfo, false), suffix), true);
@@ -527,7 +528,15 @@ void Utils::parseSongInformationForSongManager(SongToSongData& songToSongData, c
 
 	const std::filesystem::path& theirPath = Utils::toProblematicString(song);
 	const std::filesystem::path& theirParentPath = theirPath.parent_path();
-	const int songID = geode::utils::numFromString<int>(Utils::toNormalizedString(theirPath.stem())).unwrapOr(-1);
+	const std::string& theirPathStem = Utils::toNormalizedString(theirPath.stem());
+	const int superProbablySongID = geode::utils::numFromString<int>(theirPathStem).unwrapOr(-1);
+
+	// if string is "01. foobar" it parses as "1" instead of throwing geode::Err so i have to do this BS
+	// dank saw it in mod-dev-chat after slideglide explained it to him and he said "wtf" so i assume not intentional
+	// i dont know and quit frankly i dont care this is enojugh to fix the bug on their part and that's all that matter at this
+
+	const bool geodeUtilsNumFromStringIsFuckingBroken = std::all_of(theirPathStem.begin(), theirPathStem.end(), [](unsigned const char c) { return std::isdigit(c); });
+	const int songID = geodeUtilsNumFromStringIsFuckingBroken ? superProbablySongID : -1;
 
 	std::uintmax_t fileSize = std::filesystem::file_size(theirPath, ec);
 	std::filesystem::file_time_type fileTime = std::filesystem::last_write_time(theirPath, ed);
