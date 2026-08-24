@@ -3,6 +3,8 @@
 
 <mod:alk.better-touch-prio>
 
+## v1.14.2
+- Fix bugs introduced in v1.14.1.
 ## v1.14.1
 - Add that funny quality-of-life feature thnigymajig from older versions of iOS that changes the scrubbing speed based on how far you're dragging from the scrubbing area.
   - Due to how finicky it is, <cr>this option is disabled by default</c>.

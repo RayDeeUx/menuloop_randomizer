@@ -251,7 +251,7 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 
 	// sometimes songInfo is nullptr, so improvise
 	if (SongInfoObject* songInfo = mdm->getSongInfoObject(songID); songInfo && songID > 0 && !Utils::isFromConfigOrAlternateDir(currentSong)) {
-		if (!std::all_of(songFileName.begin(), songFileName.end(), [](unsigned const char c) { return std::isdigit(c); })) return Utils::newNotification(geode::utils::string::replace(songFileName, Utils::toNormalizedString(currentSong.extension()), ""), true);
+		if (!std::all_of(currentSongRawFileName.begin(), currentSongRawFileName.end(), [](unsigned const char c) { return std::isdigit(c); })) return Utils::newNotification(currentSongRawFileName, true);
 		// default: "Song Name, Artist, Song ID"
 		// fmt::format("{} by {} ({})", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID);
 		return Utils::newNotification(Utils::composedNotifString(notifString, Utils::getFormattedNGMLSongName(songInfo, false), suffix), true);
