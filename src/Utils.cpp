@@ -294,34 +294,12 @@ std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo, const bool
 
 void Utils::copyCurrentSongName() {
 	SongManager& songManager = SongManager::get();
-	std::string currentSongName = songManager.getCurrentSong();
-	std::smatch match;
-	std::smatch geodeMatch;
-	std::smatch jukeboxMatch;
-	std::string result = "";
-	currentSongName = std::regex_replace(currentSongName, std::regex(R"(com\.geode\.launcher\/)"), ""); // android is cring, original is [ "com\.geode\.launcher\/" ]
-	currentSongName = fmt::format("/{}", currentSongName); // adding an extra slash to get it working on all possible paths. this is because combo burst does some stuff under the hood i am too scared to look at and i don't want to define more regex than necessary.
-	if (songManager.getAdvancedLogs()) geode::log::info("path after: {}", currentSongName);
-	if (currentSongName.find("geode") != std::string::npos && (currentSongName.find("mods") != std::string::npos || currentSongName.find("config") != std::string::npos)) {
-		if (std::regex_search(currentSongName, geodeMatch, m_geodeAudioRegex)) {
-			result = geodeMatch[geodeMatch.size() - 2].str();
-			if (std::regex_search(result, jukeboxMatch, m_possiblyJukeboxRegex)) {
-				result = jukeboxMatch[jukeboxMatch.size() - 1].str();
-			}
-		} else {
-			result = "Something went wrong...";
-		}
-	} else if (std::regex_match(currentSongName, match, m_songEffectRegex)) {
-		if (std::regex_search(currentSongName, geodeMatch, m_geodeAudioRegex)) {
-			result = geodeMatch[geodeMatch.size() - 2].str();
-			if (std::regex_search(result, jukeboxMatch, m_possiblyJukeboxRegex)) {
-				result = jukeboxMatch[jukeboxMatch.size() - 1].str();
-			}
-		} else {
-			result = match[m_desiredIndexForFileName].str();
-		}
-	} else {
-		result = currentSongName;
+	const std::string& songString = songManager.getCurrentSong();
+	const bool isJukebox = geode::utils::string::contains(songString, "fleym.nongd") && geode::utils::string::contains(songString, "nongs");
+	const std::string& result = Utils::getBool("copySongDisplayName") && songManager.getFinishedCalculatingSongLengths() && Utils::songDataContainsSong(songString) && Utils::getSongDataOfCurrentSong().songID != std::numeric_limits<int>::max() ? Utils::getSongDataOfCurrentSong().fullDisplayNameForControlPanelAndSongList : Utils::toNormalizedString(Utils::toProblematicString(songManager.getCurrentSong()).stem());
+	if (isJukebox) {
+		geode::utils::clipboard::write(fmt::format("{} (This is an NONG song from Jukebox. Menu Loop Randomizer cannot help you find out what the actual name of this song is. Good luck.)", result));
+		return;
 	}
 	geode::utils::clipboard::write(result);
 }
@@ -562,7 +540,9 @@ void Utils::parseSongInformationForSongManager(SongToSongData& songToSongData, c
 	if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID), ea) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
 		songData.displayName = Utils::getFormattedNGMLSongName(songInfoObject, false);
 		songData.songID = songInfoObject->m_songID;
-		songData.bpm = songInfoObject->m_BPM;
+	}
+	if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject) {
+		songData.songID = songInfoObject->m_songID;
 	}
 	songData.displayName = SongListLayer::generateDisplayName(songData);
 

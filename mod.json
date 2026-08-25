@@ -6,7 +6,7 @@
 		"ios": "2.2081",
 		"android": "2.2081"
 	},
-	"version": "v1.14.2",
+	"version": "v1.14.3",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developers": ["RayDeeUx", "elnexreal"],
@@ -512,6 +512,12 @@
 			"type": "bool",
 			"default": false,
 			"enable-if": "qolModIntegration"
+		},
+		"copySongDisplayName": {
+			"name": "Copy All Song Info, Not Just Song ID (READ!)",
+			"description": "<cl>Continuing from an original idea by Akashnil.</c>\n\nWhen copying information about the current song and it's from Newgrounds or the Music Library, copy the song's full display name (title, artist name, song ID) instead of just the song ID.",
+			"type": "bool",
+			"default": false
 		},
 		"useMiniaudioForLength": {
 			"name": "Use Miniaudio to Find Song Length",

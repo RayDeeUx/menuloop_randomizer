@@ -3,6 +3,11 @@
 
 <mod:alk.better-touch-prio>
 
+## v1.14.3
+- Add an option to copy a song's full display name (when available) or just the song ID.
+  - This only applies when song lengths are finished calculating and when copying information about a song from Newgrounds or the Music Library.
+  - <cr>This option is disabled by default.</c>
+- Incidentally, fix the bug where copying song names only copied the first word when copying the names of songs that weren't from Newgrounds or the Music Library.
 ## v1.14.2
 - Fix bugs introduced in v1.14.1.
 ## v1.14.1
