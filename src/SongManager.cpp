@@ -352,6 +352,14 @@ bool SongManager::getModThiefClaudeAddictFlozwer() const {
 	return m_modThiefClaudeAddictFlozwer;
 }
 
+void SongManager::setRussianSpeakingVibecoder(const bool value) {
+	m_russianSpeakingVibecoder = value;
+}
+
+bool SongManager::getRussianSpeakingVibecoder() const {
+	return m_russianSpeakingVibecoder;
+}
+
 void SongManager::setPauseSongPositionTracking(const bool value) {
 	m_pausedSongPositionTracking = value;
 }

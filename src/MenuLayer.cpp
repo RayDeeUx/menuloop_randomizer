@@ -53,6 +53,7 @@ bool shownVibecodedWarning = false;
 bool shownVobecidedWarning = false;
 bool shownAGUAbuserWarning = false;
 bool shownModThiefWarnings = false;
+bool shownRussianSpeakerWn = false;
 
 constexpr bool debugMode = false;
 
@@ -82,6 +83,13 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 			Utils::addBlockedClosingTraits(popup);
 			scene->addChild(popup);
 			shownModThiefWarnings = true;
+		}
+		if (!shownRussianSpeakerWn && (debugMode || songManager.getRussianSpeakingVibecoder())) {
+			FLAlertLayer* popup = FLAlertLayer::create(ml, "Heads up! (Bud'te nacheku!)", "<cl>(From Menu Loop Randomizer)</c> English:\nYou have a vibecoded mod conflicting with Menu Loop Randomizer.\n<c_>If any bugs happen, you're on your own.</c>\n\n<cl>(Iz Menu Loop Randomizer)</c> Russian:\nU vas ustanovlen vibecoded mod, kotoryj konfliktuet s Menu Loop Randomizer.\n<c_>Esli vozniknut kakiye-libo oshibki, vam pridyotsya spravlyat'sya samostoyatel'no.</c>", "I Understand (Ya Ponimayu)", nullptr, 320.f, false, 200.f, .8f);
+			Utils::addUndraggablePopupTraits(popup);
+			Utils::addBlockedClosingTraits(popup);
+			scene->addChild(popup);
+			shownRussianSpeakerWn = true;
 		}
 		if (!shownAGUAbuserWarning && (debugMode || songManager.getGeodify())) {
 			FLAlertLayer* popup = FLAlertLayer::create("Heads up!", "<cl>(From Menu Loop Randomizer)</c>\n\nGeodify's menu loop has been enabled.\n<c_>If any bugs happen, you're on your own.</c>", "I Understand");

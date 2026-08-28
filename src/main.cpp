@@ -925,6 +925,8 @@ $on_mod(Loaded) {
 }
 
 $on_game(ModsLoaded) {
+	SongManager& songManager = SongManager::get();
+	songManager.setRussianSpeakingVibecoder(Loader::get()->isModLoaded("neptagon.msr"));
 	for (Mod* mod : Loader::get()->getAllMods()) {
 		if (!mod || !mod->isLoaded()) continue;
 		const std::string& modID = geode::utils::string::toLower(mod->getID());
@@ -941,7 +943,7 @@ $on_game(ModsLoaded) {
 			}
 			if (!theThiefExists) continue;
 		}
-		SongManager::get().setModThiefClaudeAddictFlozwer(true);
+		songManager.setModThiefClaudeAddictFlozwer(true);
 		break;
 	}
 }

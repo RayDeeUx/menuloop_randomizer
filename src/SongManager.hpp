@@ -150,6 +150,8 @@ class SongManager {
 	bool getVobecidedJota() const;
 	void setModThiefClaudeAddictFlozwer(const bool);
 	bool getModThiefClaudeAddictFlozwer() const;
+	void setRussianSpeakingVibecoder(const bool value);
+	bool getRussianSpeakingVibecoder() const;
 	void setPauseSongPositionTracking(const bool);
 	bool getPauseSongPositionTracking() const;
 	void setShowPlaybackProgressAndControls(const bool);
@@ -235,6 +237,7 @@ class SongManager {
 	bool m_vibecodedVentilla = false;
 	bool m_vobecidedJota = false;
 	bool m_modThiefClaudeAddictFlozwer = false;
+	bool m_russianSpeakingVibecoder = false;
 	bool m_youtubeAndVLCKeyboardShortcutsSongList = false;
 	bool m_youtubeAndVLCKeyboardShortcutsControlPanel = false;
 	bool m_osuSetting = false;
