@@ -143,25 +143,25 @@
 			"type": "bool",
 			"default": true
 		},
+		"enableNewNotification": {
+			"name": "New Notif Button",
+			"description": "Enables the <cj>notification regeneration button</c> in the main menu.",
+			"type": "bool",
+			"default": true
+		},
+		"notifications-header": {
+			"name": "Notifications",
+			"description": "Settings for \"Now Playing\" notifications in Menu Loop Randomizer.",
+			"type": "title"
+		},
 		"enableNotification": {
 			"name": "\"Now Playing\" Notifs",
 			"description": "Shows a notification with the name of the currently playing song.",
 			"type": "bool",
 			"default": true
 		},
-		"notifications-header": {
-			"name": "Notifications",
-			"description": "Choose how (many) buttons from Menu Loop Randomizer are displayed.",
-			"type": "title"
-		},
 		"replaceUnsupportedChars": {
 			"name": "Use '?' For Unsupported Characters",
-			"type": "bool",
-			"default": true
-		},
-		"enableNewNotification": {
-			"name": "New Notif Button",
-			"description": "Enables the <cj>notification regeneration button</c> in the main menu.",
 			"type": "bool",
 			"default": true
 		},
@@ -179,7 +179,7 @@
 		},
 		"removeSuffix": {
 			"name": "Hide File Extension",
-			"description": "Hides the file extension of the song being played.\n<cy>Only applies when using custom songs as the menu loop.</c>",
+			"description": "Hides the file extension of the song being played, <co>if it's still included somehow</c>.\n<cy>Only applies when using custom songs as the menu loop.</c>",
 			"type": "bool",
 			"default": true
 		},
