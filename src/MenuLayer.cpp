@@ -111,9 +111,18 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 		const bool qualifiedForNoButtonsEclipse = songManager.isEclipse && songManager.eclipseIntegrationSuccessful;
 		const bool qualifiedForNoButtonsQOLMod = songManager.isQOLMod && songManager.qolModIntegrationSuccessful;
 
+		/*
 		if ((qualifiedForNoButtonsEclipse || qualifiedForNoButtonsQOLMod) && buttonMode == "No Buttons") return true;
 
 		if (buttonMode == "Minimal" || (!qualifiedForNoButtonsEclipse && !qualifiedForNoButtonsQOLMod)) {
+			Utils::addButton("controls", menu_selector(MenuLayerMLHook::onControlsButton), REST_OF_THE_OWL);
+			return true;
+		}
+		*/
+
+		const bool qualifiedForNoButtons = qualifiedForNoButtonsEclipse || qualifiedForNoButtonsQOLMod;
+
+		if (buttonMode == "Minimal" || (buttonMode == "No Buttons" && !qualifiedForNoButtons)) {
 			Utils::addButton("controls", menu_selector(MenuLayerMLHook::onControlsButton), REST_OF_THE_OWL);
 			return true;
 		}

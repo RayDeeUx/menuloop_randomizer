@@ -3,6 +3,8 @@
 
 <mod:alk.better-touch-prio>
 
+## v1.14.4
+- Fix a bug with button modes when no mod menus are installed (thank you imes).
 ## v1.14.3
 - Add an option to copy a song's full display name (when available) or just the song ID.
   - This only applies when song lengths are finished calculating and when copying information about a song from Newgrounds or the Music Library.
