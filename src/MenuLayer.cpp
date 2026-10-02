@@ -54,6 +54,7 @@ bool shownVobecidedWarning = false;
 bool shownAGUAbuserWarning = false;
 bool shownModThiefWarnings = false;
 bool shownRussianSpeakerWn = false;
+bool shownLazerVibecoderWn = false;
 
 constexpr bool debugMode = false;
 
@@ -90,6 +91,13 @@ class $modify(MenuLayerMLHook, MenuLayer) {
 			Utils::addBlockedClosingTraits(popup);
 			scene->addChild(popup);
 			shownRussianSpeakerWn = true;
+		}
+		if (!shownLazerVibecoderWn && (debugMode || songManager.getLazerVibecoder())) {
+			FLAlertLayer* popup = FLAlertLayer::create(ml, "Heads up!", "<cl>(From Menu Loop Randomizer)</c>\n\nOne of your mods is actively overriding the menu loop, potentially with the song \"cYsmix - triangles\" or a song from one of your saved levels. The mod responsible for this is <c_>MOST LIKELY VIBECODED!!!</c>\n\nBugs that happen while this mod is loaded <c_>WILL BE IGNORED</c>.", "I Understand", nullptr, 320.f, false, 200.f, .8f);
+			Utils::addUndraggablePopupTraits(popup);
+			Utils::addBlockedClosingTraits(popup);
+			scene->addChild(popup);
+			shownLazerVibecoderWn = true;
 		}
 		if (!shownAGUAbuserWarning && (debugMode || songManager.getGeodify())) {
 			FLAlertLayer* popup = FLAlertLayer::create("Heads up!", "<cl>(From Menu Loop Randomizer)</c>\n\nGeodify's menu loop has been enabled.\n<c_>If any bugs happen, you're on your own.</c>", "I Understand");

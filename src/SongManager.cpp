@@ -360,6 +360,14 @@ bool SongManager::getRussianSpeakingVibecoder() const {
 	return m_russianSpeakingVibecoder;
 }
 
+void SongManager::setLazerVibecoder(const bool value) {
+	m_lazerVibecoder = value;
+}
+
+bool SongManager::getLazerVibecoder() const {
+	return m_lazerVibecoder;
+}
+
 void SongManager::setPauseSongPositionTracking(const bool value) {
 	m_pausedSongPositionTracking = value;
 }

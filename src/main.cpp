@@ -927,6 +927,7 @@ $on_mod(Loaded) {
 $on_game(ModsLoaded) {
 	SongManager& songManager = SongManager::get();
 	songManager.setRussianSpeakingVibecoder(Loader::get()->isModLoaded("neptagon.msr"));
+	songManager.setLazerVibecoder(Loader::get()->isModLoaded("kamol1dn.lazer-ui"));
 	for (Mod* mod : Loader::get()->getAllMods()) {
 		if (!mod || !mod->isLoaded()) continue;
 		const std::string& modID = geode::utils::string::toLower(mod->getID());
