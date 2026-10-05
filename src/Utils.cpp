@@ -848,7 +848,7 @@ bool Utils::isVobecidedJotaPlaying() {
 bool Utils::passesVobecidedSanityCheck() {
 	SongManager& songManager = SongManager::get();
 	if (songManager.getLazerVibecoder() || songManager.getModThiefClaudeAddictFlozwer() || songManager.getRussianSpeakingVibecoder()) {
-		geode::Notification::create("[MLR] Incompatible mod found.\nWhat other loaded mod can change your menu music?")->show();
+		geode::Notification::create("[MLR] Incompatible mod found.\nWhat other loaded mod can change your menu music?", geode::NotificationIcon::Error, 5.f)->show();
 		return false;
 	}
 	if (!songManager.getVobecidedJota()) return true;
