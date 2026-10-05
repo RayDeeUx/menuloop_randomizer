@@ -3,6 +3,8 @@
 
 <mod:alk.better-touch-prio>
 
+## v1.14.5
+- LLMs were a net negative.
 ## v1.14.4
 - Fix a bug with button modes when no mod menus are installed (thank you imes).
 ## v1.14.3

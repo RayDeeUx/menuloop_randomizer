@@ -846,7 +846,12 @@ bool Utils::isVobecidedJotaPlaying() {
 }
 
 bool Utils::passesVobecidedSanityCheck() {
-	if (!SongManager::get().getVobecidedJota()) return true;
+	SongManager& songManager = SongManager::get();
+	if (songManager.getLazerVibecoder() || songManager.getModThiefClaudeAddictFlozwer() || songManager.getRussianSpeakingVibecoder()) {
+		geode::Notification::create("[MLR] Incompatible mod found.\nWhat other loaded mod can change your menu music?")->show();
+		return false;
+	}
+	if (!songManager.getVobecidedJota()) return true;
 	if (!Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsNotPausedAndIsPlaying()) return true;
 	if (GJBaseGameLayer::get()) {
 		// i think showing an flalertlayer in gjbgl might crash the game with a nullptr flalertlayerprotocol pointer (endlevellayer ptsd)
