@@ -210,7 +210,7 @@ void SongListLayer::updateSongCountAndFavoritesCount(SongManager& songManager) {
 	const int songCount = std::clamp<int>(songManager.getSongsSize() - favorites, 0, std::numeric_limits<int>::max());;
 	this->setTitle(fmt::format("Menu Loop Randomizer - Your {} Song{} ({} Favorite{})", songCount, (songCount == 1 ? "" : "s"), favorites, (favorites == 1 ? "" : "s")));
 	this->m_title->setID("song-list-title"_spr);
-	this->m_title->limitLabelWidth(320.f, 1.f, .0001f);
+	this->m_title->setLimitLabelWidth(320.f, 1.f, .0001f);
 }
 
 bool SongListLayer::init() {

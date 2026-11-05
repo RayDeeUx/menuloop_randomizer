@@ -92,7 +92,7 @@ class Utils {
 	static bool songDataContainsSongPath(const std::filesystem::path&);
 	static std::string getFullNameOfCurrentSongForIntegrationsAndControlPanel();
 	static bool currentFMODSongIsNotCurrentSongManagerSong();
-	static bool givenFMODPathIsNotCurrentSongManagerSong(gd::string);
+	static bool givenFMODPathIsNotCurrentSongManagerSong(std::string);
 	static void rememberLastMenuLoop();
 	static bool menuLoopIsNotPausedAndIsPlaying();
 	static bool isVobecidedJotaPlaying();

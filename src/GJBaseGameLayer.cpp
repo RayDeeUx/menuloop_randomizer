@@ -48,7 +48,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 using namespace geode::prelude;
 
 class $modify(MenuLoopGMHook, GameManager) {
-	gd::string getMenuMusicFile() {
+	std::string getMenuMusicFile() {
 		return SongManager::get().getCurrentSong();
 	}
 	void fadeInMenuMusic() {

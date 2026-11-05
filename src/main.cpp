@@ -50,12 +50,11 @@ bool originalOverrideWasEmpty = false;
 
 #define VOBECIDED_JOTA Loader::get()->getInstalledMod("jotabelike.gd_racha")
 #define VIBECODED_RADIO Loader::get()->getInstalledMod("joseii.ventilla")
-#define BTP Loader::get()->getInstalledMod("alk.better-touch-prio")
 #define USE_BETTER_TOUCH_PRIO_DAMMIT "# <c-ff0000>***__Please install [Better Touch Prio](mod:alk.better-touch-prio) to use this feature.__***</c>\n\n<c-ff0000>Your setting was saved, but ***__no other changes will happen__*** until you install [Better Touch Prio](mod:alk.better-touch-prio):</c>\n\n<mod:alk.better-touch-prio>\n\n# <c-ff0000>This is ***__NOT__*** ***a neogtiable solution!***</c>"
 
 $on_mod(Loaded) {
 	SongManager& songManager = SongManager::get();
-	const std::filesystem::path& configDir = Mod::get()->getConfigDir();
+	const std::filesystem::path& configDir = Mod::get()->getConfigDir().toStdPath();
 	std::error_code ea, eb, ec, ed, ee;
 	// (void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 	songManager.setOsu(Mod::get()->getSettingValue<bool>("osuLazerBootleg"));
@@ -76,7 +75,7 @@ $on_mod(Loaded) {
 	GEODE_DESKTOP(songManager.setYoutubeAndVLCKeyboardShortcutsSongList(Mod::get()->getSettingValue<bool>("youtubeAndVLCKeyboardShortcutsSongList"));)
 	GEODE_DESKTOP(songManager.setYoutubeAndVLCKeyboardShortcutsControlPanel(Mod::get()->getSettingValue<bool>("youtubeAndVLCKeyboardShortcutsControlPanel"));)
 	songManager.setIncrementDecrementByMilliseconds(Mod::get()->getSettingValue<int64_t>("incrementDecrementByMilliseconds"));
-	songManager.setUndefined0Alk1m123TouchPrio(BTP && (BTP->isOrWillBeEnabled() || BTP->shouldLoad()) && !BTP->hasUnresolvedDependencies() && !BTP->hasUnresolvedIncompatibilities());
+	songManager.setUndefined0Alk1m123TouchPrio(true);
 	if (!std::filesystem::exists(configDir / "playlistOne.txt", ea)) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistOne.txt");
 	if (!std::filesystem::exists(configDir / "playlistTwo.txt", eb)) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistTwo.txt");
 	if (!std::filesystem::exists(configDir / "playlistThree.txt", ec)) Utils::writeToFile("# This file was generated automatically as it hadn't existed previously.", configDir / "playlistThree.txt");
@@ -92,7 +91,7 @@ $on_mod(Loaded) {
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # --RayDeeUx)";
-		geode::Result result = utils::file::writeString(blacklistTxt, blacklistFileIntro);
+		geode::Result result = utils::file::writeString(asp::fs::PathView{Utils::toNormalizedString(blacklistTxt)}, blacklistFileIntro);
 		if (result.isErr()) {
 			log::error("Error writing to blacklist.txt");
 		}
@@ -109,7 +108,7 @@ $on_mod(Loaded) {
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # --RayDeeUx)";
-		geode::Result<> result = utils::file::writeString(favoriteTxt, favoritesFileIntro);
+		geode::Result<> result = utils::file::writeString(asp::fs::PathView{Utils::toNormalizedString(favoriteTxt)}, favoritesFileIntro);
 		if (result.isErr()) {
 			log::error("Error writing to favorites.txt");
 		}
@@ -405,7 +404,7 @@ $on_game(ModsLoaded) {
 
 	songManager.setVibecodedVentilla(VIBECODED_RADIO && VIBECODED_RADIO->isLoaded());
 	songManager.setVobecidedJota(VOBECIDED_JOTA && VOBECIDED_JOTA->isLoaded());
-	songManager.setUndefined0Alk1m123TouchPrio(BTP && BTP->isLoaded());
+	songManager.setUndefined0Alk1m123TouchPrio(true);
 	if (loader->isModLoaded("omgrod.geodify")) {
 		Mod* gify = loader->getLoadedMod("omgrod.geodify");
 		songManager.setGeodify(gify->getSettingValue<bool>("menu-loop"));

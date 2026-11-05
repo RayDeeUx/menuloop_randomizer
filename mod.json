@@ -1,18 +1,18 @@
 {
-	"geode": "5.10.1",
+	"geode": "6.0.0-alpha.1",
 	"gd": {
-		"win": "2.2081",
-		"mac": "2.2081",
-		"ios": "2.2081",
-		"android": "2.2081"
+		"win": "2.2091",
+		"mac": "2.2091",
+		"ios": "2.2091",
+		"android": "2.2091"
 	},
-	"version": "v1.14.5",
+	"version": "v1.14.6",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developers": ["RayDeeUx", "elnexreal"],
 	"description": "Menu Loop randomizer for GD.",
 	"tags": ["music", "offline", "interface", "enhancement"],
-	"repository": "https://github.com/RayDeeUx/menuloop_randomizer",
+	"repository": "https://codeberg.org/RayDeeUx/menuloop_randomizer",
 	"settings": {
 		"basic-housekeeping-header": {
 			"name": "Basic Housekeeping (or, I Won't Make a Tutorial on Using MLR)",

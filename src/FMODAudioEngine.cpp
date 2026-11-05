@@ -58,7 +58,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		FMODAudioEngine::stopAllMusic(p0);
 	}
 	// playmusic calls loadmusic, so set songmanager var ig
-	void playMusic(gd::string path, bool shouldLoop, float fadeInTime, int channel) {
+	void playMusic(std::string path, bool shouldLoop, float fadeInTime, int channel) {
 		SongManager& songManager = SongManager::get();
 		if (!GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && !Utils::givenFMODPathIsNotCurrentSongManagerSong(path) && shouldLoop && fadeInTime == 1.f && channel == 0) {
 			if (songManager.getAdvancedLogs()) log::info("setting fade time to whatever was declared in settings, path: {}", path);
@@ -70,7 +70,7 @@ class $modify(MenuLoopFMODHook, FMODAudioEngine) {
 		FMODAudioEngine::playMusic(path, shouldLoop, fadeInTime, channel);
 		if (songManager.getInsidePlayMusic()) songManager.setInsidePlayMusic(false);
 	}
-	void loadMusic(gd::string path, float speed, float unknown, float volume, bool shouldLoop, int musicID, int channelID, bool dontReset) {
+	void loadMusic(std::string path, float speed, float unknown, float volume, bool shouldLoop, int musicID, int channelID, bool dontReset) {
 		SongManager& songManager = SongManager::get();
 		if (!songManager.getInsidePlayMusic() && !GJBaseGameLayer::get() && !VANILLA_GD_MENU_LOOP_DISABLED && Utils::givenFMODPathIsNotCurrentSongManagerSong(path)) {
 			songManager.setPauseSongPositionTracking(true); // while not necessary when gjbgl is being init'd, still necessary for menu loops from other mods
