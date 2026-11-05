@@ -75,7 +75,7 @@ class $modify(MenuLoopCSWHook, CustomSongWidget) {
 		songManager.addSong(songPath);
 
 		std::error_code ea, ec, ed;
-		const std::string& dummyJukeboxPath = Utils::toNormalizedString(geode::dirs::getModsSaveDir().toStdPath() / "fleym.nongd" / "nongs");
+		const std::string& dummyJukeboxPath = Utils::toNormalizedString(geode::dirs::getModsSaveDir().toStdPath().unwrapOr(std::filesystem::path{}) / "fleym.nongd" / "nongs");
 		const std::string& hypotheticalPathWhereMDMSongsAreStored = Utils::toNormalizedString(Utils::toProblematicString(mdm->pathForSongFolder(593059)).parent_path()); // this song ID in particular is banned from newgrounds
 
 		SongToSongData& songToSongData = songManager.getSongToSongDataEntries();

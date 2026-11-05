@@ -48,12 +48,6 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 #include <filesystem>
 #include <iostream>
 #include <fstream>
-#include <Geode/utils/random.hpp>
-
-static std::regex m_songEffectRegex(R"(.*(?:\\|\/)(\S+)\.(mp3|ogg|wav|flac|oga))", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/CqvIvI/1.
-static const std::regex m_geodeAudioRegex(R"(((?!\S+geode)(?:\\|\/)(?:([a-z0-9\-_]+\.[a-z0-9\-_]+)(?:\\|\/))([\S ]+)\.(mp3|ogg|wav|flac|oga))$)", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/0b9rY1/1.
-static const std::regex m_possiblyJukeboxRegex(R"(.*.[\\\/]([\S]+))", std::regex::optimize | std::regex::icase); // see https://regex101.com/r/Brmwbs/1.
-static constexpr int m_desiredIndexForFileName = 1; // easier place to change index
 
 int Utils::randomIndex(int size) {
 	// select a random item from the vector and return the path
@@ -262,9 +256,9 @@ void Utils::newCardAndDisplayNameFromCurrentSong() {
 bool Utils::adjustSongInfoIfJukeboxReplacedIt(SongInfoObject* songInfo) {
 	bool shouldReplaceDisplayName = false;
 	std::error_code ea;
-	const std::filesystem::path& targetPath = geode::dirs::getModsSaveDir().toStdPath() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songInfo->m_songID);
+	const std::filesystem::path& targetPath = geode::dirs::getModsSaveDir().toStdPath().unwrapOr(std::filesystem::path{}) / "fleym.nongd" / "manifest" / fmt::format("{}.json", songInfo->m_songID);
 	if (!std::filesystem::exists(targetPath, ea)) return shouldReplaceDisplayName;
-	geode::Result<matjson::Value> parsed = geode::utils::file::readJson(asp::fs::PathView{Utils::toNormalizedString(targetPath)});
+	geode::Result<matjson::Value> parsed = geode::utils::file::readJson(asp::fs::Path::fromStdPath(targetPath));
 	if (parsed.isOk() && parsed.unwrap().contains("default") && parsed.unwrap().get("default").isOk()) {
 		geode::Result<matjson::Value&> fooBar = parsed.unwrap().get("default").unwrap().get("name");
 		geode::Result<matjson::Value&> barBaz = parsed.unwrap().get("default").unwrap().get("artist");
@@ -312,7 +306,7 @@ void Utils::copyCurrentSongName() {
 
 void Utils::loadFromPlaylistFile(const std::filesystem::path& playlistFile) {
 	SongManager& songManager = SongManager::get();
-	const std::filesystem::path& configDir = geode::Mod::get()->getConfigDir().toStdPath();
+	const std::filesystem::path& configDir = geode::Mod::get()->getConfigDir().toStdPath().unwrapOr(std::filesystem::path{});
 
 	std::vector<std::string> blacklist = Utils::parseBlacklistFile(configDir / R"(blacklist.txt)");
 	std::vector<std::string> favorites = Utils::parseFavoritesFile(configDir / R"(favorites.txt)");
@@ -360,15 +354,15 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 	std::error_code ez;
 	if (!std::filesystem::exists(path, ez) && !Utils::toNormalizedString(path).empty()) {
 		geode::log::info("path {} does not exist! leaving the scene", path);
-		const std::filesystem::path& _ = geode::Mod::get()->getConfigDir(true).toStdPath(); // unused, force config dir creation
+		const std::filesystem::path& _ = geode::Mod::get()->getConfigDir(true).toStdPath().unwrapOr(std::filesystem::path{}); // unused, force config dir creation
 		return;
 	}
-	if (geode::utils::string::contains(Utils::toNormalizedString(path), "store_your_disabled_menuloops_here") && geode::utils::string::contains(Utils::toNormalizedString(path), Utils::toNormalizedString(geode::Mod::get()->getConfigDir()))) return; // avoid recursion --raydeeux
+	if (geode::utils::string::contains(Utils::toNormalizedString(path), "store_your_disabled_menuloops_here") && geode::utils::string::contains(Utils::toNormalizedString(path), Utils::toNormalizedString(geode::Mod::get()->getConfigDir().toStdPath().unwrapOr(std::filesystem::path{})))) return; // avoid recursion --raydeeux
 
 	SongManager& songManager = SongManager::get();
 
 	std::error_code ea;
-	const std::filesystem::path& playlistFile = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
+	const std::filesystem::path& playlistFile = geode::Mod::get()->getSettingValue<asp::fs::Path>("playlistFile").toStdPath().unwrapOr(std::filesystem::path{});
 	songManager.setPlaylistFileName();
 	songManager.setPlaylistIsEmpty(true);
 	if (geode::Mod::get()->getSettingValue<bool>("loadPlaylistFile") && std::filesystem::exists(playlistFile, ea) && Utils::toNormalizedString(playlistFile.extension()) == ".txt") {
@@ -387,7 +381,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 		geode::log::info("playlist file {} is empty. load songs w/o playlist.", playlistFile);
 	}
 
-	const std::filesystem::path& configDir = Utils::toNormalizedString(path).empty() ? geode::Mod::get()->getConfigDir() : path;
+	const std::filesystem::path& configDir = Utils::toNormalizedString(path).empty() ? geode::Mod::get()->getConfigDir().toStdPath().unwrapOr(std::filesystem::path{}) : path;
 	/*
 		if custom songs are enabled search for files in the config dir
 		if not, just use the newgrounds songs
@@ -412,13 +406,13 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 	}
 
 	if (customSongs) {
-		std::error_code ec, ed, ee;
-		for (const auto& file : std::filesystem::directory_iterator(configDir, ec)) {
-			if (std::filesystem::is_directory(file, ed) && Utils::getBool("searchDeeper")) {
+		std::error_code ed, ee, ef;
+		for (const auto& file : std::filesystem::directory_iterator(configDir, ed)) {
+			if (std::filesystem::is_directory(file, ee) && Utils::getBool("searchDeeper")) {
 				Utils::populateVector(customSongs, file, textFileBlacklist, textFileFavorites);
 				continue;
 			}
-			if (!std::filesystem::exists(file, ee)) continue;
+			if (!std::filesystem::exists(file, ef)) continue;
 
 			const std::filesystem::path& filePath = file.path();
 			const std::string& songPath = Utils::toNormalizedString(filePath);
@@ -543,7 +537,7 @@ void Utils::parseSongInformationForSongManager(SongToSongData& songToSongData, c
 		.isFromJukeboxDirectory = geode::utils::string::contains(std::string(song), dummyJukeboxPath),
 		.isEmpty = false
 	};
-	if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir() / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID), ea) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
+	if (!isFromConfigOrAltDirWithoutMDMCheck && songData.couldPossiblyExistInMusicDownloadManager && songInfoObject && std::filesystem::exists(geode::dirs::getModsSaveDir().toStdPath().unwrapOr(std::filesystem::path{}) / "fleym.nongd" / "manifest" / fmt::format("{}.json", songID), ea) && Utils::adjustSongInfoIfJukeboxReplacedIt(songInfoObject)) {
 		songData.displayName = Utils::getFormattedNGMLSongName(songInfoObject, false);
 		songData.songID = songInfoObject->m_songID;
 	}
@@ -572,7 +566,7 @@ void Utils::popualteSongToSongDataMap() {
 	std::error_code ec, ed;
 
 	MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
-	const std::string& dummyJukeboxPath = Utils::toNormalizedString(geode::dirs::getModsSaveDir().toStdPath() / "fleym.nongd" / "nongs");
+	const std::string& dummyJukeboxPath = Utils::toNormalizedString(geode::dirs::getModsSaveDir().toStdPath().unwrapOr(std::filesystem::path{}) / "fleym.nongd" / "nongs");
 	const std::string& hypotheticalPathWhereMDMSongsAreStored = Utils::toNormalizedString(Utils::toProblematicString(mdm->pathForSongFolder(593059)).parent_path()); // this song ID in particular is banned from newgrounds
 	std::error_code ea;
 
@@ -637,8 +631,8 @@ std::vector<std::string> Utils::parseFavoritesFile(const std::filesystem::path& 
 void Utils::refreshTheVector() {
 	const bool useCustomSongs = Utils::getBool("useCustomSongs");
 	Utils::populateVector(useCustomSongs);
-	const std::filesystem::path& additionalFolder = useCustomSongs ? geode::Mod::get()->getSettingValue<std::filesystem::path>("additionalFolder") : "";
-	if (useCustomSongs && !Utils::toNormalizedString(additionalFolder).empty() && !geode::utils::string::contains(Utils::toNormalizedString(additionalFolder), Utils::toNormalizedString(geode::Mod::get()->getConfigDir().toStdPath()))) Utils::populateVector(useCustomSongs, additionalFolder);
+	const std::filesystem::path& additionalFolder = useCustomSongs ? geode::Mod::get()->getSettingValue<asp::fs::Path>("additionalFolder").toStdPath().unwrapOr(std::filesystem::path{}) : "";
+	if (useCustomSongs && !Utils::toNormalizedString(additionalFolder).empty() && !geode::utils::string::contains(Utils::toNormalizedString(additionalFolder), Utils::toNormalizedString(geode::Mod::get()->getConfigDir().toStdPath().unwrapOr(std::filesystem::path{})))) Utils::populateVector(useCustomSongs, additionalFolder);
 }
 
 void Utils::showFreezeWarning() {
@@ -680,8 +674,8 @@ void Utils::resetSongManagerRefreshVectorSetNewSongBecause(const std::string_vie
 
 bool Utils::isFromConfigOrAlternateDir(const std::filesystem::path& parentPath) {
 	const geode::Mod* mod = geode::Mod::get();
-	const std::string& altDirString = Utils::toNormalizedString(mod->getSettingValue<std::filesystem::path>("additionalFolder"));
-	const bool isFromConfigDir = geode::utils::string::contains(Utils::toNormalizedString(parentPath), Utils::toNormalizedString(mod->getConfigDir().toStdPath()));
+	const std::string& altDirString = Utils::toNormalizedString(mod->getSettingValue<asp::fs::Path>("additionalFolder").toStdPath().unwrapOr(std::filesystem::path{}));
+	const bool isFromConfigDir = geode::utils::string::contains(Utils::toNormalizedString(parentPath), Utils::toNormalizedString(mod->getConfigDir().toStdPath().unwrapOr(std::filesystem::path{})));
 	const bool isFromAlternateDir = !altDirString.empty() && geode::utils::string::contains(Utils::toNormalizedString(parentPath), altDirString);
 	return isFromConfigDir || isFromAlternateDir;
 }
@@ -828,7 +822,7 @@ void Utils::rememberLastMenuLoop() {
 	if (songManager.isOverride()) return geode::log::info("however this is an override, so do not save it");
 
 	geode::Mod::get()->setSavedValue<std::string>("lastMenuLoop", currentSong);
-	geode::Mod::get()->setSavedValue<std::filesystem::path>("lastMenuLoopPath", Utils::toProblematicString(currentSong));
+	geode::Mod::get()->setSavedValue<asp::fs::Path>("lastMenuLoopPath", asp::fs::Path::fromStdPath(Utils::toProblematicString(currentSong)));
 }
 
 bool Utils::menuLoopIsNotPausedAndIsPlaying() {
@@ -997,7 +991,7 @@ cocos2d::ccColor3B Utils::getDecidedColor() {
 }
 
 bool Utils::notFavoritesNorBlacklist(const std::filesystem::path& filePath) {
-	return (filePath != (geode::Mod::get()->getConfigDir().toStdPath() / "favorites.txt")) && (filePath != (geode::Mod::get()->getConfigDir().toStdPath() / "blacklist.txt"));
+	return (filePath != (geode::Mod::get()->getConfigDir().toStdPath().unwrapOr(std::filesystem::path{}) / "favorites.txt")) && (filePath != (geode::Mod::get()->getConfigDir().toStdPath().unwrapOr(std::filesystem::path{}) / "blacklist.txt"));
 }
 
 void Utils::costingtonsTryNSave() {
@@ -1067,7 +1061,7 @@ platformWarning, platformWarning,
 platformWarning, platformWarning,
 platformWarning, platformWarning,
 platformWarning, platformWarning);
-		geode::Result<> result = geode::utils::file::writeString(asp::fs::PathView{Utils::toNormalizedString(fileForWriting)}, playlistSpecificIntro);
+		geode::Result<> result = geode::utils::file::writeString(asp::fs::Path::fromStdPath(fileForWriting), playlistSpecificIntro);
 		if (result.isErr()) return geode::log::error("Error writing to {}", fileForWriting);
 	} else if (!std::filesystem::exists(fileForWriting, eb)) return geode::log::info("error finding {}!", fileForWriting);
 	std::ofstream fileOutput;

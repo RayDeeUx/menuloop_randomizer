@@ -114,7 +114,7 @@ void SongManager::setCurrentSongToSavedSong() {
 	if (m_isMenuLoop || !SongManager::getOverrideSong().empty()) return;
 	std::error_code ea, eb;
 	const std::string& lastMenuLoop = geode::Mod::get()->getSavedValue<std::string>("lastMenuLoop");
-	const std::filesystem::path& lastMenuLoopPath = geode::Mod::get()->getSavedValue<std::filesystem::path>("lastMenuLoopPath");
+	const std::filesystem::path& lastMenuLoopPath = geode::Mod::get()->getSavedValue<asp::fs::Path>("lastMenuLoopPath").toStdPath().unwrapOr(std::filesystem::path{});
 	if (std::filesystem::exists(Utils::toProblematicString(lastMenuLoop), ea)) m_currentSong = lastMenuLoop;
 	else if (std::filesystem::exists(lastMenuLoopPath, eb)) m_currentSong = Utils::toNormalizedString(lastMenuLoopPath);
 	m_hashedCurrentSong = std::hash<std::string>{}(m_currentSong);
@@ -133,7 +133,7 @@ bool SongManager::getConstantShuffleMode() const {
 }
 
 void SongManager::setPlaylistFileName() {
-	m_playlistName = Utils::toNormalizedString(geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile").stem());
+	m_playlistName = Utils::toNormalizedString(geode::Mod::get()->getSettingValue<asp::fs::Path>("playlistFile").toStdPath().unwrapOr(std::filesystem::path{}).stem());
 }
 
 std::string SongManager::getPlaylistFileName() {

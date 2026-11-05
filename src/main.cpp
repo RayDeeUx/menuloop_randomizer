@@ -54,7 +54,7 @@ bool originalOverrideWasEmpty = false;
 
 $on_mod(Loaded) {
 	SongManager& songManager = SongManager::get();
-	const std::filesystem::path& configDir = Mod::get()->getConfigDir().toStdPath();
+	const std::filesystem::path& configDir = Mod::get()->getConfigDir().toStdPath().unwrapOr(std::filesystem::path{});
 	std::error_code ea, eb, ec, ed, ee;
 	// (void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 	songManager.setOsu(Mod::get()->getSettingValue<bool>("osuLazerBootleg"));
@@ -91,7 +91,7 @@ $on_mod(Loaded) {
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # --RayDeeUx)";
-		geode::Result result = utils::file::writeString(asp::fs::PathView{Utils::toNormalizedString(blacklistTxt)}, blacklistFileIntro);
+		geode::Result result = utils::file::writeString(asp::fs::Path::fromStdPath(blacklistTxt), blacklistFileIntro);
 		if (result.isErr()) {
 			log::error("Error writing to blacklist.txt");
 		}
@@ -108,7 +108,7 @@ $on_mod(Loaded) {
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # Reports of any bugs or crashes caused by incorrectly formatted lines (those that don't start with "#") will be ignored. Lines that do not start with "#" are always treated as song files by MLR.
 # --RayDeeUx)";
-		geode::Result<> result = utils::file::writeString(asp::fs::PathView{Utils::toNormalizedString(favoriteTxt)}, favoritesFileIntro);
+		geode::Result<> result = utils::file::writeString(asp::fs::Path::fromStdPath(favoriteTxt), favoritesFileIntro);
 		if (result.isErr()) {
 			log::error("Error writing to favorites.txt");
 		}
@@ -117,12 +117,12 @@ $on_mod(Loaded) {
 	if (songManager.getAdvancedLogs()) geode::log::info("repopulating vector from on_mod(Loaded)");
 	Utils::refreshTheVector();
 
-	const std::string& override = Utils::toNormalizedString(Mod::get()->getSettingValue<std::filesystem::path>("specificSongOverride"));
+	const std::string& override = Utils::toNormalizedString(Mod::get()->getSettingValue<asp::fs::Path>("specificSongOverride").toStdPath().unwrapOr(std::filesystem::path{}));
 	originalOverrideWasEmpty = override.empty();
 	songManager.setOverride(override);
 
 	const std::string& lastMenuLoop = Mod::get()->getSavedValue<std::string>("lastMenuLoop");
-	const std::filesystem::path& lastMenuLoopPath = Mod::get()->getSavedValue<std::filesystem::path>("lastMenuLoopPath");
+	const std::filesystem::path& lastMenuLoopPath = Mod::get()->getSavedValue<asp::fs::Path>("lastMenuLoopPath").toStdPath().unwrapOr(std::filesystem::path{});
 	const bool saveSongOnGameClose = Utils::getBool("saveSongOnGameClose");
 	std::error_code ef, eg;
 	const bool loopExists = std::filesystem::exists(Utils::toProblematicString(lastMenuLoop), ef) || std::filesystem::exists(lastMenuLoopPath, eg);
@@ -170,7 +170,7 @@ $on_mod(Loaded) {
 		if (!Utils::passesVobecidedSanityCheck()) return;
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("searchDeeper");
 	});
-	listenForSettingChanges<std::filesystem::path>("additionalFolder", [](const std::filesystem::path&) {
+	listenForSettingChanges<asp::fs::Path>("additionalFolder", [](const asp::fs::Path&) {
 		if (!Utils::passesVobecidedSanityCheck()) return;
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("additionalFolder");
 	});
@@ -181,7 +181,7 @@ $on_mod(Loaded) {
 		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
 		Utils::showMDPopup("Playlist Files", "## ***<c-FF0000>MLR PLAYLIST FILES ARE __FOR PERSONAL USE ONLY__. MLR PLAYLIST FILES SHOULD __NOT__ BE SHARED BETWEEN DEVICES OR USERS.</c>***\n\n\n\n<cy>Problems created by, or as a result of, ignoring this basic advice are your sole responsibility.</c>", 7302025, "playlist-files");
 	});
-	listenForSettingChanges<std::filesystem::path>("playlistFile", [](const std::filesystem::path&) {
+	listenForSettingChanges<asp::fs::Path>("playlistFile", [](const asp::fs::Path&) {
 		if (!Utils::passesVobecidedSanityCheck()) return;
 		Utils::resetSongManagerRefreshVectorSetNewSongBecause("playlistFile");
 		if (CCScene* scene = CCScene::get(); scene && (scene->getChildByID("playlist-files-warning"_spr) || scene->getChildByTag(7302025))) return;
@@ -196,11 +196,11 @@ $on_mod(Loaded) {
 		Utils::queueUpdateFrontfacingLabelsInSCMAndSLL();
 		GameManager::sharedState()->playMenuMusic();
 	});
-	listenForSettingChanges<std::filesystem::path>("specificSongOverride", [](const std::filesystem::path& specificSongOverride) {
+	listenForSettingChanges<asp::fs::Path>("specificSongOverride", [](asp::fs::Path specificSongOverride) {
 		if (!Utils::passesVobecidedSanityCheck() || VANILLA_GD_MENU_LOOP_DISABLED) return;
 		SongManager& songManagerLambda = SongManager::get();
 		FMODAudioEngine::get()->m_backgroundMusicChannel->stop();
-		const std::string& overrideString = Utils::toNormalizedString(specificSongOverride);
+		const std::string& overrideString = Utils::toNormalizedString(specificSongOverride.toStdPath().unwrapOr(std::filesystem::path{}));
 		songManagerLambda.setOverride(overrideString);
 		if (!Utils::isSupportedFile(overrideString) && overrideString.empty()) {
 			songManagerLambda.clearSongs();

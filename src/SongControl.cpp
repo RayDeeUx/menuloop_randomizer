@@ -280,7 +280,7 @@ namespace SongControl {
 			}
 		}
 
-		const std::filesystem::path& playlistFilePath = geode::Mod::get()->getSettingValue<std::filesystem::path>("playlistFile");
+		const std::filesystem::path& playlistFilePath = geode::Mod::get()->getSettingValue<asp::fs::Path>("playlistFile").toStdPath().unwrapOr(std::filesystem::path{});
 		if (const std::string& normalizedPlaylistPath = Utils::toNormalizedString(playlistFilePath); normalizedPlaylistPath.empty() || Utils::toNormalizedString(playlistFilePath.extension()) != ".txt" || !Utils::notFavoritesNorBlacklist(playlistFilePath)) {
 			return geode::Notification::create(
 				"Invalid text file selected as your MLR playlist file!",

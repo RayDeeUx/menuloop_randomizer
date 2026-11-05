@@ -42,6 +42,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 
 #define ECLIPSE_MODULES_HPP
 #include "eclipsemenu/eclipse.hpp"
+#include <asp/fs/std.hpp>
 
 enum class SongType {
 	Regular,
@@ -79,7 +80,7 @@ static constexpr std::array<std::string_view, 12> months = {
 };
 
 #define VANILLA_GD_MENU_LOOP_DISABLED GameManager::sharedState()->getGameVariable("0122")
-#define CONFIG_DIR geode::Mod::get()->getConfigDir().toStdPath()
+#define CONFIG_DIR geode::Mod::get()->getConfigDir().toStdPath().unwrapOr(std::filesystem::path{})
 #define BLACKLIST_FILE CONFIG_DIR / R"(blacklist.txt)"
 #define FAVORITES_FILE CONFIG_DIR / R"(favorites.txt)"
 
