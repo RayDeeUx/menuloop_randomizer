@@ -768,12 +768,12 @@ void SongControlMenu::toggleOsu() {
 std::string SongControlMenu::generateInfoAlertButtonDescription() {
 	SongManager& songManager = SongManager::get();
 	return fmt::format(
-		"Platform: <cl>{}</c>\n"
-		"Constant Shuffle Mode: <cl>{}</c>\n"
+		"Platform: <cl>{}</c> | Constant Shuffle Mode: <cl>{}</c>\n"
 		"Current playlist file: <cl>{}</c> (Loaded: <cl>{}</c>)\n\n"
 		"<cy>Q: Why can I only go back one song?</c>\n"
 		"A: You're randomizing <co>menu loops</c>, not using a mini-VLC/mini-Spotify. Deal with it.\n<c_>This is a non-negotiable solution.</c>\n\n"
-		"<cy>Q: Makes this mod act more like Spotify or EditorMusic, but with the menu loop!</c>\n"
+		"<cy>Q: Makes this mod act more like Spotify\n"
+		"or EditorMusic, but with the menu loop!</c>\n"
 		"A: <c_>No. Never.</c>",
 		Utils::getPlatform(),
 		songManager.getConstantShuffleMode() ? "ON" : "OFF",

@@ -394,7 +394,7 @@ bool SongListLayer::init() {
 		"<cy>Q: Make this mod act more closely to Spotify!</c>\n"
 		"A: <c_>No. Never. This mod will NOT mimic Spotify.</c>\n\n"
 		"<cy>Q: Will you ever support accent marks in song names?</c>\n"
-		"A: <c_>No. Never. Don't ever ask that again.</c>\n\n",
+		"A: <c_>No. Never. Don't ever ask that again.</c>",
 		.75f
 	);
 	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
