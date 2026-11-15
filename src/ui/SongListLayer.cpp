@@ -283,13 +283,13 @@ bool SongListLayer::init() {
 		searchBarMenu->addChild(this->m_searchBar);
 
 		this->m_searchBar->setPlaceholderScale(.5f);
-		this->m_searchBar->getContentLabel()->setLimitLabelWidth(this->m_searchBar->getContentWidth() * .85, .5f);
+		if (this->m_searchBar->getContentLabel()) this->m_searchBar->getContentLabel()->setLimitLabelWidth(this->m_searchBar->getContentWidth() * .85, .5f);
 		this->m_searchBar->setID("song-list-search-bar-input-node"_spr);
 
-		this->m_searchBar->getBGSprite()->setID("song-list-search-bar-background"_spr);
-		this->m_searchBar->getCaptionLabel()->setID("song-list-search-bar-input-node-caption-label"_spr);
-		this->m_searchBar->getContentLabel()->setID("song-list-search-bar-input-node-content-label"_spr);
-		this->m_searchBar->getPlaceholderLabel()->setID("song-list-search-bar-input-node-placeholder-label"_spr);
+		if (this->m_searchBar->getBGSprite()) this->m_searchBar->getBGSprite()->setID("song-list-search-bar-background"_spr);
+		if (this->m_searchBar->getCaptionLabel()) this->m_searchBar->getCaptionLabel()->setID("song-list-search-bar-input-node-caption-label"_spr);
+		if (this->m_searchBar->getContentLabel()) this->m_searchBar->getContentLabel()->setID("song-list-search-bar-input-node-content-label"_spr);
+		if (this->m_searchBar->getPlaceholderLabel()) this->m_searchBar->getPlaceholderLabel()->setID("song-list-search-bar-input-node-placeholder-label"_spr);
 
 		CCLayerColor* searchBarDivider = CCLayerColor::create({0, 0, 0, 127});
 		searchBarDivider->setContentSize({350.f, .5f});

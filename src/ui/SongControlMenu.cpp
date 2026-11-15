@@ -241,6 +241,10 @@ bool SongControlMenu::init() {
 	this->schedule(schedule_selector(SongControlMenu::visualizerScheduler));
 	this->schedule(schedule_selector(SongControlMenu::keepThePopupUndraggableDammit), 1.f / 60.f);
 
+	this->addOnEnterCallback([this]() {
+		this->m_musicVolCntnr->updateLayout();
+	});
+
 	SongControlMenu::forceSharpCornerIllusion();
 	SongControlMenu::updateCurrentLabel();
 
