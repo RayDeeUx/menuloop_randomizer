@@ -213,17 +213,19 @@ bool SongControlMenu::init() {
 	this->m_musicVolumeInput->setString(stringifiedVolume);
 
 	if (!this->m_isInQOLMod) {
-		this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)->setOpacity(0);
-		this->m_musicVolumeInput->getInputNode()->m_textField->setOpacity(0);
-		this->m_musicVolumeInput->getInputNode()->m_textLabel->setOpacity(0);
-		this->m_musicVolumeInput->getInputNode()->m_cursor->setOpacity(0);
-	} else songManager.songControlInputNodeQOLMod = geode::Ref(this->m_musicVolumeInput->getInputNode());
+		this->m_musicVolumeInput->setEnabled(false);
+		this->m_musicVolumeInput->setVisible(false);
+		this->m_musicVolumeInput->getCaptionLabel()->setOpacity(0);
+		this->m_musicVolumeInput->getContentLabel()->setOpacity(0);
+		this->m_musicVolumeInput->getPlaceholderLabel()->setOpacity(0);
+		this->m_musicVolumeInput->getBGSprite()->setOpacity(0);
+	} else songManager.songControlInputNodeQOLMod = geode::Ref(this->m_musicVolumeInput);
 
-	this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)->setID("music-volume-input-background"_spr);
-	this->m_musicVolumeInput->getInputNode()->m_textField->setID("music-volume-input-text-field"_spr);
-	this->m_musicVolumeInput->getInputNode()->m_textLabel->setID("music-volume-input-text-label"_spr);
-	this->m_musicVolumeInput->getInputNode()->m_cursor->setID("music-volume-input-text-cursor"_spr);
-	this->m_musicVolumeInput->getInputNode()->setID("music-volume-input-node"_spr);
+	this->m_musicVolumeInput->getBGSprite()->setID("music-volume-input-background"_spr);
+	this->m_musicVolumeInput->getCaptionLabel()->setID("music-volume-input-caption-label"_spr);
+	this->m_musicVolumeInput->getContentLabel()->setID("music-volume-input-content-label"_spr);
+	this->m_musicVolumeInput->getPlaceholderLabel()->setID("music-volume-input-placeholder-label"_spr);
+	this->m_musicVolumeInput->setID("music-volume-input-node"_spr);
 
 	this->m_musicVolumeInput->setID("music-volume-input"_spr);
 	this->m_musicVolCntnr->addChild(this->m_musicVolumeInput);
@@ -499,14 +501,14 @@ void SongControlMenu::onPlaylistButton(cocos2d::CCObject*) {
 	if (Utils::getBool("qolModIntegrationSongList") && this->m_isInQOLMod && this->getParent() && songManager.songListLayerForQOLMod && songManager.songListLayerForQOLMod->getParent() && songManager.songListLayerForQOLMod->getParent() == this->getParent()) {
 		this->setScale(0.f);
 		songManager.songListLayerForQOLMod->setScale(.7f);
-		if (this->m_musicVolumeInput && this->m_musicVolumeInput->getInputNode()) {
+		if (this->m_musicVolumeInput) {
 			this->m_musicVolumeInput->setEnabled(false);
-			this->m_musicVolumeInput->getInputNode()->onClickTrackNode(false);
+			this->m_musicVolumeInput->unfocus();
 		}
 		SongListLayer* foo = static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data());
-		if (foo && foo->m_searchBar && foo->m_searchBar->getInputNode()) {
+		if (foo && foo->m_searchBar) {
 			foo->m_searchBar->setEnabled(true);
-			foo->m_searchBar->getInputNode()->onClickTrackNode(false);
+			foo->m_searchBar->unfocus();
 		}
 		if (Utils::getBool("autoScrollToCurrentSong")) {
 			geode::Loader::get()->queueInMainThread([foo, contentLayer = foo->getContentLayer()]() {
@@ -674,11 +676,11 @@ void SongControlMenu::toggleOsu() {
 	if (this->m_musVolLabl) this->m_musVolLabl->stopAllActions();
 	if (this->m_musicVolumeInput) {
 		if (CCNode* foo = this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)) foo->stopAllActions();
-		CCTextInputNode* inputNode = this->m_musicVolumeInput->getInputNode();
+		geode::TextInput* inputNode = this->m_musicVolumeInput;
 		if (inputNode) {
-			if (inputNode->m_textField) inputNode->m_textField->stopAllActions();
-			if (inputNode->m_textLabel) inputNode->m_textLabel->stopAllActions();
-			if (inputNode->m_cursor) inputNode->m_cursor->stopAllActions();
+			if (inputNode->getCaptionLabel()) inputNode->getCaptionLabel()->stopAllActions();
+			if (inputNode->getContentLabel()) inputNode->getContentLabel()->stopAllActions();
+			if (inputNode->getPlaceholderLabel()) inputNode->getPlaceholderLabel()->stopAllActions();
 		}
 	}
 	for (cocos2d::CCSprite* spriteChild : geode::cocos::CCArrayExt<cocos2d::CCSprite*>(this->m_audieoVisual->getChildByIndex(0)->m_pChildren)) {
@@ -696,11 +698,11 @@ void SongControlMenu::toggleOsu() {
 		}
 		if (this->m_musicVolumeInput) {
 			if (CCNode* foo = this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)) foo->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
-			CCTextInputNode* inputNode = this->m_musicVolumeInput->getInputNode();
+			geode::TextInput* inputNode = this->m_musicVolumeInput;
 			if (inputNode) {
-				if (inputNode->m_textField) inputNode->m_textField->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
-				if (inputNode->m_textLabel) inputNode->m_textLabel->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
-				if (inputNode->m_cursor) inputNode->m_cursor->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
+				if (inputNode->getCaptionLabel()) inputNode->getCaptionLabel()->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
+				if (inputNode->getContentLabel()) inputNode->getContentLabel()->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
+				if (inputNode->getPlaceholderLabel()) inputNode->getPlaceholderLabel()->runAction(cocos2d::CCEaseExponentialOut::create(cocos2d::CCFadeTo::create(.8f, 255)));
 			}
 		}
 		this->m_mainLayer->runAction(
@@ -720,11 +722,11 @@ void SongControlMenu::toggleOsu() {
 		}
 		if (this->m_musicVolumeInput) {
 			if (CCNode* foo = this->m_musicVolumeInput->getChildByType<geode::NineSlice>(0)) foo->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
-			CCTextInputNode* inputNode = this->m_musicVolumeInput->getInputNode();
+			geode::TextInput* inputNode = this->m_musicVolumeInput;
 			if (inputNode) {
-				if (inputNode->m_textField) inputNode->m_textField->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
-				if (inputNode->m_textLabel) inputNode->m_textLabel->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
-				if (inputNode->m_cursor) inputNode->m_cursor->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
+				if (inputNode->getCaptionLabel()) inputNode->getCaptionLabel()->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
+				if (inputNode->getContentLabel()) inputNode->getContentLabel()->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
+				if (inputNode->getPlaceholderLabel()) inputNode->getPlaceholderLabel()->runAction(cocos2d::CCEaseIn::create(cocos2d::CCFadeTo::create(.2f, 0), .5f));
 			}
 		}
 		this->m_mainLayer->runAction(

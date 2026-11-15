@@ -462,7 +462,7 @@ void Utils::populateVector(const bool customSongs, const std::filesystem::path& 
 		const bool qualifiedForOGMenuBlacklist = geode::Mod::get()->getSavedValue<bool>("isEry");
 		for (SongInfoObject* song : geode::cocos::CCArrayExt<SongInfoObject*>(downloadManager->getDownloadedSongs())) {
 			if (!song) continue;
-			if (downloadManager->isResourceSong(song->m_songID)) continue; // resource songs not supported!!!
+			if (downloadManager->m_resourceSongUnorderedSet.contains(song->m_songID)) continue; // resource songs not supported!!!
 
 			std::string songPath = downloadManager->pathForSong(song->m_songID);
 			if (!Utils::isSupportedFile(songPath)) continue;
@@ -777,7 +777,7 @@ void Utils::queueUpdateFrontfacingLabelsInSCMAndSLL() {
 	}
 	SongListLayer* sll = cocos2d::CCScene::get()->getChildByType<SongListLayer>(0);
 	if (SongControlMenu* scm = cocos2d::CCScene::get()->getChildByType<SongControlMenu>(0); scm) geode::Loader::get()->queueInMainThread([scm] { scm->updateCurrentLabel(); });
-	else if (SongManager::get().getUndefined0Alk1m123TouchPrio() && sll && sll->m_searchBar) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(sll->m_searchBar->getInputNode(), false); });
+	else if (SongManager::get().getUndefined0Alk1m123TouchPrio() && sll && sll->m_searchBar) geode::Loader::get()->queueInMainThread([sll] { sll->displayCurrentSongByLimitingPlaceholderLabelWidth(sll->m_searchBar, false); });
 	if (sll) sll->releaseCurrProgBar();
 }
 

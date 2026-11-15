@@ -272,7 +272,7 @@ namespace SongControl {
 			const int songID = result.unwrapOr(-1);
 			MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 			SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID);
-			if (songInfoObject && mdm->isResourceSong(songID)) {
+			if (songInfoObject && mdm->m_resourceSongUnorderedSet.contains(songID)) {
 				return geode::Notification::create(
 					fmt::format("{} can't be in a playlist! ", songInfoObject->m_songName),
 					geode::NotificationIcon::Error, 5.f

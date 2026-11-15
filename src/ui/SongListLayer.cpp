@@ -53,7 +53,7 @@ ANTHROPIC_MAGIC_STRING_TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432EC
 #define GET_SEARCH_BAR_NODE this->m_searchBar
 #define GET_SEARCH_STRING m_searchBar->getString()
 #define EMPTY_SEARCH_STRG m_searchBar->setString("", false);
-#define LIMIT_PLACEHOLDER SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
+#define LIMIT_PLACEHOLDER SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar);
 #define NO_PLAYLIST_AND_NO_CUSTOM_SONGS SongManager::get().getPlaylistIsEmpty() && !Utils::getBool("useCustomSongs")
 #define CAN_SHOW_PLAYBACK_PROGRESS_AND_SCRUB_PLAYBACK !this->m_isInQOLMod && songManager.getSongScrubbingInSongList() && songManager.getFinishedCalculatingSongLengths() && songManager.getShowPlaybackControlsSongList() && songManager.getUndefined0Alk1m123TouchPrio() && !songManager.isOverride() && !VANILLA_GD_MENU_LOOP_DISABLED && !Utils::isVobecidedJotaPlaying() && Utils::menuLoopIsNotPausedAndIsPlaying() && !Utils::currentFMODSongIsNotCurrentSongManagerSong()
 
@@ -276,21 +276,20 @@ bool SongListLayer::init() {
 
 		this->m_searchBar = geode::TextInput::create(370.f, fmt::format("Search... (Current Song: {})", songManager.getCurrentSongDisplayName()));
 		this->m_searchBar->setCommonFilter(geode::CommonFilter::Any);
-		this->m_searchBar->setTextAlign(geode::TextInputAlign::Left);
+		this->m_searchBar->setAlignment(geode::Label::Alignment::Left);
 		this->m_searchBar->setPosition({145.f, 17.f});
 		this->m_searchBar->setScale(.75f);
 		this->m_searchBar->setID(SEARCH_BAR_NODE_ID);
 		searchBarMenu->addChild(this->m_searchBar);
 
-		CCTextInputNode* inputNode = this->m_searchBar->getInputNode();
-		inputNode->setLabelPlaceholderScale(.5f);
-		inputNode->setMaxLabelScale(.5f);
-		inputNode->setID("song-list-search-bar-input-node"_spr);
+		this->m_searchBar->setPlaceholderScale(.5f);
+		this->m_searchBar->getContentLabel()->setLimitLabelWidth(this->m_searchBar->getContentWidth() * .85, .5f);
+		this->m_searchBar->setID("song-list-search-bar-input-node"_spr);
 
-		this->m_searchBar->getChildByType<geode::NineSlice>(0)->setID("song-list-search-bar-background"_spr);
-		inputNode->m_textField->setID("song-list-search-bar-input-node-text-field"_spr);
-		inputNode->m_textLabel->setID("song-list-search-bar-input-node-text-label"_spr);
-		inputNode->m_cursor->setID("song-list-search-bar-input-node-cursor"_spr);
+		this->m_searchBar->getBGSprite()->setID("song-list-search-bar-background"_spr);
+		this->m_searchBar->getCaptionLabel()->setID("song-list-search-bar-input-node-caption-label"_spr);
+		this->m_searchBar->getContentLabel()->setID("song-list-search-bar-input-node-content-label"_spr);
+		this->m_searchBar->getPlaceholderLabel()->setID("song-list-search-bar-input-node-placeholder-label"_spr);
 
 		CCLayerColor* searchBarDivider = CCLayerColor::create({0, 0, 0, 127});
 		searchBarDivider->setContentSize({350.f, .5f});
@@ -308,7 +307,7 @@ bool SongListLayer::init() {
 			this->m_searchResultsLabel->setID("search-results-count-label"_spr);
 		}
 
-		if (this->m_isInQOLMod) songManager.songListInputNodeForQOLMod = geode::Ref(this->m_searchBar->getInputNode());
+		if (this->m_isInQOLMod) songManager.songListInputNodeForQOLMod = geode::Ref(this->m_searchBar);
 	}
 
 	geode::ListBorders* listBorder = geode::ListBorders::create();
@@ -522,7 +521,7 @@ bool SongListLayer::init() {
 	this->m_buttonMenu->setID("close-menu"_spr);
 
 	if (SEARCH_BAR_ENABLED && GET_SEARCH_BAR_NODE) {
-		SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
+		SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar);
 		this->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
 	}
 
@@ -585,15 +584,15 @@ void SongListLayer::onControlsButton(CCObject*) {
 	if (!Utils::passesVobecidedSanityCheck()) return;
 	SongManager& songManager = SongManager::get();
 	if (this->m_isInQOLMod && this->getParent() && songManager.songControlMenuForQOLMod && songManager.songControlMenuForQOLMod->getParent() && songManager.songControlMenuForQOLMod->getParent() == this->getParent()) {
-		if (this->m_searchBar && this->m_searchBar->getInputNode()) {
+		if (this->m_searchBar) {
 			this->m_searchBar->setEnabled(false);
-			this->m_searchBar->getInputNode()->onClickTrackNode(false);
+			this->m_searchBar->unfocus();
 		}
 		this->setScale(0.f);
 		SongControlMenu* foo = static_cast<SongControlMenu*>(songManager.songControlMenuForQOLMod.data());
-		if (foo->m_musicVolumeInput && foo->m_musicVolumeInput->getInputNode()) {
+		if (foo->m_musicVolumeInput) {
 			foo->m_musicVolumeInput->setEnabled(true);
-			foo->m_musicVolumeInput->getInputNode()->onClickTrackNode(false);
+			foo->m_musicVolumeInput->unfocus();
 		}
 		songManager.songControlMenuForQOLMod->setScale(1.f);
 		return;
@@ -781,7 +780,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 			return SongListLayer::onControlsButton(nullptr);
 		}
 		if (GET_SEARCH_BAR_NODE && (key == cocos2d::KEY_F && (isCmd || windowsCtrl))) {
-			if (this->m_searchBar->getInputNode()->m_cursor->isVisible()) return;
+			if (this->m_searchBar->isFocused()) return;
 			this->m_searchBar->focus();
 			return geode::Loader::get()->queueInMainThread([sb = geode::Ref(this->m_searchBar)] {
 				if (sb) sb->setString("", false);
@@ -827,7 +826,7 @@ void SongListLayer::keyDown(const cocos2d::enumKeyCodes key, double p1) {
 	geode::TextInput* searchBar = GET_SEARCH_BAR_NODE;
 	if (key == cocos2d::KEY_Escape) {
 		if (!searchBar && !this->m_isInQOLMod) return this->onClose(nullptr);
-		if (this->m_searchBar->getInputNode()->m_cursor->isVisible()) return this->m_searchBar->getInputNode()->onClickTrackNode(false);
+		if (this->m_searchBar->isFocused()) return this->m_searchBar->unfocus();
 		if (!this->m_isInQOLMod) return this->onClose(nullptr);
 		return;
 	}
@@ -869,16 +868,13 @@ float SongListLayer::determineYPosition(geode::ScrollLayer* scrollLayer) {
 	return scrollLayer && SongListLayer::tallEnough(scrollLayer) ? 145.f : 99999.f;
 }
 
-void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode* inputNode, const bool updateString) {
-	if (SEARCH_BAR_DISABLED || !inputNode || (inputNode->m_selected && !inputNode->getString().empty())) return;
-	cocos2d::CCLabelBMFont* placeholderLabelMaybe = static_cast<cocos2d::CCLabelBMFont*>(inputNode->getChildByTag(12242025));
-	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->m_textLabel;
-	if (!placeholderLabelMaybe) placeholderLabelMaybe = inputNode->getChildByType<cocos2d::CCLabelBMFont>(0);
-	if (!placeholderLabelMaybe || placeholderLabelMaybe->getColor() != cocos2d::ccColor3B{150, 150, 150}) return;
+void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(geode::TextInput* inputNode, const bool updateString) {
+	if (SEARCH_BAR_DISABLED || !inputNode || (inputNode->isFocused() && !inputNode->getString().empty())) return;
+	geode::Label* placeholderLabelMaybe = inputNode->getPlaceholderLabel();
 	SongManager& songManager = SongManager::get();
 	const std::string& displayName = !songManager.getFinishedCalculatingSongLengths() || !Utils::songDataContainsSong(songManager.getCurrentSong()) ? songManager.getCurrentSongDisplayName() : Utils::getSongDataOfCurrentSong().fullDisplayNameForControlPanelAndSongList;
 	if (updateString) placeholderLabelMaybe->setString(fmt::format("Search... (Current Song: {})", displayName).c_str());
-	if (placeholderLabelMaybe->isVisible()) placeholderLabelMaybe->limitLabelWidth(350.f, .5f, .0001f);
+	if (placeholderLabelMaybe->isVisible()) placeholderLabelMaybe->setLimitLabelWidth(350.f, .5f, .0001f);
 	placeholderLabelMaybe->setTag(12242025);
 }
 
@@ -1013,7 +1009,7 @@ unsigned int SongListLayer::getLength(const std::string& path, const bool revers
 
 void SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler(float) {
 	if (SEARCH_BAR_DISABLED || !GET_SEARCH_BAR_NODE) return;
-	SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar->getInputNode());
+	SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(this->m_searchBar);
 }
 
 MLRSongCell* SongListLayer::findCurrentSongCell() {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Geode/loader/Event.hpp>
-#include <Geode/loader/Dispatch.hpp>
+#include <Geode/loader/EventExport.hpp>
 #include <Geode/cocos/menu_nodes/CCMenu.h>
 #include <ccTypes.h>
 
@@ -20,6 +20,6 @@ namespace qolmod::ext
         CategoryCreateFunc customFunc = nullptr;
     };
 
-    // inline void addCustomCategory(CategoryData data);
+    inline void addCustomCategory(CategoryData data);
     GEODE_EVENT_EXPORT(void, addCustomCategory, (CategoryData data), (data));
 };

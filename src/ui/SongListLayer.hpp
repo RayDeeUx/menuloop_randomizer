@@ -121,7 +121,7 @@ public:
 	static std::string generateDisplayName(SongData&);
 	static bool tallEnough(geode::ScrollLayer*);
 	static float determineYPosition(geode::ScrollLayer*);
-	static void displayCurrentSongByLimitingPlaceholderLabelWidth(CCTextInputNode* inputNode, const bool updateString = true);
+	static void displayCurrentSongByLimitingPlaceholderLabelWidth(geode::TextInput* inputNode, const bool updateString = true);
 
 	static bool caseInsensitiveAlphabetical(MLRSongCell* a, MLRSongCell* b, bool reverse);
 	static bool fileSize(MLRSongCell* a, MLRSongCell* b, bool reverse);

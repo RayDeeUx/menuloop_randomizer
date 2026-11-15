@@ -764,13 +764,13 @@ public:
 		songManager.trackAndroidUI = false;
 		if (songManager.songControlInputNodeQOLMod) {
 			songManager.songControlInputNodeQOLMod->setString(geode::utils::numToString(std::clamp<int>(FMODAudioEngine::get()->getBackgroundMusicVolume() * 100.f, 0, 100)));
-			songManager.songControlInputNodeQOLMod->onClickTrackNode(false);
+			songManager.songControlInputNodeQOLMod->unfocus();
 			songManager.songControlInputNodeQOLMod = nullptr;
 		}
 		songManager.songControlMenuForQOLMod = nullptr;
 		if (songManager.songListInputNodeForQOLMod) {
 			songManager.songListInputNodeForQOLMod->setString("");
-			songManager.songListInputNodeForQOLMod->onClickTrackNode(false);
+			songManager.songListInputNodeForQOLMod->unfocus();
 			songManager.songListInputNodeForQOLMod = nullptr;
 		}
 		songManager.songListLayerForQOLMod = nullptr;
@@ -892,21 +892,21 @@ $on_mod(Loaded) {
 				songManager.songListLayerForQOLMod->setScale(0.f); // look bro you think of a better way of hiding these sons of bitches because moving them off screen isnt doing it --raydeeux
 
 				if (SEARCH_BAR_ENABLED && songManager.songListLayerForQOLMod.data() && static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data()) && static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data())->m_searchBar) {
-					SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data())->m_searchBar->getInputNode());
+					SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidth(static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data())->m_searchBar);
 					songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::displayCurrentSongByLimitingPlaceholderLabelWidthScheduler), 0.f);
 				}
 				songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::checkPosition));
 				songManager.songListLayerForQOLMod->schedule(schedule_selector(SongListLayer::keepThePopupUndraggableDammit), 1.f / 60.f);
 
-				if (SongControlMenu* foo = static_cast<SongControlMenu*>(songManager.songControlMenuForQOLMod.data()); foo && foo->m_musicVolumeInput && foo->m_musicVolumeInput->getInputNode()) {
+				if (SongControlMenu* foo = static_cast<SongControlMenu*>(songManager.songControlMenuForQOLMod.data()); foo && foo->m_musicVolumeInput && foo->m_musicVolumeInput) {
 					foo->m_musicVolumeInput->setEnabled(true);
-					foo->m_musicVolumeInput->getInputNode()->onClickTrackNode(false);
+					foo->m_musicVolumeInput->unfocus();
 				}
 
-				if (SongListLayer* bar = static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data()); bar && bar->m_searchBar && bar->m_searchBar->getInputNode()) {
+				if (SongListLayer* bar = static_cast<SongListLayer*>(songManager.songListLayerForQOLMod.data()); bar && bar->m_searchBar && bar->m_searchBar) {
 					bar->searchSongs("", false);
 					bar->m_searchBar->setEnabled(false);
-					bar->m_searchBar->getInputNode()->onClickTrackNode(false);
+					bar->m_searchBar->unfocus();
 				}
 			}
 

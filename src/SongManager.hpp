@@ -201,8 +201,8 @@ class SongManager {
 	std::vector<std::pair<std::optional<eclipse::components::Label>, std::string>> dynamicEclipseIntegrationHeaders {};
 	geode::Ref<FLAlertLayer> songControlMenuForQOLMod = nullptr; // canonically a SongControlMenu
 	geode::Ref<FLAlertLayer> songListLayerForQOLMod = nullptr; // canonically a SongListLayer
-	geode::Ref<CCTextInputNode> songListInputNodeForQOLMod = nullptr;
-	geode::Ref<CCTextInputNode> songControlInputNodeQOLMod = nullptr;
+	geode::Ref<geode::TextInput> songListInputNodeForQOLMod = nullptr;
+	geode::Ref<geode::TextInput> songControlInputNodeQOLMod = nullptr;
 	bool trackAndroidUI = false;
 
 	FMOD::DSP* loudnessDSP = nullptr;
