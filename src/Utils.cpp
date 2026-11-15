@@ -278,17 +278,23 @@ bool Utils::adjustSongInfoIfJukeboxReplacedIt(SongInfoObject* songInfo) {
 std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo, const bool showFullAnyway) {
 	SongManager& songManager = SongManager::get();
 	const std::filesystem::path& currentSongPath = Utils::toProblematicString(songManager.getCurrentSong());
+	// geode::log::info("currentSongPath: {}", currentSongPath);
+	// geode::log::info("!songInfo: {}", !songInfo);
 	if (Utils::getBool("useCustomSongs") && songManager.getPlaylistIsEmpty()) return Utils::currentCustomSong();
 	if (!songInfo) return Utils::toNormalizedString(currentSongPath.filename());
 	const std::string& formatSetting = geode::Mod::get()->getSettingValue<std::string>("songFormatNGML");
+	// geode::log::info("formatSetting: {}", formatSetting);
 	const bool isMenuLoopFromNG = songInfo->m_songID == 584131;
 	const std::string& robtopSuffix = isMenuLoopFromNG ? " [OOF!]" : "";
 	Utils::adjustSongInfoIfJukeboxReplacedIt(songInfo);
+	// song ID 1414623 causes a FUCKTON of issues.
+	if (songInfo->m_songID == 1414623) songInfo->m_songName = "? M";
 	std::string displayName = fmt::format("{}", songInfo->m_songName);
 	if (showFullAnyway || formatSetting == "Song Name, Artist, Song ID") displayName = fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
 	else if (formatSetting == "Song Name + Artist") displayName = fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
 	else if (formatSetting == "Song Name + Song ID") displayName = fmt::format("{} ({}){}", songInfo->m_songName, songInfo->m_songID, robtopSuffix);
 	Utils::sanitizeASCII(displayName);
+	// geode::log::info("displayName: {}", displayName);
 	return displayName;
 }
 
@@ -503,6 +509,8 @@ void Utils::parseSongInformationForSongManager(SongToSongData& songToSongData, c
 	SongType songType = SongType::Regular;
 	if (std::ranges::find(blacklist.begin(), blacklist.end(), song) != blacklist.end()) songType = SongType::Blacklisted;
 	else if (std::ranges::find(favorites.begin(), favorites.end(), song) != favorites.end()) songType = SongType::Favorited;
+
+	// geode::log::info("song: {}", song); // song ID 1414623 causes a FUCKTON of issues.
 
 	const std::filesystem::path& theirPath = Utils::toProblematicString(song);
 	const std::filesystem::path& theirParentPath = theirPath.parent_path();
