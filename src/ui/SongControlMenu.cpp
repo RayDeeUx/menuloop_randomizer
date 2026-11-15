@@ -688,6 +688,7 @@ void SongControlMenu::doTheRippleEffectFromOsuLazer() {
 					nullptr
 				),
 				cocos2d::CCScaleTo::create(0.f, 1.f),
+				cocos2d::CCHide::create(),
 				nullptr
 			)
 		);
@@ -772,7 +773,7 @@ std::string SongControlMenu::generateInfoAlertButtonDescription() {
 		"Current playlist file: <cl>{}</c> (Loaded: <cl>{}</c>)\n\n"
 		"<cy>Q: Why can I only go back one song?</c>\n"
 		"A: You're randomizing <co>menu loops</c>, not using a mini-VLC/mini-Spotify. Deal with it.\n<c_>This is a non-negotiable solution.</c>\n\n"
-		"<cy>Q: Add</c> <cl>[feature suggestion that makes this mod act like Spotify or EditorMusic, but with the menu loop]</c><cy>!</c>\n"
+		"<cy>Q: Makes this mod act more like Spotify or EditorMusic, but with the menu loop!</c>\n"
 		"A: <c_>No. Never.</c>",
 		Utils::getPlatform(),
 		songManager.getConstantShuffleMode() ? "ON" : "OFF",

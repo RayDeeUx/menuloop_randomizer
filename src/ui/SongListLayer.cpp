@@ -393,8 +393,8 @@ bool SongListLayer::init() {
 		"Controls: <cl>shuffle</c>, <cl>copy name</c>, <cl>previous song</c>, <cl>control panel</c>.\n\n"
 		"<cy>Q: Make this mod act more closely to Spotify!</c>\n"
 		"A: <c_>No. Never. This mod will NOT mimic Spotify.</c>\n\n"
-		"<cy>Q: Where is the search bar/song sorting menu?</c>\n"
-		"A: <cg>Install \"Better Touch Prio\" by alk1m123; check your settings.</c>",
+		"<cy>Q: Will you ever support accent marks in song names?</c>\n"
+		"A: <c_>No. Never. Don't ever ask that again.</c>\n\n",
 		.75f
 	);
 	infoMenu->addChildAtPosition(infoBtn, geode::Anchor::Center);
