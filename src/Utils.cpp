@@ -260,14 +260,20 @@ bool Utils::adjustSongInfoIfJukeboxReplacedIt(SongInfoObject* songInfo) {
 	if (!std::filesystem::exists(targetPath, ea)) return shouldReplaceDisplayName;
 	geode::Result<matjson::Value> parsed = geode::utils::file::readJson(asp::fs::Path::fromStdPath(targetPath));
 	if (parsed.isOk() && parsed.unwrap().contains("default") && parsed.unwrap().get("default").isOk()) {
-		geode::Result<matjson::Value&> fooBar = parsed.unwrap().get("default").unwrap().get("name");
-		geode::Result<matjson::Value&> barBaz = parsed.unwrap().get("default").unwrap().get("artist");
+		matjson::Value& unwrappedDefault = parsed.unwrap().get("default").unwrap();
+		geode::Result<matjson::Value&> fooBar = unwrappedDefault.get("name");
+		geode::Result<matjson::Value&> barBaz = unwrappedDefault.get("artist");
+		// song ID 1414623 causes a FUCKTON of issues. sanitize all strings, i guess
 		if (fooBar.isOk()) {
-			const std::string& unwrapped = fooBar.unwrap().asString().unwrap();
+			std::string unwrapped = fooBar.unwrap().asString().unwrap();
+			Utils::sanitizeASCII(unwrapped);
+			// geode::log::info("unwrapped and sanitized m_songName: {}", unwrapped);
 			if (!unwrapped.empty()) songInfo->m_songName = unwrapped;
 		}
 		if (barBaz.isOk()) {
-			const std::string& unwrapped = barBaz.unwrap().asString().unwrap();
+			std::string unwrapped = barBaz.unwrap().asString().unwrap();
+			Utils::sanitizeASCII(unwrapped);
+			// geode::log::info("unwrapped and sanitized m_artistName: {}", unwrapped);
 			if (!unwrapped.empty()) songInfo->m_artistName = unwrapped;
 		}
 		if (fooBar.isOk() && barBaz.isOk()) shouldReplaceDisplayName = true;
@@ -287,8 +293,6 @@ std::string Utils::getFormattedNGMLSongName(SongInfoObject* songInfo, const bool
 	const bool isMenuLoopFromNG = songInfo->m_songID == 584131;
 	const std::string& robtopSuffix = isMenuLoopFromNG ? " [OOF!]" : "";
 	Utils::adjustSongInfoIfJukeboxReplacedIt(songInfo);
-	// song ID 1414623 causes a FUCKTON of issues.
-	if (songInfo->m_songID == 1414623) songInfo->m_songName = "? M";
 	std::string displayName = fmt::format("{}", songInfo->m_songName);
 	if (showFullAnyway || formatSetting == "Song Name, Artist, Song ID") displayName = fmt::format("{} by {} ({}){}", songInfo->m_songName, songInfo->m_artistName, songInfo->m_songID, robtopSuffix);
 	else if (formatSetting == "Song Name + Artist") displayName = fmt::format("{} by {}{}", songInfo->m_songName, songInfo->m_artistName, robtopSuffix);
