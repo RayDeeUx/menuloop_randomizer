@@ -48,6 +48,7 @@ protected:
 	cocos2d::CCLabelBMFont* m_currTimeLb{};
 	cocos2d::CCLabelBMFont* m_remnTimeLb{};
 	cocos2d::CCLabelBMFont* m_totlTimeLb{};
+	cocos2d::CCLabelBMFont* m_fakeAssTit{};
 	cocos2d::CCMenu* m_songControlsMenu {};
 	cocos2d::CCMenu* m_theTimeoutCorner {};
 	cocos2d::CCMenu* m_openSongListMenu {};

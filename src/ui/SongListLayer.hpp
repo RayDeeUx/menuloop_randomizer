@@ -70,6 +70,7 @@ public:
 	geode::Scrollbar* m_scrollBar {};
 	geode::TextInput* m_searchBar {};
 	cocos2d::CCLabelBMFont* m_searchResultsLabel {};
+	cocos2d::CCLabelBMFont* m_fakeAssTitleLabel {};
 	CCLayerColor* m_fakeCurrProgNonHitbox {};
 	CCLayerColor* m_fakeFullBarNonHitbox {};
 	CCLayerColor* m_fakeCurrProg {};

@@ -53,8 +53,8 @@ bool SongControlMenu::init() {
 	Utils::addUndraggablePopupTraits(this);
 	SongManager& songManager = SongManager::get();
 
-	this->setTitle("Menu Loop Randomizer - Control Panel");
-	this->m_title->setScale(.45f);
+	this->setTitle("");
+	this->m_title->setID("fake-ass-title-geode-label-was-a-freaking-mistake"_spr);
 
 	cocos2d::CCLayer* mainLayer = this->m_mainLayer;
 	const cocos2d::CCSize layerSize = mainLayer->getContentSize();
@@ -62,8 +62,21 @@ bool SongControlMenu::init() {
 	const float centerStage = layerSize.width / 2.f;
 	mainLayer->setID("main-layer"_spr);
 
-	this->m_title->setPositionY(this->m_title->getPositionY() + 2.f);
-	this->m_title->setPositionX(mainLayer->getContentWidth() / 2.f);
+	this->m_fakeAssTit = cocos2d::CCLabelBMFont::create("Menu Loop Randomizer - Control Panel", "goldFont.fnt");
+	this->m_fakeAssTit->setScale(.45f);
+	this->m_fakeAssTit->setPositionY(this->m_title->getPositionY() + 2.f);
+	this->m_fakeAssTit->setPositionX(this->m_mainLayer->getContentWidth() / 2.f);
+	this->m_title->getParent()->addChild(this->m_fakeAssTit);
+
+	this->m_title->setScale(0.f);
+	this->m_title->setSkewX(0.f);
+	this->m_title->setSkewY(90.f);
+	this->m_title->setMaxWidth(0.f);
+	this->m_title->setVisible(false);
+	this->m_title->setOpacity(false);
+	this->m_title->setColor({0, 0, 0});
+	this->m_title->setLimitLabelSize({0.f, 0.f}, 0.f, 0.f);
+	this->m_title->setPosition({123456789.f, 123456789.f});
 
 	this->m_songControlsMenu = cocos2d::CCMenu::create();
 	Utils::addButton("shuffle", menu_selector(SongControlMenu::onShuffleButton), REST_OF_THE_OWL);
@@ -96,7 +109,7 @@ bool SongControlMenu::init() {
 
 	this->m_theTimeoutCorner = cocos2d::CCMenu::create();
 	this->m_stngButton = Utils::addButton("settings", menu_selector(SongControlMenu::onSettingsButton), this->m_theTimeoutCorner, this);
-	this->m_theTimeoutCorner->setPosition({280.f, this->m_title->getPositionY() - 2.5f});
+	this->m_theTimeoutCorner->setPosition({280.f, this->m_fakeAssTit->getPositionY() - 2.5f});
 	this->m_theTimeoutCorner->ignoreAnchorPointForPosition(false);
 	this->m_theTimeoutCorner->setContentSize({24.f, 24.f});
 	this->m_theTimeoutCorner->setLayout(geode::ColumnLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.f)->setAutoScale(true));
@@ -104,7 +117,7 @@ bool SongControlMenu::init() {
 	this->m_openSongListMenu = cocos2d::CCMenu::create();
 	Utils::addButton("playlist", menu_selector(SongControlMenu::onPlaylistButton), this->m_openSongListMenu, this);
 	this->m_openSongListMenu->getChildren()->objectAtIndex(0)->setTag(20260105);
-	this->m_openSongListMenu->setPosition({280.f, this->m_title->getPositionY() - 51.5f});
+	this->m_openSongListMenu->setPosition({280.f, this->m_fakeAssTit->getPositionY() - 51.5f});
 	this->m_openSongListMenu->ignoreAnchorPointForPosition(false);
 	this->m_openSongListMenu->setContentSize({27.f, 27.f});
 	this->m_openSongListMenu->setLayout(geode::RowLayout::create()->setGap(0.f)->setDefaultScaleLimits(.0001f, 1.f)->setAutoScale(true));
@@ -232,7 +245,7 @@ bool SongControlMenu::init() {
 	this->m_musVolLabl->setID("music-volume-label"_spr);
 	this->m_musicVolCntnr->addChild(this->m_musVolLabl);
 
-	this->m_musicVolCntnr->setLayout(geode::RowLayout::create()->setAxisReverse(true));
+	this->m_musicVolCntnr->setLayout(geode::RowLayout::create()->ignoreInvisibleChildren(false)->setAxisReverse(true));
 	this->m_musicVolCntnr->setID("music-volume-container"_spr);
 	this->m_mainLayer->addChild(this->m_musicVolCntnr);
 
@@ -240,10 +253,6 @@ bool SongControlMenu::init() {
 
 	this->schedule(schedule_selector(SongControlMenu::visualizerScheduler));
 	this->schedule(schedule_selector(SongControlMenu::keepThePopupUndraggableDammit), 1.f / 60.f);
-
-	this->addOnEnterCallback([this]() {
-		this->m_musicVolCntnr->updateLayout();
-	});
 
 	SongControlMenu::forceSharpCornerIllusion();
 	SongControlMenu::updateCurrentLabel();
@@ -292,11 +301,11 @@ bool SongControlMenu::init() {
 
 	this->b->setID("trans-bg"_spr);
 	this->w->setID("ripple-bg"_spr);
-	this->m_title->setID("title"_spr);
 	this->m_clipNode->setID("clip-node"_spr);
 	this->m_bgSprite->setID("background"_spr);
 	this->m_closeBtn->setID("close-button"_spr);
 	this->m_buttonMenu->setID("close-menu"_spr);
+	this->m_fakeAssTit->setID("actual-title"_spr);
 	this->m_otherLabel->setID("im-not-spotify"_spr);
 	this->m_darkProgBar->setID("dark-prog-bar"_spr);
 	this->m_currProgBar->setID("curr-prog-bar"_spr);

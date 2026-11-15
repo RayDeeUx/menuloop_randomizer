@@ -208,9 +208,9 @@ void SongListLayer::addSongsToScrollLayer(geode::ScrollLayer* scrollLayer, SongM
 void SongListLayer::updateSongCountAndFavoritesCount(SongManager& songManager) {
 	const int favorites = std::clamp<int>(songManager.getFavorites().size(), 0, std::numeric_limits<int>::max());
 	const int songCount = std::clamp<int>(songManager.getSongsSize() - favorites, 0, std::numeric_limits<int>::max());;
-	this->setTitle(fmt::format("Menu Loop Randomizer - Your {} Song{} ({} Favorite{})", songCount, (songCount == 1 ? "" : "s"), favorites, (favorites == 1 ? "" : "s")));
-	this->m_title->setID("song-list-title"_spr);
-	this->m_title->setLimitLabelWidth(320.f, 1.f, .0001f);
+	this->m_fakeAssTitleLabel->setString(fmt::format("Menu Loop Randomizer - Your {} Song{} ({} Favorite{})", songCount, (songCount == 1 ? "" : "s"), favorites, (favorites == 1 ? "" : "s")).c_str());
+	this->m_fakeAssTitleLabel->setID("song-list-title"_spr);
+	this->m_fakeAssTitleLabel->limitLabelWidth(320.f, 1.f, .0001f);
 }
 
 bool SongListLayer::init() {
@@ -219,6 +219,23 @@ bool SongListLayer::init() {
 	Utils::addUndraggablePopupTraits(this);
 	this->setUserFlag("user95401.scrollbar_everywhere/scrollbar", true);
 	this->setUserObject("user95401.scrollbar_everywhere/scrollbar", cocos2d::CCBool::create(true)); // fuck off, user95401.
+
+	this->setTitle("");
+	this->m_title->setID("fake-ass-title-geode-label-was-a-freaking-mistake"_spr);
+
+	this->m_fakeAssTitleLabel = cocos2d::CCLabelBMFont::create("Menu Loop Randomizer - Your 0 Songs (0 Favorites)", "goldFont.fnt");
+	this->m_fakeAssTitleLabel->setPosition(this->m_title->getPosition());
+	this->m_title->getParent()->addChild(this->m_fakeAssTitleLabel);
+
+	this->m_title->setScale(0.f);
+	this->m_title->setSkewX(0.f);
+	this->m_title->setSkewY(90.f);
+	this->m_title->setMaxWidth(0.f);
+	this->m_title->setVisible(false);
+	this->m_title->setOpacity(false);
+	this->m_title->setColor({0, 0, 0});
+	this->m_title->setLimitLabelSize({0.f, 0.f}, 0.f, 0.f);
+	this->m_title->setPosition({123456789.f, 123456789.f});
 
 	SongManager& songManager = SongManager::get();
 	SongListLayer::updateSongCountAndFavoritesCount(songManager);
@@ -299,7 +316,7 @@ bool SongListLayer::init() {
 
 		if (Utils::getBool("showFilterOrSearchResultsCount")) {
 			this->m_searchResultsLabel = cocos2d::CCLabelBMFont::create("", "chatFont.fnt");
-			this->m_searchResultsLabel->setPosition({this->m_title->boundingBox().getMaxX() - 1.5f, this->m_isInQOLMod ? this->m_title->boundingBox().getMaxY() - .5f : this->m_title->boundingBox().getMinY() + .5f});
+			this->m_searchResultsLabel->setPosition({this->m_fakeAssTitleLabel->boundingBox().getMaxX() - 1.5f, this->m_isInQOLMod ? this->m_fakeAssTitleLabel->boundingBox().getMaxY() - .5f : this->m_fakeAssTitleLabel->boundingBox().getMinY() + .5f});
 			this->m_searchResultsLabel->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 			this->m_searchResultsLabel->setAlignment(cocos2d::CCTextAlignment::kCCTextAlignmentRight);
 			this->m_searchResultsLabel->setAnchorPoint({1.f, this->m_isInQOLMod ? 0.f : 1.f});
@@ -393,7 +410,7 @@ bool SongListLayer::init() {
 	settingsMenu->setID("songlayerlist-settings-menu"_spr);
 	CCMenuItemSpriteExtra* settings = Utils::addButton("settings", menu_selector(SongListLayer::onSettingsButton), settingsMenu, this);
 	settings->setPosition(settingsMenu->getContentSize() / 2.f);
-	settingsMenu->setPosition({395.f, this->m_title->getPositionY()});
+	settingsMenu->setPosition({395.f, this->m_fakeAssTitleLabel->getPositionY()});
 	settingsMenu->setScale(.825f);
 	this->m_mainLayer->addChild(settingsMenu);
 
@@ -537,13 +554,13 @@ bool SongListLayer::init() {
 	if (this->m_isInQOLMod) {
 		if (this->m_closeBtn) this->m_closeBtn->removeMeAndCleanup();
 		if (infoMenu) infoMenu->removeMeAndCleanup();
-		if (this->m_title) {
-			this->m_title->setPositionY(this->m_title->getPositionY() + 2.5f);
+		if (this->m_fakeAssTitleLabel) {
+			this->m_fakeAssTitleLabel->setPositionY(this->m_fakeAssTitleLabel->getPositionY() + 2.5f);
 			cocos2d::CCLabelBMFont* neverInLifeHaveIBlushedRussiansDoNotDoThis = cocos2d::CCLabelBMFont::create("[You're currently viewing this menu inside QOLMod. Keybinds, shortcuts, and mouse wheel/trackpad scrolling are disabled.]", "chatFont.fnt");
-			neverInLifeHaveIBlushedRussiansDoNotDoThis->limitLabelWidth(this->m_title->getScaledContentWidth(), 1.f, .0001f);
+			neverInLifeHaveIBlushedRussiansDoNotDoThis->limitLabelWidth(this->m_fakeAssTitleLabel->getScaledContentWidth(), 1.f, .0001f);
 			neverInLifeHaveIBlushedRussiansDoNotDoThis->setBlendFunc({GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA});
 			this->m_mainLayer->addChild(neverInLifeHaveIBlushedRussiansDoNotDoThis);
-			neverInLifeHaveIBlushedRussiansDoNotDoThis->setPosition(this->m_title->getPosition());
+			neverInLifeHaveIBlushedRussiansDoNotDoThis->setPosition(this->m_fakeAssTitleLabel->getPosition());
 			neverInLifeHaveIBlushedRussiansDoNotDoThis->setPositionY(neverInLifeHaveIBlushedRussiansDoNotDoThis->getPositionY() - 12.5f);
 			neverInLifeHaveIBlushedRussiansDoNotDoThis->setID("qolmod-notice"_spr);
 		}
@@ -1020,7 +1037,7 @@ MLRSongCell* SongListLayer::findCurrentSongCell() {
 bool SongListLayer::failsSanityCheckForDraggableProgressBar(cocos2d::CCTouch* touch, const bool fromBegan) {
 	SongManager& songManager = SongManager::get();
 	const bool canShowPlaybackProgress = CAN_SHOW_PLAYBACK_PROGRESS_AND_SCRUB_PLAYBACK;
-	if (!canShowPlaybackProgress || !touch || !this->m_title) return true;
+	if (!canShowPlaybackProgress || !touch || !this->m_fakeAssTitleLabel) return true;
 	if (!this->m_fakeCurrProg || !this->m_fakeFullBar || !this->m_fakeCurrProgNonHitbox || !this->m_fakeFullBarNonHitbox) return true;
 	if (!fromBegan && !this->m_isDragging) return true;
 	return false;
