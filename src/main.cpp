@@ -418,7 +418,7 @@ $on_game(ModsLoaded) {
 	}
 
 	songManager.setSawbladeCustomSongsFolder(loader->isModLoaded("sawblade.custom_song_folder"));
-	songManager.setUndefined0Alk1m123TouchPrio(loader->isModLoaded("alk.better-touch-prio"));
+	songManager.setUndefined0Alk1m123TouchPrio(true);
 	if (loader->isModLoaded("colon.menu_loop_start_time")) songManager.setColonMenuLoopStartTime(loader->getLoadedMod("colon.menu_loop_start_time"));
 
 	if (loader->isModLoaded("eclipse.eclipse-menu")) songManager.isEclipse = true;

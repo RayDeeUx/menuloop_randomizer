@@ -327,15 +327,14 @@
 			"name": "Show Search Bar",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SEARCH BAR WILL APPEAR.__***</c>\n\nChoose if you want to show the search bar in the Song List menu.",
 			"type": "bool",
-			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio"
+			"default": true
 		},
 		"showFilterOrSearchResultsCount": {
 			"name": "Show Filter/Search Result Count",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS SETTING WILL BE IGNORED.__***</c>\n\nChoose if you want to show the number of search results when filtering or searching for songs in the Song List menu.",
 			"type": "bool",
 			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio && showSearchBar"
+			"enable-if": "showSearchBar"
 		},
 		"compactModeScaleFactor": {
 			"name": "Compact Mode Scale Factor",
@@ -352,50 +351,46 @@
 				"arrow-step": 0,
 				"big-arrow-step": 0,
 				"slider-step": 0.01
-			},
-			"enable-if": "loaded:alk.better-touch-prio"
+			}
 		},
 		"showSortSongOptions": {
 			"name": "Show Sorting Options",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SONG SORTING OPTIONS WILL APPEAR.__***</c>\n\nChoose if you want to show song sorting options in the Song List menu.",
 			"type": "bool",
-			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio"
+			"default": true
 		},
 		"showSortSongLength": {
 			"name": "Show Song Length Sorting Option (READ!)",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO SONG SORTING OPTIONS WILL APPEAR.__***</c>\n\nChoose if you want the option to sort songs by their length in the Song List menu.\n\n<cy>Requires \"Show Sorting Options\" to be enabled.</c>",
 			"type": "bool",
 			"default": false,
-			"enable-if": "loaded:alk.better-touch-prio && showSortSongOptions"
+			"enable-if": "showSortSongOptions"
 		},
 		"showExtraInfoLabel": {
 			"name": "Show Extra Song Info in Compact Mode",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO EXTRA LABELS WILL APPEAR.__***</c>\n\nChoose if you want to show extra information about a specific song when Compact Mode is enabled in the Song List menu.",
 			"type": "bool",
-			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio"
+			"default": true
 		},
 		"showPlaybackProgressControlsSongList": {
 			"name": "Show Playback Progress and Controls",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, NO CONTROLS WILL APPEAR.__***</c>\n\nChoose if you want to show playback controls for the currently playing song in the Song List menu.",
 			"type": "bool",
-			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio"
+			"default": true
 		},
 		"songScrubbingInSongList": {
 			"name": "Song Scrubbing in Song List",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS SETTING WILL BE IGNORED.__***</c>\n\nChoose if you want to scrub along the golden popup title of the Song List menu to change song playback position of the currently playing song.",
 			"type": "bool",
 			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio && showPlaybackProgressControlsSongList"
+			"enable-if": "showPlaybackProgressControlsSongList"
 		},
 		"songScrubbingSpeedFactorInSongList": {
 			"name": "iOS-like Controls For Fine-grained Song Scrubbing in Song List",
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS SETTING WILL BE IGNORED.__***</c>\n\nChoose if you want to allow classic iOS-like controls for fine-grained song scrubbing. This would trigger along the area BELOW the golden popup title of the Song List menu.",
 			"type": "bool",
 			"default": false,
-			"enable-if": "loaded:alk.better-touch-prio && showPlaybackProgressControlsSongList && songScrubbingInSongList"
+			"enable-if": "showPlaybackProgressControlsSongList && songScrubbingInSongList"
 		},
 		"youtubeAndVLCKeyboardShortcutsSongList": {
 			"name": "YT/VLC/Spotify-like Hotkeys",
@@ -450,7 +445,7 @@
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS SETTING WILL BE IGNORED.__***</c>\n\nChoose if you want to allow classic iOS-like controls for fine-grained song scrubbing. This would trigger along the area ABOVE the playback progress bar of the Control Panel.",
 			"type": "bool",
 			"default": false,
-			"enable-if": "loaded:alk.better-touch-prio && showPlaybackProgressControlsSongList && songScrubbingInControlPanel"
+			"enable-if": "showPlaybackProgressControlsSongList && songScrubbingInControlPanel"
 		},
 		"youtubeAndVLCKeyboardShortcutsControlPanel": {
 			"name": "YT/VLC/Spotify-like Hotkeys",
@@ -524,7 +519,6 @@
 			"description": "<c-ff0000>***__IF THE \"BETTER TOUCH PRIO\" MOD BY UNDEFINED0 + ALK1M123 IS NOT INSTALLED, THIS OPTION DOES NOTHING.__***</c>\n\nChoose if you prefer Miniaudio over FMOD for finding the length of a song. If this option is disabled, FMOD will find the lengths of all of your songs instead. This means song length calculations are more precise, but take slightly longer to complete.\n\n<c-aaaaaa>*(Note that in some cases, FMOD may still be used to find the length of a song if Miniaudio fails to do so.)*</c>",
 			"type": "bool",
 			"default": true,
-			"enable-if": "loaded:alk.better-touch-prio",
 			"platforms": ["win", "mac", "android"]
 		},
 		"incrementDecrementByMilliseconds": {
@@ -542,8 +536,7 @@
 				"arrow-step": 500,
 				"big-arrow-step": 1000,
 				"slider-step": 100
-			},
-			"enable-if": "loaded:alk.better-touch-prio"
+			}
 		},
 		"specificSongOverride": {
 			"name": "Specific Menu Loop File Override",

@@ -848,7 +848,7 @@ std::string SongListLayer::generateDisplayName(SongData& songData) {
 		MusicDownloadManager* mdm = MusicDownloadManager::sharedState();
 		if (SongInfoObject* songInfoObject = mdm->getSongInfoObject(songID)) {
 			displayName = Utils::getFormattedNGMLSongName(songInfoObject, false);
-			fullDisplayNameForControlPanelAndSongList = Utils::getFormattedNGMLSongName(songInfoObject, true);
+			fullDisplayNameForControlPanelAndSongList = Utils::getFormattedNGMLSongName(songInfoObject, false);
 		}
 	}
 

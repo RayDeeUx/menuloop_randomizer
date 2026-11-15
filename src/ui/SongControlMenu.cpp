@@ -215,16 +215,16 @@ bool SongControlMenu::init() {
 	if (!this->m_isInQOLMod) {
 		this->m_musicVolumeInput->setEnabled(false);
 		this->m_musicVolumeInput->setVisible(false);
-		this->m_musicVolumeInput->getCaptionLabel()->setOpacity(0);
-		this->m_musicVolumeInput->getContentLabel()->setOpacity(0);
-		this->m_musicVolumeInput->getPlaceholderLabel()->setOpacity(0);
-		this->m_musicVolumeInput->getBGSprite()->setOpacity(0);
+		if (this->m_musicVolumeInput->getCaptionLabel()) this->m_musicVolumeInput->getCaptionLabel()->setOpacity(0);
+		if (this->m_musicVolumeInput->getContentLabel()) this->m_musicVolumeInput->getContentLabel()->setOpacity(0);
+		if (this->m_musicVolumeInput->getPlaceholderLabel()) this->m_musicVolumeInput->getPlaceholderLabel()->setOpacity(0);
+		if (this->m_musicVolumeInput->getBGSprite()) this->m_musicVolumeInput->getBGSprite()->setOpacity(0);
 	} else songManager.songControlInputNodeQOLMod = geode::Ref(this->m_musicVolumeInput);
 
-	this->m_musicVolumeInput->getBGSprite()->setID("music-volume-input-background"_spr);
-	this->m_musicVolumeInput->getCaptionLabel()->setID("music-volume-input-caption-label"_spr);
-	this->m_musicVolumeInput->getContentLabel()->setID("music-volume-input-content-label"_spr);
-	this->m_musicVolumeInput->getPlaceholderLabel()->setID("music-volume-input-placeholder-label"_spr);
+	if (this->m_musicVolumeInput->getBGSprite()) this->m_musicVolumeInput->getBGSprite()->setID("music-volume-input-background"_spr);
+	if (this->m_musicVolumeInput->getCaptionLabel()) this->m_musicVolumeInput->getCaptionLabel()->setID("music-volume-input-caption-label"_spr);
+	if (this->m_musicVolumeInput->getContentLabel()) this->m_musicVolumeInput->getContentLabel()->setID("music-volume-input-content-label"_spr);
+	if (this->m_musicVolumeInput->getPlaceholderLabel()) this->m_musicVolumeInput->getPlaceholderLabel()->setID("music-volume-input-placeholder-label"_spr);
 	this->m_musicVolumeInput->setID("music-volume-input-node"_spr);
 
 	this->m_musicVolumeInput->setID("music-volume-input"_spr);

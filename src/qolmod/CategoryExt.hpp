@@ -20,6 +20,8 @@ namespace qolmod::ext
         CategoryCreateFunc customFunc = nullptr;
     };
 
-    inline void addCustomCategory(CategoryData data);
-    GEODE_EVENT_EXPORT(void, addCustomCategory, (CategoryData data), (data));
+    // inline void addCustomCategory(CategoryData data);
+    // GEODE_EVENT_EXPORT(void, addCustomCategory, (CategoryData data), (data));
+
+    void addCustomCategory(CategoryData data) {}
 };
