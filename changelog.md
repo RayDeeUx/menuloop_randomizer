@@ -3,6 +3,8 @@
 
 <mod:alk.better-touch-prio>
 
+## v1.14.6
+- 2.2091 as a game update was a net negative.
 ## v1.14.5
 - LLMs were a net negative.
 ## v1.14.4
