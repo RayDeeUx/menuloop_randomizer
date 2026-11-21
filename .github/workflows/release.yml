@@ -42,8 +42,8 @@ jobs:
           # sdk: nightly
           # build-config: RelWithDebInfo
           # export-pdb: true
-          # bindings: RayDeeUx/bindings
-          # bindings-ref: "foobar"
+          bindings: RayDeeUx/bindings
+          bindings-ref: ios-menulooprandomizer-was-a-mistake
           combine: true
           target: ${{ matrix.config.target }}
 

@@ -42,8 +42,8 @@ jobs:
           build-config: RelWithDebInfo
           export-symbols: true
           export-pdb: true
-          # bindings: geode-sdk/bindings
-          # bindings-ref: main
+          bindings: RayDeeUx/bindings
+          bindings-ref: ios-menulooprandomizer-was-a-mistake
           combine: true
           target: ${{ matrix.config.target }}
 
