@@ -1,12 +1,12 @@
 {
-	"geode": "6.0.0-beta.1",
+	"geode": "6.0.0",
 	"gd": {
 		"win": "2.2091",
 		"mac": "2.2091",
 		"ios": "2.2091",
 		"android": "2.2091"
 	},
-	"version": "v1.14.6",
+	"version": "v1.14.7",
 	"id": "elnexreal.menuloop_randomizer",
 	"name": "Menu Loop Randomizer",
 	"developers": ["RayDeeUx", "elnexreal"],

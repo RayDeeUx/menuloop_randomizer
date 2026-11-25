@@ -752,7 +752,7 @@ std::string Utils::currentCustomSong() {
 
 std::string Utils::toNormalizedString(const std::filesystem::path& path) {
 	// return geode::utils::string::pathToString(path);
-	return path.string();
+	return asp::fs::Path::fromStdPath(path).string();
 }
 
 std::filesystem::path Utils::toProblematicString(const std::string_view path) {
