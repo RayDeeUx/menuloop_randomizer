@@ -3,6 +3,8 @@
 
 <mod:alk.better-touch-prio>
 
+## v1.14.8
+- Update Eclipse Menu headers to prevent crashes.
 ## v1.14.6 and v1.14.7
 - 2.2091 as a game update was a net negative.
 ## v1.14.5

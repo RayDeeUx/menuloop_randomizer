@@ -59,7 +59,7 @@ namespace eclipse::__internal__ {
 
         // modules
         void(*RegisterCheat)(std::string, geode::Function<bool()>) = nullptr;
-        geode::Result<>(*LoadReplay)(std::filesystem::path const&) = nullptr;
+        geode::Result<>(*LoadReplay)(asp::fs::PathView) = nullptr;
         geode::Result<>(*LoadReplayFromData)(std::span<uint8_t>) = nullptr;
         bool(*CheckCheatsEnabled)() = nullptr;
         bool(*CheckCheatedInAttempt)() = nullptr;
@@ -74,6 +74,11 @@ namespace eclipse::__internal__ {
         void(*SetComponentDescription)(size_t, std::string) = nullptr;
         void(*SetLabelText)(size_t, std::string) = nullptr;
         void(*SetInputFloatParams)(size_t, std::optional<float>, std::optional<float>, std::optional<std::string>) = nullptr;
+
+        // cheat locks
+        void(*LockCheats)(geode::Mod*) = nullptr;
+        void(*UnlockCheats)(geode::Mod*) = nullptr;
+        bool(*AreCheatsLocked)() = nullptr;
     };
 
     struct FetchVTableEvent : geode::Event<FetchVTableEvent, bool(VTable&, size_t)> {

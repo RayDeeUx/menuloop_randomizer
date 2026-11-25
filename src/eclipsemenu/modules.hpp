@@ -24,7 +24,7 @@ namespace eclipse::modules {
 namespace eclipse {
     /// @brief Load a replay from a file path.
     /// @param path The path to the replay file.
-    inline geode::Result<> loadReplay(std::filesystem::path const& path) {
+    inline geode::Result<> loadReplay(asp::fs::PathView path) {
         auto& vtable = __internal__::getVTable();
         if (vtable.LoadReplay) {
             return vtable.LoadReplay(path);
@@ -70,6 +70,31 @@ namespace eclipse {
             return vtable.GetHackingModules();
         }
         return {};
+    }
+
+    /// @brief Disable all cheats and lock them in the menu until unlockCheats() is called.
+    inline void lockCheats(geode::Mod* mod = geode::Mod::get()) {
+        auto& vtable = __internal__::getVTable();
+        if (vtable.LockCheats) {
+            vtable.LockCheats(mod);
+        }
+    }
+
+    /// @brief Unlock cheats and remove the lock from the menu.
+    inline void unlockCheats(geode::Mod* mod = geode::Mod::get()) {
+        auto& vtable = __internal__::getVTable();
+        if (vtable.UnlockCheats) {
+            vtable.UnlockCheats(mod);
+        }
+    }
+
+    /// @brief Check if any mod currently holds a cheat lock.
+    inline bool areCheatsLocked() {
+        auto& vtable = __internal__::getVTable();
+        if (vtable.AreCheatsLocked) {
+            return vtable.AreCheatsLocked();
+        }
+        return false;
     }
 }
 
